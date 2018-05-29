@@ -1,0 +1,35 @@
+
+{
+  "name": "wstringsextra",
+  "version": "0.3.0",
+  "description": "Collection of special string tools",
+  "author": "Kostiantyn Wandalen <wtory.net@domainsbyproxy.com>",
+  "license": "MIT",
+  "main": "staging/dwtools/amid/astring/StringsExtra.s",
+  "files": [
+    "staging/dwtools/amid",
+    "production"
+  ],
+  "scripts": {
+    "test": "wtest staging",
+    "make_doc": "./doc.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Wandalen/wStringsExtra.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Wandalen/wStringsExtra/issues"
+  },
+  "dependencies": {
+    "wTools": ""
+  },
+  "devDependencies": {
+    "wTesting": "",
+    "wstringsextra": "."
+  },
+  "keywords": [
+    "wTools",
+    "wStringsExtra"
+  ]
+}
