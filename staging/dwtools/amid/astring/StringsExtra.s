@@ -20,6 +20,128 @@ var strTypeOf = _.strTypeOf;
 //
 // --
 
+//
+
+/**
+ * Converts string to camelcase using special pattern.
+ * If function finds character from this( '.','-','_','/' ) list before letter,
+ * it replaces letter with uppercase version.
+ * For example: '.an _example' or '/an -example', method converts string to( 'An Example' ). *
+ *
+ * @param {string} srcStr - Source string.
+ * @returns {string} Returns camelcase version of string.
+ *
+ * @example
+ * //returns aBCD
+ * _.strCamelize( 'a-b_c/d' );
+ *
+ * @example
+ * //returns testString
+ * _.strCamelize( 'test-string' );
+ *
+ * @method strCamelize
+ * @throws { Exception } Throws a exception if( srcStr ) is not a String.
+ * @throws { Exception } Throws a exception if no argument provided.
+ * @memberof wTools
+ *
+ */
+
+function strCamelize( srcStr )
+{
+  _.assert( arguments.length === 1 );
+  _.assert( _.strIs( srcStr ) );
+
+  var result = srcStr;
+  var regexp = /\.\w|-\w|_\w|\/\w/g;
+
+  var result = result.replace( regexp,function( match )
+  {
+    return match[ 1 ].toUpperCase();
+  });
+
+  return result;
+}
+
+//
+
+/**
+ * Removes invalid characters from filename passed as first( srcStr ) argument by replacing characters finded by
+ * pattern with second argument( o ) property( o.delimeter ).If( o.delimeter ) is not defined,
+ * function sets value to( '_' ).
+ *
+ * @param {string} srcStr - Source string.
+ * @param {object} o - Object that contains o.
+ * @returns {string} Returns string with result of replacements.
+ *
+ * @example
+ * //returns _example_file_name.txt
+ * _.strFilenameFor( "'example\\file?name.txt" );
+ *
+ * @example
+ * //returns #example#file#name.js
+ * var o = { 'delimeter':'#' };
+ * _.strFilenameFor( "'example\\file?name.js",o );
+ *
+ * @method strFilenameFor
+ * @throws { Exception } Throws a exception if( srcStr ) is not a String.
+ * @throws { Exception } Throws a exception if( o ) is not a Map.
+ * @throws { Exception } Throws a exception if no arguments provided.
+ * @memberof wTools
+ *
+ */
+
+function strFilenameFor( o )
+{
+  if( _.strIs( o ) )
+  o = { src : o }
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.strIs( o.src ) );
+  _.routineOptions( strFilenameFor,o );
+
+  var regexp = /<|>|:|"|'|\/|\\|\||\&|\?|\*|\n|\s/g;
+  var result = o.src.replace( regexp,function( match )
+  {
+    return o.delimeter;
+  });
+
+  return result;
+}
+
+strFilenameFor.defaults =
+{
+  src : null,
+  delimeter : '_',
+}
+
+//
+
+function strVarNameFor( o )
+{
+  if( _.strIs( o ) )
+  o = { src : o }
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.strIs( o.src ) );
+  _.routineOptions( strVarNameFor,o );
+
+  var regexp = /\.|\-|\+|<|>|:|"|'|\/|\\|\||\&|\?|\*|\n|\s/g;
+  var result = o.src.replace( regexp,function( match )
+  {
+    return o.delimeter;
+  });
+
+  return result;
+}
+
+strVarNameFor.defaults =
+{
+  src : null,
+  delimeter : '_',
+}
+
+//
+
 function strToRegexpTolerating( src )
 {
   var result = [];
@@ -1051,6 +1173,10 @@ strTable.onCellAfter = ( cellStr, index2d, o ) => cellStr
 
 var Proto =
 {
+
+  strCamelize : strCamelize,
+  strFilenameFor : strFilenameFor,
+  strVarNameFor : strVarNameFor,
 
   strToRegexpTolerating : strToRegexpTolerating,
   strToRegexp : strToRegexp,

@@ -7,7 +7,7 @@
   "license": "MIT",
   "main": "staging/dwtools/amid/astring/StringsExtra.s",
   "files": [
-    "staging/dwtools/amid",
+    "staging/dwtools/amid/astring",
     "production"
   ],
   "scripts": {
