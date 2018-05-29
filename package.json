@@ -21,7 +21,8 @@
     "url": "https://github.com/Wandalen/wStringsExtra/issues"
   },
   "dependencies": {
-    "wTools": ""
+    "wTools": "",
+    "wStringer": ""
   },
   "devDependencies": {
     "wTesting": "",

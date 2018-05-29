@@ -1,9 +1,10 @@
 
 if( typeof module !== 'undefined' )
-{
-  require( 'wTools' );
-}
-
+require( 'wstringsextra' );
 var _ = wTools;
 
 /**/
+
+var got = _.strExtractStereoStrips( '#abc#' );
+var expected = [ '', 'abc', '' ];
+console.log( 'strExtractStereoStrips', got );
