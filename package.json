@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "wTools": "",
-    "wStringer": ""
+    "wstringer": ""
   },
   "devDependencies": {
     "wTesting": "",
