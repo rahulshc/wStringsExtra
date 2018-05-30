@@ -2,32 +2,6 @@
 
 'use strict';
 
-if( typeof module !== 'undefined' )
-{
-
-  if( typeof _global_ === 'undefined' || !_global_.wBase )
-  {
-    let toolsPath = '../../../dwtools/Base.s';
-    let toolsExternal = 0;
-    try
-    {
-      require.resolve( toolsPath );
-    }
-    catch( err )
-    {
-      toolsExternal = 1;
-      require( 'wTools' );
-    }
-    if( !toolsExternal )
-    require( toolsPath );
-  }
-
-  var _ = _global_.wTools;
-
-  _.include( 'wStringer' );
-
-}
-
 //
 
 var Self = _global_.wTools;
@@ -45,8 +19,6 @@ var strTypeOf = _.strTypeOf;
 // --
 //
 // --
-
-//
 
 /**
  * Converts string to camelcase using special pattern.
@@ -331,175 +303,6 @@ strFind.defaults =
   nearestSplitting : 1,
   determiningLineNumber : 0,
   toleratingText : 0,
-}
-
-//
-
-function strExtractStrips( src, o )
-{
-  _.assert( _.strIs( src ) );
-  _.assert( _.objectIs( o ) );
-  _.assert( arguments.length === 1 || arguments.length === 2 );
-  _.routineOptions( strExtractStrips, o );
-
-  var result = [];
-  var splitted = src.split( o.delimeter );
-  var isNextStrip = 0;
-  var isPrevStrip = 0;
-
-  /* */
-
-  for( var i = 0; i < splitted.length; i++ )
-  {
-
-    if( !isNextStrip )
-    {
-      isNextStrip = 1;
-      if( splitted[ i ] )
-      {
-        isPrevStrip = 0;
-        result.push( splitted[ i ] );
-      }
-      continue;
-    }
-
-    var strip = o.onStrip ? o.onStrip( splitted[ i ] ) : splitted[ i ];
-    if( strip !== undefined )
-    {
-      isNextStrip = 0;
-      isPrevStrip = 1;
-      result.push( strip );
-    }
-    else
-    {
-      if( !isPrevStrip && result.length > 0 )
-      result[ result.length-1 ] += o.delimeter + splitted[ i ];
-      else
-      result.push( o.delimeter + splitted[ i ] );
-      isNextStrip = 1;
-      isPrevStrip = 0;
-    }
-
-  }
-
-  return result;
-}
-
-strExtractStrips.defaults =
-{
-  delimeter : '#',
-  onStrip : null
-}
-
-//
-
-/**
- * Extracts words enclosed by prefix( o.prefix ) and postfix( o.postfix ) delimeters
- * Function can be called in two ways:
- * - First to pass only source string and use default options;
- * - Second to pass source string and options map like ( { prefix : '#', postfix : '#' } ) as function context.
- *
- * Returns result as array of strings.
- *
- * Function extracts words in two attempts:
- * First by splitting source string by ( o.prefix ).
- * Second by splitting each element of the result of first attempt by( o.postfix ).
- * If splitting by ( o.prefix ) gives only single element then second attempt is skipped,otherwise function
- * splits all elements except first by ( o.postfix ) into two halfs and calls provided ( o.onStrip ) function on first half.
- * If result of second splitting( by o.postfix ) is undefined function appends value of element from first splitting attempt
- * with ( o.prefix ) prepended to the last element of result array.
- *
- * @param {string} src - Source string.
- * @param {object} o - Options map.
- * @param {string} [ o.prefix = '#' ] - delimeter that marks begining of enclosed string
- * @param {string} [ o.postfix = '#' ] - delimeter that marks ending of enclosed string
- * @param {string} [ o.onStrip = null ] - function called on each splitted part of a source string
- * @returns {object} Returns an array of strings separated by( o.delimeter ).
- *
- * @example
- * _.strExtractStereoStrips( '#abc#' );
- * //returns [ '', 'abc', '' ]
- *
- * @example
- * _.strExtractStereoStrips.call( { prefix : '#', postfix : '$' }, '#abc$' );
- * //returns [ 'abc' ]
- *
- * @example
- * function onStrip( strip )
- * {
- *   if( strip.length )
- *   return strip.toUpperCase();
- * }
- * _.strExtractStereoStrips.call( { postfix : '$', onStrip : onStrip }, '#abc$' );
- * //returns [ 'ABC' ]
- *
- * @method strExtractStereoStrips
- * @throws { Exception } Throw an exception if( arguments.length ) is not equal 1 or 2.
- * @throws { Exception } Throw an exception if( o.src ) is not a String.
- * @throws { Exception } Throw an exception if( o.delimeter ) is not a String or an Array.
- * @throws { Exception } Throw an exception if object( o ) has been extended by invalid property.
- * @memberof wTools
- *
- */
-
-function strExtractStereoStrips( src )
-{
-
-  var o = this !== Self ? this : Object.create( null );
-
-  _.assert( _.strIs( src ) );
-  _.assert( _.objectIs( o ) );
-  _.assert( arguments.length === 1 );
-  _.routineOptions( strExtractStereoStrips, o );
-
-  var result = [];
-  var splitted = src.split( o.prefix );
-
-  if( splitted.length === 1 )
-  return splitted;
-
-  /* */
-
-  if( splitted[ 0 ] )
-  result.push( splitted[ 0 ] );
-
-  /* */
-
-  for( var i = 1; i < splitted.length; i++ )
-  {
-    var halfs = _.strCutOffLeft( splitted[ i ],o.postfix );
-
-    _.assert( halfs.length === 1 || halfs.length === 3 ); /* xxx */
-
-    if( halfs.length === 3 )
-    halfs = [ halfs[ 0 ], halfs[ 2 ] ]
-
-    var strip = o.onStrip ? o.onStrip( halfs[ 0 ] ) : halfs[ 0 ];
-
-    if( strip !== undefined )
-    {
-      result.push( strip );
-      if( halfs[ 1 ] )
-      result.push( halfs[ 1 ] );
-    }
-    else
-    {
-      if( result.length )
-      result[ result.length-1 ] += o.prefix + splitted[ i ];
-      else
-      result.push( o.prefix + splitted[ i ] );
-    }
-
-  }
-
-  return result;
-}
-
-strExtractStereoStrips.defaults =
-{
-  prefix : '#',
-  postfix : '#',
-  onStrip : null,
 }
 
 //
@@ -1193,6 +996,90 @@ strTable.onCellGet =
 
 strTable.onCellAfter = ( cellStr, index2d, o ) => cellStr
 
+//
+
+function strsSort( srcs )
+{
+
+  _.assert( _.arrayIs( srcs ) );
+
+  // debugger;
+
+  var result = srcs.sort( function( a, b )
+  {
+    // a = a.toLowerCase();
+    // b = b.toLowerCase();
+    if( a < b ) return -1;
+    if( a > b ) return +1;
+    return 0;
+  });
+
+  return result;
+}
+
+//
+
+function strDifference( src1,src2,o )
+{
+  _assert( _.strIs( src1 ) );
+  _assert( _.strIs( src2 ) );
+
+  if( src1 === src2 )
+  return false;
+
+  for( var i = 0, l = Math.min( src1.length, src2.length ) ; i < l ; i++ )
+  if( src1[ i ] !== src2[ i ] )
+  return src1.substr( 0,i ) + '*';
+
+  return src1.substr( 0,i ) + '*';
+}
+
+//
+
+function strSimilarity( src1,src2,o )
+{
+  _assert( _.strIs( src1 ) );
+  _assert( _.strIs( src2 ) );
+
+  var latter = [ _.strLattersSpectre( src1 ),_.strLattersSpectre( src2 ) ];
+  var result = _.lattersSpectreComparison( latter[ 0 ],latter[ 1 ] );
+  return result;
+}
+
+//
+
+function strLattersSpectre( src )
+{
+  var result = Object.create( null );
+
+  for( var s = 0 ; s < src.length ; s++ )
+  {
+    if( !result[ src[ s ] ] ) result[ src[ s ] ] = 1;
+    else result[ src[ s ] ] += 1;
+  }
+
+  result.length = src.length;
+  return result;
+}
+
+//
+
+function lattersSpectreComparison( src1,src2 )
+{
+
+  var same = 0;
+
+  if( src1.length === 0 && src2.length === 0 ) return 1;
+
+  for( var l in src1 )
+  {
+    if( l === 'length' ) continue;
+    if( src2[ l ] ) same += Math.min( src1[ l ],src2[ l ] );
+  }
+
+  return same / Math.max( src1.length,src2.length );
+}
+
 // --
 // prototype
 // --
@@ -1207,9 +1094,6 @@ var Proto =
   strToRegexpTolerating : strToRegexpTolerating,
   strToRegexp : strToRegexp,
   strFind : strFind,
-
-  strExtractStrips : strExtractStrips,
-  strExtractStereoStrips : strExtractStereoStrips,
 
   strSorterParse : strSorterParse,
 
@@ -1228,6 +1112,12 @@ var Proto =
   strParseMap : strParseMap,
 
   strTable : strTable,
+  strsSort : strsSort,
+
+  strDifference : strDifference, /* experimental */
+  strSimilarity : strSimilarity, /* experimental */
+  strLattersSpectre : strLattersSpectre, /* experimental */
+  lattersSpectreComparison : lattersSpectreComparison, /* experimental */
 
 }
 

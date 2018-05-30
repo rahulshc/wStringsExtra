@@ -34,8 +34,6 @@ var _ = _global_.wTools;
 //
 // --
 
-//
-
 function strCamelize( test )
 {
   test.description = 'converts string to camelcase';
@@ -143,122 +141,256 @@ function strFilenameFor( test )
 
 //
 
-function strExtractStrips( test )
+function strMetricFormat( test )
 {
 
-  function onStrip( part )
+  test.description = 'default options';
+  var got = _.strMetricFormat( "100m", { } );
+  var expected = "100.0 ";
+  test.identical( got,expected );
+
+  test.description = 'default options';
+  var got = _.strMetricFormat( 0.005 );
+  var expected = "5.0 m";
+  test.identical( got,expected );
+
+  test.description = 'number to million';
+  var got = _.strMetricFormat( 1, { metric : 6 } );
+  var expected = "1.0 M";
+  test.identical( got,expected );
+
+  test.description = 'metric out of range';
+  var got = _.strMetricFormat( 1, { metric : 25 } );
+  var expected = "1.0 ";
+  test.identical( got,expected );
+
+  test.description = 'fixed : 0';
+  var got = _.strMetricFormat( "1300", { fixed : 0 } );
+  var expected = "1 k";
+  test.identical( got,expected );
+
+  test.description = 'divisor, thousand test';
+  var got = _.strMetricFormat( "1000000",{ divisor : 2, thousand:100 } );
+  var expected = "1.0 M";
+  test.identical( got,expected );
+
+  test.description = 'divisor, thousand,dimensions,metric test';
+  var got = _.strMetricFormat( "10000", { divisor : 2, thousand : 10, dimensions : 3,metric: 1 } );
+  var expected = '10.0 k'
+  test.identical( got,expected );
+
+  test.description = 'divisor, thousand,dimensions test';
+  var got = _.strMetricFormat( "10000", { divisor : 2, thousand : 10, dimensions : 3 } );
+  var expected = "10.0 h";
+  test.identical( got,expected );
+
+  test.description = 'divisor, thousand,dimensions,fixed test';
+  var got = _.strMetricFormat( "10000", { divisor : 2, thousand : 10, dimensions : 3, fixed : 0 } );
+  var expected = "10 h";
+  test.identical( got,expected );
+
+  /**/
+
+  if( !Config.debug )
+  return;
+
+  test.description = 'invalid arguments count';
+  test.shouldThrowError( function()
   {
-    var temp = part.split( ':' )
-    if( temp.length === 2 )
-    {
-      return temp;
-    }
-    return undefined;
-  }
+    _.strMetricFormat( '1', { fixed : 0 }, '3' );
+  });
 
-  test.description = 'case 1';
-  var str = 'this #background:red#is#background:default# text and # is not';
-  var got = _.strExtractStrips( str, { onStrip : onStrip } );
-  var expected =
-  [
-    'this ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and # is not'
-  ];
-  test.identical( got, expected );
+  test.description = 'invalid first argument type';
+  test.shouldThrowError( function()
+  {
+    _.strMetricFormat( [ 1, 2, 3 ] );
+  });
 
-  test.description = 'case 2';
-  var str = '#simple # text #background:red#is#background:default# text and # is not#';
-  var got = _.strExtractStrips( str, { onStrip : onStrip } );
-  var expected =
-  [
-    '#simple # text ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and # is not#'
-  ];
-  test.identical( got, expected );
+  test.description = 'invalid second argument type';
+  test.shouldThrowError( function()
+  {
+    _.strMetricFormat( 11, '0' );
+  });
 
-  test.description = 'case 3';
-  var str = '#background:red#i#s#background:default##text';
-  var got = _.strExtractStrips( str, { onStrip : onStrip } );
-  var expected =
-  [
-    [ 'background', 'red' ], 'i#s', [ 'background', 'default' ], '#text'
-  ];
-  test.identical( got, expected );
+  test.description = 'no arguments';
+  test.shouldThrowError( function()
+  {
+    _.strMetricFormat();
+  });
 
-  test.description = 'warapped by strips';
-  var str = '#background:red#text#background:default#';
-  var got = _.strExtractStrips( str, { onStrip : onStrip } );
-  var expected =
-  [
-    [ 'background', 'red' ], 'text', [ 'background', 'default' ]
-  ];
-  test.identical( got, expected );
+  test.description = 'fixed out of range';
+  test.shouldThrowError( function()
+  {
+    _.strMetricFormat( "1300", { fixed : 22 } );
+  });
 
 }
 
 //
 
-function strExtractStereoStrips( test )
+function strMetricFormatBytes( test )
 {
-  var got,expected;
 
-  test.description = 'default';
+  test.description = 'default options';
+  var got = _.strMetricFormatBytes( 1024 );
+  var expected = '1024.0 b';
+  test.identical( got,expected );
 
-  /* nothing */
+  test.description = 'default options';
+  var got = _.strMetricFormatBytes( 2500 );
+  var expected = '2.4 kb';
+  test.identical( got,expected );
 
-  got = _.strExtractStereoStrips( '' );
-  expected = [ '' ];
-  test.identical( got, expected );
+  test.description = 'fixed';
+  var got = _.strMetricFormatBytes( 2500, { fixed : 0 } );
+  var expected = '2 kb';
+  test.identical( got,expected );
 
-  /* prefix/postfix # by default*/
+  test.description = 'invalid metric value';
+  var got = _.strMetricFormatBytes( 2500 , { metric:4 } );
+  var expected = '2500.0 b';
+  test.identical( got,expected );
 
-  got = _.strExtractStereoStrips( '#abc#' );
-  expected = [ '', 'abc', '' ];
-  test.identical( got, expected );
+  test.description = 'divisor test';
+  var got = _.strMetricFormatBytes( Math.pow(2,32) , { divisor:4, thousand: 1024 } );
+  var expected = '4.0 Tb';
+  test.identical( got,expected );
 
-  //
 
-  test.description = 'with options';
+  /**/
 
-  /* pre/post are same*/
+  if( !Config.debug )
+  return;
 
-  got = _.strExtractStereoStrips.call( { prefix : '/', postfix : '/' }, '/abc/' );
-  expected = [ '', 'abc', '' ];
+  test.description = 'invalid first argument type';
+  test.shouldThrowError( function()
+  {
+    _.strMetricFormatBytes( [ '1', '2', '3' ] );
+  });
+
+  test.description = 'invalid second argument type';
+  test.shouldThrowError( function()
+  {
+    _.strMetricFormatBytes( 0, '0' );
+  });
+
+  test.description = 'no arguments';
+  test.shouldThrowError( function()
+  {
+    _.strMetricFormatBytes();
+  });
+
+  test.description = 'fixed out of range';
+  test.shouldThrowError( function()
+  {
+    _.strMetricFormatBytes( "1300", { fixed : 22 } );
+  });
+
+}
+
+//
+
+function strToBytes( test )
+{
+
+  test.description = 'simple string';
+  var got = _.strToBytes( 'abcd' );
+  var expected = new Uint8Array ( [ 97, 98, 99, 100 ] );
+  test.identical( got,expected );
+
+  test.description = 'escaping';
+  var got = _.strToBytes( '\u001bABC\n\t' );
+  var expected = new Uint8Array ( [ 27, 65, 66, 67, 10, 9 ] );
+  test.identical( got,expected );
+
+  test.description = 'zero length';
+  var got = _.strToBytes( '' );
+  var expected = new Uint8Array ( [ ] );
+  test.identical( got,expected );
+
+  test.description = 'returns the typed-array';
+  var got = _.strToBytes( 'abc' );
+  var expected = got;
   test.identical( got, expected );
 
   /**/
 
-  got = _.strExtractStereoStrips.call( { prefix : '/', postfix : '/' }, '//abc//' );
-  expected = [ '', '', 'abc', '', '' ];
-  test.identical( got, expected );
+  if( !Config.debug )
+  return;
 
-  /* different pre/post */
-
-  got = _.strExtractStereoStrips.call( { prefix : '/#', postfix : '#' }, '/#abc#' );
-  expected = [ 'abc' ];
-  test.identical( got, expected );
-
-  /* postfix appears in source two times */
-  got = _.strExtractStereoStrips.call( { prefix : '/', postfix : '#' }, '/ab#c#' );
-  expected = [ 'ab', 'c#' ];
-  test.identical( got, expected );
-
-  /* onStrip #1 */
-  function onStrip1( strip )
+  test.description = 'invalid arguments count';
+  test.shouldThrowError( function()
   {
-    if( strip.length )
-    return strip;
-  }
-  got = _.strExtractStereoStrips.call( { onStrip : onStrip1 }, '#abc#' );
-  expected = [ '#abc#' ];
-  test.identical( got, expected );
+    _.strToBytes( '1', '2' );
+  });
 
-  /* onStrip #2 */
-  function onStrip2( strip )
+  test.description = 'invalid argument type';
+  test.shouldThrowError( function()
   {
-    return strip + strip;
-  }
-  got = _.strExtractStereoStrips.call( { prefix : '/', postfix : '#', onStrip : onStrip2 }, '/abc#' );
-  expected = [ 'abcabc' ];
-  test.identical( got, expected );
+    _.strToBytes( 0 );
+  });
+
+  test.description = 'no arguments';
+  test.shouldThrowError( function()
+  {
+    _.strToBytes();
+  });
+
+  test.description = 'argument is wrong';
+  test.shouldThrowError( function( )
+  {
+    _.strToBytes( [  ] );
+  } );
+
+  test.description = 'argument is wrong';
+  test.shouldThrowError( function( )
+  {
+    _.strToBytes( 13 );
+  } );
+
+}
+
+//
+
+function strTimeFormat( test )
+{
+
+  test.description = 'simple number';
+  var got = _.strTimeFormat( 1000 );
+  var expected = '1.000 s';
+  test.identical( got,expected );
+
+  test.description = 'simple number';
+  var got = _.strTimeFormat( 1);
+  var expected = '1.000 ms';
+  test.identical( got,expected );
+
+  test.description = 'number as string';
+  var got = _.strTimeFormat( '1.5' );
+  var expected = '1.500 ms';
+  test.identical( got,expected );
+
+  test.description = 'big number';
+  var got = _.strTimeFormat( Math.pow( 4,7 ) );
+  var expected = '16.384 s';
+  test.identical( got,expected );
+
+  test.description = 'zero';
+  var got = _.strTimeFormat( 0 );
+  var expected = '0.000 ys';
+  test.identical( got,expected );
+
+  test.description = 'empty call';
+  var got = _.strTimeFormat(  );
+  var expected = 'NaN s';
+  test.identical( got,expected );
+
+  /**/
+
+  if( !Config.debug )
+  return;
+
+  xxx
 
 }
 
@@ -365,6 +497,80 @@ function strSorterParse( test )
   test.shouldThrowError( () => _.strSorterParse( src, fields ) );
 }
 
+//
+
+function strDifference( test )
+{
+
+  test.description = 'returns the string';
+  var got = _.strDifference( 'abc', 'abd' );
+  var expected = 'ab*';
+  test.identical( got, expected );
+
+  test.description = 'returns the string where the difference in the first letter';
+  var got = _.strDifference( 'abc', 'def' );
+  var expected = '*';
+  test.identical( got, expected );
+
+  test.description = 'returns false because arguments are equal';
+  var got = _.strDifference( 'abc', 'abc' );
+  var expected = false;
+  test.identical( got, expected );
+
+  /**/
+
+  if( !Config.debug )
+  return;
+
+  test.description = 'no arguments';
+  test.shouldThrowError( function( )
+  {
+    _.strDifference( );
+  } );
+
+  test.description = 'first argument is wrong';
+  test.shouldThrowError( function( )
+  {
+    _.strDifference( [  ], 'abc' );
+  } );
+
+  test.description = 'second argument is wrong';
+  test.shouldThrowError( function( )
+  {
+    _.strDifference( 'abc', 13 );
+  } );
+
+  test.description = 'not enough arguments';
+  test.shouldThrowError( function( )
+  {
+    _.strDifference( 'abc' );
+  } );
+
+}
+
+//
+
+function strLattersSpectre( test )
+{
+
+  test.description = 'returns the object';
+  var got = _.strLattersSpectre( 'abcacc' );
+  var expected = { a: 2, b: 1, c: 3, length: 6 };
+  test.identical( got, expected );
+
+  /**/
+
+  if( !Config.debug )
+  return;
+
+  test.description = 'no arguments';
+  test.shouldThrowError( function( )
+  {
+    _.strLattersSpectre( );
+  } );
+
+};
+
 // --
 //
 // --
@@ -372,7 +578,7 @@ function strSorterParse( test )
 var Self =
 {
 
-  name : 'StringTools tests 2',
+  name : 'StringsExtra',
   silencing : 1,
 
   tests :
@@ -381,9 +587,15 @@ var Self =
     strCamelize : strCamelize,
     strFilenameFor : strFilenameFor,
 
-    strExtractStrips : strExtractStrips,
-    strExtractStereoStrips : strExtractStereoStrips,
+    strMetricFormat : strMetricFormat,
+    strMetricFormatBytes : strMetricFormatBytes,
+    strToBytes : strToBytes,
+    strTimeFormat : strTimeFormat,
+
     strSorterParse : strSorterParse,
+
+    strDifference : strDifference,
+    strLattersSpectre : strLattersSpectre,
 
   }
 
