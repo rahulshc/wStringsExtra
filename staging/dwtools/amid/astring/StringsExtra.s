@@ -842,11 +842,8 @@ function strTable( o )
   _.assert( arguments.length === 1 );
 
   if( !_.objectIs( o ) )
-  {
-    o = { data : o }
-  }
+  o = { data : o }
   _.routineOptions( strTable,o );
-
   _.assert( _.arrayLike( o.data ) );
 
   if( typeof module !== 'undefined' && module !== null )
@@ -857,10 +854,11 @@ function strTable( o )
 
   if( _.cliTable == undefined )
   {
-    throw( 'browser version of strTable is not implemented' );
+    if( !o.silent )
+    throw _.err( 'version of strTable without support of cli-table2 is not implemented' );
   }
 
-  //
+  /* */
 
   function makeWidth( propertyName, def, len )
   {
@@ -927,7 +925,7 @@ function strTable( o )
     rowAligns : o.rowAligns,
     style :
     {
-      compact : o.compact,
+      compact : !!o.compact,
       'padding-left' : o.paddingLeft,
       'padding-right' : o.paddingRight,
     }
@@ -979,10 +977,12 @@ strTable.defaults =
   colAlign : 'center',
   colAligns : null,
 
-  compact : true,
+  compact : 1,
+  silent : 1,
 
   paddingLeft : 0,
   paddingRight : 0,
+
 
   onCellGet : null,
   onCellAfter : null,

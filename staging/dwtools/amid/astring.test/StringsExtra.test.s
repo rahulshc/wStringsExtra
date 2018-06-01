@@ -580,6 +580,7 @@ var Self =
 
   name : 'StringsExtra',
   silencing : 1,
+  enabled : 0, //
 
   tests :
   {
