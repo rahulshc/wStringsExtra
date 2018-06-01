@@ -849,13 +849,21 @@ function strTable( o )
   if( typeof module !== 'undefined' && module !== null )
   {
     if( !_.cliTable  )
-    _.cliTable = require( 'cli-table2' );
+    try
+    {
+      _.cliTable = require( 'cli-table2' );
+    }
+    catch( err )
+    {
+    }
   }
 
   if( _.cliTable == undefined )
   {
     if( !o.silent )
     throw _.err( 'version of strTable without support of cli-table2 is not implemented' );
+    else
+    return;
   }
 
   /* */
