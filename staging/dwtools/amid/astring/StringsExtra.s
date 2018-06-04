@@ -1,6 +1,6 @@
 (function _StringExtra_s_() {
 
-'use strict';
+'use strict'; /* aaa */
 
 //
 
