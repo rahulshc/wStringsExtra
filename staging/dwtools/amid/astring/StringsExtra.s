@@ -652,7 +652,7 @@ function strCsvFrom( src,o )
 
     o.header = [];
 
-    _.eachRecursive( _.entityValueWithIndex( src,0 ),function( e,k,i )
+    _.look( _.entityValueWithIndex( src,0 ),function( e,k,i )
     {
       o.header.push( k );
     });
@@ -668,7 +668,7 @@ function strCsvFrom( src,o )
 
   if( o.withHeader )
   {
-    _.eachRecursive( o.header,function( e,k,i ){
+    _.look( o.header,function( e,k,i ){
       result += e + o.cellSeparator;
     });
     result = result.substr( 0,result.length-o.cellSeparator.length ) + o.rowSeparator;
@@ -1089,7 +1089,7 @@ function lattersSpectreComparison( src1,src2 )
 }
 
 // --
-// prototype
+// define class
 // --
 
 var Proto =
