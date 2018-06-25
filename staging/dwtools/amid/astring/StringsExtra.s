@@ -142,10 +142,12 @@ strVarNameFor.defaults =
 
 function strToRegexpTolerating( src )
 {
-  var result = [];
+  var result = src;
 
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( src ) || _.regexpIs( src ) );
+
+  xxx
 
   if( _.strIs( src ) )
   {
@@ -154,11 +156,10 @@ function strToRegexpTolerating( src )
     {
       prefix : '>->',
       postfix : '<-<',
+      src : src,
     }
 
-    // debugger;
-    var strips = _.strExtractStereoStrips.call( optionsExtract,src );
-    // debugger;
+    var strips = _.strExtractStereoStrips( optionsExtract );
 
     for( var s = 0 ; s < strips.length ; s++ )
     {
@@ -167,19 +168,16 @@ function strToRegexpTolerating( src )
       if( s % 2 === 0 )
       {
         strip = _.regexpEscape( strip );
-        // strip = _.strReplaceAll( strip,/\s+/,'\\s*' );
         strip = strip.replace( /\s+/g,'\\s*' );
-        // strip = strip.replace( /(\w+)/,'\\s*$1\\s*' );
-        // strip = strip.replace( /\\s\*\\s\*/g,'\\s*' );
       }
 
       strips[ s ] = strip;
     }
 
-    src = RegExp( strips.join( '' ),'g' );
+    result = RegExp( strips.join( '' ),'g' );
   }
 
-  return src;
+  return result;
 }
 
 //
