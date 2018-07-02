@@ -46,7 +46,7 @@ var strTypeOf = _.strTypeOf;
 
 function strCamelize( srcStr )
 {
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'expects single argument' );
   _.assert( _.strIs( srcStr ) );
 
   var result = srcStr;
@@ -93,7 +93,7 @@ function strFilenameFor( o )
   if( _.strIs( o ) )
   o = { src : o }
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'expects single argument' );
   _.assert( _.strIs( o.src ) );
   _.routineOptions( strFilenameFor,o );
 
@@ -119,7 +119,7 @@ function strVarNameFor( o )
   if( _.strIs( o ) )
   o = { src : o }
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'expects single argument' );
   _.assert( _.strIs( o.src ) );
   _.routineOptions( strVarNameFor,o );
 
@@ -144,7 +144,7 @@ function strToRegexpTolerating( src )
 {
   var result = src;
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'expects single argument' );
   _.assert( _.strIs( src ) || _.regexpIs( src ) );
 
   xxx
@@ -186,7 +186,7 @@ function strToRegexp( src )
 {
   var result = [];
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'expects single argument' );
   _.assert( _.strIs( src ) || _.regexpIs( src ) );
 
   if( _.strIs( src ) )
@@ -204,7 +204,7 @@ function strFind( o )
 {
   var result = [];
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'expects single argument' );
   _.routineOptions( strFind,o );
 
   /* */
@@ -392,7 +392,7 @@ strSorterParse.defaults =
 function strToBytes( src )
 {
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'expects single argument' );
   _.assert( _.strIs( src ) );
 
   var result = new Uint8Array( src.length );
@@ -837,7 +837,7 @@ strParseMap.defaults =
 
 function strTable( o )
 {
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'expects single argument' );
 
   if( !_.objectIs( o ) )
   o = { data : o }
