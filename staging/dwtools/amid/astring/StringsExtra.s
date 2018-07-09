@@ -1,6 +1,32 @@
 (function _StringExtra_s_() {
 
-'use strict'; /* aaa */
+'use strict';
+
+if( typeof module !== 'undefined' )
+{
+
+  if( typeof _global_ === 'undefined' || !_global_.wBase )
+  {
+    let toolsPath = '../../../dwtools/Base.s';
+    let toolsExternal = 0;
+    try
+    {
+      toolsPath = require.resolve( toolsPath );
+    }
+    catch( err )
+    {
+      toolsExternal = 1;
+      require( 'wTools' );
+    }
+    if( !toolsExternal )
+    require( toolsPath );
+  }
+
+  var _ = _global_.wTools;
+
+  _.include( 'wArraySorted' );
+
+}
 
 //
 
@@ -15,6 +41,8 @@ var _ObjectHasOwnProperty = Object.hasOwnProperty;
 var _assert = _.assert;
 var _arraySlice = _.arraySlice;
 var strTypeOf = _.strTypeOf;
+
+_.assert( _.arraySortedAddOnce );
 
 // --
 //
@@ -91,14 +119,14 @@ function strCamelize( srcStr )
 function strFilenameFor( o )
 {
   if( _.strIs( o ) )
-  o = { src : o }
+  o = { srcString : o }
 
   _.assert( arguments.length === 1, 'expects single argument' );
-  _.assert( _.strIs( o.src ) );
+  _.assert( _.strIs( o.srcString ) );
   _.routineOptions( strFilenameFor,o );
 
   var regexp = /<|>|:|"|'|\/|\\|\||\&|\?|\*|\n|\s/g;
-  var result = o.src.replace( regexp,function( match )
+  var result = o.srcString.replace( regexp,function( match )
   {
     return o.delimeter;
   });
@@ -108,7 +136,7 @@ function strFilenameFor( o )
 
 strFilenameFor.defaults =
 {
-  src : null,
+  srcString : null,
   delimeter : '_',
 }
 
@@ -140,6 +168,69 @@ strVarNameFor.defaults =
 
 //
 
+/**
+ * @name _strHtmlEscapeMap
+ * @type {object}
+ * @description Html escape symbols map.
+ * @global
+ */
+
+var _strHtmlEscapeMap =
+{
+  '&' : '&amp;',
+  '<' : '&lt;',
+  '>' : '&gt;',
+  '"' : '&quot;',
+  '\'' : '&#39;',
+  '/' : '&#x2F;'
+}
+
+/**
+ * Replaces all occurrences of html escape symbols from map( _strHtmlEscapeMap )
+ * in source( str ) with their code equivalent like( '&' -> '&amp;' ).
+ * Returns result of replacements as new string or original if nothing replaced.
+ *
+ * @param {string} str - Source string to parse.
+ * @returns {string} Returns string with result of replacements.
+ *
+ * @example
+ * //returns &lt;&amp;test &amp;text &amp;here&gt;
+ * _.strHtmlEscape( '<&test &text &here>' );
+ *
+ * @example
+ * //returns 1 &lt; 2
+ * _.strHtmlEscape( '1 < 2' );
+ *
+ * @example
+ * //returns &#x2F;&#x2F;test&#x2F;&#x2F;
+ * _.strHtmlEscape( '//test//' );
+ *
+ * @example
+ * //returns &amp;,&lt;
+ * _.strHtmlEscape( ['&','<'] );
+ *
+ * @example
+ * //returns &lt;div class=&quot;cls&quot;&gt;&lt;&#x2F;div&gt;
+ * _.strHtmlEscape('<div class="cls"></div>');
+ *
+ * @method strHtmlEscape
+ * @throws { Exception } Throws a exception if no argument provided.
+ * @memberof wTools
+ *
+ */
+
+function strHtmlEscape( str )
+{
+  _.assert( arguments.length === 1, 'expects single argument' );
+
+  return String( str ).replace( /[&<>"'\/]/g, function( s )
+  {
+    return _strHtmlEscapeMap[ s ];
+  });
+}
+
+//
+
 function strToRegexpTolerating( src )
 {
   var result = src;
@@ -159,7 +250,7 @@ function strToRegexpTolerating( src )
       src : src,
     }
 
-    var strips = _.strExtractStereoStrips( optionsExtract );
+    var strips = _.strExtractInlinedStereo( optionsExtract );
 
     for( var s = 0 ; s < strips.length ; s++ )
     {
@@ -307,7 +398,6 @@ strFind.defaults =
 
 function strSorterParse( o )
 {
-  _.assert( arguments.length === 1 || arguments.length === 2 );
 
   if( arguments.length === 1 )
   {
@@ -326,6 +416,7 @@ function strSorterParse( o )
 
   _.routineOptions( strSorterParse, o );
   _.assert( o.fields === null || _.objectLike( o.fields ) );
+  _.assert( arguments.length === 1 || arguments.length === 2 );
 
   var map =
   {
@@ -367,6 +458,388 @@ strSorterParse.defaults =
   src : null,
   fields : null,
 }
+
+//
+
+/**
+ * Replaces each occurrence of string( ins ) in source( src ) with string( sub ).
+ * Returns result of replacements as new string or original string if no matches finded in source( src ).
+ * Function can be called in three different ways:
+ * - One argument: object that contains options: source( src ) and dictionary.
+ * - Two arguments: source string( src ), map( dictionary ).
+ * - Three arguments: source string( src ), pattern string( ins ), replacement( sub ).
+ * @param {string} src - Source string to parse.
+ * @param {string} ins - String to find in source( src ).
+ * @param {string} sub - String that replaces finded occurrence( ins ).
+ * @param {object} dictionary - Map that contains pattern/replacement pairs like ( { 'ins' : 'sub' } ).
+ * @returns {string} Returns string with result of replacements.
+ *
+ * @example
+ * //one argument
+ * //returns xbc
+ * _.strReplaceAll( { src : 'abc', dictionary : { 'a' : 'x' } } );
+ *
+ * @example
+ * //two arguments
+ * //returns a12
+ * _.strReplaceAll( 'abc',{ 'a' : '1', 'b' : '2' } );
+ *
+ * @example
+ * //three arguments
+ * //returns axc
+ * _.strReplaceAll( 'abc','b','x' );
+ *
+ * @method strReplaceAll
+ * @throws { Exception } Throws a exception if no arguments provided.
+ * @throws { Exception } Throws a exception if( src ) is not a String.
+ * @throws { Exception } Throws a exception if( ins ) is not a String.
+ * @throws { Exception } Throws a exception if( sub ) is not a String.
+ * @throws { Exception } Throws a exception if( dictionary ) is not a Object.
+ * @throws { Exception } Throws a exception if( dictionary ) key value is not a String.
+ * @memberof wTools
+ *
+ */
+
+function strReplaceAll( src, ins, sub )
+{
+
+  var o;
+
+  if( arguments.length === 3 )
+  {
+    o = { src : src };
+    o.dictionary = [ [ ins, sub ] ]
+  }
+  else if( arguments.length === 2 )
+  {
+    o = { src : arguments[ 0 ] , dictionary : arguments[ 1 ] };
+  }
+  else if( arguments.length === 1 )
+  {
+    o = arguments[ 0 ];
+  }
+
+  /**/
+
+  _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
+  _.assert( _.strIs( o.src ) );
+  _.assert( _.objectIs( o.dictionary ) || _.arrayGenericIs( o.dictionary ));
+  _.routineOptions( strReplaceAll, o );
+
+  /**/
+
+  var foundArray = [];
+  var src = o.src;
+
+  /* */
+
+  if( _.objectIs( o.dictionary ) )
+  {
+    for( var ins in o.dictionary )
+    {
+      replaceWithString( src, ins, o.dictionary[ ins ] );
+    }
+  }
+  else if( _.arrayGenericIs( o.dictionary ) )
+  {
+    for( var p = 0; p < o.dictionary.length; p++ )
+    {
+
+      var pair = o.dictionary[ p ];
+      var ins = _.arrayAs( pair[ 0 ] );
+      var sub = _.arrayAs( pair[ 1 ] );
+
+      _.assert( _.arrayGenericIs( o.dictionary[ p ] ) );
+      _.assert( pair.length === 2 );
+      _.assert( ins.length === sub.length );
+
+      for( var i = 0; i < ins.length; i++ )
+      {
+        _.assert( _.strIs( ins[ i ] ) || _.regexpIs( ins[ i ] ) );
+
+        if( _.strIs( ins[ i ] ) )
+        {
+          if( !ins.length )
+          continue;
+          replaceWithString( src, ins[ i ], sub[ i ] );
+        }
+        else
+        {
+          replaceWithRegexp( src, ins[ i ], sub[ i ] );
+        }
+
+      }
+    }
+  }
+
+  /* */
+
+  var result = '';
+  var index = 0;
+  for( var f = 0 ; f < foundArray.length ; f++ )
+  {
+    var fo = foundArray[ f ];
+    result += src.substring( index, fo[ 0 ] );
+    result += fo[ 3 ];
+    index = fo[ 1 ];
+  }
+
+  result += src.substring( index, src.length );
+
+  return result
+
+  /* */
+
+  function replaceWithRegexp( src, ins, sub )
+  {
+
+    if( _.routineIs( sub ) )
+    {
+      src.replace( ins, handleReplaceWithRoutine( sub ) );
+    }
+    else
+    {
+      src.replace( ins, handleReplaceWithString( sub ) );
+    }
+
+  }
+
+  /* */
+
+  function replaceWithString( src, ins, sub )
+  {
+    _.assert( _.strIs( sub ) || _.routineIs( sub ), 'expects string or routine {-sub-}' );
+
+    if( !ins.length )
+    return src;
+
+    var index2 = 0;
+    var index = src.indexOf( ins );
+    while( index >= 0 )
+    {
+
+      var f = found( index, ins, sub );
+
+      var subStr = sub;
+      if( f )
+      if( _.routineIs( sub ) )
+      {
+        var it = Object.create( null );
+        it.match = src.substring( index, index + ins.length );
+        it.range = [ index, index + it.match.length ];
+        it.counter = o.counter;
+        it.input = src;
+        it.groups = [];
+        subStr = sub( it.match, it );
+        _.assert( _.strIs( subStr ), 'expects string' );
+        f[ 3 ] = subStr;
+      }
+
+      if( f )
+      {
+        index += ins.length;
+        o.counter += 1;
+      }
+      else
+      {
+        index += 1;
+      }
+
+      index2 = index;
+      index = src.indexOf( ins, index );
+
+    }
+
+  }
+
+  /* */
+
+  function intersects( ins1, ins2 )
+  {
+    if( ins2[ 1 ] <= ins1[ 0 ] )
+    return false;
+    if( ins1[ 1 ] <= ins2[ 0 ] )
+    return false;
+    return true;
+  }
+
+  /* */
+
+  function comparator( ins1, ins2 )
+  {
+    if( intersects( ins1, ins2 ) )
+    return 0;
+    return ins1[ 0 ] - ins2[ 0 ];
+  }
+
+  /* */
+
+  function found( index, ins, sub )
+  {
+    var f = [ index, index + ins.length, ins, sub ];
+    if( _.arraySortedAddOnce( foundArray, f, comparator ) )
+    return f;
+    else
+    return null;
+  }
+
+  /* */
+
+  function handleReplaceWithRoutine( callback )
+  {
+    function adapt()
+    {
+      var f = found( arguments[ arguments.length - 2 ], arguments[ 0 ], null );
+      if( !f )
+      return f;
+      var it = Object.create( null );
+      it.match = arguments[ 0 ];
+      it.range = [ arguments[ arguments.length - 2 ], arguments[ arguments.length - 2 ] + it.match.length ];
+      it.counter = o.counter;
+      it.input = arguments[ arguments.length - 1 ];
+      it.groups = _.arraySlice( arguments, 1, arguments.length-2 );
+      var subStr = callback( it.match, it );
+      o.counter += 1;
+      _.assert( _.strIs( subStr ), 'expects string' );
+      f[ 3 ] = subStr;
+      return f;
+    }
+    return adapt;
+  }
+
+  /* */
+
+  function handleReplaceWithString( subStr )
+  {
+    _.assert( _.strIs( subStr ), 'expects string' );
+    function adapt()
+    {
+      var f = found( arguments[ arguments.length - 2 ], arguments[ 0 ], null );
+      if( !f )
+      return f;
+      o.counter += 1;
+      f[ 3 ] = subStr;
+      return f;
+    }
+    return adapt;
+  }
+
+}
+
+strReplaceAll.defaults =
+{
+  src : null,
+  dictionary : null,
+  counter : 0,
+}
+
+// //
+//
+// function strReplaceAll( src, ins, sub )
+// {
+//   var o;
+//   _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
+//
+//   if( arguments.length === 3 )
+//   {
+//     o = { src : src };
+//     o.dictionary = [ [ ins, sub ] ]
+//   }
+//   else if( arguments.length === 2 )
+//   {
+//     o = { src : src , dictionary : arguments[ 1 ] };
+//   }
+//   else if( arguments.length === 1 )
+//   {
+//     o = arguments[ 0 ];
+//   }
+//
+//   /**/
+//
+//   _.assert( _.strIs( o.src ) );
+//   _.assert( _.objectIs( o.dictionary ) || _.arrayLike( o.dictionary ));
+//
+//   /**/
+//
+//   var index = 0;
+//
+//   function replace( src, ins, sub )
+//   {
+//     _.assert( _.strIs( sub ), 'strReplaceAll : expects sub as string' );
+//
+//     if( !ins.length )
+//     return src;
+//
+//     do
+//     {
+//       var index = src.indexOf( ins,index );
+//       if( index >= 0 )
+//       {
+//         src = src.substring( 0,index ) + sub + src.substring( index+ins.length );
+//         index += sub.length;
+//       }
+//       else
+//       break;
+//
+//     }
+//     while( 1 );
+//
+//     return src;
+//   }
+//
+//   var src = o.src;
+//
+//   /* */
+//
+//   if( _.objectIs( o.dictionary ) )
+//   {
+//     for( var ins in o.dictionary )
+//     {
+//       if( !ins.length ) continue;
+//       src = replace( src, ins, o.dictionary[ ins ] );
+//     }
+//   }
+//   else if( _.arrayLike( o.dictionary ) )
+//   {
+//     for( var p = 0; p < o.dictionary.length; p++ )
+//     {
+//       _.assert( _.arrayLike( o.dictionary[ p ] ) );
+//
+//       var pair = o.dictionary[ p ];
+//
+//       _.assert( pair.length === 2 );
+//
+//       var ins = _.arrayAs( pair[ 0 ] );
+//       var sub = _.arrayAs( pair[ 1 ] );
+//
+//       _.assert( ins.length === sub.length );
+//
+//       for( var i = 0; i < ins.length; i++ )
+//       {
+//         _.assert( _.strIs( ins[ i ] ) || _.regexpIs( ins[ i ] ) );
+//
+//         if( _.strIs( ins[ i ] ) )
+//         {
+//           if( !ins.length ) continue;
+//           src = replace( src, ins[ i ], sub[ i ] );
+//         }
+//         else
+//         {
+//           src = src.replace( ins[ i ], sub[ i ] );
+//         }
+//       }
+//     }
+//   }
+//
+//   return src;
+//   //return src.replace( new RegExp( _.regexpEscape( ins ),'gm' ), sub );
+// }
+//
+// strReplaceAll.defaults =
+// {
+//   src : null,
+//   dictionary : null,
+// }
 
 // --
 // format
@@ -491,49 +964,52 @@ var _metrics =
 
 function strMetricFormat( number,o )
 {
+
+  if( _.strIs( number ) )
+  number = parseFloat( number );
+
+  var o = _.routineOptions( strMetricFormat, o );
+
+  _.assert( _.numberIs( number ), '"number" should be Number' );
   _.assert( arguments.length === 1 || arguments.length === 2 );
-  _.assert( _.objectIs( o ) || o === undefined,'expects map ( o )' );
+  _.assert( _.objectIs( o ) || o === undefined,'expects map {-o-}' );
+  _.assert( _.numberIs( o.fixed ) );
+  _.assert( o.fixed <= 20 );
 
-  var o = o || Object.create( null );
-
-  if( _.strIs( number ) ) number = parseFloat( number );
-  if( !_.numberIs( number ) ) throw _.err( 'strMetricFormat :','"number" should be Number' );
-
-  if( o.divisor === undefined ) o.divisor = 3;
-  if( o.thousand === undefined ) o.thousand = 1000;
-  if( o.fixed === undefined ) o.fixed = 1;
-  if( o.dimensions === undefined ) o.dimensions = 1;
-  if( o.metric === undefined ) o.metric = 0;
-
-  if( o.dimensions !== 1 ) o.thousand = Math.pow( o.thousand,o.dimensions );
-
-  var metric = o.metric;
   var original = number;
 
-  if( Math.abs( number ) > o.thousand )
+  if( o.dimensions !== 1 )
+  o.thousand = Math.pow( o.thousand,o.dimensions );
+
+  if( number !== 0 )
   {
 
-    while( Math.abs( number ) > o.thousand || !_metrics[ String( metric ) ] )
+    if( Math.abs( number ) > o.thousand )
     {
 
-      if( metric + o.divisor > _metrics.range[ 1 ] ) break;
+      while( Math.abs( number ) > o.thousand || !o.metrics[ String( o.metric ) ] )
+      {
 
-      number /= o.thousand;
-      metric += o.divisor;
+        if( o.metric + o.divisor > o.metrics.range[ 1 ] ) break;
+
+        number /= o.thousand;
+        o.metric += o.divisor;
+
+      }
 
     }
-
-  }
-  else if( Math.abs( number ) < 1 )
-  {
-
-    while( Math.abs( number ) < 1 || !_metrics[ String( metric ) ] )
+    else if( Math.abs( number ) < 1 )
     {
 
-      if( metric - o.divisor < _metrics.range[ 0 ] ) break;
+      while( Math.abs( number ) < 1 || !o.metrics[ String( o.metric ) ] )
+      {
 
-      number *= o.thousand;
-      metric -= o.divisor;
+        if( o.metric - o.divisor < o.metrics.range[ 0 ] ) break;
+
+        number *= o.thousand;
+        o.metric -= o.divisor;
+
+      }
 
     }
 
@@ -541,9 +1017,9 @@ function strMetricFormat( number,o )
 
   var result = '';
 
-  if( _metrics[ String( metric ) ] )
+  if( o.metrics[ String( o.metric ) ] )
   {
-    result = number.toFixed( o.fixed ) + ' ' + _metrics[ String( metric ) ].symbol;
+    result = number.toFixed( o.fixed ) + ' ' + o.metrics[ String( o.metric ) ].symbol;
   }
   else
   {
@@ -551,6 +1027,16 @@ function strMetricFormat( number,o )
   }
 
   return result;
+}
+
+strMetricFormat.defaults =
+{
+  divisor : 3,
+  thousand : 1000,
+  fixed : 1,
+  dimensions : 1,
+  metric : 0,
+  metrics : _metrics,
 }
 
 //
@@ -631,7 +1117,9 @@ function strMetricFormatBytes( number,o )
 
 function strTimeFormat( time )
 {
-  var result = strMetricFormat( time*0.001,{ fixed : 3 } ) + 's';
+  _.assert( arguments.length === 1 );
+  time = _.timeFrom( time );
+  var result = _.strMetricFormat( time*0.001,{ fixed : 3 } ) + 's';
   return result;
 }
 
@@ -1096,12 +1584,14 @@ var Proto =
   strCamelize : strCamelize,
   strFilenameFor : strFilenameFor,
   strVarNameFor : strVarNameFor,
+  strHtmlEscape : strHtmlEscape,
 
   strToRegexpTolerating : strToRegexpTolerating,
   strToRegexp : strToRegexp,
   strFind : strFind,
 
   strSorterParse : strSorterParse,
+  strReplaceAll : strReplaceAll, /* document me */
 
   // format
 
