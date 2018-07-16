@@ -2,7 +2,7 @@
   "name": "wstringsextra",
   "version": "0.3.17",
   "description": "Collection of special string tools",
-  "author": "Kostiantyn Wandalen <wtory.net@domainsbyproxy.com>",
+  "author": "Kostiantyn Wandalen <wanalen@willbe.so>",
   "license": "MIT",
   "main": "staging/dwtools/amid/astring/StringsExtra.s",
   "files": [
