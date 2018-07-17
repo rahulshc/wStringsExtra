@@ -1,6 +1,6 @@
 (function _StringExtra_s_() {
 
-'use strict'; /**/
+'use strict';
 
 if( typeof module !== 'undefined' )
 {
@@ -238,8 +238,6 @@ function strToRegexpTolerating( src )
   _.assert( arguments.length === 1, 'expects single argument' );
   _.assert( _.strIs( src ) || _.regexpIs( src ) );
 
-  xxx
-
   if( _.strIs( src ) )
   {
 
@@ -321,23 +319,26 @@ function strFind( o )
 
         r.ins = execed[ 0 ];
         r.inss = _.arraySlice( execed,1 );
-        r.range = [ execed.index, execed.index + r.ins.length ];
-        r.rrange = [ o.src.length - execed.index, o.src.length - execed.index - r.ins.length ];
+        r.charsRange = [ execed.index, execed.index + r.ins.length ];
+        r.charsRangeRight = [ o.src.length - execed.index, o.src.length - execed.index - r.ins.length ];
 
         if( o.determiningLineNumber )
         {
-          var first = o.src.substring( 0,r.range[ 0 ] ).split( '\n' ).length;
-          r.lines = [ first,first+o.src.substring( r.range[ 0 ],r.range[ 1 ] ).split( '\n' ).length ];
+          var first = o.src.substring( 0,r.charsRange[ 0 ] ).split( '\n' ).length;
+          r.linesRange = [ first, first+o.src.substring( r.charsRange[ 0 ], r.charsRange[ 1 ] ).split( '\n' ).length ];
         }
 
         if( o.nearestLines )
         r.nearest = _.strLinesNearest
         ({
           src : o.src,
-          charRange : r.range,
+          charsRange : r.charsRange,
           numberOfLines : o.nearestLines,
           nearestSplitting : o.nearestSplitting,
         });
+
+        debugger;
+        r.linesOffsets = [ first - _.strLinesCount( r.nearest[ 0 ] ), first, first+1 ];
 
         result.push( r );
       }
@@ -359,7 +360,7 @@ function strFind( o )
 
   var result = _.arraySort( result,function( e )
   {
-    return e.range[ 0 ];
+    return e.charsRange[ 0 ];
   });
 
   for( var i1 = 0 ; i1 < result.length-1 ; i1++ )
@@ -369,10 +370,10 @@ function strFind( o )
     {
       var r2 = result[ i1+1 ];
 
-      if( r1.range[ 1 ] > r2.range[ 0 ] )
+      if( r1.charsRange[ 1 ] > r2.charsRange[ 0 ] )
       debugger;
 
-      if( r1.range[ 1 ] > r2.range[ 0 ] )
+      if( r1.charsRange[ 1 ] > r2.charsRange[ 0 ] )
       result.splice( i1+1,i1+2 );
       else
       break;
@@ -388,7 +389,7 @@ strFind.defaults =
   src : null,
   ins : null,
   onIns : null,
-  nearestLines : 4,
+  nearestLines : 3,
   nearestSplitting : 1,
   determiningLineNumber : 0,
   toleratingText : 0,
