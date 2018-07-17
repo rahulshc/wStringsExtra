@@ -334,11 +334,12 @@ function strFind( o )
           src : o.src,
           charsRange : r.charsRange,
           numberOfLines : o.nearestLines,
-          nearestSplitting : o.nearestSplitting,
         });
 
-        debugger;
-        r.linesOffsets = [ first - _.strLinesCount( r.nearest[ 0 ] ), first, first+1 ];
+        r.linesOffsets = [ first - _.strLinesCount( r.nearest[ 0 ] ) + 1, first, first + _.strLinesCount( r.nearest[ 1 ] ) ];
+
+        if( !o.nearestSplitting )
+        r.nearest.join( '' );
 
         result.push( r );
       }
