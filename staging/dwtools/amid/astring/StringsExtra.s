@@ -1596,7 +1596,12 @@ function strLattersSpectresSimilarity( src1, src2 )
     result += Math.abs( src1[ s ] - src2[ s ] );
   }
 
-  result = Math.floor( ( minl / maxl ) - ( 0.5 * result / maxl ) );
+  result = ( minl / maxl ) - ( 0.5 * result / maxl );
+
+  if( result < 0 || result > 1 )
+  debugger;
+
+  result = _.numberClamp( result, [ 0,1 ] );
 
   return result;
 }
