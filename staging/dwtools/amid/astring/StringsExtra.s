@@ -39,7 +39,7 @@ var _ObjectToString = Object.prototype.toString;
 var _ObjectHasOwnProperty = Object.hasOwnProperty;
 
 var _assert = _.assert;
-var _arraySlice = _.arraySlice;
+var _arraySlice = _.longSlice;
 var strTypeOf = _.strTypeOf;
 
 _.assert( _.arraySortedAddOnce );
@@ -318,7 +318,7 @@ function strFind( o )
         var r = Object.create( null );
 
         r.ins = execed[ 0 ];
-        r.inss = _.arraySlice( execed,1 );
+        r.inss = _.longSlice( execed,1 );
         r.charsRange = [ execed.index, execed.index + r.ins.length ];
         r.charsRangeRight = [ o.src.length - execed.index, o.src.length - execed.index - r.ins.length ];
 
@@ -525,7 +525,7 @@ function strReplaceAll( src, ins, sub )
 
   _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
   _.assert( _.strIs( o.src ) );
-  _.assert( _.objectIs( o.dictionary ) || _.arrayGenericIs( o.dictionary ));
+  _.assert( _.objectIs( o.dictionary ) || _._arrayLike( o.dictionary ));
   _.routineOptions( strReplaceAll, o );
 
   /**/
@@ -542,7 +542,7 @@ function strReplaceAll( src, ins, sub )
       replaceWithString( src, ins, o.dictionary[ ins ] );
     }
   }
-  else if( _.arrayGenericIs( o.dictionary ) )
+  else if( _._arrayLike( o.dictionary ) )
   {
     for( var p = 0; p < o.dictionary.length; p++ )
     {
@@ -551,7 +551,7 @@ function strReplaceAll( src, ins, sub )
       var ins = _.arrayAs( pair[ 0 ] );
       var sub = _.arrayAs( pair[ 1 ] );
 
-      _.assert( _.arrayGenericIs( o.dictionary[ p ] ) );
+      _.assert( _._arrayLike( o.dictionary[ p ] ) );
       _.assert( pair.length === 2 );
       _.assert( ins.length === sub.length );
 
@@ -699,7 +699,7 @@ function strReplaceAll( src, ins, sub )
       it.range = [ arguments[ arguments.length - 2 ], arguments[ arguments.length - 2 ] + it.match.length ];
       it.counter = o.counter;
       it.input = arguments[ arguments.length - 1 ];
-      it.groups = _.arraySlice( arguments, 1, arguments.length-2 );
+      it.groups = _.longSlice( arguments, 1, arguments.length-2 );
       var subStr = callback( it.match, it );
       o.counter += 1;
       _.assert( _.strIs( subStr ), 'expects string' );
@@ -759,7 +759,7 @@ strReplaceAll.defaults =
 //   /**/
 //
 //   _.assert( _.strIs( o.src ) );
-//   _.assert( _.objectIs( o.dictionary ) || _.arrayLike( o.dictionary ));
+//   _.assert( _.objectIs( o.dictionary ) || _.longIs( o.dictionary ));
 //
 //   /**/
 //
@@ -801,11 +801,11 @@ strReplaceAll.defaults =
 //       src = replace( src, ins, o.dictionary[ ins ] );
 //     }
 //   }
-//   else if( _.arrayLike( o.dictionary ) )
+//   else if( _.longIs( o.dictionary ) )
 //   {
 //     for( var p = 0; p < o.dictionary.length; p++ )
 //     {
-//       _.assert( _.arrayLike( o.dictionary[ p ] ) );
+//       _.assert( _.longIs( o.dictionary[ p ] ) );
 //
 //       var pair = o.dictionary[ p ];
 //
@@ -1332,7 +1332,7 @@ function strTable( o )
   if( !_.objectIs( o ) )
   o = { data : o }
   _.routineOptions( strTable,o );
-  _.assert( _.arrayLike( o.data ) );
+  _.assert( _.longIs( o.data ) );
 
   if( typeof module !== 'undefined' && module !== null )
   {
@@ -1362,7 +1362,7 @@ function strTable( o )
     var _property = _.arrayFillTimes( [], len, def );
     if( property )
     {
-      _.assert( _.mapIs( property ) || _.arrayLike( property ) , 'routine expects colWidths/rowWidths property as Object or Array-Like' );
+      _.assert( _.mapIs( property ) || _.longIs( property ) , 'routine expects colWidths/rowWidths property as Object or Array-Like' );
       for( var k in property )
       {
         k = _.numberFrom( k );
@@ -1382,7 +1382,7 @@ function strTable( o )
   var maxLen = 0;
   for( var i = 0; i < o.data.length; i++ )
   {
-    if( !_.arrayLike( o.data[ i ] ) )
+    if( !_.longIs( o.data[ i ] ) )
     {
       isArrayOfArrays = false;
       break;
@@ -1532,13 +1532,17 @@ function strDifference( src1,src2,o )
 
 //
 
-function strSimilarity( src1,src2,o )
+function strSimilarity( src1,src2 )
 {
-  _assert( _.strIs( src1 ) );
-  _assert( _.strIs( src2 ) );
+  _.assert( _.strIs( src1 ) );
+  _.assert( _.strIs( src2 ) );
+  _.assert( arguments.length === 2 );
 
-  var latter = [ _.strLattersSpectre( src1 ),_.strLattersSpectre( src2 ) ];
-  var result = _.lattersSpectreComparison( latter[ 0 ],latter[ 1 ] );
+  debugger;
+
+  var spectres = [ _.strLattersSpectre( src1 ),_.strLattersSpectre( src2 ) ];
+  var result = _.strLattersSpectresSimilarity( spectres[ 0 ],spectres[ 1 ] );
+
   return result;
 }
 
@@ -1546,35 +1550,74 @@ function strSimilarity( src1,src2,o )
 
 function strLattersSpectre( src )
 {
-  var result = Object.create( null );
+  var total = 0;
+  var result = new U32x( 257 );
+
+  _.assert( arguments.length === 1 );
 
   for( var s = 0 ; s < src.length ; s++ )
   {
-    if( !result[ src[ s ] ] ) result[ src[ s ] ] = 1;
-    else result[ src[ s ] ] += 1;
+    var c = src.charCodeAt( s );
+    result[ c & 0xff ] += 1;
+    total += 1;
+    c = c >> 8;
+    if( c === 0 )
+    continue;
+    result[ c & 0xff ] += 1;
+    total += 1;
+    if( c === 0 )
+    continue;
+    result[ c & 0xff ] += 1;
+    total += 1;
+    if( c === 0 )
+    continue;
+    result[ c & 0xff ] += 1;
+    total += 1;
   }
 
-  result.length = src.length;
+  result[ 256 ] = total;
+
   return result;
 }
 
 //
 
-function lattersSpectreComparison( src1,src2 )
+function strLattersSpectresSimilarity( src1, src2 )
 {
+  var result = 0;
+  var minl = Math.min( src1[ 256 ], src2[ 256 ] );
+  var maxl = Math.max( src1[ 256 ], src2[ 256 ] );
 
-  var same = 0;
+  _.assert( arguments.length === 2 );
+  _.assert( src1.length === src2.length );
 
-  if( src1.length === 0 && src2.length === 0 ) return 1;
-
-  for( var l in src1 )
+  for( var s = 0 ; s < src1.length-1 ; s++ )
   {
-    if( l === 'length' ) continue;
-    if( src2[ l ] ) same += Math.min( src1[ l ],src2[ l ] );
+    result += Math.abs( src1[ s ] - src2[ s ] );
   }
 
-  return same / Math.max( src1.length,src2.length );
+  result = Math.floor( ( minl / maxl ) - ( 0.5 * result / maxl ) );
+
+  return result;
 }
+
+//
+//
+// function lattersSpectreComparison( src1,src2 )
+// {
+//
+//   var same = 0;
+//
+//   if( src1.length === 0 && src2.length === 0 ) return 1;
+//
+//   for( var l in src1 )
+//   {
+//     if( l === 'length' ) continue;
+//     if( src2[ l ] ) same += Math.min( src1[ l ],src2[ l ] );
+//   }
+//
+//   return same / Math.max( src1.length,src2.length );
+// }
 
 // --
 // define class
@@ -1615,7 +1658,8 @@ var Proto =
   strDifference : strDifference, /* experimental */
   strSimilarity : strSimilarity, /* experimental */
   strLattersSpectre : strLattersSpectre, /* experimental */
-  lattersSpectreComparison : lattersSpectreComparison, /* experimental */
+  strLattersSpectresSimilarity : strLattersSpectresSimilarity,
+  // lattersSpectreComparison : lattersSpectreComparison, /* experimental */
 
 }
 
