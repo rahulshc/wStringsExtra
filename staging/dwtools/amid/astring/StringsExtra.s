@@ -230,63 +230,65 @@ function strHtmlEscape( str )
 }
 
 //
-
-function strToRegexpTolerating( src )
-{
-  var result = src;
-
-  _.assert( arguments.length === 1, 'expects single argument' );
-  _.assert( _.strIs( src ) || _.regexpIs( src ) );
-
-  if( _.strIs( src ) )
-  {
-
-    var optionsExtract =
-    {
-      prefix : '>->',
-      postfix : '<-<',
-      src : src,
-    }
-
-    var strips = _.strExtractInlinedStereo( optionsExtract );
-
-    for( var s = 0 ; s < strips.length ; s++ )
-    {
-      var strip = strips[ s ];
-
-      if( s % 2 === 0 )
-      {
-        strip = _.regexpEscape( strip );
-        strip = strip.replace( /\s+/g,'\\s*' );
-      }
-
-      strips[ s ] = strip;
-    }
-
-    result = RegExp( strips.join( '' ),'g' );
-  }
-
-  return result;
-}
-
 //
-
-function strToRegexp( src )
-{
-  var result = [];
-
-  _.assert( arguments.length === 1, 'expects single argument' );
-  _.assert( _.strIs( src ) || _.regexpIs( src ) );
-
-  if( _.strIs( src ) )
-  {
-    src = _.regexpEscape( src );
-    src = RegExp( src,'g' );
-  }
-
-  return src;
-}
-
+// xxx
+// function strToRegexpTolerating( src )
+// {
+//   var result = src;
+//
+//   _.assert( arguments.length === 1, 'expects single argument' );
+//   _.assert( _.strIs( src ) || _.regexpIs( src ) );
+//
+//   if( _.strIs( src ) )
+//   {
+//
+//     var optionsExtract =
+//     {
+//       prefix : '>->',
+//       postfix : '<-<',
+//       src : src,
+//     }
+//
+//     var strips = _.strExtractInlinedStereo( optionsExtract );
+//
+//     for( var s = 0 ; s < strips.length ; s++ )
+//     {
+//       var strip = strips[ s ];
+//
+//       if( s % 2 === 0 )
+//       {
+//         strip = _.regexpEscape( strip );
+//         strip = strip.replace( /\s+/g,'\\s*' );
+//       }
+//
+//       strips[ s ] = strip;
+//     }
+//
+//     result = RegExp( strips.join( '' ),'g' );
+//   }
+//
+//   return result;
+// }
+//
+//
+//
+// xxx
+// function strToRegexp( src )
+// {
+//   var result = [];
+//
+//   _.assert( arguments.length === 1, 'expects single argument' );
+//   _.assert( _.strIs( src ) || _.regexpIs( src ) );
+//
+//   if( _.strIs( src ) )
+//   {
+//     src = _.regexpEscape( src );
+//     src = RegExp( src,'g' );
+//   }
+//
+//   return src;
+// }
+//
 //
 
 function strFind( o )
@@ -299,11 +301,12 @@ function strFind( o )
   /* */
 
   o.ins = _.arrayAs( o.ins );
-  for( var i = 0 ; i < o.ins.length ; i++ )
-  if( o.toleratingText )
-  o.ins[ i ] = _.strToRegexpTolerating( o.ins[ i ] );
-  else
-  o.ins[ i ] = _.strToRegexp( o.ins[ i ] );
+  o.ins = _.regexpsMaybeFrom
+  ({
+    srcStr : o.ins,
+    stringWithRegexp : o.stringWithRegexp,
+    toleratingSpaces : o.toleratingSpaces,
+  });
 
   /* */
 
@@ -393,7 +396,8 @@ strFind.defaults =
   nearestLines : 3,
   nearestSplitting : 1,
   determiningLineNumber : 0,
-  toleratingText : 0,
+  stringWithRegexp : 0,
+  toleratingSpaces : 0,
 }
 
 //
@@ -1598,7 +1602,7 @@ function strLattersSpectresSimilarity( src1, src2 )
 
   result = ( minl / maxl ) - ( 0.5 * result / maxl );
 
-  if( result < 0 || result > 1 )
+  if( result > 1 )
   debugger;
 
   result = _.numberClamp( result, [ 0,1 ] );
@@ -1636,8 +1640,8 @@ var Proto =
   strVarNameFor : strVarNameFor,
   strHtmlEscape : strHtmlEscape,
 
-  strToRegexpTolerating : strToRegexpTolerating,
-  strToRegexp : strToRegexp,
+  // strToRegexpTolerating : strToRegexpTolerating,
+  // strToRegexp : strToRegexp,
   strFind : strFind,
 
   strSorterParse : strSorterParse,
