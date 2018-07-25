@@ -431,7 +431,14 @@ function strSorterParse( o )
   }
 
   var delimeters = _.mapOwnKeys( map );
-  var splitted = _.strSplit({ src : o.src, delimeter : delimeters, stripping : 1, preservingDelimeters : 1 });
+  var splitted = _.strSplit/**1**/
+  ({
+    src : o.src,
+    delimeter : delimeters,
+    stripping : 1,
+    preservingDelimeters : 1,
+    preservingEmpty : 0,
+  });
 
   var parsed = [];
 
@@ -1293,7 +1300,15 @@ function strParseMap( o )
   var src = o.src;
 
   if( _.strIs( src ) )
-  src = _.strSplit({ src : src, delimeter : o.valKeyDelimeter, stripping : 1 });
+  src = _.strSplit/**1**/
+  ({
+    src : src,
+    delimeter : o.valKeyDelimeter,
+    stripping : 1,
+    preservingEmpty : 1,
+    preservingDelimeters : 0,
+  });
+  debugger;
 
   var result = Object.create( null );
   for( var a = 1 ; a < src.length ; a++ )
