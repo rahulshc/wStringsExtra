@@ -1300,7 +1300,7 @@ function strParseMap( o )
   var src = o.src;
 
   if( _.strIs( src ) )
-  src = _.strSplit/**1**/
+  src = _.strSplit
   ({
     src : src,
     delimeter : o.valKeyDelimeter,
@@ -1308,7 +1308,6 @@ function strParseMap( o )
     preservingEmpty : 1,
     preservingDelimeters : 0,
   });
-  debugger;
 
   var result = Object.create( null );
   for( var a = 1 ; a < src.length ; a++ )
@@ -1319,7 +1318,7 @@ function strParseMap( o )
 
     if( a < src.length - 1 )
     {
-      var cuts = _.strCutOffAllLeft( right,o.entryDelimeter );
+      var cuts = _.strIsolateEndOrAll( right,o.entryDelimeter );
       var val = cuts[ 0 ];
       src[ a+0 ] = cuts[ 2 ];
     }
@@ -1555,7 +1554,7 @@ function strSimilarity( src1,src2 )
 {
   _.assert( _.strIs( src1 ) );
   _.assert( _.strIs( src2 ) );
-  _.assert( arguments.length === 2 );
+  _.assert( arguments.length === 2, 'expects exactly two arguments' );
 
   debugger;
 
@@ -1607,7 +1606,7 @@ function strLattersSpectresSimilarity( src1, src2 )
   var minl = Math.min( src1[ 256 ], src2[ 256 ] );
   var maxl = Math.max( src1[ 256 ], src2[ 256 ] );
 
-  _.assert( arguments.length === 2 );
+  _.assert( arguments.length === 2, 'expects exactly two arguments' );
   _.assert( src1.length === src2.length );
 
   for( var s = 0 ; s < src1.length-1 ; s++ )
