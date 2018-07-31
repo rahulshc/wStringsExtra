@@ -38,11 +38,11 @@ var _FunctionBind = Function.prototype.bind;
 var _ObjectToString = Object.prototype.toString;
 var _ObjectHasOwnProperty = Object.hasOwnProperty;
 
-var _assert = _.assert;
+// var __assert = _.assert;
 var _arraySlice = _.longSlice;
 var strTypeOf = _.strTypeOf;
 
-_.assert( _.arraySortedAddOnce );
+_.assert( _.routineIs( _.arraySortedAddOnce ) );
 
 // --
 //
@@ -536,7 +536,7 @@ function strReplaceAll( src, ins, sub )
 
   _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
   _.assert( _.strIs( o.src ) );
-  _.assert( _.objectIs( o.dictionary ) || _._arrayLike( o.dictionary ));
+  _.assert( _.objectIs( o.dictionary ) || _.arrayLike( o.dictionary ));
   _.routineOptions( strReplaceAll, o );
 
   /**/
@@ -553,7 +553,7 @@ function strReplaceAll( src, ins, sub )
       replaceWithString( src, ins, o.dictionary[ ins ] );
     }
   }
-  else if( _._arrayLike( o.dictionary ) )
+  else if( _.arrayLike( o.dictionary ) )
   {
     for( var p = 0; p < o.dictionary.length; p++ )
     {
@@ -562,7 +562,7 @@ function strReplaceAll( src, ins, sub )
       var ins = _.arrayAs( pair[ 0 ] );
       var sub = _.arrayAs( pair[ 1 ] );
 
-      _.assert( _._arrayLike( o.dictionary[ p ] ) );
+      _.assert( _.arrayLike( o.dictionary[ p ] ) );
       _.assert( pair.length === 2 );
       _.assert( ins.length === sub.length );
 
@@ -1535,8 +1535,8 @@ function strsSort( srcs )
 
 function strDifference( src1,src2,o )
 {
-  _assert( _.strIs( src1 ) );
-  _assert( _.strIs( src2 ) );
+  _.assert( _.strIs( src1 ) );
+  _.assert( _.strIs( src2 ) );
 
   if( src1 === src2 )
   return false;
