@@ -2,6 +2,14 @@
 
 'use strict';
 
+/**
+  @module Tools/base/StringToolsExtra - Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.
+*/
+
+/**
+ * @file StringToolsExtra.s.
+ */
+
 if( typeof module !== 'undefined' )
 {
 

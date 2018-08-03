@@ -1,33 +1,10 @@
 
 # wStringsExtra [![Build Status](https://travis-ci.org/Wandalen/wStringsExtra.svg?branch=master)](https://travis-ci.org/Wandalen/wStringsExtra)
 
-Collection of special string tools.
+Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+### Try out
+```
+npm install
+node sample/Sample.s
+```
