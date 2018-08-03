@@ -8,3 +8,4 @@ Collection of sophisticated routines for operations on Strings. StringsToolsExtr
 npm install
 node sample/Sample.s
 ```
+
