@@ -321,6 +321,7 @@ function strFind( o )
   function findForIns( ins )
   {
 
+    var prevIndex = -1;
     do
     {
       var execed = ins.exec( o.src );
@@ -328,8 +329,12 @@ function strFind( o )
       {
         var r = Object.create( null );
 
+        _.assert( execed.index > prevIndex, () => 'Seems RegExp is not global ' + _.toStr( ins ) );
+
         r.ins = execed[ 0 ];
-        r.inss = _.longSlice( execed,1 );
+        // debugger;
+        r.inss = _.longSlice( execed );
+        // debugger;
         r.charsRange = [ execed.index, execed.index + r.ins.length ];
         r.charsRangeRight = [ o.src.length - execed.index, o.src.length - execed.index - r.ins.length ];
 
