@@ -1,4 +1,4 @@
-(function _StringExtra_s_() {
+(function _StringsExtra_s_() {
 
 'use strict';
 
