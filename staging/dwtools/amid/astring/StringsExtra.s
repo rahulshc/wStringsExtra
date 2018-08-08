@@ -30,7 +30,7 @@ if( typeof module !== 'undefined' )
     require( toolsPath );
   }
 
-  var _ = _global_.wTools;
+  let _ = _global_.wTools;
 
   _.include( 'wArraySorted' );
 
@@ -38,17 +38,17 @@ if( typeof module !== 'undefined' )
 
 //
 
-var Self = _global_.wTools;
-var _ = _global_.wTools;
+let Self = _global_.wTools;
+let _ = _global_.wTools;
 
-var _ArraySlice = Array.prototype.slice;
-var _FunctionBind = Function.prototype.bind;
-var _ObjectToString = Object.prototype.toString;
-var _ObjectHasOwnProperty = Object.hasOwnProperty;
+let _ArraySlice = Array.prototype.slice;
+let _FunctionBind = Function.prototype.bind;
+let _ObjectToString = Object.prototype.toString;
+let _ObjectHasOwnProperty = Object.hasOwnProperty;
 
-// var __assert = _.assert;
-var _arraySlice = _.longSlice;
-var strTypeOf = _.strTypeOf;
+// let __assert = _.assert;
+let _arraySlice = _.longSlice;
+let strTypeOf = _.strTypeOf;
 
 _.assert( _.routineIs( _.arraySortedAddOnce ) );
 
@@ -85,10 +85,10 @@ function strCamelize( srcStr )
   _.assert( arguments.length === 1, 'expects single argument' );
   _.assert( _.strIs( srcStr ) );
 
-  var result = srcStr;
-  var regexp = /\.\w|-\w|_\w|\/\w/g;
+  let result = srcStr;
+  let regexp = /\.\w|-\w|_\w|\/\w/g;
 
-  var result = result.replace( regexp,function( match )
+  result = result.replace( regexp,function( match )
   {
     return match[ 1 ].toUpperCase();
   });
@@ -113,7 +113,7 @@ function strCamelize( srcStr )
  *
  * @example
  * //returns #example#file#name.js
- * var o = { 'delimeter':'#' };
+ * let o = { 'delimeter':'#' };
  * _.strFilenameFor( "'example\\file?name.js",o );
  *
  * @method strFilenameFor
@@ -133,8 +133,8 @@ function strFilenameFor( o )
   _.assert( _.strIs( o.srcString ) );
   _.routineOptions( strFilenameFor,o );
 
-  var regexp = /<|>|:|"|'|\/|\\|\||\&|\?|\*|\n|\s/g;
-  var result = o.srcString.replace( regexp,function( match )
+  let regexp = /<|>|:|"|'|\/|\\|\||\&|\?|\*|\n|\s/g;
+  let result = o.srcString.replace( regexp,function( match )
   {
     return o.delimeter;
   });
@@ -159,8 +159,8 @@ function strVarNameFor( o )
   _.assert( _.strIs( o.src ) );
   _.routineOptions( strVarNameFor,o );
 
-  var regexp = /\.|\-|\+|<|>|:|"|'|\/|\\|\||\&|\?|\*|\n|\s/g;
-  var result = o.src.replace( regexp,function( match )
+  let regexp = /\.|\-|\+|<|>|:|"|'|\/|\\|\||\&|\?|\*|\n|\s/g;
+  let result = o.src.replace( regexp,function( match )
   {
     return o.delimeter;
   });
@@ -183,7 +183,7 @@ strVarNameFor.defaults =
  * @global
  */
 
-var _strHtmlEscapeMap =
+let _strHtmlEscapeMap =
 {
   '&' : '&amp;',
   '<' : '&lt;',
@@ -239,10 +239,9 @@ function strHtmlEscape( str )
 
 //
 //
-// xxx
 // function strToRegexpTolerating( src )
 // {
-//   var result = src;
+//   let result = src;
 //
 //   _.assert( arguments.length === 1, 'expects single argument' );
 //   _.assert( _.strIs( src ) || _.regexpIs( src ) );
@@ -250,18 +249,18 @@ function strHtmlEscape( str )
 //   if( _.strIs( src ) )
 //   {
 //
-//     var optionsExtract =
+//     let optionsExtract =
 //     {
 //       prefix : '>->',
 //       postfix : '<-<',
 //       src : src,
 //     }
 //
-//     var strips = _.strExtractInlinedStereo( optionsExtract );
+//     let strips = _.strExtractInlinedStereo( optionsExtract );
 //
-//     for( var s = 0 ; s < strips.length ; s++ )
+//     for( let s = 0 ; s < strips.length ; s++ )
 //     {
-//       var strip = strips[ s ];
+//       let strip = strips[ s ];
 //
 //       if( s % 2 === 0 )
 //       {
@@ -280,10 +279,9 @@ function strHtmlEscape( str )
 //
 //
 //
-// xxx
 // function strToRegexp( src )
 // {
-//   var result = [];
+//   let result = [];
 //
 //   _.assert( arguments.length === 1, 'expects single argument' );
 //   _.assert( _.strIs( src ) || _.regexpIs( src ) );
@@ -299,12 +297,16 @@ function strHtmlEscape( str )
 //
 //
 
-function strFind( o )
+/*
+qqq : tests required
+*/
+
+function strSearch( o )
 {
-  var result = [];
+  let result = [];
 
   _.assert( arguments.length === 1, 'expects single argument' );
-  _.routineOptions( strFind,o );
+  _.routineOptions( strSearch,o );
 
   /* */
 
@@ -318,171 +320,513 @@ function strFind( o )
 
   /* */
 
-  function findForIns( ins )
+  let found = _.strFindAll( o.src, o.ins );
+
+  found.forEach( ( it ) =>
   {
 
-    var prevIndex = -1;
-    do
+    // it.ins = execed[ 0 ];
+    // it.groups = _.longSlice( execed );
+
+    it.charsRange = it.range;
+    it.charsRangeRight = [ o.src.length - it.charsRange[ 0 ], o.src.length - it.charsRange[ 1 ] ];
+
+    let first;
+    if( o.determiningLineNumber )
     {
-      var execed = ins.exec( o.src );
-      if( execed )
-      {
-        var r = Object.create( null );
-
-        _.assert( execed.index > prevIndex, () => 'Seems RegExp is not global ' + _.toStr( ins ) );
-
-        r.ins = execed[ 0 ];
-        // debugger;
-        r.inss = _.longSlice( execed );
-        // debugger;
-        r.charsRange = [ execed.index, execed.index + r.ins.length ];
-        r.charsRangeRight = [ o.src.length - execed.index, o.src.length - execed.index - r.ins.length ];
-
-        if( o.determiningLineNumber )
-        {
-          var first = o.src.substring( 0,r.charsRange[ 0 ] ).split( '\n' ).length;
-          r.linesRange = [ first, first+o.src.substring( r.charsRange[ 0 ], r.charsRange[ 1 ] ).split( '\n' ).length ];
-        }
-
-        if( o.nearestLines )
-        r.nearest = _.strLinesNearest
-        ({
-          src : o.src,
-          charsRange : r.charsRange,
-          numberOfLines : o.nearestLines,
-        });
-
-        r.linesOffsets = [ first - _.strLinesCount( r.nearest[ 0 ] ) + 1, first, first + _.strLinesCount( r.nearest[ 1 ] ) ];
-
-        if( !o.nearestSplitting )
-        r.nearest.join( '' );
-
-        result.push( r );
-      }
-
+      first = o.src.substring( 0,it.charsRange[ 0 ] ).split( '\n' ).length;
+      it.linesRange = [ first, first+o.src.substring( it.charsRange[ 0 ], it.charsRange[ 1 ] ).split( '\n' ).length ];
     }
-    while( execed );
 
-  }
+    if( o.nearestLines )
+    it.nearest = _.strLinesNearest
+    ({
+      src : o.src,
+      charsRange : it.charsRange,
+      numberOfLines : o.nearestLines,
+    });
 
-  /* */
+    if( o.determiningLineNumber )
+    it.linesOffsets = [ first - _.strLinesCount( it.nearest[ 0 ] ) + 1, first, first + _.strLinesCount( it.nearest[ 1 ] ) ];
 
-  for( var i = 0 ; i < o.ins.length ; i++ )
-  findForIns( o.ins[ i ] );
-
-  /* */
-
-  if( o.ins.length <= 1 )
-  return result;
-
-  var result = _.arraySort( result,function( e )
-  {
-    return e.charsRange[ 0 ];
-  });
-
-  for( var i1 = 0 ; i1 < result.length-1 ; i1++ )
-  {
-    var r1 = result[ i1 ];
-    do
+    if( o.onTokenize )
     {
-      var r2 = result[ i1+1 ];
+      let tokens = o.onTokenize( it.nearest.join( '' ) );
 
-      if( r1.charsRange[ 1 ] > r2.charsRange[ 0 ] )
+      if( _.strsAnyHas( _.entitySelect( tokens, '*.tokenName' ), 'string' ) )
       debugger;
 
-      if( r1.charsRange[ 1 ] > r2.charsRange[ 0 ] )
-      result.splice( i1+1,i1+2 );
-      else
-      break;
-    }
-    while( true )
-  }
+      let ranges = _.entitySelect( tokens, '*.range.0' );
+      // ranges.push( tokens[ tokens.length-1 ].range[ 1 ] );
+      let range = [ it.nearest[ 0 ].length, it.nearest[ 0 ].length + it.nearest[ 1 ].length ];
+      let embrace = _.arraySortedLookUpEmbrace( ranges, range );
+      let interval = _.arraySortedLookUpInterval( ranges, range );
+      let narrow = _.arraySortedLookUpIntervalNarrowest( ranges, range );
+      narrow[ 1 ] -= 1;
 
-  return result;
+      // _.assert( narrow[ 1 ] === range[  ] );
+
+      if( _.strsAnyHas( _.entitySelect( tokens, '*.tokenName' ), 'string' ) )
+      debugger;
+    }
+
+    if( !o.nearestSplitting )
+    it.nearest.join( '' );
+
+  });
+
+  return found;
+
+  // for( let i = 0 ; i < o.ins.length ; i++ )
+  // findForIns( o.ins[ i ] );
+  //
+  // /* */
+  //
+  // if( o.ins.length <= 1 )
+  // return result;
+  //
+  // let result = _.arraySort( result,function( e )
+  // {
+  //   return e.charsRange[ 0 ];
+  // });
+  //
+  // for( let i1 = 0 ; i1 < result.length-1 ; i1++ )
+  // {
+  //   let r1 = result[ i1 ];
+  //   do
+  //   {
+  //     let r2 = result[ i1+1 ];
+  //
+  //     if( r1.charsRange[ 1 ] > r2.charsRange[ 0 ] )
+  //     debugger;
+  //
+  //     if( r1.charsRange[ 1 ] > r2.charsRange[ 0 ] )
+  //     result.splice( i1+1,i1+2 );
+  //     else
+  //     break;
+  //   }
+  //   while( true )
+  // }
+  //
+  // return result;
+  //
+  // /* */
+  //
+  // function findForIns( ins )
+  // {
+  //
+  //   let prevIndex = -1;
+  //   do
+  //   {
+  //     let execed = ins.exec( o.src );
+  //     if( execed )
+  //     {
+  //       let r = Object.create( null );
+  //
+  //       _.assert( execed.index > prevIndex, () => 'Seems RegExp is not global ' + _.toStr( ins ) );
+  //
+  //       r.ins = execed[ 0 ];
+  //       r.groups = _.longSlice( execed );
+  //       r.charsRange = [ execed.index, execed.index + r.ins.length ];
+  //       r.charsRangeRight = [ o.src.length - execed.index, o.src.length - execed.index - r.ins.length ];
+  //
+  //       if( o.determiningLineNumber )
+  //       {
+  //         let first = o.src.substring( 0,r.charsRange[ 0 ] ).split( '\n' ).length;
+  //         r.linesRange = [ first, first+o.src.substring( r.charsRange[ 0 ], r.charsRange[ 1 ] ).split( '\n' ).length ];
+  //       }
+  //
+  //       if( o.nearestLines )
+  //       r.nearest = _.strLinesNearest
+  //       ({
+  //         src : o.src,
+  //         charsRange : r.charsRange,
+  //         numberOfLines : o.nearestLines,
+  //       });
+  //
+  //       r.linesOffsets = [ first - _.strLinesCount( r.nearest[ 0 ] ) + 1, first, first + _.strLinesCount( r.nearest[ 1 ] ) ];
+  //
+  //       if( !o.nearestSplitting )
+  //       r.nearest.join( '' );
+  //
+  //       result.push( r );
+  //     }
+  //
+  //   }
+  //   while( execed );
+  //
+  // }
+
 }
 
-strFind.defaults =
+strSearch.defaults =
 {
   src : null,
   ins : null,
-  onIns : null,
   nearestLines : 3,
   nearestSplitting : 1,
   determiningLineNumber : 0,
   stringWithRegexp : 0,
   toleratingSpaces : 0,
+  onTokenize : null,
 }
 
+// function strSearch( o )
+// {
+//   let result = [];
+//
+//   _.assert( arguments.length === 1, 'expects single argument' );
+//   _.routineOptions( strSearch,o );
+//
+//   /* */
+//
+//   o.ins = _.arrayAs( o.ins );
+//   o.ins = _.regexpsMaybeFrom
+//   ({
+//     srcStr : o.ins,
+//     stringWithRegexp : o.stringWithRegexp,
+//     toleratingSpaces : o.toleratingSpaces,
+//   });
+//
+//   /* */
+//
+//   for( let i = 0 ; i < o.ins.length ; i++ )
+//   findForIns( o.ins[ i ] );
+//
+//   /* */
+//
+//   if( o.ins.length <= 1 )
+//   return result;
+//
+//   let result = _.arraySort( result,function( e )
+//   {
+//     return e.charsRange[ 0 ];
+//   });
+//
+//   for( let i1 = 0 ; i1 < result.length-1 ; i1++ )
+//   {
+//     let r1 = result[ i1 ];
+//     do
+//     {
+//       let r2 = result[ i1+1 ];
+//
+//       if( r1.charsRange[ 1 ] > r2.charsRange[ 0 ] )
+//       debugger;
+//
+//       if( r1.charsRange[ 1 ] > r2.charsRange[ 0 ] )
+//       result.splice( i1+1,i1+2 );
+//       else
+//       break;
+//     }
+//     while( true )
+//   }
+//
+//   return result;
+//
+//   /* */
+//
+//   function findForIns( ins )
+//   {
+//
+//     let prevIndex = -1;
+//     do
+//     {
+//       let execed = ins.exec( o.src );
+//       if( execed )
+//       {
+//         let r = Object.create( null );
+//
+//         _.assert( execed.index > prevIndex, () => 'Seems RegExp is not global ' + _.toStr( ins ) );
+//
+//         r.ins = execed[ 0 ];
+//         r.groups = _.longSlice( execed );
+//         r.charsRange = [ execed.index, execed.index + r.ins.length ];
+//         r.charsRangeRight = [ o.src.length - execed.index, o.src.length - execed.index - r.ins.length ];
+//
+//         if( o.determiningLineNumber )
+//         {
+//           let first = o.src.substring( 0,r.charsRange[ 0 ] ).split( '\n' ).length;
+//           r.linesRange = [ first, first+o.src.substring( r.charsRange[ 0 ], r.charsRange[ 1 ] ).split( '\n' ).length ];
+//         }
+//
+//         if( o.nearestLines )
+//         r.nearest = _.strLinesNearest
+//         ({
+//           src : o.src,
+//           charsRange : r.charsRange,
+//           numberOfLines : o.nearestLines,
+//         });
+//
+//         r.linesOffsets = [ first - _.strLinesCount( r.nearest[ 0 ] ) + 1, first, first + _.strLinesCount( r.nearest[ 1 ] ) ];
+//
+//         if( !o.nearestSplitting )
+//         r.nearest.join( '' );
+//
+//         result.push( r );
+//       }
+//
+//     }
+//     while( execed );
+//
+//   }
+//
+// }
+//
+// strSearch.defaults =
+// {
+//   src : null,
+//   ins : null,
+//   nearestLines : 3,
+//   nearestSplitting : 1,
+//   determiningLineNumber : 0,
+//   stringWithRegexp : 0,
+//   toleratingSpaces : 0,
+// }
 //
 
-function strSorterParse( o )
+function strFindAll( src, ins )
 {
-
-  if( arguments.length === 1 )
-  {
-    if( _.strIs( o ) )
-    o = { src : o }
-  }
+  let o;
 
   if( arguments.length === 2 )
   {
-    o =
+    o = { src : arguments[ 0 ] , ins : arguments[ 1 ] };
+  }
+  else if( arguments.length === 1 )
+  {
+    o = arguments[ 0 ];
+  }
+
+  if( _.strIs( o.ins ) || _.regexpIs( o.ins ) )
+  o.ins = [ o.ins ];
+
+  /* */
+
+  _.assert( arguments.length === 1 || arguments.length === 2 );
+  _.assert( _.strIs( o.src ) );
+  _.assert( _.arrayLike( o.ins ) || _.objectIs( o.ins ) );
+  _.routineOptions( strFindAll, o );
+
+  /* */
+
+  ins = o.ins;
+  let tokenNames;
+  if( _.mapIs( ins ) )
+  {
+    ins = [];
+    tokenNames = [];
+    let i = 0;
+    for( var name in o.ins )
     {
-      src : arguments[ 0 ],
-      fields : arguments[ 1 ]
+      tokenNames[ i ] = name;
+      ins[ i ] = o.ins[ name ];
+      i += 1;
     }
   }
 
-  _.routineOptions( strSorterParse, o );
-  _.assert( o.fields === null || _.objectLike( o.fields ) );
-  _.assert( arguments.length === 1 || arguments.length === 2 );
+  let descriptorsArray = [];
+  let execeds = [];
+  let closests = [];
+  let closestInsIndex = -1;
+  let closestIndex = o.src.length;
+  let currentIndex = 0;
 
-  var map =
+  /* */
+
+  ins.forEach( ( ins, tokenId ) =>
   {
-    '>' : 1,
-    '<' : 0
-  }
+    _.assert( _.strIs( ins ) || _.regexpIs( ins ) );
+    if( _.regexpIs( ins ) )
+    _.assert( !ins.sticky );
 
-  var delimeters = _.mapOwnKeys( map );
-  var splitted = _.strSplit/**1**/
-  ({
-    src : o.src,
-    delimeter : delimeters,
-    stripping : 1,
-    preservingDelimeters : 1,
-    preservingEmpty : 0,
+    let found = find( o.src, ins, tokenId );
+    closests[ tokenId ] = found;
+    if( found < closestIndex )
+    {
+      closestIndex = found
+      closestInsIndex = tokenId;
+    }
   });
 
-  var parsed = [];
+  /* */
 
-  if( splitted.length >= 2 )
-  for( var i = 0; i < splitted.length; i+= 2 )
+  currentIndex = closestIndex;
+  while( currentIndex < o.src.length )
   {
-    var field = splitted[ i ];
-    var postfix = splitted[ i + 1 ];
+    descriptorFor( o.src, closestIndex, closestInsIndex );
 
-    _.assert( o.fields ? o.fields[ field ] : true, 'Field: ', field, ' is not allowed.' );
-    _.assert( _.strIs( postfix ), 'Field: ', field, ' doesn\'t have a postfix.' );
-
-    var valueForPostfix = map[ postfix ];
-
-    if( valueForPostfix !== undefined )
+    closestIndex = o.src.length;
+    closests.forEach( ( index, tokenId ) =>
     {
-      parsed.push( [ field,valueForPostfix ] )
+      if( index < currentIndex )
+      index = closests[ tokenId ] = find( o.src, ins[ tokenId ], tokenId );
+
+      _.assert( closests[ tokenId ] >= currentIndex );
+      if( index < closestIndex )
+      {
+        closestIndex = index
+        closestInsIndex = tokenId;
+      }
+    });
+
+    currentIndex = closestIndex;
+  }
+
+  /* */
+
+  return descriptorsArray;
+
+  /* */
+
+  function find( src, ins, tokenId )
+  {
+    let result;
+
+    if( _.strIs( ins ) )
+    {
+      if( !ins.length )
+      result = src.length;
+      else
+      result = findWithString( o.src, ins, tokenId );
     }
     else
     {
-      _.assert( 0, 'unknown postfix: ', postfix )
+      result = findWithRegexp( o.src, ins, tokenId );
     }
+
+    _.assert( result >= 0 );
+    return result;
   }
 
-  return parsed;
+  /* */
+
+  function findWithString( src, ins )
+  {
+
+    if( !ins.length )
+    return src.length;
+
+    let index = src.indexOf( ins, currentIndex );
+
+    if( index < 0 )
+    return src.length;
+
+    return index;
+  }
+
+  /* */
+
+  function findWithRegexp( src, ins, tokenId )
+  {
+    let execed;
+    let result = src.length;
+
+    if( currentIndex === 0 || ins.global )
+    {
+
+      do
+      {
+
+        execed = ins.exec( src );
+        if( execed )
+        result = execed.index;
+        else
+        result = src.length;
+
+      }
+      while( result < currentIndex );
+
+    }
+    else
+    {
+      execed = ins.exec( src.substring( currentIndex ) );
+
+      if( execed )
+      result = execed.index + currentIndex;
+
+    }
+
+    if( execed )
+    execeds[ tokenId ] = execed;
+
+    return result;
+  }
+
+  /* */
+
+  function descriptorFor( src, index, tokenId )
+  {
+    let originalIns = ins[ tokenId ];
+    let foundIns;
+
+    if( o.fast )
+    {
+      let it = [];
+
+      if( _.strIs( originalIns ) )
+      {
+        foundIns = originalIns;
+      }
+      else
+      {
+        let execed = execeds[ tokenId ];
+        _.assert( !!execed );
+        foundIns = execed[ 0 ];
+      }
+
+      it[ 0 ] = index;
+      it[ 1 ] = index + foundIns.length;
+      it[ 2 ] = tokenId;
+
+      descriptorsArray.push( it );
+    }
+    else
+    {
+      let it = Object.create( null );
+      let groups;
+
+      if( _.strIs( originalIns ) )
+      {
+        foundIns = originalIns;
+        groups = [ foundIns ];
+      }
+      else
+      {
+        let execed = execeds[ tokenId ];
+        _.assert( !!execed );
+        foundIns = execed[ 0 ];
+        groups = _.longSlice( execed, 0, execed.length );
+      }
+
+      it.match = foundIns;
+      it.groups = groups;
+      it.tokenId = tokenId;
+      it.range = [ index, index + foundIns.length ];
+      it.counter = o.counter;
+      it.input = src;
+
+      if( tokenNames )
+      it.tokenName = tokenNames[ tokenId ];
+
+      descriptorsArray.push( it );
+    }
+
+    if( foundIns.length > 0 )
+    currentIndex += foundIns.length;
+    else
+    currentIndex += 1;
+
+    o.counter += 1;
+  }
+
 }
 
-strSorterParse.defaults =
+strFindAll.defaults =
 {
   src : null,
-  fields : null,
+  ins : null,
+  fast : 0,
+  counter : 0,
 }
 
 //
@@ -528,8 +872,7 @@ strSorterParse.defaults =
 
 function strReplaceAll( src, ins, sub )
 {
-
-  var o;
+  let o;
 
   if( arguments.length === 3 )
   {
@@ -545,210 +888,289 @@ function strReplaceAll( src, ins, sub )
     o = arguments[ 0 ];
   }
 
-  /**/
+  /* verify */
 
+  _.routineOptions( strReplaceAll, o );
   _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
   _.assert( _.strIs( o.src ) );
-  _.assert( _.objectIs( o.dictionary ) || _.arrayLike( o.dictionary ));
-  _.routineOptions( strReplaceAll, o );
+  _.assert( _.objectIs( o.dictionary ) || _.longIs( o.dictionary ) || o.dictionary === null );
+  _.assert( ( _.longIs( o.ins ) && _.longIs( o.sub ) ) || ( o.ins === null && o.sub === null ) );
 
-  /**/
+  /* pre */
 
-  var foundArray = [];
-  var src = o.src;
+  let foundArray = [];
 
-  /* */
-
-  if( _.objectIs( o.dictionary ) )
+  if( o.dictionary )
   {
-    for( var ins in o.dictionary )
+
+    o.ins = [];
+    o.sub = [];
+
+    if( _.objectIs( o.dictionary ) )
     {
-      replaceWithString( src, ins, o.dictionary[ ins ] );
-    }
-  }
-  else if( _.arrayLike( o.dictionary ) )
-  {
-    for( var p = 0; p < o.dictionary.length; p++ )
-    {
-
-      var pair = o.dictionary[ p ];
-      var ins = _.arrayAs( pair[ 0 ] );
-      var sub = _.arrayAs( pair[ 1 ] );
-
-      _.assert( _.arrayLike( o.dictionary[ p ] ) );
-      _.assert( pair.length === 2 );
-      _.assert( ins.length === sub.length );
-
-      for( var i = 0; i < ins.length; i++ )
+      let i = 0;
+      for( let d in o.dictionary )
       {
-        _.assert( _.strIs( ins[ i ] ) || _.regexpIs( ins[ i ] ) );
-
-        if( _.strIs( ins[ i ] ) )
+        o.ins[ i ] = d;
+        o.sub[ i ] = o.dictionary[ d ];
+        i += 1;
+      }
+    }
+    else
+    {
+      let i = 0;
+      o.dictionary.forEach( ( d ) =>
+      {
+        let ins = d[ 0 ];
+        let sub = d[ 1 ];
+        _.assert( d.length === 2 );
+        _.assert( !( _.arrayIs( ins ) ^ _.arrayIs( sub ) ) );
+        if( _.arrayIs( ins ) )
         {
-          if( !ins.length )
-          continue;
-          replaceWithString( src, ins[ i ], sub[ i ] );
+          _.assert( ins.length === sub.length )
+          for( let n = 0 ; n < ins.length ; n++ )
+          {
+            o.ins[ i ] = ins[ n ];
+            o.sub[ i ] = sub[ n ];
+            i += 1;
+          }
         }
         else
         {
-          replaceWithRegexp( src, ins[ i ], sub[ i ] );
+          o.ins[ i ] = ins;
+          o.sub[ i ] = sub;
+          i += 1;
         }
-
-      }
+      });
     }
+
+    o.dictionary = null;
+  }
+
+  /* verify */
+
+  _.assert( !o.dictionary );
+  _.assert( o.ins.length === o.sub.length );
+
+  if( Config.debug )
+  {
+    o.ins.forEach( ( ins ) => _.assert( _.strIs( ins ) || _.regexpIs( ins ) ), 'expects String or RegExp' );
+    o.sub.forEach( ( sub ) => _.assert( _.strIs( sub ) || _.routineIs( sub ) ), 'expects String or Routine' );
   }
 
   /* */
+
+  let found = _.strFindAll( o.src, o.ins );
 
   var result = '';
   var index = 0;
-  for( var f = 0 ; f < foundArray.length ; f++ )
+  found.forEach( ( it ) =>
   {
-    var fo = foundArray[ f ];
-    result += src.substring( index, fo[ 0 ] );
-    result += fo[ 3 ];
-    index = fo[ 1 ];
-  }
-
-  result += src.substring( index, src.length );
-
-  return result
-
-  /* */
-
-  function replaceWithRegexp( src, ins, sub )
-  {
-
+    let sub = o.sub[ it.tokenId ];
+    result += o.src.substring( index, it.range[ 0 ] );
     if( _.routineIs( sub ) )
-    {
-      src.replace( ins, handleReplaceWithRoutine( sub ) );
-    }
-    else
-    {
-      src.replace( ins, handleReplaceWithString( sub ) );
-    }
+    sub = sub.call( o, it.match, it );
+    _.assert( _.strIs( sub ) );
+    result += sub;
+    index = it.range[ 1 ];
+  });
 
-  }
+  result += o.src.substring( index, o.src.length );
 
-  /* */
+  return result;
 
-  function replaceWithString( src, ins, sub )
-  {
-    _.assert( _.strIs( sub ) || _.routineIs( sub ), 'expects string or routine {-sub-}' );
-
-    if( !ins.length )
-    return src;
-
-    var index2 = 0;
-    var index = src.indexOf( ins );
-    while( index >= 0 )
-    {
-
-      var f = found( index, ins, sub );
-
-      var subStr = sub;
-      if( f )
-      if( _.routineIs( sub ) )
-      {
-        var it = Object.create( null );
-        it.match = src.substring( index, index + ins.length );
-        it.range = [ index, index + it.match.length ];
-        it.counter = o.counter;
-        it.input = src;
-        it.groups = [];
-        subStr = sub( it.match, it );
-        _.assert( _.strIs( subStr ), 'expects string' );
-        f[ 3 ] = subStr;
-      }
-
-      if( f )
-      {
-        index += ins.length;
-        o.counter += 1;
-      }
-      else
-      {
-        index += 1;
-      }
-
-      index2 = index;
-      index = src.indexOf( ins, index );
-
-    }
-
-  }
-
-  /* */
-
-  function intersects( ins1, ins2 )
-  {
-    if( ins2[ 1 ] <= ins1[ 0 ] )
-    return false;
-    if( ins1[ 1 ] <= ins2[ 0 ] )
-    return false;
-    return true;
-  }
-
-  /* */
-
-  function comparator( ins1, ins2 )
-  {
-    if( intersects( ins1, ins2 ) )
-    return 0;
-    return ins1[ 0 ] - ins2[ 0 ];
-  }
-
-  /* */
-
-  function found( index, ins, sub )
-  {
-    var f = [ index, index + ins.length, ins, sub ];
-    if( _.arraySortedAddOnce( foundArray, f, comparator ) )
-    return f;
-    else
-    return null;
-  }
-
-  /* */
-
-  function handleReplaceWithRoutine( callback )
-  {
-    function adapt()
-    {
-      var f = found( arguments[ arguments.length - 2 ], arguments[ 0 ], null );
-      if( !f )
-      return f;
-      var it = Object.create( null );
-      it.match = arguments[ 0 ];
-      it.range = [ arguments[ arguments.length - 2 ], arguments[ arguments.length - 2 ] + it.match.length ];
-      it.counter = o.counter;
-      it.input = arguments[ arguments.length - 1 ];
-      it.groups = _.longSlice( arguments, 1, arguments.length-2 );
-      var subStr = callback( it.match, it );
-      o.counter += 1;
-      _.assert( _.strIs( subStr ), 'expects string' );
-      f[ 3 ] = subStr;
-      return f;
-    }
-    return adapt;
-  }
-
-  /* */
-
-  function handleReplaceWithString( subStr )
-  {
-    _.assert( _.strIs( subStr ), 'expects string' );
-    function adapt()
-    {
-      var f = found( arguments[ arguments.length - 2 ], arguments[ 0 ], null );
-      if( !f )
-      return f;
-      o.counter += 1;
-      f[ 3 ] = subStr;
-      return f;
-    }
-    return adapt;
-  }
+  // if( _.objectIs( o.dictionary ) )
+  // {
+  //   for( let ins in o.dictionary )
+  //   {
+  //     replaceWithString( o.src, ins, o.dictionary[ ins ] );
+  //   }
+  // }
+  // else if( _.arrayLike( o.dictionary ) )
+  // {
+  //
+  //   for( let p = 0; p < o.dictionary.length; p++ )
+  //   {
+  //
+  //     let pair = o.dictionary[ p ];
+  //     let ins = _.arrayAs( pair[ 0 ] );
+  //     let sub = _.arrayAs( pair[ 1 ] );
+  //
+  //     _.assert( _.arrayLike( o.dictionary[ p ] ) );
+  //     _.assert( pair.length === 2 );
+  //     _.assert( ins.length === sub.length );
+  //
+  //     for( let i = 0; i < ins.length; i++ )
+  //     {
+  //       _.assert( _.strIs( ins[ i ] ) || _.regexpIs( ins[ i ] ) );
+  //
+  //       if( _.strIs( ins[ i ] ) )
+  //       {
+  //         if( !ins.length )
+  //         continue;
+  //         replaceWithString( o.src, ins[ i ], sub[ i ] );
+  //       }
+  //       else
+  //       {
+  //         replaceWithRegexp( o.src, ins[ i ], sub[ i ] );
+  //       }
+  //
+  //     }
+  //   }
+  //
+  // }
+  //
+  // /* */
+  //
+  // let result = '';
+  // let index = 0;
+  // for( let f = 0 ; f < foundArray.length ; f++ )
+  // {
+  //   let fo = foundArray[ f ];
+  //   result += o.src.substring( index, fo[ 0 ] );
+  //   result += fo[ 3 ];
+  //   index = fo[ 1 ];
+  // }
+  //
+  // result += o.src.substring( index, o.src.length );
+  //
+  // return result
+  //
+  // /* */
+  //
+  // function replaceWithRegexp( src, ins, sub )
+  // {
+  //
+  //   if( _.routineIs( sub ) )
+  //   {
+  //     src.replace( ins, handleReplaceWithRoutine( sub ) );
+  //   }
+  //   else
+  //   {
+  //     src.replace( ins, handleReplaceWithString( sub ) );
+  //   }
+  //
+  // }
+  //
+  // /* */
+  //
+  // function replaceWithString( src, ins, sub )
+  // {
+  //   _.assert( _.strIs( sub ) || _.routineIs( sub ), 'expects string or routine {-sub-}' );
+  //
+  //   if( !ins.length )
+  //   return src;
+  //
+  //   let index2 = 0;
+  //   let index = src.indexOf( ins );
+  //   while( index >= 0 )
+  //   {
+  //
+  //     let f = found( index, ins, sub );
+  //
+  //     let subStr = sub;
+  //     if( f )
+  //     if( _.routineIs( sub ) )
+  //     {
+  //       let it = Object.create( null );
+  //       it.match = src.substring( index, index + ins.length );
+  //       it.range = [ index, index + it.match.length ];
+  //       it.counter = o.counter;
+  //       it.input = src;
+  //       it.groups = [];
+  //       subStr = sub( it.match, it );
+  //       _.assert( _.strIs( subStr ), 'expects string' );
+  //       f[ 3 ] = subStr;
+  //     }
+  //
+  //     if( f )
+  //     {
+  //       index += ins.length;
+  //       o.counter += 1;
+  //     }
+  //     else
+  //     {
+  //       index += 1;
+  //     }
+  //
+  //     index2 = index;
+  //     index = src.indexOf( ins, index );
+  //
+  //   }
+  //
+  // }
+  //
+  // /* */
+  //
+  // function intersects( ins1, ins2 )
+  // {
+  //   if( ins2[ 1 ] <= ins1[ 0 ] )
+  //   return false;
+  //   if( ins1[ 1 ] <= ins2[ 0 ] )
+  //   return false;
+  //   return true;
+  // }
+  //
+  // /* */
+  //
+  // function comparator( ins1, ins2 )
+  // {
+  //   if( intersects( ins1, ins2 ) )
+  //   return 0;
+  //   return ins1[ 0 ] - ins2[ 0 ];
+  // }
+  //
+  // /* */
+  //
+  // function found( index, ins, sub )
+  // {
+  //   let f = [ index, index + ins.length, ins, sub ];
+  //   if( _.arraySortedAddOnce( foundArray, f, comparator ) )
+  //   return f;
+  //   else
+  //   return null;
+  // }
+  //
+  // /* */
+  //
+  // function handleReplaceWithRoutine( callback )
+  // {
+  //   function adapt()
+  //   {
+  //     let f = found( arguments[ arguments.length - 2 ], arguments[ 0 ], null );
+  //     if( !f )
+  //     return f;
+  //     let it = Object.create( null );
+  //     it.match = arguments[ 0 ];
+  //     it.range = [ arguments[ arguments.length - 2 ], arguments[ arguments.length - 2 ] + it.match.length ];
+  //     it.counter = o.counter;
+  //     it.input = arguments[ arguments.length - 1 ];
+  //     it.groups = _.longSlice( arguments, 1, arguments.length-2 );
+  //     let subStr = callback( it.match, it );
+  //     o.counter += 1;
+  //     _.assert( _.strIs( subStr ), 'expects string' );
+  //     f[ 3 ] = subStr;
+  //     return f;
+  //   }
+  //   return adapt;
+  // }
+  //
+  // /* */
+  //
+  // function handleReplaceWithString( subStr )
+  // {
+  //   _.assert( _.strIs( subStr ), 'expects string' );
+  //   function adapt()
+  //   {
+  //     let f = found( arguments[ arguments.length - 2 ], arguments[ 0 ], null );
+  //     if( !f )
+  //     return f;
+  //     o.counter += 1;
+  //     f[ 3 ] = subStr;
+  //     return f;
+  //   }
+  //   return adapt;
+  // }
 
 }
 
@@ -756,15 +1178,14 @@ strReplaceAll.defaults =
 {
   src : null,
   dictionary : null,
+  ins : null,
+  sub : null,
   counter : 0,
 }
 
-// //
-//
 // function strReplaceAll( src, ins, sub )
 // {
-//   var o;
-//   _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
+//   let o;
 //
 //   if( arguments.length === 3 )
 //   {
@@ -773,7 +1194,7 @@ strReplaceAll.defaults =
 //   }
 //   else if( arguments.length === 2 )
 //   {
-//     o = { src : src , dictionary : arguments[ 1 ] };
+//     o = { src : arguments[ 0 ] , dictionary : arguments[ 1 ] };
 //   }
 //   else if( arguments.length === 1 )
 //   {
@@ -782,90 +1203,341 @@ strReplaceAll.defaults =
 //
 //   /**/
 //
+//   _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
 //   _.assert( _.strIs( o.src ) );
-//   _.assert( _.objectIs( o.dictionary ) || _.longIs( o.dictionary ));
+//   _.assert( _.objectIs( o.dictionary ) || _.arrayLike( o.dictionary ));
+//   _.routineOptions( strReplaceAll, o );
 //
 //   /**/
 //
-//   var index = 0;
-//
-//   function replace( src, ins, sub )
-//   {
-//     _.assert( _.strIs( sub ), 'strReplaceAll : expects sub as string' );
-//
-//     if( !ins.length )
-//     return src;
-//
-//     do
-//     {
-//       var index = src.indexOf( ins,index );
-//       if( index >= 0 )
-//       {
-//         src = src.substring( 0,index ) + sub + src.substring( index+ins.length );
-//         index += sub.length;
-//       }
-//       else
-//       break;
-//
-//     }
-//     while( 1 );
-//
-//     return src;
-//   }
-//
-//   var src = o.src;
+//   let foundArray = [];
+//   // let src = o.src;
 //
 //   /* */
 //
 //   if( _.objectIs( o.dictionary ) )
 //   {
-//     for( var ins in o.dictionary )
+//     for( let ins in o.dictionary )
 //     {
-//       if( !ins.length ) continue;
-//       src = replace( src, ins, o.dictionary[ ins ] );
+//       replaceWithString( o.src, ins, o.dictionary[ ins ] );
 //     }
 //   }
-//   else if( _.longIs( o.dictionary ) )
+//   else if( _.arrayLike( o.dictionary ) )
 //   {
-//     for( var p = 0; p < o.dictionary.length; p++ )
+//     for( let p = 0; p < o.dictionary.length; p++ )
 //     {
-//       _.assert( _.longIs( o.dictionary[ p ] ) );
 //
-//       var pair = o.dictionary[ p ];
+//       let pair = o.dictionary[ p ];
+//       let ins = _.arrayAs( pair[ 0 ] );
+//       let sub = _.arrayAs( pair[ 1 ] );
 //
+//       _.assert( _.arrayLike( o.dictionary[ p ] ) );
 //       _.assert( pair.length === 2 );
-//
-//       var ins = _.arrayAs( pair[ 0 ] );
-//       var sub = _.arrayAs( pair[ 1 ] );
-//
 //       _.assert( ins.length === sub.length );
 //
-//       for( var i = 0; i < ins.length; i++ )
+//       for( let i = 0; i < ins.length; i++ )
 //       {
 //         _.assert( _.strIs( ins[ i ] ) || _.regexpIs( ins[ i ] ) );
 //
 //         if( _.strIs( ins[ i ] ) )
 //         {
-//           if( !ins.length ) continue;
-//           src = replace( src, ins[ i ], sub[ i ] );
+//           if( !ins.length )
+//           continue;
+//           replaceWithString( o.src, ins[ i ], sub[ i ] );
 //         }
 //         else
 //         {
-//           src = src.replace( ins[ i ], sub[ i ] );
+//           replaceWithRegexp( o.src, ins[ i ], sub[ i ] );
 //         }
+//
 //       }
 //     }
 //   }
 //
-//   return src;
-//   //return src.replace( new RegExp( _.regexpEscape( ins ),'gm' ), sub );
+//   /* */
+//
+//   let result = '';
+//   let index = 0;
+//   for( let f = 0 ; f < foundArray.length ; f++ )
+//   {
+//     let fo = foundArray[ f ];
+//     result += o.src.substring( index, fo[ 0 ] );
+//     result += fo[ 3 ];
+//     index = fo[ 1 ];
+//   }
+//
+//   result += o.src.substring( index, o.src.length );
+//
+//   return result
+//
+//   /* */
+//
+//   function replaceWithRegexp( src, ins, sub )
+//   {
+//
+//     if( _.routineIs( sub ) )
+//     {
+//       src.replace( ins, handleReplaceWithRoutine( sub ) );
+//     }
+//     else
+//     {
+//       src.replace( ins, handleReplaceWithString( sub ) );
+//     }
+//
+//   }
+//
+//   /* */
+//
+//   function replaceWithString( src, ins, sub )
+//   {
+//     _.assert( _.strIs( sub ) || _.routineIs( sub ), 'expects string or routine {-sub-}' );
+//
+//     if( !ins.length )
+//     return src;
+//
+//     let index2 = 0;
+//     let index = src.indexOf( ins );
+//     while( index >= 0 )
+//     {
+//
+//       let f = found( index, ins, sub );
+//
+//       let subStr = sub;
+//       if( f )
+//       if( _.routineIs( sub ) )
+//       {
+//         let it = Object.create( null );
+//         it.match = src.substring( index, index + ins.length );
+//         it.range = [ index, index + it.match.length ];
+//         it.counter = o.counter;
+//         it.input = src;
+//         it.groups = [];
+//         subStr = sub( it.match, it );
+//         _.assert( _.strIs( subStr ), 'expects string' );
+//         f[ 3 ] = subStr;
+//       }
+//
+//       if( f )
+//       {
+//         index += ins.length;
+//         o.counter += 1;
+//       }
+//       else
+//       {
+//         index += 1;
+//       }
+//
+//       index2 = index;
+//       index = src.indexOf( ins, index );
+//
+//     }
+//
+//   }
+//
+//   /* */
+//
+//   function intersects( ins1, ins2 )
+//   {
+//     if( ins2[ 1 ] <= ins1[ 0 ] )
+//     return false;
+//     if( ins1[ 1 ] <= ins2[ 0 ] )
+//     return false;
+//     return true;
+//   }
+//
+//   /* */
+//
+//   function comparator( ins1, ins2 )
+//   {
+//     if( intersects( ins1, ins2 ) )
+//     return 0;
+//     return ins1[ 0 ] - ins2[ 0 ];
+//   }
+//
+//   /* */
+//
+//   function found( index, ins, sub )
+//   {
+//     let f = [ index, index + ins.length, ins, sub ];
+//     if( _.arraySortedAddOnce( foundArray, f, comparator ) )
+//     return f;
+//     else
+//     return null;
+//   }
+//
+//   /* */
+//
+//   function handleReplaceWithRoutine( callback )
+//   {
+//     function adapt()
+//     {
+//       let f = found( arguments[ arguments.length - 2 ], arguments[ 0 ], null );
+//       if( !f )
+//       return f;
+//       let it = Object.create( null );
+//       it.match = arguments[ 0 ];
+//       it.range = [ arguments[ arguments.length - 2 ], arguments[ arguments.length - 2 ] + it.match.length ];
+//       it.counter = o.counter;
+//       it.input = arguments[ arguments.length - 1 ];
+//       it.groups = _.longSlice( arguments, 1, arguments.length-2 );
+//       let subStr = callback( it.match, it );
+//       o.counter += 1;
+//       _.assert( _.strIs( subStr ), 'expects string' );
+//       f[ 3 ] = subStr;
+//       return f;
+//     }
+//     return adapt;
+//   }
+//
+//   /* */
+//
+//   function handleReplaceWithString( subStr )
+//   {
+//     _.assert( _.strIs( subStr ), 'expects string' );
+//     function adapt()
+//     {
+//       let f = found( arguments[ arguments.length - 2 ], arguments[ 0 ], null );
+//       if( !f )
+//       return f;
+//       o.counter += 1;
+//       f[ 3 ] = subStr;
+//       return f;
+//     }
+//     return adapt;
+//   }
+//
 // }
 //
 // strReplaceAll.defaults =
 // {
 //   src : null,
 //   dictionary : null,
+//   counter : 0,
 // }
+
+//
+
+var JsTokensDefinition =
+{
+  'comment.multiline'     : /\/\*.*?\*\//,
+  'comment.singleline'    : /\/\/.*?\n/,
+  'whitespace'            : /\s+/,
+  'string.single'         : /'(?:\\\n|\\'|[^'\n])*?'/,
+  'string.double'         : /"(?:\\\n|\\"|[^"\n])*?"/,
+  'string.multiline'      : /`(?:\\\n|\\`|[^`])*?`/,
+  'keyword'               : /\b(?:do|if|in|for|let|new|try|var|case|else|enum|eval|null|this|true|void|with|await|break|catch|class|const|false|super|throw|while|yield|delete|export|import|public|return|static|switch|typeof|default|extends|finally|package|private|continue|debugger|function|arguments|interface|protected|implements|instanceof)\b/,
+  'regexp'                : /\/(?:\\\/|[^\/])*?\/(\w+)/,
+  'name'                  : /[a-z_\$][0-9a-z_\$]*/i,
+  'number'                : /(?:0x(?:\d|[a-f])+|\d+(?:\.\d+)?(?:e[+-]?\d+)?)/i,
+  'parenthes'             : /[\(\)]/,
+  'curly'                 : /[{}]/,
+  'square'                : /[\[\]]/,
+  'punctuation'           : /;|,|\.\.\.|\.|\:|\?|=>|>=|<=|<|>|!==|===|!=|==|=|!|&|<<|>>|>>>|\+\+|--|\*\*|\+|-|\^|\||\/|\*|%|~|\!/,
+}
+
+function strTokenizeJs( o )
+{
+  if( _.strIs( o ) )
+  o = { src : o }
+
+  let result = _.strFindAll({ src : o.src, ins : JsTokensDefinition });
+
+  return result;
+}
+
+strTokenizeJs.defaults =
+{
+  src : null,
+}
+
+// var pattern = {
+//   string1    : /"(?:(?:\\\n|\\"|[^"\n]))*?"/
+// , string2    : /'(?:(?:\\\n|\\'|[^'\n]))*?'/
+// //, string2    : /'(?:(?:\\'|[^']))*?'/
+// , comment1   : /\/\*[\s\S]*?\*\//
+// , comment2   : /\/\/.*?\n/
+// , whitespace : /\s+/
+// , keyword    : /\b(?:var|let|for|if|else|in|class|function|return|with|case|break|switch|export|new|while|do|throw|catch)\b/
+// , regexp     : /\/(?:(?:\\\/|[^\n\/]))*?\//
+// , name       : /[a-zA-Z_\$][a-zA-Z_\$0-9]*/
+// , number     : /\d+(?:\.\d+)?(?:e[+-]?\d+)?/
+// , parens     : /[\(\)]/
+// , curly      : /[{}]/
+// , square     : /[\[\]]/
+// , punct      : /[;.:\?\^%<>=!&|+\-,~]/
+// }
+
+//
+
+function strSorterParse( o )
+{
+
+  if( arguments.length === 1 )
+  {
+    if( _.strIs( o ) )
+    o = { src : o }
+  }
+
+  if( arguments.length === 2 )
+  {
+    o =
+    {
+      src : arguments[ 0 ],
+      fields : arguments[ 1 ]
+    }
+  }
+
+  _.routineOptions( strSorterParse, o );
+  _.assert( o.fields === null || _.objectLike( o.fields ) );
+  _.assert( arguments.length === 1 || arguments.length === 2 );
+
+  let map =
+  {
+    '>' : 1,
+    '<' : 0
+  }
+
+  let delimeters = _.mapOwnKeys( map );
+  let splitted = _.strSplit/**1**/
+  ({
+    src : o.src,
+    delimeter : delimeters,
+    stripping : 1,
+    preservingDelimeters : 1,
+    preservingEmpty : 0,
+  });
+
+  let parsed = [];
+
+  if( splitted.length >= 2 )
+  for( let i = 0; i < splitted.length; i+= 2 )
+  {
+    let field = splitted[ i ];
+    let postfix = splitted[ i + 1 ];
+
+    _.assert( o.fields ? o.fields[ field ] : true, 'Field: ', field, ' is not allowed.' );
+    _.assert( _.strIs( postfix ), 'Field: ', field, ' doesn\'t have a postfix.' );
+
+    let valueForPostfix = map[ postfix ];
+
+    if( valueForPostfix !== undefined )
+    {
+      parsed.push( [ field,valueForPostfix ] )
+    }
+    else
+    {
+      _.assert( 0, 'unknown postfix: ', postfix )
+    }
+  }
+
+  return parsed;
+}
+
+strSorterParse.defaults =
+{
+  src : null,
+  fields : null,
+}
 
 // --
 // format
@@ -894,9 +1566,9 @@ function strToBytes( src )
   _.assert( arguments.length === 1, 'expects single argument' );
   _.assert( _.strIs( src ) );
 
-  var result = new Uint8Array( src.length );
+  let result = new Uint8Array( src.length );
 
-  for( var s = 0, sl = src.length ; s < sl ; s++ )
+  for( let s = 0, sl = src.length ; s < sl ; s++ )
   {
     result[ s ] = src.charCodeAt( s );
   }
@@ -957,7 +1629,7 @@ function strToBytes( src )
  *
  */
 
-var _metrics =
+let _metrics =
 {
 
   '24'  : { name : 'yotta', symbol : 'Y' , word : 'septillion' },
@@ -994,7 +1666,7 @@ function strMetricFormat( number,o )
   if( _.strIs( number ) )
   number = parseFloat( number );
 
-  var o = _.routineOptions( strMetricFormat, o );
+  o = _.routineOptions( strMetricFormat, o );
 
   _.assert( _.numberIs( number ), '"number" should be Number' );
   _.assert( arguments.length === 1 || arguments.length === 2 );
@@ -1002,7 +1674,7 @@ function strMetricFormat( number,o )
   _.assert( _.numberIs( o.fixed ) );
   _.assert( o.fixed <= 20 );
 
-  var original = number;
+  let original = number;
 
   if( o.dimensions !== 1 )
   o.thousand = Math.pow( o.thousand,o.dimensions );
@@ -1041,7 +1713,7 @@ function strMetricFormat( number,o )
 
   }
 
-  var result = '';
+  let result = '';
 
   if( o.metrics[ String( o.metric ) ] )
   {
@@ -1099,8 +1771,8 @@ strMetricFormat.defaults =
 function strMetricFormatBytes( number,o )
 {
 
-  var o = o || Object.create( null );
-  var defaultOptions =
+  o = o || Object.create( null );
+  let defaultOptions =
   {
     divisor : 3,
     thousand : 1024,
@@ -1145,7 +1817,7 @@ function strTimeFormat( time )
 {
   _.assert( arguments.length === 1 );
   time = _.timeFrom( time );
-  var result = _.strMetricFormat( time*0.001,{ fixed : 3 } ) + 's';
+  let result = _.strMetricFormat( time*0.001,{ fixed : 3 } ) + 's';
   return result;
 }
 
@@ -1154,8 +1826,8 @@ function strTimeFormat( time )
 function strCsvFrom( src,o )
 {
 
-  var result = '';
-  var o = o || Object.create( null );
+  let result = '';
+  o = o || Object.create( null );
 
   debugger;
 
@@ -1189,13 +1861,13 @@ function strCsvFrom( src,o )
   _.each( src,function( row )
   {
 
-    var rowString = '';
+    let rowString = '';
 
     _.each( o.header,function( key )
     {
 
       debugger;
-      var element = _.entityWithKeyRecursive( row,key );
+      let element = _.entityWithKeyRecursive( row,key );
       if( element === undefined ) element = '';
       element = String( element );
       if( element.indexOf( o.rowSeparator ) !== -1 )
@@ -1219,16 +1891,16 @@ function strCsvFrom( src,o )
 function strToDom( xmlStr )
 {
 
-  var xmlDoc = null;
-  var isIEParser = window.ActiveXObject || "ActiveXObject" in window;
+  let xmlDoc = null;
+  let isIEParser = window.ActiveXObject || "ActiveXObject" in window;
 
   if( xmlStr === undefined ) return xmlDoc;
 
   if( window.DOMParser )
   {
 
-    var parser = new window.DOMParser();
-    var parsererrorNS = null;
+    let parser = new window.DOMParser();
+    let parsererrorNS = null;
 
     if( !isIEParser ) {
 
@@ -1273,24 +1945,24 @@ function strToDom( xmlStr )
 
 function strToConfig( src,o )
 {
-  var result = Object.create( null );
+  let result = Object.create( null );
   if( !_.strIs( src ) )
   throw _.err( '_.strToConfig :','require string' );
 
-  var o = o || Object.create( null );
+  o = o || Object.create( null );
   if( o.delimeter === undefined ) o.delimeter = ' :';
 
-  var src = src.split( '\n' );
+  let src = src.split( '\n' );
 
-  for( var s = 0 ; s < src.length ; s++ )
+  for( let s = 0 ; s < src.length ; s++ )
   {
 
-    var row = src[ s ];
-    var i = row.indexOf( o.delimeter );
+    let row = src[ s ];
+    let i = row.indexOf( o.delimeter );
     if( i === -1 ) continue;
 
-    var key = row.substr( 0,i ).trim();
-    var val = row.substr( i+1 ).trim();
+    let key = row.substr( 0,i ).trim();
+    let val = row.substr( i+1 ).trim();
 
     result[ key ] = val;
 
@@ -1310,7 +1982,7 @@ function strParseMap( o )
   _.routineOptions( strParseMap,o );
   _.assert( _.strIs( o.entryDelimeter ) );
 
-  var src = o.src;
+  let src = o.src;
 
   if( _.strIs( src ) )
   src = _.strSplit
@@ -1322,17 +1994,17 @@ function strParseMap( o )
     preservingDelimeters : 0,
   });
 
-  var result = Object.create( null );
-  for( var a = 1 ; a < src.length ; a++ )
+  let result = Object.create( null );
+  for( let a = 1 ; a < src.length ; a++ )
   {
-    var left = src[ a-1 ];
-    var right = src[ a+0 ];
-    var val = right;
+    let left = src[ a-1 ];
+    let right = src[ a+0 ];
+    let val = right;
 
     if( a < src.length - 1 )
     {
-      var cuts = _.strIsolateEndOrAll( right,o.entryDelimeter );
-      var val = cuts[ 0 ];
+      let cuts = _.strIsolateEndOrAll( right,o.entryDelimeter );
+      val = cuts[ 0 ];
       src[ a+0 ] = cuts[ 2 ];
     }
 
@@ -1389,12 +2061,12 @@ function strTable( o )
 
   function makeWidth( propertyName, def, len )
   {
-    var property = o[ propertyName ];
-    var _property = _.arrayFillTimes( [], len, def );
+    let property = o[ propertyName ];
+    let _property = _.arrayFillTimes( [], len, def );
     if( property )
     {
       _.assert( _.mapIs( property ) || _.longIs( property ) , 'routine expects colWidths/rowWidths property as Object or Array-Like' );
-      for( var k in property )
+      for( let k in property )
       {
         k = _.numberFrom( k );
         if( k < len )
@@ -1409,9 +2081,9 @@ function strTable( o )
 
   //
 
-  var isArrayOfArrays = true;
-  var maxLen = 0;
-  for( var i = 0; i < o.data.length; i++ )
+  let isArrayOfArrays = true;
+  let maxLen = 0;
+  for( let i = 0; i < o.data.length; i++ )
   {
     if( !_.longIs( o.data[ i ] ) )
     {
@@ -1422,7 +2094,7 @@ function strTable( o )
     maxLen = Math.max( maxLen, o.data[ i ].length );
   }
 
-  var onCellGet = strTable.onCellGet;
+  let onCellGet = strTable.onCellGet;
   o.onCellGet = o.onCellGet || isArrayOfArrays ? onCellGet.ofArrayOfArray :  onCellGet.ofFlatArray ;
   o.onCellAfter = o.onCellAfter || strTable.onCellAfter;
 
@@ -1443,7 +2115,7 @@ function strTable( o )
   makeWidth( 'rowWidths', o.rowWidth, o.rowsNumber );
   makeWidth( 'rowAligns', o.rowAlign, o.rowsNumber );
 
-  var tableOptions =
+  let tableOptions =
   {
     head : o.head,
     colWidths : o.colWidths,
@@ -1458,25 +2130,25 @@ function strTable( o )
     }
   }
 
-  var table = new _.cliTable( tableOptions );
+  let table = new _.cliTable( tableOptions );
 
   //
 
-  for( var y = 0; y < o.rowsNumber; y++ )
+  for( let y = 0; y < o.rowsNumber; y++ )
   {
-    var row = [];
+    let row = [];
     table.push( row );
 
-    for( var x = 0; x < o.colsNumber; x++ )
+    for( let x = 0; x < o.colsNumber; x++ )
     {
-      var index2d = [ y, x ];
-      var cellData = o.onCellGet( o.data, index2d, o );
-      var cellStr;
+      let index2d = [ y, x ];
+      let cellData = o.onCellGet( o.data, index2d, o );
+      let cellStr;
 
       if( cellData === undefined )
-      var cellData = cellStr = '';
+      cellData = cellStr = '';
       else
-      var cellStr = _.toStr( cellData, { wrap : 0, stringWrapper : '' } );
+      cellStr = _.toStr( cellData, { wrap : 0, stringWrapper : '' } );
 
       cellStr = o.onCellAfter( cellStr, index2d, o );
       row.push( cellStr );
@@ -1532,7 +2204,7 @@ function strsSort( srcs )
 
   // debugger;
 
-  var result = srcs.sort( function( a, b )
+  let result = srcs.sort( function( a, b )
   {
     // a = a.toLowerCase();
     // b = b.toLowerCase();
@@ -1554,7 +2226,7 @@ function strDifference( src1,src2,o )
   if( src1 === src2 )
   return false;
 
-  for( var i = 0, l = Math.min( src1.length, src2.length ) ; i < l ; i++ )
+  for( let i = 0, l = Math.min( src1.length, src2.length ) ; i < l ; i++ )
   if( src1[ i ] !== src2[ i ] )
   return src1.substr( 0,i ) + '*';
 
@@ -1571,8 +2243,8 @@ function strSimilarity( src1,src2 )
 
   debugger;
 
-  var spectres = [ _.strLattersSpectre( src1 ),_.strLattersSpectre( src2 ) ];
-  var result = _.strLattersSpectresSimilarity( spectres[ 0 ],spectres[ 1 ] );
+  let spectres = [ _.strLattersSpectre( src1 ),_.strLattersSpectre( src2 ) ];
+  let result = _.strLattersSpectresSimilarity( spectres[ 0 ],spectres[ 1 ] );
 
   return result;
 }
@@ -1581,14 +2253,14 @@ function strSimilarity( src1,src2 )
 
 function strLattersSpectre( src )
 {
-  var total = 0;
-  var result = new U32x( 257 );
+  let total = 0;
+  let result = new U32x( 257 );
 
   _.assert( arguments.length === 1 );
 
-  for( var s = 0 ; s < src.length ; s++ )
+  for( let s = 0 ; s < src.length ; s++ )
   {
-    var c = src.charCodeAt( s );
+    let c = src.charCodeAt( s );
     result[ c & 0xff ] += 1;
     total += 1;
     c = c >> 8;
@@ -1615,14 +2287,14 @@ function strLattersSpectre( src )
 
 function strLattersSpectresSimilarity( src1, src2 )
 {
-  var result = 0;
-  var minl = Math.min( src1[ 256 ], src2[ 256 ] );
-  var maxl = Math.max( src1[ 256 ], src2[ 256 ] );
+  let result = 0;
+  let minl = Math.min( src1[ 256 ], src2[ 256 ] );
+  let maxl = Math.max( src1[ 256 ], src2[ 256 ] );
 
   _.assert( arguments.length === 2, 'expects exactly two arguments' );
   _.assert( src1.length === src2.length );
 
-  for( var s = 0 ; s < src1.length-1 ; s++ )
+  for( let s = 0 ; s < src1.length-1 ; s++ )
   {
     result += Math.abs( src1[ s ] - src2[ s ] );
   }
@@ -1642,11 +2314,11 @@ function strLattersSpectresSimilarity( src1, src2 )
 // function lattersSpectreComparison( src1,src2 )
 // {
 //
-//   var same = 0;
+//   let same = 0;
 //
 //   if( src1.length === 0 && src2.length === 0 ) return 1;
 //
-//   for( var l in src1 )
+//   for( let l in src1 )
 //   {
 //     if( l === 'length' ) continue;
 //     if( src2[ l ] ) same += Math.min( src1[ l ],src2[ l ] );
@@ -1659,7 +2331,7 @@ function strLattersSpectresSimilarity( src1, src2 )
 // define class
 // --
 
-var Proto =
+let Proto =
 {
 
   strCamelize : strCamelize,
@@ -1669,10 +2341,12 @@ var Proto =
 
   // strToRegexpTolerating : strToRegexpTolerating,
   // strToRegexp : strToRegexp,
-  strFind : strFind,
+  strSearch : strSearch,
+  strFindAll : strFindAll,
+  strReplaceAll : strReplaceAll, /* document me */
+  strTokenizeJs : strTokenizeJs,
 
   strSorterParse : strSorterParse,
-  strReplaceAll : strReplaceAll, /* document me */
 
   // format
 

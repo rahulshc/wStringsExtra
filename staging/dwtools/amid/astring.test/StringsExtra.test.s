@@ -1,4 +1,4 @@
-( function _String_test_s_() {
+( function _StringExtra_test_s_() {
 
 'use strict';
 
@@ -208,100 +208,1109 @@ function strHtmlEscape( test )
 
 //
 
+/*
+  qqq : duplicate test case for fast : 1
+*/
+
+function strFindAll( test )
+{
+
+  function log( src )
+  {
+    logger.log( _.toStr( src, { levels : 3 } ) );
+  }
+
+  /* - */
+
+  test.open( 'string' );
+
+  test.case = 'simple replace';
+  var got = _.strFindAll( 'aabaa','b' );
+  var expected =
+  [
+    {
+      groups : [ 'b' ],
+      match : 'b',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'aabaa'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'simple replace';
+  var got = _.strFindAll( 'aabaa','aa' );
+  var expected =
+  [
+    {
+      groups : [ 'aa' ],
+      match : 'aa',
+      tokenId : 0,
+      range : [ 0, 2 ],
+      counter : 0,
+      input : 'aabaa'
+    },
+    {
+      groups : [ 'aa' ],
+      match : 'aa',
+      tokenId : 0,
+      range : [ 3, 5 ],
+      counter : 1,
+      input : 'aabaa'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'first two args empty strings';
+  var got = _.strFindAll( '', '' );
+  var expected = [];
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'secong argument is empty string';
+  var got = _.strFindAll( 'a', '' );
+  var expected = [];
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'all three args empty strings';
+  var got = _.strFindAll( '', '' );
+  var expected = [];
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'third arg is empty string ';
+  var got = _.strFindAll( 'a', 'a' );
+  var expected =
+  [
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 0, 1 ],
+      counter : 0,
+      input : 'a'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'one argument call';
+  var got = _.strFindAll({ src : 'gpxa', ins : [ 'x' , 'a' ] });
+  var expected =
+  [
+    {
+      groups : [ 'x' ],
+      match : 'x',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpxa'
+    },
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 1,
+      range : [ 3, 4 ],
+      counter : 1,
+      input : 'gpxa'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'two arguments call';
+  var got = _.strFindAll( 'hello', [ 'l' ] );
+  var expected =
+  [
+    {
+      groups : [ 'l' ],
+      match : 'l',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'hello'
+    },
+    {
+      groups : [ 'l' ],
+      match : 'l',
+      tokenId : 0,
+      range : [ 3, 4 ],
+      counter : 1,
+      input : 'hello'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'no occurrences returns origin';
+  var got = _.strFindAll( 'hello', 'x' );
+  var expected = [];
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'empty array';
+  var got = _.strFindAll( 'hello', [] );
+  var expected = [];
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'empty by empty, empty src';
+  var got = _.strFindAll( '','' );
+  var expected = [];
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'not empty by empty, empty src';
+  var got = _.strFindAll( '','x' );
+  var expected = [];
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'empty by not empty, empty src';
+  var got = _.strFindAll( '','' );
+  var expected = [];
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'empty by empty, not empty src';
+  var got = _.strFindAll( 'x','' );
+  var expected = [];
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'not empty by empty, not empty src';
+  var got = _.strFindAll( 'x','x' );
+  var expected =
+  [
+    {
+      groups : [ 'x' ],
+      match : 'x',
+      tokenId : 0,
+      range : [ 0, 1 ],
+      counter : 0,
+      input : 'x'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'empty by not empty, not empty src';
+  var got = _.strFindAll( 'x','' );
+  var expected = [];
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'repeat';
+  var got = _.strFindAll( 'ababab','ab' );
+  var expected =
+  [
+    {
+      groups : [ 'ab' ],
+      match : 'ab',
+      tokenId : 0,
+      range : [ 0, 2 ],
+      counter : 0,
+      input : 'ababab'
+    },
+    {
+      groups : [ 'ab' ],
+      match : 'ab',
+      tokenId : 0,
+      range : [ 2, 4 ],
+      counter : 1,
+      input : 'ababab'
+    },
+    {
+      groups : [ 'ab' ],
+      match : 'ab',
+      tokenId : 0,
+      range : [ 4, 6 ],
+      counter : 2,
+      input : 'ababab'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'repeat';
+  var got = _.strFindAll( 'abaabab',[ 'aa','ab' ] );
+  var expected =
+  [
+    {
+      groups : [ 'ab' ],
+      match : 'ab',
+      tokenId : 1,
+      range : [ 0, 2 ],
+      counter : 0,
+      input : 'abaabab'
+    },
+    {
+      groups : [ 'aa' ],
+      match : 'aa',
+      tokenId : 0,
+      range : [ 2, 4 ],
+      counter : 1,
+      input : 'abaabab'
+    },
+    {
+      groups : [ 'ab' ],
+      match : 'ab',
+      tokenId : 1,
+      range : [ 5, 7 ],
+      counter : 2,
+      input : 'abaabab'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'no recursion should happen';
+  var got = _.strFindAll( 'abcabc', [ 'abc', 'a' ] );
+  var expected =
+  [
+    {
+      groups : [ 'abc' ],
+      match : 'abc',
+      tokenId : 0,
+      range : [ 0, 3 ],
+      counter : 0,
+      input : 'abcabc'
+    },
+    {
+      groups : [ 'abc' ],
+      match : 'abc',
+      tokenId : 0,
+      range : [ 3, 6 ],
+      counter : 1,
+      input : 'abcabc'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'no recursion should happen';
+  var got = _.strFindAll( 'abcabc', [ 'a', 'abc' ] );
+  var expected =
+  [
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 0, 1 ],
+      counter : 0,
+      input : 'abcabc'
+    },
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 3, 4 ],
+      counter : 1,
+      input : 'abcabc'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  test.close( 'string' );
+
+  /* - */
+
+  test.open( 'regexp with no flags' );
+
+  var got = _.strFindAll( 'aabaa', /b/ );
+  var expected =
+  [
+    {
+      groups : [ 'b' ],
+      match : 'b',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'aabaa'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( '12345', /[1-3]/ );
+  var expected =
+  [
+    {
+      groups : [ '1' ],
+      match : '1',
+      tokenId : 0,
+      range : [ 0, 1 ],
+      counter : 0,
+      input : '12345'
+    },
+    {
+      groups : [ '2' ],
+      match : '2',
+      tokenId : 0,
+      range : [ 1, 2 ],
+      counter : 1,
+      input : '12345'
+    },
+    {
+      groups : [ '3' ],
+      match : '3',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 2,
+      input : '12345'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( 'gpbaac', /a+/ );
+  var expected =
+  [
+    {
+      groups : [ 'aa' ],
+      match : 'aa',
+      tokenId : 0,
+      range : [ 3, 5 ],
+      counter : 0,
+      input : 'gpbaac'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( 'gpbgpcgpd', /(gp)+[^bc]$/ );
+  var expected =
+  [
+    {
+      groups : [ 'gpd', 'gp' ],
+      match : 'gpd',
+      tokenId : 0,
+      range : [ 6, 9 ],
+      counter : 0,
+      input : 'gpbgpcgpd'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( 'gpa', [ 'a' ] );
+  var expected =
+  [
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpa'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( 'gpa', [ /a/ ] );
+  var expected =
+  [
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpa'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( 'gpa', [ /a/ ] );
+  var expected =
+  [
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpa'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( 'gpahpb', [ 'a', 'b' ] );
+  var expected =
+  [
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpahpb'
+    },
+    {
+      groups : [ 'b' ],
+      match : 'b',
+      tokenId : 1,
+      range : [ 5, 6 ],
+      counter : 1,
+      input : 'gpahpb'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( 'gpahpb', [ /a/, /b/ ] );
+  var expected =
+  [
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpahpb'
+    },
+    {
+      groups : [ 'b' ],
+      match : 'b',
+      tokenId : 1,
+      range : [ 5, 6 ],
+      counter : 1,
+      input : 'gpahpb'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( 'gpahpb', [ /a/, 'b' ] );
+  var expected =
+  [
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpahpb'
+    },
+    {
+      groups : [ 'b' ],
+      match : 'b',
+      tokenId : 1,
+      range : [ 5, 6 ],
+      counter : 1,
+      input : 'gpahpb'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( 'gpahpb', [ 'a', /b/ ] );
+  var expected =
+  [
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpahpb'
+    },
+    {
+      groups : [ 'b' ],
+      match : 'b',
+      tokenId : 1,
+      range : [ 5, 6 ],
+      counter : 1,
+      input : 'gpahpb'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'trivial ins:string sub:routine';
+  var got = _.strFindAll( 'this is hello from hell', 'hell' );
+  var expected =
+  [
+    {
+      groups : [ 'hell' ],
+      match : 'hell',
+      tokenId : 0,
+      range : [ 8, 12 ],
+      counter : 0,
+      input : 'this is hello from hell'
+    },
+    {
+      groups : [ 'hell' ],
+      match : 'hell',
+      tokenId : 0,
+      range : [ 19, 23 ],
+      counter : 1,
+      input : 'this is hello from hell'
+    }
+  ]
+  log( got );
+  test.identical( got, expected );
+
+  test.case = 'trivial ins:regexp sub:routine';
+  var got = _.strFindAll( 'this is hello from hell', /hell/ );
+  var expected =
+  [
+    {
+      groups : [ 'hell' ],
+      match : 'hell',
+      tokenId : 0,
+      range : [ 8, 12 ],
+      counter : 0,
+      input : 'this is hello from hell'
+    },
+    {
+      groups : [ 'hell' ],
+      match : 'hell',
+      tokenId : 0,
+      range : [ 19, 23 ],
+      counter : 1,
+      input : 'this is hello from hell'
+    }
+  ]
+  log( got );
+  test.identical( got, expected );
+
+  test.close( 'regexp with no flags' );
+
+  /* - */
+
+  test.open( 'regexp with gm' );
+
+  var got = _.strFindAll( 'aabaa', /b/gm );
+  var expected =
+  [
+    {
+      groups : [ 'b' ],
+      match : 'b',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'aabaa'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( '12345', /[1-3]/gm );
+  var expected =
+  [
+    {
+      groups : [ '1' ],
+      match : '1',
+      tokenId : 0,
+      range : [ 0, 1 ],
+      counter : 0,
+      input : '12345'
+    },
+    {
+      groups : [ '2' ],
+      match : '2',
+      tokenId : 0,
+      range : [ 1, 2 ],
+      counter : 1,
+      input : '12345'
+    },
+    {
+      groups : [ '3' ],
+      match : '3',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 2,
+      input : '12345'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( 'gpbaac', /a+/gm );
+  var expected =
+  [
+    {
+      groups : [ 'aa' ],
+      match : 'aa',
+      tokenId : 0,
+      range : [ 3, 5 ],
+      counter : 0,
+      input : 'gpbaac'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( 'gpbgpcgpd', /(gp)+[^bc]$/gm );
+  var expected =
+  [
+    {
+      groups : [ 'gpd', 'gp' ],
+      match : 'gpd',
+      tokenId : 0,
+      range : [ 6, 9 ],
+      counter : 0,
+      input : 'gpbgpcgpd'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( 'gpa', [ 'a' ] );
+  var expected =
+  [
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpa'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( 'gpa', [ /a/ ] );
+  var expected =
+  [
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpa'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( 'gpa', [ /a/gm ] );
+  var expected =
+  [
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpa'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( 'gpahpb', [ 'a', 'b' ] );
+  var expected =
+  [
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpahpb'
+    },
+    {
+      groups : [ 'b' ],
+      match : 'b',
+      tokenId : 1,
+      range : [ 5, 6 ],
+      counter : 1,
+      input : 'gpahpb'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( 'gpahpb', [ /a/gm, /b/gm ] );
+  var expected =
+  [
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpahpb'
+    },
+    {
+      groups : [ 'b' ],
+      match : 'b',
+      tokenId : 1,
+      range : [ 5, 6 ],
+      counter : 1,
+      input : 'gpahpb'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( 'gpahpb', [ /a/gm, 'b' ] );
+  var expected =
+  [
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpahpb'
+    },
+    {
+      groups : [ 'b' ],
+      match : 'b',
+      tokenId : 1,
+      range : [ 5, 6 ],
+      counter : 1,
+      input : 'gpahpb'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  var got = _.strFindAll( 'gpahpb', [ 'a', /b/gm ] );
+  var expected =
+  [
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpahpb'
+    },
+    {
+      groups : [ 'b' ],
+      match : 'b',
+      tokenId : 1,
+      range : [ 5, 6 ],
+      counter : 1,
+      input : 'gpahpb'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  test.case = 'trivial ins:string sub:routine';
+  var got = _.strFindAll( 'this is hello from hell', 'hell' );
+  var expected =
+  [
+    {
+      groups : [ 'hell' ],
+      match : 'hell',
+      tokenId : 0,
+      range : [ 8, 12 ],
+      counter : 0,
+      input : 'this is hello from hell'
+    },
+    {
+      groups : [ 'hell' ],
+      match : 'hell',
+      tokenId : 0,
+      range : [ 19, 23 ],
+      counter : 1,
+      input : 'this is hello from hell'
+    }
+  ]
+  log( got );
+  test.identical( got, expected );
+
+  test.case = 'trivial ins:regexp sub:routine';
+  var got = _.strFindAll( 'this is hello from hell', /hell/gm );
+  var expected =
+  [
+    {
+      groups : [ 'hell' ],
+      match : 'hell',
+      tokenId : 0,
+      range : [ 8, 12 ],
+      counter : 0,
+      input : 'this is hello from hell'
+    },
+    {
+      groups : [ 'hell' ],
+      match : 'hell',
+      tokenId : 0,
+      range : [ 19, 23 ],
+      counter : 1,
+      input : 'this is hello from hell'
+    }
+  ]
+  log( got );
+  test.identical( got, expected );
+
+  test.close( 'regexp with gm' );
+
+  /* - */
+
+  test.open( 'complex' );
+
+  test.case = 'map';
+  var map =
+  {
+    manya : /a+/,
+    ba : /ba/,
+  }
+  var got = _.strFindAll( 'aabaa', map );
+  log( got );
+  var expected =
+  [
+    {
+      groups : [ 'aa' ],
+      match : 'aa',
+      tokenId : 0,
+      range : [ 0, 2 ],
+      counter : 0,
+      input : 'aabaa',
+      tokenName : 'manya'
+    },
+    {
+      groups : [ 'ba' ],
+      match : 'ba',
+      tokenId : 1,
+      range : [ 2, 4 ],
+      counter : 1,
+      input : 'aabaa',
+      tokenName : 'ba'
+    },
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 4, 5 ],
+      counter : 2,
+      input : 'aabaa',
+      tokenName : 'manya'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  /**/
+
+  test.case = 'options map';
+
+  var o =
+  {
+    src : '**',
+    ins :
+    [
+      /\./g,
+      /([!?*@+]+)\((.*?(?:\|(.*?))*)\)/g,
+      /(\*\*\/|\*\*)/g,
+      /(\*)/g,
+      /(\?)/g
+    ],
+    fast : 0,
+    counter : 1,
+  }
+  var got = _.strFindAll( o );
+  var expected =
+  [
+    {
+      match : '**',
+      groups : [ '**', '**' ],
+      tokenId : 2,
+      range : [ 0, 2 ],
+      counter : 1,
+      input : '**',
+    }
+  ]
+  log( got );
+  test.identical( got, expected );
+
+  test.close( 'complex' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.open( 'throwing' );
+
+  test.case = 'invalid arguments count';
+  test.shouldThrowError( function()
+  {
+    _.strFindAll( '1', '2', '3', '4' );
+  });
+
+  test.case = 'invalid arguments count';
+  test.shouldThrowError( function()
+  {
+    _.strFindAll( '1', '2', '3' );
+  });
+
+  test.case = 'no arguments';
+  test.shouldThrowError( function()
+  {
+    _.strFindAll( );
+  });
+
+  test.case = 'first argument is wrong';
+  test.shouldThrowError( function()
+  {
+    _.strFindAll( 1, '2','3' );
+  });
+
+  test.case = 'second argument is wrong';
+  test.shouldThrowError( function()
+  {
+    _.strFindAll( '1', 2, '3' );
+  });
+
+  test.case = 'third argument is wrong';
+  test.shouldThrowError( function()
+  {
+    _.strFindAll( '1','2', 3 );
+  });
+
+  test.case = 'second arg is not a Object';
+  test.shouldThrowError( function()
+  {
+    _.strFindAll( '1', 2 );
+  });
+
+  test.case = 'argument is not a Object';
+  test.shouldThrowError( function()
+  {
+    _.strFindAll( '1' );
+  });
+
+  test.case = 'wrong type of dictionary value';
+  test.shouldThrowError( function()
+  {
+    _.strFindAll( { dst : 'gpx', dictionary : { 'a' : [ 1, 2 ] } } )
+  });
+
+  test.shouldThrowError( function()
+  {
+    _.strFindAll( 'gpahpb',[ 'a' ], [ 'c', 'd' ] );
+  });
+
+  test.shouldThrowError( function()
+  {
+    _.strFindAll( 'gpahpb',[ 'a', 'b' ], [ 'x' ] );
+  });
+
+  test.shouldThrowError( function()
+  {
+    _.strFindAll( 'gpahpb',{ 'a' : [ 'x' ] } );
+  });
+
+  test.close( 'throwing' );
+}
+
+//
+
 function strReplaceAll( test )
 {
 
   /* */
 
-  test.case = 'simple replace';
-  var got = _.strReplaceAll( 'aabaa','b','c' );
-  var expected = 'aacaa';
-  test.identical( got,expected );
+  test.open( 'string' );
 
-  test.case = 'simple replace';
-  var got = _.strReplaceAll( 'aabaa','aa','zz' );
-  var expected = 'zzbzz';
-  test.identical( got,expected );
-
-  test.case = 'first two args empty strings';
-  var got = _.strReplaceAll( '', '', 'c' );
-  var expected = '';
-  test.identical( got,expected );
-
-  test.case = 'secong argument is empty string';
-  var got = _.strReplaceAll( 'a', '', 'c' );
-  var expected = 'a';
-  test.identical( got,expected );
-
-  test.case = 'all three args empty strings';
-  var got = _.strReplaceAll( '', '', '' );
-  var expected = '';
-  test.identical( got,expected );
-
-  test.case = 'third arg is empty string ';
-  var got = _.strReplaceAll( 'a', 'a', '' );
-  var expected = '';
-  test.identical( got,expected );
-
-  test.case = 'one argument call';
-  var got = _.strReplaceAll( { src : 'gpx', dictionary : { 'x' : 'a' } } );
-  var expected = 'gpa';
-  test.identical( got,expected );
-
-  test.case = 'two arguments call';
-  var got = _.strReplaceAll( 'hello', { 'l' : 'y' } );
-  var expected = 'heyyo';
-  test.identical( got,expected );
-
-  test.case = 'no occurrences returns origin';
-  var got = _.strReplaceAll( 'hello', 'x', 'y' );
-  var expected = 'hello';
-  test.identical( got,expected );
-
-  test.case = 'empty dictionary';
-  var got = _.strReplaceAll( 'hello', { } );
-  var expected = 'hello';
-  test.identical( got,expected );
-
-  /* special cases */
-
-  test.case = 'empty by empty, empty src';
-  var got = _.strReplaceAll( '','','' );
-  var expected = '';
-  test.identical( got,expected );
-
-  test.case = 'not empty by empty, empty src';
-  var got = _.strReplaceAll( '','x','' );
-  var expected = '';
-  test.identical( got,expected );
-
-  test.case = 'empty by not empty, empty src';
-  var got = _.strReplaceAll( '','','x' );
-  var expected = '';
-  test.identical( got,expected );
-
-  test.case = 'empty by empty, not empty src';
-  var got = _.strReplaceAll( 'x','','' );
-  var expected = 'x';
-  test.identical( got,expected );
-
-  test.case = 'not empty by empty, not empty src';
-  var got = _.strReplaceAll( 'x','x','' );
-  var expected = '';
-  test.identical( got,expected );
-
-  test.case = 'empty by not empty, not empty src';
-  var got = _.strReplaceAll( 'x','','x' );
-  var expected = 'x';
-  test.identical( got,expected );
-
-  test.case = 'repeat';
-  var got = _.strReplaceAll( 'ababab','ab','ab' );
-  var expected = 'ababab';
-  test.identical( got,expected );
+  // test.case = 'simple replace';
+  // var got = _.strReplaceAll( 'aabaa','b','c' );
+  // var expected = 'aacaa';
+  // test.identical( got,expected );
+  //
+  // test.case = 'simple replace';
+  // var got = _.strReplaceAll( 'aabaa','aa','zz' );
+  // var expected = 'zzbzz';
+  // test.identical( got,expected );
+  //
+  // test.case = 'first two args empty strings';
+  // var got = _.strReplaceAll( '', '', 'c' );
+  // var expected = '';
+  // test.identical( got,expected );
+  //
+  // test.case = 'secong argument is empty string';
+  // var got = _.strReplaceAll( 'a', '', 'c' );
+  // var expected = 'a';
+  // test.identical( got,expected );
+  //
+  // test.case = 'all three args empty strings';
+  // var got = _.strReplaceAll( '', '', '' );
+  // var expected = '';
+  // test.identical( got,expected );
+  //
+  // test.case = 'third arg is empty string ';
+  // var got = _.strReplaceAll( 'a', 'a', '' );
+  // var expected = '';
+  // test.identical( got,expected );
+  //
+  // test.case = 'one argument call';
+  // var got = _.strReplaceAll( { src : 'gpx', dictionary : { 'x' : 'a' } } );
+  // var expected = 'gpa';
+  // test.identical( got,expected );
+  //
+  // test.case = 'two arguments call';
+  // var got = _.strReplaceAll( 'hello', { 'l' : 'y' } );
+  // var expected = 'heyyo';
+  // test.identical( got,expected );
+  //
+  // test.case = 'no occurrences returns origin';
+  // var got = _.strReplaceAll( 'hello', 'x', 'y' );
+  // var expected = 'hello';
+  // test.identical( got,expected );
+  //
+  // test.case = 'empty dictionary';
+  // var got = _.strReplaceAll( 'hello', { } );
+  // var expected = 'hello';
+  // test.identical( got,expected );
+  //
+  // /* special cases */
+  //
+  // test.case = 'empty by empty, empty src';
+  // var got = _.strReplaceAll( '','','' );
+  // var expected = '';
+  // test.identical( got,expected );
+  //
+  // test.case = 'not empty by empty, empty src';
+  // var got = _.strReplaceAll( '','x','' );
+  // var expected = '';
+  // test.identical( got,expected );
+  //
+  // test.case = 'empty by not empty, empty src';
+  // var got = _.strReplaceAll( '','','x' );
+  // var expected = '';
+  // test.identical( got,expected );
+  //
+  // test.case = 'empty by empty, not empty src';
+  // var got = _.strReplaceAll( 'x','','' );
+  // var expected = 'x';
+  // test.identical( got,expected );
+  //
+  // test.case = 'not empty by empty, not empty src';
+  // var got = _.strReplaceAll( 'x','x','' );
+  // var expected = '';
+  // test.identical( got,expected );
+  //
+  // test.case = 'empty by not empty, not empty src';
+  // var got = _.strReplaceAll( 'x','','x' );
+  // var expected = 'x';
+  // test.identical( got,expected );
+  //
+  // test.case = 'repeat';
+  // var got = _.strReplaceAll( 'ababab','ab','ab' );
+  // var expected = 'ababab';
+  // test.identical( got,expected );
 
   test.case = 'no recursion should happen';
+  debugger;
   var got = _.strReplaceAll( 'abcabc',{ abc : 'a', a : 'b' } );
+  debugger;
   var expected = 'aa';
   test.identical( got,expected );
 
@@ -315,9 +1324,11 @@ function strReplaceAll( test )
   var expected = 'bbcbbc';
   test.identical( got,expected );
 
-  /* */
+  test.close( 'string' );
 
-  test.case = 'regexp';
+  /* - */
+
+  test.open( 'regexp' );
 
   var got = _.strReplaceAll( 'aabaa',/b/gm,'c' );
   var expected = 'aacaa';
@@ -359,11 +1370,8 @@ function strReplaceAll( test )
   var expected = 'gpchpd';
   test.identical( got,expected );
 
-  /* */
-
   function replaceHell( match, it )
   {
-    debugger;
     test.identical( arguments.length, 2 );
     test.identical( match, 'hell' );
 
@@ -374,7 +1382,8 @@ function strReplaceAll( test )
       expectedIt.range = [ 8,12 ];
       expectedIt.counter = 0;
       expectedIt.input = 'this is hello from hell';
-      expectedIt.groups = [];
+      expectedIt.groups = [ 'hell' ];
+      expectedIt.tokenId = 0;
       test.identical( it, expectedIt );
     }
     else
@@ -384,7 +1393,8 @@ function strReplaceAll( test )
       expectedIt.range = [ 19,23 ];
       expectedIt.counter = 1;
       expectedIt.input = 'this is hello from hell';
-      expectedIt.groups = [];
+      expectedIt.groups = [ 'hell' ];
+      expectedIt.tokenId = 0;
       test.identical( it, expectedIt );
     }
 
@@ -401,10 +1411,14 @@ function strReplaceAll( test )
   var expected = 'this is paradiseo from paradise';
   test.identical( got,expected );
 
-  /**/
+  test.close( 'regexp' );
+
+  /* - */
 
   if( !Config.debug )
   return;
+
+  test.open( 'throwing' );
 
   test.case = 'invalid arguments count';
   test.shouldThrowError( function()
@@ -469,6 +1483,7 @@ function strReplaceAll( test )
     _.strReplaceAll( 'gpahpb',{ 'a' : [ 'x' ] } );
   });
 
+  test.close( 'throwing' );
 }
 
 //
@@ -1019,6 +2034,7 @@ var Self =
 
     //
 
+    strFindAll : strFindAll,
     strReplaceAll : strReplaceAll,
     strSorterParse : strSorterParse,
 
