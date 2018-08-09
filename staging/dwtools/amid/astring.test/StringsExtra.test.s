@@ -1220,92 +1220,92 @@ function strReplaceAll( test )
 
   test.open( 'string' );
 
-  // test.case = 'simple replace';
-  // var got = _.strReplaceAll( 'aabaa','b','c' );
-  // var expected = 'aacaa';
-  // test.identical( got,expected );
-  //
-  // test.case = 'simple replace';
-  // var got = _.strReplaceAll( 'aabaa','aa','zz' );
-  // var expected = 'zzbzz';
-  // test.identical( got,expected );
-  //
-  // test.case = 'first two args empty strings';
-  // var got = _.strReplaceAll( '', '', 'c' );
-  // var expected = '';
-  // test.identical( got,expected );
-  //
-  // test.case = 'secong argument is empty string';
-  // var got = _.strReplaceAll( 'a', '', 'c' );
-  // var expected = 'a';
-  // test.identical( got,expected );
-  //
-  // test.case = 'all three args empty strings';
-  // var got = _.strReplaceAll( '', '', '' );
-  // var expected = '';
-  // test.identical( got,expected );
-  //
-  // test.case = 'third arg is empty string ';
-  // var got = _.strReplaceAll( 'a', 'a', '' );
-  // var expected = '';
-  // test.identical( got,expected );
-  //
-  // test.case = 'one argument call';
-  // var got = _.strReplaceAll( { src : 'gpx', dictionary : { 'x' : 'a' } } );
-  // var expected = 'gpa';
-  // test.identical( got,expected );
-  //
-  // test.case = 'two arguments call';
-  // var got = _.strReplaceAll( 'hello', { 'l' : 'y' } );
-  // var expected = 'heyyo';
-  // test.identical( got,expected );
-  //
-  // test.case = 'no occurrences returns origin';
-  // var got = _.strReplaceAll( 'hello', 'x', 'y' );
-  // var expected = 'hello';
-  // test.identical( got,expected );
-  //
-  // test.case = 'empty dictionary';
-  // var got = _.strReplaceAll( 'hello', { } );
-  // var expected = 'hello';
-  // test.identical( got,expected );
-  //
-  // /* special cases */
-  //
-  // test.case = 'empty by empty, empty src';
-  // var got = _.strReplaceAll( '','','' );
-  // var expected = '';
-  // test.identical( got,expected );
-  //
-  // test.case = 'not empty by empty, empty src';
-  // var got = _.strReplaceAll( '','x','' );
-  // var expected = '';
-  // test.identical( got,expected );
-  //
-  // test.case = 'empty by not empty, empty src';
-  // var got = _.strReplaceAll( '','','x' );
-  // var expected = '';
-  // test.identical( got,expected );
-  //
-  // test.case = 'empty by empty, not empty src';
-  // var got = _.strReplaceAll( 'x','','' );
-  // var expected = 'x';
-  // test.identical( got,expected );
-  //
-  // test.case = 'not empty by empty, not empty src';
-  // var got = _.strReplaceAll( 'x','x','' );
-  // var expected = '';
-  // test.identical( got,expected );
-  //
-  // test.case = 'empty by not empty, not empty src';
-  // var got = _.strReplaceAll( 'x','','x' );
-  // var expected = 'x';
-  // test.identical( got,expected );
-  //
-  // test.case = 'repeat';
-  // var got = _.strReplaceAll( 'ababab','ab','ab' );
-  // var expected = 'ababab';
-  // test.identical( got,expected );
+  test.case = 'simple replace';
+  var got = _.strReplaceAll( 'aabaa','b','c' );
+  var expected = 'aacaa';
+  test.identical( got,expected );
+
+  test.case = 'simple replace';
+  var got = _.strReplaceAll( 'aabaa','aa','zz' );
+  var expected = 'zzbzz';
+  test.identical( got,expected );
+
+  test.case = 'first two args empty strings';
+  var got = _.strReplaceAll( '', '', 'c' );
+  var expected = '';
+  test.identical( got,expected );
+
+  test.case = 'secong argument is empty string';
+  var got = _.strReplaceAll( 'a', '', 'c' );
+  var expected = 'a';
+  test.identical( got,expected );
+
+  test.case = 'all three args empty strings';
+  var got = _.strReplaceAll( '', '', '' );
+  var expected = '';
+  test.identical( got,expected );
+
+  test.case = 'third arg is empty string ';
+  var got = _.strReplaceAll( 'a', 'a', '' );
+  var expected = '';
+  test.identical( got,expected );
+
+  test.case = 'one argument call';
+  var got = _.strReplaceAll( { src : 'gpx', dictionary : { 'x' : 'a' } } );
+  var expected = 'gpa';
+  test.identical( got,expected );
+
+  test.case = 'two arguments call';
+  var got = _.strReplaceAll( 'hello', { 'l' : 'y' } );
+  var expected = 'heyyo';
+  test.identical( got,expected );
+
+  test.case = 'no occurrences returns origin';
+  var got = _.strReplaceAll( 'hello', 'x', 'y' );
+  var expected = 'hello';
+  test.identical( got,expected );
+
+  test.case = 'empty dictionary';
+  var got = _.strReplaceAll( 'hello', { } );
+  var expected = 'hello';
+  test.identical( got,expected );
+
+  /* special cases */
+
+  test.case = 'empty by empty, empty src';
+  var got = _.strReplaceAll( '','','' );
+  var expected = '';
+  test.identical( got,expected );
+
+  test.case = 'not empty by empty, empty src';
+  var got = _.strReplaceAll( '','x','' );
+  var expected = '';
+  test.identical( got,expected );
+
+  test.case = 'empty by not empty, empty src';
+  var got = _.strReplaceAll( '','','x' );
+  var expected = '';
+  test.identical( got,expected );
+
+  test.case = 'empty by empty, not empty src';
+  var got = _.strReplaceAll( 'x','','' );
+  var expected = 'x';
+  test.identical( got,expected );
+
+  test.case = 'not empty by empty, not empty src';
+  var got = _.strReplaceAll( 'x','x','' );
+  var expected = '';
+  test.identical( got,expected );
+
+  test.case = 'empty by not empty, not empty src';
+  var got = _.strReplaceAll( 'x','','x' );
+  var expected = 'x';
+  test.identical( got,expected );
+
+  test.case = 'repeat';
+  var got = _.strReplaceAll( 'ababab','ab','ab' );
+  var expected = 'ababab';
+  test.identical( got,expected );
 
   test.case = 'no recursion should happen';
   debugger;
@@ -1484,6 +1484,54 @@ function strReplaceAll( test )
   });
 
   test.close( 'throwing' );
+}
+
+//
+
+function strTokenizeJs( test )
+{
+
+  function log( src )
+  {
+    logger.log( _.toStr( src, { levels : 3 } ) );
+  }
+
+  /* - */
+
+  var code =
+` // divide by zero`
+
+  var expected =
+  [
+    {
+      match : ' ',
+      groups : [ ' ' ],
+      tokenId : 2,
+      range : [ 0, 1 ],
+      counter : 0,
+      input : ' // divide by zero',
+      tokenName : 'whitespace'
+    },
+    {
+      match : '// divide by zero',
+      groups : [ '// divide by zero' ],
+      tokenId : 1,
+      range : [ 1, 18 ],
+      counter : 1,
+      input : ' // divide by zero',
+      tokenName : 'comment/singleline'
+    }
+  ]
+
+  var got = _.strTokenizeJs( code );
+
+  log( code );
+  log( _.entitySelect( got, '*.tokenName' ) );
+  log( got );
+  test.identical( got, expected );
+
+  /* - */
+
 }
 
 //
@@ -2036,6 +2084,7 @@ var Self =
 
     strFindAll : strFindAll,
     strReplaceAll : strReplaceAll,
+    strTokenizeJs : strTokenizeJs,
     strSorterParse : strSorterParse,
 
     //

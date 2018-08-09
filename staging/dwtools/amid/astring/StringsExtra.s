@@ -303,7 +303,6 @@ qqq : tests required
 
 function strSearch( o )
 {
-  let result = [];
 
   _.assert( arguments.length === 1, 'expects single argument' );
   _.routineOptions( strSearch,o );
@@ -318,8 +317,15 @@ function strSearch( o )
     toleratingSpaces : o.toleratingSpaces,
   });
 
+  if( _.arrayIs( o.excludingTokens ) || _.strIs( o.excludingTokens ) )
+  {
+    o.excludingTokens = _.path.globsToRegexp( o.excludingTokens );
+    o.excludingTokens = _.regexpsAny( o.excludingTokens );
+  }
+
   /* */
 
+  let result = [];
   let found = _.strFindAll( o.src, o.ins );
 
   found.forEach( ( it ) =>
@@ -353,33 +359,30 @@ function strSearch( o )
     {
       let tokens = o.onTokenize( it.nearest.join( '' ) );
 
-      // if( _.strsAnyHas( _.entitySelect( tokens, '*.tokenName' ), 'string' ) )
-      // debugger;
-
-      if( _.strHas( it.nearest[ 0 ], '// caught     at divide (<anonymous>:2:29' ) )
-      debugger;
-
       let ranges = _.entitySelect( tokens, '*.range.0' );
-      // ranges.push( tokens[ tokens.length-1 ].range[ 1 ] );
       let range = [ it.nearest[ 0 ].length, it.nearest[ 0 ].length + it.nearest[ 1 ].length ];
-      let embrace = _.arraySortedLookUpIntervalEmbracingAtLeastOld( ranges, range );
-      let interval = _.arraySortedLookUpInterval( ranges, range );
-      let narrow = _.arraySortedLookUpIntervalNarrowest( ranges, range );
       let having = _.arraySortedLookUpIntervalHaving( ranges, range );
 
       _.assert( ranges[ having[ 0 ] ] <= range[ 0 ] );
-      _.assert( ranges[ having[ 1 ] ] >= range[ 1 ] );
+      _.assert( having[ 1 ] === ranges.length || ranges[ having[ 1 ] ] >= range[ 1 ] );
 
-      // if( _.strsAnyHas( _.entitySelect( tokens, '*.tokenName' ), 'string' ) )
-      // debugger;
+      if( o.excludingTokens )
+      {
+        let tokenNames = _.entitySelect( tokens, '*.tokenName' );
+        let pass = _.none( _.regexpTest( o.excludingTokens, tokenNames ) );
+        if( !pass )
+        return;
+      }
+
     }
 
     if( !o.nearestSplitting )
     it.nearest.join( '' );
 
+    result.push( it );
   });
 
-  return found;
+  return result;
 
   // for( let i = 0 ; i < o.ins.length ; i++ )
   // findForIns( o.ins[ i ] );
@@ -473,6 +476,7 @@ strSearch.defaults =
   stringWithRegexp : 0,
   toleratingSpaces : 0,
   onTokenize : null,
+  excludingTokens : null,
 }
 
 // function strSearch( o )
@@ -835,74 +839,17 @@ strFindAll.defaults =
 
 //
 
-/**
- * Replaces each occurrence of string( ins ) in source( src ) with string( sub ).
- * Returns result of replacements as new string or original string if no matches finded in source( src ).
- * Function can be called in three different ways:
- * - One argument: object that contains options: source( src ) and dictionary.
- * - Two arguments: source string( src ), map( dictionary ).
- * - Three arguments: source string( src ), pattern string( ins ), replacement( sub ).
- * @param {string} src - Source string to parse.
- * @param {string} ins - String to find in source( src ).
- * @param {string} sub - String that replaces finded occurrence( ins ).
- * @param {object} dictionary - Map that contains pattern/replacement pairs like ( { 'ins' : 'sub' } ).
- * @returns {string} Returns string with result of replacements.
- *
- * @example
- * //one argument
- * //returns xbc
- * _.strReplaceAll( { src : 'abc', dictionary : { 'a' : 'x' } } );
- *
- * @example
- * //two arguments
- * //returns a12
- * _.strReplaceAll( 'abc',{ 'a' : '1', 'b' : '2' } );
- *
- * @example
- * //three arguments
- * //returns axc
- * _.strReplaceAll( 'abc','b','x' );
- *
- * @method strReplaceAll
- * @throws { Exception } Throws a exception if no arguments provided.
- * @throws { Exception } Throws a exception if( src ) is not a String.
- * @throws { Exception } Throws a exception if( ins ) is not a String.
- * @throws { Exception } Throws a exception if( sub ) is not a String.
- * @throws { Exception } Throws a exception if( dictionary ) is not a Object.
- * @throws { Exception } Throws a exception if( dictionary ) key value is not a String.
- * @memberof wTools
- *
- */
-
-function strReplaceAll( src, ins, sub )
+function _strReplaceMap_pre( o )
 {
-  let o;
-
-  if( arguments.length === 3 )
-  {
-    o = { src : src };
-    o.dictionary = [ [ ins, sub ] ]
-  }
-  else if( arguments.length === 2 )
-  {
-    o = { src : arguments[ 0 ] , dictionary : arguments[ 1 ] };
-  }
-  else if( arguments.length === 1 )
-  {
-    o = arguments[ 0 ];
-  }
 
   /* verify */
 
-  _.routineOptions( strReplaceAll, o );
-  _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
-  _.assert( _.strIs( o.src ) );
+  _.assertMapHasAll( o, _strReplaceMap_pre.defaults );
+  _.assert( arguments.length === 1 );
   _.assert( _.objectIs( o.dictionary ) || _.longIs( o.dictionary ) || o.dictionary === null );
   _.assert( ( _.longIs( o.ins ) && _.longIs( o.sub ) ) || ( o.ins === null && o.sub === null ) );
 
   /* pre */
-
-  let foundArray = [];
 
   if( o.dictionary )
   {
@@ -962,6 +909,146 @@ function strReplaceAll( src, ins, sub )
     o.sub.forEach( ( sub ) => _.assert( _.strIs( sub ) || _.routineIs( sub ) ), 'expects String or Routine' );
   }
 
+  return o;
+}
+
+_strReplaceMap_pre.defaults =
+{
+  dictionary : null,
+  ins : null,
+  sub : null,
+}
+
+//
+
+/**
+ * Replaces each occurrence of string( ins ) in source( src ) with string( sub ).
+ * Returns result of replacements as new string or original string if no matches finded in source( src ).
+ * Function can be called in three different ways:
+ * - One argument: object that contains options: source( src ) and dictionary.
+ * - Two arguments: source string( src ), map( dictionary ).
+ * - Three arguments: source string( src ), pattern string( ins ), replacement( sub ).
+ * @param {string} src - Source string to parse.
+ * @param {string} ins - String to find in source( src ).
+ * @param {string} sub - String that replaces finded occurrence( ins ).
+ * @param {object} dictionary - Map that contains pattern/replacement pairs like ( { 'ins' : 'sub' } ).
+ * @returns {string} Returns string with result of replacements.
+ *
+ * @example
+ * //one argument
+ * //returns xbc
+ * _.strReplaceAll( { src : 'abc', dictionary : { 'a' : 'x' } } );
+ *
+ * @example
+ * //two arguments
+ * //returns a12
+ * _.strReplaceAll( 'abc',{ 'a' : '1', 'b' : '2' } );
+ *
+ * @example
+ * //three arguments
+ * //returns axc
+ * _.strReplaceAll( 'abc','b','x' );
+ *
+ * @method strReplaceAll
+ * @throws { Exception } Throws a exception if no arguments provided.
+ * @throws { Exception } Throws a exception if( src ) is not a String.
+ * @throws { Exception } Throws a exception if( ins ) is not a String.
+ * @throws { Exception } Throws a exception if( sub ) is not a String.
+ * @throws { Exception } Throws a exception if( dictionary ) is not a Object.
+ * @throws { Exception } Throws a exception if( dictionary ) key value is not a String.
+ * @memberof wTools
+ *
+ */
+
+function strReplaceAll( src, ins, sub )
+{
+  let o;
+  let foundArray = [];
+
+  if( arguments.length === 3 )
+  {
+    o = { src : src };
+    o.dictionary = [ [ ins, sub ] ]
+  }
+  else if( arguments.length === 2 )
+  {
+    o = { src : arguments[ 0 ] , dictionary : arguments[ 1 ] };
+  }
+  else if( arguments.length === 1 )
+  {
+    o = arguments[ 0 ];
+  }
+
+  /* verify */
+
+  _.routineOptions( strReplaceAll, o );
+  _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
+  _.assert( _.strIs( o.src ) );
+  // _.assert( _.objectIs( o.dictionary ) || _.longIs( o.dictionary ) || o.dictionary === null );
+  // _.assert( ( _.longIs( o.ins ) && _.longIs( o.sub ) ) || ( o.ins === null && o.sub === null ) );
+
+  // /* pre */
+  //
+  // if( o.dictionary )
+  // {
+  //
+  //   o.ins = [];
+  //   o.sub = [];
+  //
+  //   if( _.objectIs( o.dictionary ) )
+  //   {
+  //     let i = 0;
+  //     for( let d in o.dictionary )
+  //     {
+  //       o.ins[ i ] = d;
+  //       o.sub[ i ] = o.dictionary[ d ];
+  //       i += 1;
+  //     }
+  //   }
+  //   else
+  //   {
+  //     let i = 0;
+  //     o.dictionary.forEach( ( d ) =>
+  //     {
+  //       let ins = d[ 0 ];
+  //       let sub = d[ 1 ];
+  //       _.assert( d.length === 2 );
+  //       _.assert( !( _.arrayIs( ins ) ^ _.arrayIs( sub ) ) );
+  //       if( _.arrayIs( ins ) )
+  //       {
+  //         _.assert( ins.length === sub.length )
+  //         for( let n = 0 ; n < ins.length ; n++ )
+  //         {
+  //           o.ins[ i ] = ins[ n ];
+  //           o.sub[ i ] = sub[ n ];
+  //           i += 1;
+  //         }
+  //       }
+  //       else
+  //       {
+  //         o.ins[ i ] = ins;
+  //         o.sub[ i ] = sub;
+  //         i += 1;
+  //       }
+  //     });
+  //   }
+  //
+  //   o.dictionary = null;
+  // }
+  //
+  // /* verify */
+  //
+  // _.assert( !o.dictionary );
+  // _.assert( o.ins.length === o.sub.length );
+  //
+  // if( Config.debug )
+  // {
+  //   o.ins.forEach( ( ins ) => _.assert( _.strIs( ins ) || _.regexpIs( ins ) ), 'expects String or RegExp' );
+  //   o.sub.forEach( ( sub ) => _.assert( _.strIs( sub ) || _.routineIs( sub ) ), 'expects String or Routine' );
+  // }
+
+  _._strReplaceMap_pre( o );
+
   /* */
 
   let found = _.strFindAll( o.src, o.ins );
@@ -982,200 +1069,6 @@ function strReplaceAll( src, ins, sub )
   result += o.src.substring( index, o.src.length );
 
   return result;
-
-  // if( _.objectIs( o.dictionary ) )
-  // {
-  //   for( let ins in o.dictionary )
-  //   {
-  //     replaceWithString( o.src, ins, o.dictionary[ ins ] );
-  //   }
-  // }
-  // else if( _.arrayLike( o.dictionary ) )
-  // {
-  //
-  //   for( let p = 0; p < o.dictionary.length; p++ )
-  //   {
-  //
-  //     let pair = o.dictionary[ p ];
-  //     let ins = _.arrayAs( pair[ 0 ] );
-  //     let sub = _.arrayAs( pair[ 1 ] );
-  //
-  //     _.assert( _.arrayLike( o.dictionary[ p ] ) );
-  //     _.assert( pair.length === 2 );
-  //     _.assert( ins.length === sub.length );
-  //
-  //     for( let i = 0; i < ins.length; i++ )
-  //     {
-  //       _.assert( _.strIs( ins[ i ] ) || _.regexpIs( ins[ i ] ) );
-  //
-  //       if( _.strIs( ins[ i ] ) )
-  //       {
-  //         if( !ins.length )
-  //         continue;
-  //         replaceWithString( o.src, ins[ i ], sub[ i ] );
-  //       }
-  //       else
-  //       {
-  //         replaceWithRegexp( o.src, ins[ i ], sub[ i ] );
-  //       }
-  //
-  //     }
-  //   }
-  //
-  // }
-  //
-  // /* */
-  //
-  // let result = '';
-  // let index = 0;
-  // for( let f = 0 ; f < foundArray.length ; f++ )
-  // {
-  //   let fo = foundArray[ f ];
-  //   result += o.src.substring( index, fo[ 0 ] );
-  //   result += fo[ 3 ];
-  //   index = fo[ 1 ];
-  // }
-  //
-  // result += o.src.substring( index, o.src.length );
-  //
-  // return result
-  //
-  // /* */
-  //
-  // function replaceWithRegexp( src, ins, sub )
-  // {
-  //
-  //   if( _.routineIs( sub ) )
-  //   {
-  //     src.replace( ins, handleReplaceWithRoutine( sub ) );
-  //   }
-  //   else
-  //   {
-  //     src.replace( ins, handleReplaceWithString( sub ) );
-  //   }
-  //
-  // }
-  //
-  // /* */
-  //
-  // function replaceWithString( src, ins, sub )
-  // {
-  //   _.assert( _.strIs( sub ) || _.routineIs( sub ), 'expects string or routine {-sub-}' );
-  //
-  //   if( !ins.length )
-  //   return src;
-  //
-  //   let index2 = 0;
-  //   let index = src.indexOf( ins );
-  //   while( index >= 0 )
-  //   {
-  //
-  //     let f = found( index, ins, sub );
-  //
-  //     let subStr = sub;
-  //     if( f )
-  //     if( _.routineIs( sub ) )
-  //     {
-  //       let it = Object.create( null );
-  //       it.match = src.substring( index, index + ins.length );
-  //       it.range = [ index, index + it.match.length ];
-  //       it.counter = o.counter;
-  //       it.input = src;
-  //       it.groups = [];
-  //       subStr = sub( it.match, it );
-  //       _.assert( _.strIs( subStr ), 'expects string' );
-  //       f[ 3 ] = subStr;
-  //     }
-  //
-  //     if( f )
-  //     {
-  //       index += ins.length;
-  //       o.counter += 1;
-  //     }
-  //     else
-  //     {
-  //       index += 1;
-  //     }
-  //
-  //     index2 = index;
-  //     index = src.indexOf( ins, index );
-  //
-  //   }
-  //
-  // }
-  //
-  // /* */
-  //
-  // function intersects( ins1, ins2 )
-  // {
-  //   if( ins2[ 1 ] <= ins1[ 0 ] )
-  //   return false;
-  //   if( ins1[ 1 ] <= ins2[ 0 ] )
-  //   return false;
-  //   return true;
-  // }
-  //
-  // /* */
-  //
-  // function comparator( ins1, ins2 )
-  // {
-  //   if( intersects( ins1, ins2 ) )
-  //   return 0;
-  //   return ins1[ 0 ] - ins2[ 0 ];
-  // }
-  //
-  // /* */
-  //
-  // function found( index, ins, sub )
-  // {
-  //   let f = [ index, index + ins.length, ins, sub ];
-  //   if( _.arraySortedAddOnce( foundArray, f, comparator ) )
-  //   return f;
-  //   else
-  //   return null;
-  // }
-  //
-  // /* */
-  //
-  // function handleReplaceWithRoutine( callback )
-  // {
-  //   function adapt()
-  //   {
-  //     let f = found( arguments[ arguments.length - 2 ], arguments[ 0 ], null );
-  //     if( !f )
-  //     return f;
-  //     let it = Object.create( null );
-  //     it.match = arguments[ 0 ];
-  //     it.range = [ arguments[ arguments.length - 2 ], arguments[ arguments.length - 2 ] + it.match.length ];
-  //     it.counter = o.counter;
-  //     it.input = arguments[ arguments.length - 1 ];
-  //     it.groups = _.longSlice( arguments, 1, arguments.length-2 );
-  //     let subStr = callback( it.match, it );
-  //     o.counter += 1;
-  //     _.assert( _.strIs( subStr ), 'expects string' );
-  //     f[ 3 ] = subStr;
-  //     return f;
-  //   }
-  //   return adapt;
-  // }
-  //
-  // /* */
-  //
-  // function handleReplaceWithString( subStr )
-  // {
-  //   _.assert( _.strIs( subStr ), 'expects string' );
-  //   function adapt()
-  //   {
-  //     let f = found( arguments[ arguments.length - 2 ], arguments[ 0 ], null );
-  //     if( !f )
-  //     return f;
-  //     o.counter += 1;
-  //     f[ 3 ] = subStr;
-  //     return f;
-  //   }
-  //   return adapt;
-  // }
-
 }
 
 strReplaceAll.defaults =
@@ -1187,248 +1080,16 @@ strReplaceAll.defaults =
   counter : 0,
 }
 
-// function strReplaceAll( src, ins, sub )
-// {
-//   let o;
-//
-//   if( arguments.length === 3 )
-//   {
-//     o = { src : src };
-//     o.dictionary = [ [ ins, sub ] ]
-//   }
-//   else if( arguments.length === 2 )
-//   {
-//     o = { src : arguments[ 0 ] , dictionary : arguments[ 1 ] };
-//   }
-//   else if( arguments.length === 1 )
-//   {
-//     o = arguments[ 0 ];
-//   }
-//
-//   /**/
-//
-//   _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
-//   _.assert( _.strIs( o.src ) );
-//   _.assert( _.objectIs( o.dictionary ) || _.arrayLike( o.dictionary ));
-//   _.routineOptions( strReplaceAll, o );
-//
-//   /**/
-//
-//   let foundArray = [];
-//   // let src = o.src;
-//
-//   /* */
-//
-//   if( _.objectIs( o.dictionary ) )
-//   {
-//     for( let ins in o.dictionary )
-//     {
-//       replaceWithString( o.src, ins, o.dictionary[ ins ] );
-//     }
-//   }
-//   else if( _.arrayLike( o.dictionary ) )
-//   {
-//     for( let p = 0; p < o.dictionary.length; p++ )
-//     {
-//
-//       let pair = o.dictionary[ p ];
-//       let ins = _.arrayAs( pair[ 0 ] );
-//       let sub = _.arrayAs( pair[ 1 ] );
-//
-//       _.assert( _.arrayLike( o.dictionary[ p ] ) );
-//       _.assert( pair.length === 2 );
-//       _.assert( ins.length === sub.length );
-//
-//       for( let i = 0; i < ins.length; i++ )
-//       {
-//         _.assert( _.strIs( ins[ i ] ) || _.regexpIs( ins[ i ] ) );
-//
-//         if( _.strIs( ins[ i ] ) )
-//         {
-//           if( !ins.length )
-//           continue;
-//           replaceWithString( o.src, ins[ i ], sub[ i ] );
-//         }
-//         else
-//         {
-//           replaceWithRegexp( o.src, ins[ i ], sub[ i ] );
-//         }
-//
-//       }
-//     }
-//   }
-//
-//   /* */
-//
-//   let result = '';
-//   let index = 0;
-//   for( let f = 0 ; f < foundArray.length ; f++ )
-//   {
-//     let fo = foundArray[ f ];
-//     result += o.src.substring( index, fo[ 0 ] );
-//     result += fo[ 3 ];
-//     index = fo[ 1 ];
-//   }
-//
-//   result += o.src.substring( index, o.src.length );
-//
-//   return result
-//
-//   /* */
-//
-//   function replaceWithRegexp( src, ins, sub )
-//   {
-//
-//     if( _.routineIs( sub ) )
-//     {
-//       src.replace( ins, handleReplaceWithRoutine( sub ) );
-//     }
-//     else
-//     {
-//       src.replace( ins, handleReplaceWithString( sub ) );
-//     }
-//
-//   }
-//
-//   /* */
-//
-//   function replaceWithString( src, ins, sub )
-//   {
-//     _.assert( _.strIs( sub ) || _.routineIs( sub ), 'expects string or routine {-sub-}' );
-//
-//     if( !ins.length )
-//     return src;
-//
-//     let index2 = 0;
-//     let index = src.indexOf( ins );
-//     while( index >= 0 )
-//     {
-//
-//       let f = found( index, ins, sub );
-//
-//       let subStr = sub;
-//       if( f )
-//       if( _.routineIs( sub ) )
-//       {
-//         let it = Object.create( null );
-//         it.match = src.substring( index, index + ins.length );
-//         it.range = [ index, index + it.match.length ];
-//         it.counter = o.counter;
-//         it.input = src;
-//         it.groups = [];
-//         subStr = sub( it.match, it );
-//         _.assert( _.strIs( subStr ), 'expects string' );
-//         f[ 3 ] = subStr;
-//       }
-//
-//       if( f )
-//       {
-//         index += ins.length;
-//         o.counter += 1;
-//       }
-//       else
-//       {
-//         index += 1;
-//       }
-//
-//       index2 = index;
-//       index = src.indexOf( ins, index );
-//
-//     }
-//
-//   }
-//
-//   /* */
-//
-//   function intersects( ins1, ins2 )
-//   {
-//     if( ins2[ 1 ] <= ins1[ 0 ] )
-//     return false;
-//     if( ins1[ 1 ] <= ins2[ 0 ] )
-//     return false;
-//     return true;
-//   }
-//
-//   /* */
-//
-//   function comparator( ins1, ins2 )
-//   {
-//     if( intersects( ins1, ins2 ) )
-//     return 0;
-//     return ins1[ 0 ] - ins2[ 0 ];
-//   }
-//
-//   /* */
-//
-//   function found( index, ins, sub )
-//   {
-//     let f = [ index, index + ins.length, ins, sub ];
-//     if( _.arraySortedAddOnce( foundArray, f, comparator ) )
-//     return f;
-//     else
-//     return null;
-//   }
-//
-//   /* */
-//
-//   function handleReplaceWithRoutine( callback )
-//   {
-//     function adapt()
-//     {
-//       let f = found( arguments[ arguments.length - 2 ], arguments[ 0 ], null );
-//       if( !f )
-//       return f;
-//       let it = Object.create( null );
-//       it.match = arguments[ 0 ];
-//       it.range = [ arguments[ arguments.length - 2 ], arguments[ arguments.length - 2 ] + it.match.length ];
-//       it.counter = o.counter;
-//       it.input = arguments[ arguments.length - 1 ];
-//       it.groups = _.longSlice( arguments, 1, arguments.length-2 );
-//       let subStr = callback( it.match, it );
-//       o.counter += 1;
-//       _.assert( _.strIs( subStr ), 'expects string' );
-//       f[ 3 ] = subStr;
-//       return f;
-//     }
-//     return adapt;
-//   }
-//
-//   /* */
-//
-//   function handleReplaceWithString( subStr )
-//   {
-//     _.assert( _.strIs( subStr ), 'expects string' );
-//     function adapt()
-//     {
-//       let f = found( arguments[ arguments.length - 2 ], arguments[ 0 ], null );
-//       if( !f )
-//       return f;
-//       o.counter += 1;
-//       f[ 3 ] = subStr;
-//       return f;
-//     }
-//     return adapt;
-//   }
-//
-// }
-//
-// strReplaceAll.defaults =
-// {
-//   src : null,
-//   dictionary : null,
-//   counter : 0,
-// }
-
 //
 
 var JsTokensDefinition =
 {
-  'comment.multiline'     : /\/\*.*?\*\//,
-  'comment.singleline'    : /\/\/.*?\n/,
+  'comment/multiline'     : /\/\*.*?\*\//,
+  'comment/singleline'    : /\/\/.*?(?=\n|$)/,
   'whitespace'            : /\s+/,
-  'string.single'         : /'(?:\\\n|\\'|[^'\n])*?'/,
-  'string.double'         : /"(?:\\\n|\\"|[^"\n])*?"/,
-  'string.multiline'      : /`(?:\\\n|\\`|[^`])*?`/,
+  'string/single'         : /'(?:\\\n|\\'|[^'\n])*?'/,
+  'string/double'         : /"(?:\\\n|\\"|[^"\n])*?"/,
+  'string/multiline'      : /`(?:\\\n|\\`|[^`])*?`/,
   'keyword'               : /\b(?:do|if|in|for|let|new|try|var|case|else|enum|eval|null|this|true|void|with|await|break|catch|class|const|false|super|throw|while|yield|delete|export|import|public|return|static|switch|typeof|default|extends|finally|package|private|continue|debugger|function|arguments|interface|protected|implements|instanceof)\b/,
   'regexp'                : /\/(?:\\\/|[^\/])*?\/(\w+)/,
   'name'                  : /[a-z_\$][0-9a-z_\$]*/i,
@@ -2347,6 +2008,8 @@ let Proto =
   // strToRegexp : strToRegexp,
   strSearch : strSearch,
   strFindAll : strFindAll,
+
+  _strReplaceMap_pre : _strReplaceMap_pre,
   strReplaceAll : strReplaceAll, /* document me */
   strTokenizeJs : strTokenizeJs,
 
