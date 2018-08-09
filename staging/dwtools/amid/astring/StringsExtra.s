@@ -353,21 +353,25 @@ function strSearch( o )
     {
       let tokens = o.onTokenize( it.nearest.join( '' ) );
 
-      if( _.strsAnyHas( _.entitySelect( tokens, '*.tokenName' ), 'string' ) )
+      // if( _.strsAnyHas( _.entitySelect( tokens, '*.tokenName' ), 'string' ) )
+      // debugger;
+
+      if( _.strHas( it.nearest[ 0 ], '// caught     at divide (<anonymous>:2:29' ) )
       debugger;
 
       let ranges = _.entitySelect( tokens, '*.range.0' );
       // ranges.push( tokens[ tokens.length-1 ].range[ 1 ] );
       let range = [ it.nearest[ 0 ].length, it.nearest[ 0 ].length + it.nearest[ 1 ].length ];
-      let embrace = _.arraySortedLookUpEmbrace( ranges, range );
+      let embrace = _.arraySortedLookUpIntervalEmbracingAtLeastOld( ranges, range );
       let interval = _.arraySortedLookUpInterval( ranges, range );
       let narrow = _.arraySortedLookUpIntervalNarrowest( ranges, range );
-      narrow[ 1 ] -= 1;
+      let having = _.arraySortedLookUpIntervalHaving( ranges, range );
 
-      // _.assert( narrow[ 1 ] === range[  ] );
+      _.assert( ranges[ having[ 0 ] ] <= range[ 0 ] );
+      _.assert( ranges[ having[ 1 ] ] >= range[ 1 ] );
 
-      if( _.strsAnyHas( _.entitySelect( tokens, '*.tokenName' ), 'string' ) )
-      debugger;
+      // if( _.strsAnyHas( _.entitySelect( tokens, '*.tokenName' ), 'string' ) )
+      // debugger;
     }
 
     if( !o.nearestSplitting )
