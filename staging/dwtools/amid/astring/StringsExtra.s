@@ -1086,10 +1086,10 @@ var JsTokensDefinition =
 {
   'comment/multiline'     : /\/\*.*?\*\//,
   'comment/singleline'    : /\/\/.*?(?=\n|$)/,
-  'whitespace'            : /\s+/,
   'string/single'         : /'(?:\\\n|\\'|[^'\n])*?'/,
   'string/double'         : /"(?:\\\n|\\"|[^"\n])*?"/,
   'string/multiline'      : /`(?:\\\n|\\`|[^`])*?`/,
+  'whitespace'            : /\s+/,
   'keyword'               : /\b(?:do|if|in|for|let|new|try|var|case|else|enum|eval|null|this|true|void|with|await|break|catch|class|const|false|super|throw|while|yield|delete|export|import|public|return|static|switch|typeof|default|extends|finally|package|private|continue|debugger|function|arguments|interface|protected|implements|instanceof)\b/,
   'regexp'                : /\/(?:\\\/|[^\/])*?\/(\w+)/,
   'name'                  : /[a-z_\$][0-9a-z_\$]*/i,
@@ -1115,22 +1115,40 @@ strTokenizeJs.defaults =
   src : null,
 }
 
-// var pattern = {
-//   string1    : /"(?:(?:\\\n|\\"|[^"\n]))*?"/
-// , string2    : /'(?:(?:\\\n|\\'|[^'\n]))*?'/
-// //, string2    : /'(?:(?:\\'|[^']))*?'/
-// , comment1   : /\/\*[\s\S]*?\*\//
-// , comment2   : /\/\/.*?\n/
-// , whitespace : /\s+/
-// , keyword    : /\b(?:var|let|for|if|else|in|class|function|return|with|case|break|switch|export|new|while|do|throw|catch)\b/
-// , regexp     : /\/(?:(?:\\\/|[^\n\/]))*?\//
-// , name       : /[a-zA-Z_\$][a-zA-Z_\$0-9]*/
-// , number     : /\d+(?:\.\d+)?(?:e[+-]?\d+)?/
-// , parens     : /[\(\)]/
-// , curly      : /[{}]/
-// , square     : /[\[\]]/
-// , punct      : /[;.:\?\^%<>=!&|+\-,~]/
-// }
+//
+
+var CppTokensDefinition =
+{
+  'comment/multiline'     : /\/\*.*?\*\//,
+  'comment/singleline'    : /\/\/.*?(?=\n|$)/,
+  'string/single'         : /'(?:\\\n|\\'|[^'\n])*?'/,
+  'string/double'         : /"(?:\\\n|\\"|[^"\n])*?"/,
+  'string/multiline'      : /`(?:\\\n|\\`|[^`])*?`/,
+  'whitespace'            : /\s+/,
+  'keyword'               : /\b(?:do|if|in|for|let|new|try|var|case|else|enum|eval|null|this|true|void|with|await|break|catch|class|const|false|super|throw|while|yield|delete|export|import|public|return|static|switch|typeof|default|extends|finally|package|private|continue|debugger|function|arguments|interface|protected|implements|instanceof)\b/,
+  'regexp'                : /\/(?:\\\/|[^\/])*?\/(\w+)/,
+  'name'                  : /[a-z_\$][0-9a-z_\$]*/i,
+  'number'                : /(?:0x(?:\d|[a-f])+|\d+(?:\.\d+)?(?:e[+-]?\d+)?)/i,
+  'parenthes'             : /[\(\)]/,
+  'curly'                 : /[{}]/,
+  'square'                : /[\[\]]/,
+  'punctuation'           : /;|,|\.\.\.|\.|\:|\?|=>|>=|<=|<|>|!=|!=|==|=|!|&|<<|>>|\+\+|--|\*\*|\+|-|\^|\||\/|\*|%|~|\!/,
+}
+
+function strTokenizeCpp( o )
+{
+  if( _.strIs( o ) )
+  o = { src : o }
+
+  let result = _.strFindAll({ src : o.src, ins : CppTokensDefinition });
+
+  return result;
+}
+
+strTokenizeCpp.defaults =
+{
+  src : null,
+}
 
 //
 
@@ -2012,6 +2030,7 @@ let Proto =
   _strReplaceMap_pre : _strReplaceMap_pre,
   strReplaceAll : strReplaceAll, /* document me */
   strTokenizeJs : strTokenizeJs,
+  strTokenizeCpp : strTokenizeCpp,
 
   strSorterParse : strSorterParse,
 
