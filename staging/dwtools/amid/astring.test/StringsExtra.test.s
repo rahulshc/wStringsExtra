@@ -1506,7 +1506,7 @@ function strTokenizeJs( test )
     {
       match : ' ',
       groups : [ ' ' ],
-      tokenId : 2,
+      tokenId : 5,
       range : [ 0, 1 ],
       counter : 0,
       input : ' // divide by zero',
