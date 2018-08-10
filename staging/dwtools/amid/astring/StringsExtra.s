@@ -1909,7 +1909,7 @@ function strDifference( src1,src2,o )
   if( src1 === src2 )
   return false;
 
-  for( let i = 0, l = Math.min( src1.length, src2.length ) ; i < l ; i++ )
+  for( var i = 0, l = Math.min( src1.length, src2.length ) ; i < l ; i++ )
   if( src1[ i ] !== src2[ i ] )
   return src1.substr( 0,i ) + '*';
 
