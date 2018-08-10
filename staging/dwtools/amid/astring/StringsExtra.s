@@ -2011,7 +2011,7 @@ function strLattersSpectresSimilarity( src1, src2 )
 // }
 
 // --
-// define class
+// declare
 // --
 
 let Proto =
