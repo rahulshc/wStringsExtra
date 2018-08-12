@@ -368,7 +368,9 @@ function strSearch( o )
 
       if( o.excludingTokens )
       {
+        debugger;
         let tokenNames = _.entitySelect( tokens, '*.tokenName' );
+        tokenNames = tokenNames.slice( having[ 0 ], having[ 1 ] );
         let pass = _.none( _.regexpTest( o.excludingTokens, tokenNames ) );
         if( !pass )
         return;
@@ -383,87 +385,6 @@ function strSearch( o )
   });
 
   return result;
-
-  // for( let i = 0 ; i < o.ins.length ; i++ )
-  // findForIns( o.ins[ i ] );
-  //
-  // /* */
-  //
-  // if( o.ins.length <= 1 )
-  // return result;
-  //
-  // let result = _.arraySort( result,function( e )
-  // {
-  //   return e.charsRange[ 0 ];
-  // });
-  //
-  // for( let i1 = 0 ; i1 < result.length-1 ; i1++ )
-  // {
-  //   let r1 = result[ i1 ];
-  //   do
-  //   {
-  //     let r2 = result[ i1+1 ];
-  //
-  //     if( r1.charsRange[ 1 ] > r2.charsRange[ 0 ] )
-  //     debugger;
-  //
-  //     if( r1.charsRange[ 1 ] > r2.charsRange[ 0 ] )
-  //     result.splice( i1+1,i1+2 );
-  //     else
-  //     break;
-  //   }
-  //   while( true )
-  // }
-  //
-  // return result;
-  //
-  // /* */
-  //
-  // function findForIns( ins )
-  // {
-  //
-  //   let prevIndex = -1;
-  //   do
-  //   {
-  //     let execed = ins.exec( o.src );
-  //     if( execed )
-  //     {
-  //       let r = Object.create( null );
-  //
-  //       _.assert( execed.index > prevIndex, () => 'Seems RegExp is not global ' + _.toStr( ins ) );
-  //
-  //       r.ins = execed[ 0 ];
-  //       r.groups = _.longSlice( execed );
-  //       r.charsRange = [ execed.index, execed.index + r.ins.length ];
-  //       r.charsRangeRight = [ o.src.length - execed.index, o.src.length - execed.index - r.ins.length ];
-  //
-  //       if( o.determiningLineNumber )
-  //       {
-  //         let first = o.src.substring( 0,r.charsRange[ 0 ] ).split( '\n' ).length;
-  //         r.linesRange = [ first, first+o.src.substring( r.charsRange[ 0 ], r.charsRange[ 1 ] ).split( '\n' ).length ];
-  //       }
-  //
-  //       if( o.nearestLines )
-  //       r.nearest = _.strLinesNearest
-  //       ({
-  //         src : o.src,
-  //         charsRange : r.charsRange,
-  //         numberOfLines : o.nearestLines,
-  //       });
-  //
-  //       r.linesOffsets = [ first - _.strLinesCount( r.nearest[ 0 ] ) + 1, first, first + _.strLinesCount( r.nearest[ 1 ] ) ];
-  //
-  //       if( !o.nearestSplitting )
-  //       r.nearest.join( '' );
-  //
-  //       result.push( r );
-  //     }
-  //
-  //   }
-  //   while( execed );
-  //
-  // }
-
 }
 
 strSearch.defaults =
@@ -479,117 +400,6 @@ strSearch.defaults =
   excludingTokens : null,
 }
 
-// function strSearch( o )
-// {
-//   let result = [];
-//
-//   _.assert( arguments.length === 1, 'expects single argument' );
-//   _.routineOptions( strSearch,o );
-//
-//   /* */
-//
-//   o.ins = _.arrayAs( o.ins );
-//   o.ins = _.regexpsMaybeFrom
-//   ({
-//     srcStr : o.ins,
-//     stringWithRegexp : o.stringWithRegexp,
-//     toleratingSpaces : o.toleratingSpaces,
-//   });
-//
-//   /* */
-//
-//   for( let i = 0 ; i < o.ins.length ; i++ )
-//   findForIns( o.ins[ i ] );
-//
-//   /* */
-//
-//   if( o.ins.length <= 1 )
-//   return result;
-//
-//   let result = _.arraySort( result,function( e )
-//   {
-//     return e.charsRange[ 0 ];
-//   });
-//
-//   for( let i1 = 0 ; i1 < result.length-1 ; i1++ )
-//   {
-//     let r1 = result[ i1 ];
-//     do
-//     {
-//       let r2 = result[ i1+1 ];
-//
-//       if( r1.charsRange[ 1 ] > r2.charsRange[ 0 ] )
-//       debugger;
-//
-//       if( r1.charsRange[ 1 ] > r2.charsRange[ 0 ] )
-//       result.splice( i1+1,i1+2 );
-//       else
-//       break;
-//     }
-//     while( true )
-//   }
-//
-//   return result;
-//
-//   /* */
-//
-//   function findForIns( ins )
-//   {
-//
-//     let prevIndex = -1;
-//     do
-//     {
-//       let execed = ins.exec( o.src );
-//       if( execed )
-//       {
-//         let r = Object.create( null );
-//
-//         _.assert( execed.index > prevIndex, () => 'Seems RegExp is not global ' + _.toStr( ins ) );
-//
-//         r.ins = execed[ 0 ];
-//         r.groups = _.longSlice( execed );
-//         r.charsRange = [ execed.index, execed.index + r.ins.length ];
-//         r.charsRangeRight = [ o.src.length - execed.index, o.src.length - execed.index - r.ins.length ];
-//
-//         if( o.determiningLineNumber )
-//         {
-//           let first = o.src.substring( 0,r.charsRange[ 0 ] ).split( '\n' ).length;
-//           r.linesRange = [ first, first+o.src.substring( r.charsRange[ 0 ], r.charsRange[ 1 ] ).split( '\n' ).length ];
-//         }
-//
-//         if( o.nearestLines )
-//         r.nearest = _.strLinesNearest
-//         ({
-//           src : o.src,
-//           charsRange : r.charsRange,
-//           numberOfLines : o.nearestLines,
-//         });
-//
-//         r.linesOffsets = [ first - _.strLinesCount( r.nearest[ 0 ] ) + 1, first, first + _.strLinesCount( r.nearest[ 1 ] ) ];
-//
-//         if( !o.nearestSplitting )
-//         r.nearest.join( '' );
-//
-//         result.push( r );
-//       }
-//
-//     }
-//     while( execed );
-//
-//   }
-//
-// }
-//
-// strSearch.defaults =
-// {
-//   src : null,
-//   ins : null,
-//   nearestLines : 3,
-//   nearestSplitting : 1,
-//   determiningLineNumber : 0,
-//   stringWithRegexp : 0,
-//   toleratingSpaces : 0,
-// }
 //
 
 function strFindAll( src, ins )
