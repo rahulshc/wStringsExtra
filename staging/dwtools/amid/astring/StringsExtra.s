@@ -50,7 +50,7 @@ let _ObjectHasOwnProperty = Object.hasOwnProperty;
 let _arraySlice = _.longSlice;
 let strTypeOf = _.strTypeOf;
 
-_.assert( _.routineIs( _.arraySortedAddOnce ) );
+_.assert( _.routineIs( _.sorted.addOnce ) );
 
 // --
 //
@@ -361,7 +361,7 @@ function strSearch( o )
 
       let ranges = _.entitySelect( tokens, '*.range.0' );
       let range = [ it.nearest[ 0 ].length, it.nearest[ 0 ].length + it.nearest[ 1 ].length ];
-      let having = _.arraySortedLookUpIntervalHaving( ranges, range );
+      let having = _.sorted.lookUpIntervalHaving( ranges, range );
 
       _.assert( ranges[ having[ 0 ] ] <= range[ 0 ] );
       _.assert( having[ 1 ] === ranges.length || ranges[ having[ 1 ] ] >= range[ 1 ] );
