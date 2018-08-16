@@ -98,6 +98,33 @@ function strCamelize( srcStr )
 
 //
 
+function strCamelToTitle( srcStr )
+{
+  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( _.strIs( srcStr ) );
+
+  let result = srcStr;
+  let regexp = /(\s*[A-za-z][a-z]*)|(\s*[0-9]+)/g;
+  // let split = /(\s*)/g;
+
+  result = result.replace( regexp, function( match, g1, g2, offset )
+  {
+    let g = match;
+    // let splitted = split.exec( g );
+    // debugger;
+    if( offset > 0 )
+    g = _.strDecapitalize( g );
+    if( offset > 0 && g[ 0 ] !== ' ' )
+    return ' ' + g;
+    else
+    return g;
+  });
+
+  return result;
+}
+
+//
+
 /**
  * Removes invalid characters from filename passed as first( srcStr ) argument by replacing characters finded by
  * pattern with second argument( o ) property( o.delimeter ).If( o.delimeter ) is not defined,
@@ -1828,6 +1855,8 @@ let Proto =
 {
 
   strCamelize : strCamelize,
+  strCamelToTitle : strCamelToTitle,
+
   strFilenameFor : strFilenameFor,
   strVarNameFor : strVarNameFor,
   strHtmlEscape : strHtmlEscape,

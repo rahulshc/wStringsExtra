@@ -37,6 +37,7 @@ var _ = _global_.wTools;
 
 function strCamelize( test )
 {
+
   test.case = 'converts string to camelcase';
   var got = _.strCamelize( 'a-b_c/d' );
   var expected = 'aBCD';
@@ -85,6 +86,37 @@ function strCamelize( test )
   {
     _.strCamelize( [ ] );
   });
+
+}
+
+//
+
+function strCamelToTitle( test )
+{
+
+  test.case = 'trivial';
+  var src = 'someString';
+  var expected = 'some string';
+  var got = _.strCamelToTitle( src );
+  test.identical( got, expected );
+
+  test.case = 'trivial - first upper case';
+  var src = 'SomeString';
+  var expected = 'Some string';
+  var got = _.strCamelToTitle( src );
+  test.identical( got, expected );
+
+  test.case = 'several tokens';
+  var src = 'abcEfgHigMigg';
+  var expected = 'abc efg hig migg';
+  var got = _.strCamelToTitle( src );
+  test.identical( got, expected );
+
+  test.case = 'with digits and spaces';
+  var src = 'someString13 ThisIs14 1999 year1d';
+  var expected = 'some string 13 This is 14 1999 year 1 d';
+  var got = _.strCamelToTitle( src );
+  test.identical( got, expected );
 
 }
 
@@ -2077,6 +2109,8 @@ var Self =
   {
 
     strCamelize : strCamelize,
+    strCamelToTitle : strCamelToTitle,
+
     strFilenameFor : strFilenameFor,
     strHtmlEscape : strHtmlEscape,
 
