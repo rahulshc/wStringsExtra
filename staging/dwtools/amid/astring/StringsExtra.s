@@ -1018,7 +1018,7 @@ function strSorterParse( o )
   }
 
   let delimeters = _.mapOwnKeys( map );
-  let splitted = _.strSplit/**1**/
+  let splitted = _.strSplit
   ({
     src : o.src,
     delimeter : delimeters,
@@ -1499,8 +1499,10 @@ function strParseMap( o )
   if( _.strIs( o ) || _.arrayIs( o ) )
   o = { src : o }
 
-  _.routineOptions( strParseMap,o );
+  _.routineOptions( strParseMap, o );
+  _.assert( !!o.valKeyDelimeter );
   _.assert( _.strIs( o.entryDelimeter ) );
+  _.assert( arguments.length === 1 );
 
   let src = o.src;
 
@@ -1538,6 +1540,36 @@ function strParseMap( o )
 }
 
 strParseMap.defaults =
+{
+  src : null,
+  valKeyDelimeter : ':',
+  entryDelimeter : ' ',
+}
+
+//
+
+function strJoinMap( o )
+{
+
+  _.routineOptions( strParseMap, o );
+  _.assert( _.strIs( o.valKeyDelimeter ) );
+  _.assert( _.strIs( o.entryDelimeter ) );
+  _.assert( _.objectIs( o.src ) );
+  _.assert( arguments.length === 1 );
+
+  let result = '';
+  let c = 0;
+  for( let s in o.src )
+  {
+    if( c > 0 )
+    result += o.entryDelimeter;
+    result += s + o.entryDelimeter + o.src[ s ];
+  }
+
+  return result;
+}
+
+strJoinMap.defaults =
 {
   src : null,
   valKeyDelimeter : ':',
@@ -1886,6 +1918,7 @@ let Proto =
   strToConfig : strToConfig, /* experimental */
 
   strParseMap : strParseMap,
+  strJoinMap : strJoinMap,
 
   strTable : strTable,
   strsSort : strsSort,
