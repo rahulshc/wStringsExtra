@@ -1472,12 +1472,12 @@ function strToConfig( src,o )
   o = o || Object.create( null );
   if( o.delimeter === undefined ) o.delimeter = ' :';
 
-  let src = src.split( '\n' );
+  let splitted = src.split( '\n' );
 
-  for( let s = 0 ; s < src.length ; s++ )
+  for( let s = 0 ; s < splitted.length ; s++ )
   {
 
-    let row = src[ s ];
+    let row = splitted[ s ];
     let i = row.indexOf( o.delimeter );
     if( i === -1 ) continue;
 
