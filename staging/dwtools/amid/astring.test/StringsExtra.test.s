@@ -91,31 +91,43 @@ function strCamelize( test )
 
 //
 
-function strCamelToTitle( test )
+function strToTitle( test )
 {
 
   test.case = 'trivial';
   var src = 'someString';
   var expected = 'some string';
-  var got = _.strCamelToTitle( src );
+  var got = _.strToTitle( src );
   test.identical( got, expected );
 
   test.case = 'trivial - first upper case';
   var src = 'SomeString';
   var expected = 'Some string';
-  var got = _.strCamelToTitle( src );
+  var got = _.strToTitle( src );
   test.identical( got, expected );
 
   test.case = 'several tokens';
   var src = 'abcEfgHigMigg';
   var expected = 'abc efg hig migg';
-  var got = _.strCamelToTitle( src );
+  var got = _.strToTitle( src );
   test.identical( got, expected );
 
   test.case = 'with digits and spaces';
   var src = 'someString13 ThisIs14 1999 year1d';
   var expected = 'some string 13 This is 14 1999 year 1 d';
-  var got = _.strCamelToTitle( src );
+  var got = _.strToTitle( src );
+  test.identical( got, expected );
+
+  test.case = 'with digits and spaces and underscore';
+  var src = 'some_test_13_14_this is __13__ __x__';
+  var expected = 'some test 13 14 this is 13 x';
+  var got = _.strToTitle( src );
+  test.identical( got, expected );
+
+  test.case = 'with digits and spaces and dot';
+  var src = 'some.test_13.14.this is ..13.. ..x..';
+  var expected = 'some test 13 14 this is 13 x';
+  var got = _.strToTitle( src );
   test.identical( got, expected );
 
 }
@@ -2109,7 +2121,7 @@ var Self =
   {
 
     strCamelize : strCamelize,
-    strCamelToTitle : strCamelToTitle,
+    strToTitle : strToTitle,
 
     strFilenameFor : strFilenameFor,
     strHtmlEscape : strHtmlEscape,

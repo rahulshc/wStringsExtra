@@ -98,20 +98,21 @@ function strCamelize( srcStr )
 
 //
 
-function strCamelToTitle( srcStr )
+let _strToTitleRegexp1 = /(?<=\s|^)(?:_|\.)+|(?:_|\.)+(?=\s|$)/g;
+let _strToTitleRegexp2 = /(?:_|\.)+/g;
+let _strToTitleRegexp3 = /(\s*[A-za-z][a-z]*)|(\s*[0-9]+)/g;
+function strToTitle( srcStr )
 {
   _.assert( arguments.length === 1, 'expects single argument' );
   _.assert( _.strIs( srcStr ) );
 
   let result = srcStr;
-  let regexp = /(\s*[A-za-z][a-z]*)|(\s*[0-9]+)/g;
-  // let split = /(\s*)/g;
 
-  result = result.replace( regexp, function( match, g1, g2, offset )
+  result = result.replace( _strToTitleRegexp1, '' );
+  result = result.replace( _strToTitleRegexp2, ' ' );
+  result = result.replace( _strToTitleRegexp3, function( match, g1, g2, offset )
   {
     let g = match;
-    // let splitted = split.exec( g );
-    // debugger;
     if( offset > 0 )
     g = _.strDecapitalize( g );
     if( offset > 0 && g[ 0 ] !== ' ' )
@@ -1887,7 +1888,7 @@ let Proto =
 {
 
   strCamelize : strCamelize,
-  strCamelToTitle : strCamelToTitle,
+  strToTitle : strToTitle,
 
   strFilenameFor : strFilenameFor,
   strVarNameFor : strVarNameFor,
