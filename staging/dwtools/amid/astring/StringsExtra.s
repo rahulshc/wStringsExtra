@@ -677,12 +677,12 @@ strFindAll.defaults =
 
 //
 
-function _strReplaceMap_pre( o )
+function _strReplaceMapPrepare( o )
 {
 
   /* verify */
 
-  _.assertMapHasAll( o, _strReplaceMap_pre.defaults );
+  _.assertMapHasAll( o, _strReplaceMapPrepare.defaults );
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( o.dictionary ) || _.longIs( o.dictionary ) || o.dictionary === null );
   _.assert( ( _.longIs( o.ins ) && _.longIs( o.sub ) ) || ( o.ins === null && o.sub === null ) );
@@ -750,7 +750,7 @@ function _strReplaceMap_pre( o )
   return o;
 }
 
-_strReplaceMap_pre.defaults =
+_strReplaceMapPrepare.defaults =
 {
   dictionary : null,
   ins : null,
@@ -822,70 +822,8 @@ function strReplaceAll( src, ins, sub )
   _.routineOptions( strReplaceAll, o );
   _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
   _.assert( _.strIs( o.src ) );
-  // _.assert( _.objectIs( o.dictionary ) || _.longIs( o.dictionary ) || o.dictionary === null );
-  // _.assert( ( _.longIs( o.ins ) && _.longIs( o.sub ) ) || ( o.ins === null && o.sub === null ) );
 
-  // /* pre */
-  //
-  // if( o.dictionary )
-  // {
-  //
-  //   o.ins = [];
-  //   o.sub = [];
-  //
-  //   if( _.objectIs( o.dictionary ) )
-  //   {
-  //     let i = 0;
-  //     for( let d in o.dictionary )
-  //     {
-  //       o.ins[ i ] = d;
-  //       o.sub[ i ] = o.dictionary[ d ];
-  //       i += 1;
-  //     }
-  //   }
-  //   else
-  //   {
-  //     let i = 0;
-  //     o.dictionary.forEach( ( d ) =>
-  //     {
-  //       let ins = d[ 0 ];
-  //       let sub = d[ 1 ];
-  //       _.assert( d.length === 2 );
-  //       _.assert( !( _.arrayIs( ins ) ^ _.arrayIs( sub ) ) );
-  //       if( _.arrayIs( ins ) )
-  //       {
-  //         _.assert( ins.length === sub.length )
-  //         for( let n = 0 ; n < ins.length ; n++ )
-  //         {
-  //           o.ins[ i ] = ins[ n ];
-  //           o.sub[ i ] = sub[ n ];
-  //           i += 1;
-  //         }
-  //       }
-  //       else
-  //       {
-  //         o.ins[ i ] = ins;
-  //         o.sub[ i ] = sub;
-  //         i += 1;
-  //       }
-  //     });
-  //   }
-  //
-  //   o.dictionary = null;
-  // }
-  //
-  // /* verify */
-  //
-  // _.assert( !o.dictionary );
-  // _.assert( o.ins.length === o.sub.length );
-  //
-  // if( Config.debug )
-  // {
-  //   o.ins.forEach( ( ins ) => _.assert( _.strIs( ins ) || _.regexpIs( ins ) ), 'expects String or RegExp' );
-  //   o.sub.forEach( ( sub ) => _.assert( _.strIs( sub ) || _.routineIs( sub ) ), 'expects String or Routine' );
-  // }
-
-  _._strReplaceMap_pre( o );
+  _._strReplaceMapPrepare( o );
 
   /* */
 
@@ -1899,7 +1837,7 @@ let Proto =
   strSearch : strSearch,
   strFindAll : strFindAll,
 
-  _strReplaceMap_pre : _strReplaceMap_pre,
+  _strReplaceMapPrepare : _strReplaceMapPrepare,
   strReplaceAll : strReplaceAll, /* document me */
   strTokenizeJs : strTokenizeJs,
   strTokenizeCpp : strTokenizeCpp,
