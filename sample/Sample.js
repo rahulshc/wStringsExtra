@@ -5,6 +5,9 @@ var _ = wTools;
 
 /**/
 
-var got = _.strExtractStereoStrips( '#abc#' );
-var expected = [ '', 'abc', '' ];
-console.log( 'strExtractStereoStrips', got );
+var title = _.strCapitalize( _.strToTitle( 'some_test_13_14_this is __13__ __x__' ) );
+console.log( title );
+
+/*
+Some test 13 14 this is 13 x
+*/
