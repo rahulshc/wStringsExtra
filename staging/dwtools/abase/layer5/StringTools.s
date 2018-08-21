@@ -1,13 +1,13 @@
-(function _StringsExtra_s_() {
+(function _StringTools_s_() {
 
 'use strict';
 
 /**
-  @module Tools/base/StringToolsExtra - Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.
+  @module Tools/base/layer5/StringTools - Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.
 */
 
 /**
- * @file StringToolsExtra.s.
+ * @file StringTools.s.
  */
 
 if( typeof module !== 'undefined' )
@@ -33,6 +33,7 @@ if( typeof module !== 'undefined' )
   let _ = _global_.wTools;
 
   _.include( 'wArraySorted' );
+  _.include( 'wArraySparse' );
 
 }
 
@@ -924,6 +925,26 @@ function strTokenizeCpp( o )
 strTokenizeCpp.defaults =
 {
   src : null,
+}
+
+//
+
+function strSubs( srcStr, sparse )
+{
+  var result = [];
+
+  _.assert( arguments.length === 2, 'expects exactly two arguments' );
+  _.assert( _.strIs( srcStr ) );
+  _.assert( _.sparse.is( sparse ) );
+
+  debugger; xxx
+
+  _.sparse.eachElement( sparse, ( range ) =>
+  {
+    result.push( srcStr.substring( range[ 0 ], range[ 1 ] ) );
+  });
+
+  return result;
 }
 
 //
@@ -1841,6 +1862,8 @@ let Proto =
   strReplaceAll : strReplaceAll, /* document me */
   strTokenizeJs : strTokenizeJs,
   strTokenizeCpp : strTokenizeCpp,
+
+  strSubs : strSubs,
 
   strSorterParse : strSorterParse,
 
