@@ -474,7 +474,7 @@ function strFindAll( src, ins )
   let descriptorsArray = [];
   let execeds = [];
   let closests = [];
-  let closestInsIndex = -1;
+  let closestTokenId = -1;
   let closestIndex = o.src.length;
   let currentIndex = 0;
 
@@ -491,22 +491,21 @@ function strFindAll( src, ins )
     if( found < closestIndex )
     {
       closestIndex = found
-      closestInsIndex = tokenId;
+      closestTokenId = tokenId;
     }
   });
 
   /* */
 
-  debugger;
-  // currentIndex = closestIndex;
   while( closestIndex < o.src.length )
   {
 
-    // if( o.tokenizingUnknown && 1 )
-    // xxx;
+    if( o.tokenizingUnknown && closestIndex > currentIndex )
+    {
+      descriptorFor( o.src, currentIndex, -1 );
+    }
 
-    debugger;
-    descriptorFor( o.src, closestIndex, closestInsIndex );
+    descriptorFor( o.src, closestIndex, closestTokenId );
 
     closestIndex = o.src.length;
     closests.forEach( ( index, tokenId ) =>
@@ -519,13 +518,17 @@ function strFindAll( src, ins )
       if( index < closestIndex )
       {
         closestIndex = index
-        closestInsIndex = tokenId;
+        closestTokenId = tokenId;
       }
     });
 
-    // currentIndex = closestIndex;
+    _.assert( closestIndex <= o.src.length );
   }
-  debugger;
+
+  if( o.tokenizingUnknown && closestIndex > currentIndex )
+  {
+    descriptorFor( o.src, currentIndex, -1 );
+  }
 
   /* */
 
@@ -613,6 +616,9 @@ function strFindAll( src, ins )
   {
     let originalIns = ins[ tokenId ];
     let foundIns;
+
+    if( tokenId === -1 )
+    originalIns = src.substring( index, closestIndex );
 
     if( o.fast )
     {
@@ -870,14 +876,14 @@ strReplaceAll.defaults =
 
 var JsTokensDefinition =
 {
-  'comment/multiline'     : /\/\*.*?\*\//,
+  'comment/multiline'     : /\/\*(?:\n|.)*?\*\//,
   'comment/singleline'    : /\/\/.*?(?=\n|$)/,
   'string/single'         : /'(?:\\\n|\\'|[^'\n])*?'/,
   'string/double'         : /"(?:\\\n|\\"|[^"\n])*?"/,
   'string/multiline'      : /`(?:\\\n|\\`|[^`])*?`/,
   'whitespace'            : /\s+/,
   'keyword'               : /\b(?:do|if|in|for|let|new|try|var|case|else|enum|eval|null|this|true|void|with|await|break|catch|class|const|false|super|throw|while|yield|delete|export|import|public|return|static|switch|typeof|default|extends|finally|package|private|continue|debugger|function|arguments|interface|protected|implements|instanceof)\b/,
-  'regexp'                : /\/(?:\\\/|[^\/])*?\/(\w+)/,
+  'regexp'                : /\/((?:\\\/|[^\/\n])+?)\/(\w*)/,
   'name'                  : /[a-z_\$][0-9a-z_\$]*/i,
   'number'                : /(?:0x(?:\d|[a-f])+|\d+(?:\.\d+)?(?:e[+-]?\d+)?)/i,
   'parenthes'             : /[\(\)]/,

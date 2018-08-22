@@ -1143,7 +1143,7 @@ function strFindAll( test )
 
   /**/
 
-  test.case = 'map with tokenizingUnknwon : 1';
+  test.case = 'map with tokenizingUnknwon : 1, but not unknown';
   var map =
   {
     manya : /a+/,
@@ -1153,6 +1153,7 @@ function strFindAll( test )
   ({
     src : 'aabaa',
     ins : map,
+    tokenizingUnknown : 1,
   });
   log( got );
   var expected =
@@ -1186,6 +1187,83 @@ function strFindAll( test )
     }
   ]
   log( got );
+  test.identical( got,expected );
+
+  /* */
+
+  test.case = 'map with tokenizingUnknwon : 1 and unknown';
+  var map =
+  {
+    manya : /a+/,
+    ba : /ba/,
+  }
+  var got = _.strFindAll
+  ({
+    src : 'xaayybaaz',
+    ins : map,
+    tokenizingUnknown : 1,
+  });
+  debugger;
+  log( got );
+  var expected =
+  [
+    {
+      match : 'x',
+      groups : [ 'x' ],
+      tokenId : -1,
+      range : [ 0, 1 ],
+      counter : 0,
+      input : 'xaayybaaz',
+      tokenName : undefined,
+    },
+    {
+      match : 'aa',
+      groups : [ 'aa' ],
+      tokenId : 0,
+      range : [ 1, 3 ],
+      counter : 1,
+      input : 'xaayybaaz',
+      tokenName : 'manya',
+    },
+    {
+      match : 'yy',
+      groups : [ 'yy' ],
+      tokenId : -1,
+      range : [ 3, 5 ],
+      counter : 2,
+      input : 'xaayybaaz',
+      tokenName : undefined,
+    },
+    {
+      match : 'ba',
+      groups : [ 'ba' ],
+      tokenId : 1,
+      range : [ 5, 7 ],
+      counter : 3,
+      input : 'xaayybaaz',
+      tokenName : 'ba'
+    },
+    {
+      match : 'a',
+      groups : [ 'a' ],
+      tokenId : 0,
+      range : [ 7, 8 ],
+      counter : 4,
+      input : 'xaayybaaz',
+      tokenName : 'manya'
+    },
+    {
+      match : 'z',
+      groups : [ 'z' ],
+      tokenId : -1,
+      range : [ 8, 9 ],
+      counter : 5,
+      input : 'xaayybaaz',
+      tokenName : undefined,
+    },
+  ]
+  log( got );
+  debugger;
   test.identical( got,expected );
 
   /**/
@@ -1589,6 +1667,54 @@ function strTokenizeJs( test )
 
   /* - */
 
+  test.case = 'single line comment';
+
+  var code = `
+// type : 'image/png',
+`;
+
+  var expected =
+  [
+    {
+      match : '\n',
+      groups : [ '\n' ],
+      tokenId : 5,
+      range : [ 0, 1 ],
+      counter : 0,
+      input : code,
+      tokenName : 'whitespace'
+    },
+    {
+      match : `// type : 'image/png',`,
+      groups : [ `// type : 'image/png',` ],
+      tokenId : 1,
+      range : [ 1, 23 ],
+      counter : 1,
+      input : code,
+      tokenName : 'comment/singleline'
+    },
+    {
+      match : '\n',
+      groups : [ '\n' ],
+      tokenId : 5,
+      range : [ 23, 24 ],
+      counter : 2,
+      input : code,
+      tokenName : 'whitespace'
+    },
+  ]
+
+  debugger;
+  var got = _.strTokenizeJs( code );
+
+  log( code );
+  log( _.entitySelect( got, '*.tokenName' ) );
+  debugger;
+  log( got );
+  test.identical( got, expected );
+
+  test.case = 'single line comment';
+
   var code =
 ` // divide by zero`
 
@@ -1622,6 +1748,157 @@ function strTokenizeJs( test )
   test.identical( got, expected );
 
   /* - */
+
+  test.case = 'single line comment inside long text looking like regexp';
+
+  var code =
+  `
+for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
+  // type : 'image/png',
+`;
+
+  var got = _.strTokenizeJs({ src : code, tokenizingUnknown : 1 });
+
+  log( code );
+  log( _.toStr( _.entitySelect( got, '*.match' ), { multiline : 0 } ) );
+  log( _.entitySelect( got, '*.tokenName' ) );
+
+  var tokenNamesGot = _.entitySelect( got, '*.tokenName' );
+  var tokenNamesExpected = [ 'whitespace', 'keyword', 'parenthes', 'whitespace', 'keyword', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'number', 'punctuation', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'punctuation', 'name', 'whitespace', 'punctuation', 'whitespace', 'number', 'punctuation', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'punctuation', 'whitespace', 'parenthes', 'whitespace', 'comment/singleline', 'whitespace' ];
+  test.identical( tokenNamesGot, tokenNamesExpected );
+
+  var matchesGot = _.entitySelect( got, '*.match' );
+  var matchesExpected = [ '\n', 'for', '(', ' ', 'var', ' ', 'p', ' ', '=', ' ', '0', ',', 'pl', ' ', '=', ' ', 'polygon', '.', 'length', ' ', '/', ' ', '2', ';', ' ', 'p', ' ', '<', ' ', 'pl', ' ', ';', ' ', 'p', '++', ' ', ')', '\n  ', '// type : \'image/png\',', '\n' ];
+  test.identical( matchesGot, matchesExpected );
+
+  /* - */
+
+  test.case = 'multiline comment';
+
+  var code =
+`
+  /**
+   * @file File.js.
+   */
+`
+
+  var expected =
+  [
+    {
+      match : '\n  ',
+      groups : [ '\n  ' ],
+      tokenId : 5,
+      range : [ 0, 3 ],
+      counter : 0,
+      input : code,
+      tokenName : 'whitespace'
+    },
+    {
+      match : `/**
+   * @file File.js.
+   */`,
+      groups : [ `/**
+   * @file File.js.
+   */` ],
+      tokenId : 0,
+      range : [ 3, 32 ],
+      counter : 1,
+      input : code,
+      tokenName : 'comment/multiline'
+    },
+    {
+      match : '\n',
+      groups : [ '\n' ],
+      tokenId : 5,
+      range : [ 32, 33 ],
+      counter : 2,
+      input : code,
+      tokenName : 'whitespace'
+    },
+  ]
+
+  var got = _.strTokenizeJs( code );
+
+  log( code );
+  log( _.entitySelect( got, '*.tokenName' ) );
+  log( got );
+  test.identical( got, expected );
+
+  /* - */
+
+  test.case = 'regular experssion without flags';
+
+  var code = `/\d+/`;
+
+  var expected =
+  [
+    {
+      match : '/\d+/',
+      groups : [ '/\d+/', '\d+', '' ],
+      tokenId : 7,
+      range : [ 0, 4 ],
+      counter : 0,
+      input : code,
+      tokenName : 'regexp'
+    },
+  ]
+
+  var got = _.strTokenizeJs( code );
+
+  log( code );
+  log( _.entitySelect( got, '*.tokenName' ) );
+  log( got );
+  test.identical( got, expected );
+
+  /* - */
+
+  test.case = 'regular experssion with flags';
+
+  var code = `/\d+/ig`;
+
+  var expected =
+  [
+    {
+      match : '/\d+/ig',
+      groups : [ '/\d+/ig', '\d+', 'ig' ],
+      tokenId : 7,
+      range : [ 0, 6 ],
+      counter : 0,
+      input : code,
+      tokenName : 'regexp'
+    },
+  ]
+
+  var got = _.strTokenizeJs( code );
+
+  log( code );
+  log( _.entitySelect( got, '*.tokenName' ) );
+  log( got );
+  test.identical( got, expected );
+
+  /* - */
+
+  // test.case = 'looking like regexp, but not';
+  //
+  // var x = / 2 , y /;
+  // var code = `for( var p = x / 2 , y / 2 ; p < pl ; p++ )`;
+  //
+  // debugger;
+  // var got = _.strTokenizeJs({ src : code, tokenizingUnknown : 1 });
+  //
+  // log( code );
+  // log( _.toStr( _.entitySelect( got, '*.match' ), { multiline : 0 } ) );
+  // log( _.entitySelect( got, '*.tokenName' ) );
+  //
+  // debugger;
+  //
+  // var tokenNamesGot = _.entitySelect( got, '*.tokenName' );
+  // var tokenNamesExpected = [ 'whitespace', 'keyword', 'parenthes', 'whitespace', 'keyword', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'number', 'punctuation', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'punctuation', 'name', 'whitespace', 'punctuation', 'whitespace', 'number', 'punctuation', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'punctuation', 'whitespace', 'parenthes', 'whitespace', 'comment/singleline', 'whitespace' ];
+  // test.identical( tokenNamesGot, tokenNamesExpected );
+  //
+  // var matchesGot = _.entitySelect( got, '*.match' );
+  // var matchesExpected = [ '\n', 'for', '(', ' ', 'var', ' ', 'p', ' ', '=', ' ', '0', ',', 'pl', ' ', '=', ' ', 'polygon', '.', 'length', ' ', '/', ' ', '2', ';', ' ', 'p', ' ', '<', ' ', 'pl', ' ', ';', ' ', 'p', '++', ' ', ')', '\n  ', '// type : \'image/png\',', '\n' ];
+  // test.identical( matchesGot, matchesExpected );
 
 }
 
