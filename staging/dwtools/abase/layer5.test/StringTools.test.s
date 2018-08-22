@@ -25,7 +25,7 @@ if( typeof module !== 'undefined' )
   var _ = _global_.wTools;
 
   _.include( 'wTesting' );
-  require( '../astring/StringsExtra.s' );
+  require( '../layer5/StringTools.s' );
 
 }
 
@@ -253,7 +253,7 @@ function strHtmlEscape( test )
 //
 
 /*
-  qqq : duplicate test case for fast : 1
+  qqq : duplicate test cases for fast : 1
 */
 
 function strFindAll( test )
@@ -1107,6 +1107,53 @@ function strFindAll( test )
     ba : /ba/,
   }
   var got = _.strFindAll( 'aabaa', map );
+  log( got );
+  var expected =
+  [
+    {
+      groups : [ 'aa' ],
+      match : 'aa',
+      tokenId : 0,
+      range : [ 0, 2 ],
+      counter : 0,
+      input : 'aabaa',
+      tokenName : 'manya'
+    },
+    {
+      groups : [ 'ba' ],
+      match : 'ba',
+      tokenId : 1,
+      range : [ 2, 4 ],
+      counter : 1,
+      input : 'aabaa',
+      tokenName : 'ba'
+    },
+    {
+      groups : [ 'a' ],
+      match : 'a',
+      tokenId : 0,
+      range : [ 4, 5 ],
+      counter : 2,
+      input : 'aabaa',
+      tokenName : 'manya'
+    }
+  ]
+  log( got );
+  test.identical( got,expected );
+
+  /**/
+
+  test.case = 'map with tokenizingUnknwon : 1';
+  var map =
+  {
+    manya : /a+/,
+    ba : /ba/,
+  }
+  var got = _.strFindAll
+  ({
+    src : 'aabaa',
+    ins : map,
+  });
   log( got );
   var expected =
   [

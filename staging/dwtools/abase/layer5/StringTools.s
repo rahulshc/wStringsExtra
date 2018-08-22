@@ -460,8 +460,8 @@ function strFindAll( src, ins )
   let tokenNames;
   if( _.mapIs( ins ) )
   {
-    ins = [];
     tokenNames = [];
+    ins = [];
     let i = 0;
     for( var name in o.ins )
     {
@@ -497,9 +497,15 @@ function strFindAll( src, ins )
 
   /* */
 
-  currentIndex = closestIndex;
-  while( currentIndex < o.src.length )
+  debugger;
+  // currentIndex = closestIndex;
+  while( closestIndex < o.src.length )
   {
+
+    // if( o.tokenizingUnknown && 1 )
+    // xxx;
+
+    debugger;
     descriptorFor( o.src, closestIndex, closestInsIndex );
 
     closestIndex = o.src.length;
@@ -509,6 +515,7 @@ function strFindAll( src, ins )
       index = closests[ tokenId ] = find( o.src, ins[ tokenId ], tokenId );
 
       _.assert( closests[ tokenId ] >= currentIndex );
+
       if( index < closestIndex )
       {
         closestIndex = index
@@ -516,8 +523,9 @@ function strFindAll( src, ins )
       }
     });
 
-    currentIndex = closestIndex;
+    // currentIndex = closestIndex;
   }
+  debugger;
 
   /* */
 
@@ -659,9 +667,9 @@ function strFindAll( src, ins )
     }
 
     if( foundIns.length > 0 )
-    currentIndex += foundIns.length;
+    currentIndex = index + foundIns.length;
     else
-    currentIndex += 1;
+    currentIndex = index + 1;
 
     o.counter += 1;
   }
@@ -674,6 +682,7 @@ strFindAll.defaults =
   ins : null,
   fast : 0,
   counter : 0,
+  tokenizingUnknown : 0,
 }
 
 //
@@ -882,7 +891,12 @@ function strTokenizeJs( o )
   if( _.strIs( o ) )
   o = { src : o }
 
-  let result = _.strFindAll({ src : o.src, ins : JsTokensDefinition });
+  let result = _.strFindAll
+  ({
+    src : o.src,
+    ins : JsTokensDefinition,
+    tokenizingUnknown : o.tokenizingUnknown,
+  });
 
   return result;
 }
@@ -890,6 +904,7 @@ function strTokenizeJs( o )
 strTokenizeJs.defaults =
 {
   src : null,
+  tokenizingUnknown : 0,
 }
 
 //
@@ -917,7 +932,12 @@ function strTokenizeCpp( o )
   if( _.strIs( o ) )
   o = { src : o }
 
-  let result = _.strFindAll({ src : o.src, ins : CppTokensDefinition });
+  let result = _.strFindAll
+  ({
+    src : o.src,
+    ins : JsTokensDefinition,
+    tokenizingUnknown : o.tokenizingUnknown,
+  });
 
   return result;
 }
@@ -925,6 +945,7 @@ function strTokenizeCpp( o )
 strTokenizeCpp.defaults =
 {
   src : null,
+  tokenizingUnknown : 0,
 }
 
 //
@@ -937,9 +958,9 @@ function strSubs( srcStr, sparse )
   _.assert( _.strIs( srcStr ) );
   _.assert( _.sparse.is( sparse ) );
 
-  debugger; xxx
+  debugger;
 
-  _.sparse.eachElement( sparse, ( range ) =>
+  _.sparse.eachRange( sparse, ( range ) =>
   {
     result.push( srcStr.substring( range[ 0 ], range[ 1 ] ) );
   });
