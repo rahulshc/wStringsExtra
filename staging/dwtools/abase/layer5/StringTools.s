@@ -1489,6 +1489,7 @@ function strParseMap( o )
   _.routineOptions( strParseMap, o );
   _.assert( !!o.valKeyDelimeter );
   _.assert( _.strIs( o.entryDelimeter ) );
+  _.assert( _.strIs( o.src ) || _.arrayIs( o.src ) );
   _.assert( arguments.length === 1 );
 
   let src = o.src;
@@ -1509,6 +1510,9 @@ function strParseMap( o )
     let left = src[ a-1 ];
     let right = src[ a+0 ];
     let val = right;
+
+    _.assert( _.strIs( left ) );
+    _.assert( _.strIs( right ) );
 
     if( a < src.length - 1 )
     {
