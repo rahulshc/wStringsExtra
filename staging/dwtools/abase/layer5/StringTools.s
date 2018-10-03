@@ -1886,6 +1886,7 @@ let Proto =
 
   // strToRegexpTolerating : strToRegexpTolerating,
   // strToRegexp : strToRegexp,
+
   strSearch : strSearch,
   strFindAll : strFindAll,
 
