@@ -106,6 +106,13 @@ function strToTitle( test )
   var got = _.strToTitle( src );
   test.identical( got, expected );
 
+  /* take into account this case */
+  test.case = 'single letter prefeix';
+  var src = 'wTranspStrat';
+  var expected = 'Transp strat';
+  var got = _.strToTitle( src );
+  test.identical( got, expected );
+
   test.case = 'several tokens';
   var src = 'abcEfgHigMigg';
   var expected = 'abc efg hig migg';
