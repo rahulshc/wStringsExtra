@@ -99,7 +99,7 @@ function strCamelize( srcStr )
 
 //
 
-let _strToTitleRegexp1 = /(?<=\s|^)(?:_|\.)+|(?:_|\.)+(?=\s|$)/g;
+let _strToTitleRegexp1 = /(?<=\s|^)(?:_|\.)+|(?:_|\.)+(?=\s|$)|^\w(?=[A-Z])/g;
 let _strToTitleRegexp2 = /(?:_|\.)+/g;
 let _strToTitleRegexp3 = /(\s*[A-za-z][a-z]*)|(\s*[0-9]+)/g;
 function strToTitle( srcStr )
