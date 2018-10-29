@@ -960,7 +960,7 @@ function strSubs( srcStr, sparse )
 {
   var result = [];
 
-  _.assert( arguments.length === 2, 'expects exactly two arguments' );
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
   _.assert( _.strIs( srcStr ) );
   _.assert( _.sparse.is( sparse ) );
 
@@ -1782,7 +1782,7 @@ function strSimilarity( src1,src2 )
 {
   _.assert( _.strIs( src1 ) );
   _.assert( _.strIs( src2 ) );
-  _.assert( arguments.length === 2, 'expects exactly two arguments' );
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
   debugger;
 
@@ -1834,7 +1834,7 @@ function strLattersSpectresSimilarity( src1, src2 )
   let minl = Math.min( src1[ 256 ], src2[ 256 ] );
   let maxl = Math.max( src1[ 256 ], src2[ 256 ] );
 
-  _.assert( arguments.length === 2, 'expects exactly two arguments' );
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
   _.assert( src1.length === src2.length );
 
   for( let s = 0 ; s < src1.length-1 ; s++ )
