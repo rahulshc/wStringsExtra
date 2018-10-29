@@ -83,7 +83,7 @@ _.assert( _.routineIs( _.sorted.addOnce ) );
 
 function strCamelize( srcStr )
 {
-  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.strIs( srcStr ) );
 
   let result = srcStr;
@@ -104,7 +104,7 @@ let _strToTitleRegexp2 = /(?:_|\.)+/g;
 let _strToTitleRegexp3 = /(\s*[A-za-z][a-z]*)|(\s*[0-9]+)/g;
 function strToTitle( srcStr )
 {
-  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.strIs( srcStr ) );
 
   let result = srcStr;
@@ -158,7 +158,7 @@ function strFilenameFor( o )
   if( _.strIs( o ) )
   o = { srcString : o }
 
-  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.strIs( o.srcString ) );
   _.routineOptions( strFilenameFor,o );
 
@@ -184,7 +184,7 @@ function strVarNameFor( o )
   if( _.strIs( o ) )
   o = { src : o }
 
-  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.strIs( o.src ) );
   _.routineOptions( strVarNameFor,o );
 
@@ -258,7 +258,7 @@ let _strHtmlEscapeMap =
 
 function strHtmlEscape( str )
 {
-  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
 
   return String( str ).replace( /[&<>"'\/]/g, function( s )
   {
@@ -272,7 +272,7 @@ function strHtmlEscape( str )
 // {
 //   let result = src;
 //
-//   _.assert( arguments.length === 1, 'expects single argument' );
+//   _.assert( arguments.length === 1, 'Expects single argument' );
 //   _.assert( _.strIs( src ) || _.regexpIs( src ) );
 //
 //   if( _.strIs( src ) )
@@ -312,7 +312,7 @@ function strHtmlEscape( str )
 // {
 //   let result = [];
 //
-//   _.assert( arguments.length === 1, 'expects single argument' );
+//   _.assert( arguments.length === 1, 'Expects single argument' );
 //   _.assert( _.strIs( src ) || _.regexpIs( src ) );
 //
 //   if( _.strIs( src ) )
@@ -333,7 +333,7 @@ qqq : tests required
 function strSearch( o )
 {
 
-  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
   _.routineOptions( strSearch,o );
 
   /* */
@@ -759,8 +759,8 @@ function _strReplaceMapPrepare( o )
 
   if( Config.debug )
   {
-    o.ins.forEach( ( ins ) => _.assert( _.strIs( ins ) || _.regexpIs( ins ) ), 'expects String or RegExp' );
-    o.sub.forEach( ( sub ) => _.assert( _.strIs( sub ) || _.routineIs( sub ) ), 'expects String or Routine' );
+    o.ins.forEach( ( ins ) => _.assert( _.strIs( ins ) || _.regexpIs( ins ) ), 'Expects String or RegExp' );
+    o.sub.forEach( ( sub ) => _.assert( _.strIs( sub ) || _.routineIs( sub ) ), 'Expects String or Routine' );
   }
 
   return o;
@@ -1070,7 +1070,7 @@ strSorterParse.defaults =
 function strToBytes( src )
 {
 
-  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.strIs( src ) );
 
   let result = new Uint8Array( src.length );
@@ -1177,7 +1177,7 @@ function strMetricFormat( number,o )
 
   _.assert( _.numberIs( number ), '"number" should be Number' );
   _.assert( arguments.length === 1 || arguments.length === 2 );
-  _.assert( _.objectIs( o ) || o === undefined,'expects map {-o-}' );
+  _.assert( _.objectIs( o ) || o === undefined,'Expects map {-o-}' );
   _.assert( _.numberIs( o.fixed ) );
   _.assert( o.fixed <= 20 );
 
@@ -1573,7 +1573,7 @@ strJoinMap.defaults =
 
 function strTable( o )
 {
-  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( !_.objectIs( o ) )
   o = { data : o }
