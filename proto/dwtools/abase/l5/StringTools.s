@@ -3,7 +3,7 @@
 'use strict';
 
 /**
-  @module Tools/base/layer5/StringTools - Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.
+  @module Tools/base/l5/StringTools - Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.
 */
 
 /**
@@ -1762,23 +1762,6 @@ function strsSort( srcs )
 
 //
 
-function strDifference( src1,src2,o )
-{
-  _.assert( _.strIs( src1 ) );
-  _.assert( _.strIs( src2 ) );
-
-  if( src1 === src2 )
-  return false;
-
-  for( var i = 0, l = Math.min( src1.length, src2.length ) ; i < l ; i++ )
-  if( src1[ i ] !== src2[ i ] )
-  return src1.substr( 0,i ) + '*';
-
-  return src1.substr( 0,i ) + '*';
-}
-
-//
-
 function strSimilarity( src1,src2 )
 {
   _.assert( _.strIs( src1 ) );
@@ -1918,7 +1901,6 @@ let Proto =
   strTable : strTable,
   strsSort : strsSort,
 
-  strDifference : strDifference, /* experimental */
   strSimilarity : strSimilarity, /* experimental */
   strLattersSpectre : strLattersSpectre, /* experimental */
   strLattersSpectresSimilarity : strLattersSpectresSimilarity,

@@ -4,13 +4,13 @@
   "description": "Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.",
   "author": "Kostiantyn Wandalen <wanalen@willbe.so>",
   "license": "MIT",
-  "main": "staging/dwtools/abase/layer5/StringTools.s",
+  "main": "proto/dwtools/abase/l5/StringTools.s",
   "files": [
-    "staging/dwtools/abase/layer5",
+    "proto/dwtools/abase/l5",
     "production"
   ],
   "scripts": {
-    "test": "wtest staging",
+    "test": "wtest proto",
     "make_doc": "./doc.sh"
   },
   "repository": {
