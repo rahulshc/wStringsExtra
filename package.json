@@ -7,7 +7,7 @@
   "main": "proto/dwtools/abase/l5/StringTools.s",
   "files": [
     "proto/dwtools/abase/l5",
-    "production"
+    "proto/dwtools/Tools.s", "production"
   ],
   "scripts": {
     "test": "wtest proto",
