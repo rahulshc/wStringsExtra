@@ -388,7 +388,7 @@ function strSearch( o )
     {
       let tokens = o.onTokenize( it.nearest.join( '' ) );
 
-      let ranges = _.entitySelect( tokens, '*.range.0' );
+      let ranges = _.entitySelect( tokens, '*/range/0' );
       let range = [ it.nearest[ 0 ].length, it.nearest[ 0 ].length + it.nearest[ 1 ].length ];
       let having = _.sorted.lookUpIntervalHaving( ranges, range );
 
@@ -398,7 +398,7 @@ function strSearch( o )
       if( o.excludingTokens )
       {
         debugger;
-        let tokenNames = _.entitySelect( tokens, '*.tokenName' );
+        let tokenNames = _.entitySelect( tokens, '*/tokenName' );
         tokenNames = tokenNames.slice( having[ 0 ], having[ 1 ] );
         let pass = _.none( _.regexpTest( o.excludingTokens, tokenNames ) );
         if( !pass )
