@@ -1715,7 +1715,7 @@ function strTokenizeJs( test )
   var got = _.strTokenizeJs( code );
 
   log( code );
-  log( _.entitySelect( got, '*/tokenName' ) );
+  log( _.select( got, '*/tokenName' ) );
   debugger;
   log( got );
   test.identical( got, expected );
@@ -1750,7 +1750,7 @@ function strTokenizeJs( test )
   var got = _.strTokenizeJs( code );
 
   log( code );
-  log( _.entitySelect( got, '*/tokenName' ) );
+  log( _.select( got, '*/tokenName' ) );
   log( got );
   test.identical( got, expected );
 
@@ -1767,14 +1767,14 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
   var got = _.strTokenizeJs({ src : code, tokenizingUnknown : 1 });
 
   log( code );
-  log( _.toStr( _.entitySelect( got, '*/match' ), { multiline : 0 } ) );
-  log( _.entitySelect( got, '*/tokenName' ) );
+  log( _.toStr( _.select( got, '*/match' ), { multiline : 0 } ) );
+  log( _.select( got, '*/tokenName' ) );
 
-  var tokenNamesGot = _.entitySelect( got, '*/tokenName' );
+  var tokenNamesGot = _.select( got, '*/tokenName' );
   var tokenNamesExpected = [ 'whitespace', 'keyword', 'parenthes', 'whitespace', 'keyword', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'number', 'punctuation', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'punctuation', 'name', 'whitespace', 'punctuation', 'whitespace', 'number', 'punctuation', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'punctuation', 'whitespace', 'parenthes', 'whitespace', 'comment/singleline', 'whitespace' ];
   test.identical( tokenNamesGot, tokenNamesExpected );
 
-  var matchesGot = _.entitySelect( got, '*/match' );
+  var matchesGot = _.select( got, '*/match' );
   var matchesExpected = [ '\n', 'for', '(', ' ', 'var', ' ', 'p', ' ', '=', ' ', '0', ',', 'pl', ' ', '=', ' ', 'polygon', '.', 'length', ' ', '/', ' ', '2', ';', ' ', 'p', ' ', '<', ' ', 'pl', ' ', ';', ' ', 'p', '++', ' ', ')', '\n  ', '// type : \'image/png\',', '\n' ];
   test.identical( matchesGot, matchesExpected );
 
@@ -1827,7 +1827,7 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
   var got = _.strTokenizeJs( code );
 
   log( code );
-  log( _.entitySelect( got, '*/tokenName' ) );
+  log( _.select( got, '*/tokenName' ) );
   log( got );
   test.identical( got, expected );
 
@@ -1853,7 +1853,7 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
   var got = _.strTokenizeJs( code );
 
   log( code );
-  log( _.entitySelect( got, '*/tokenName' ) );
+  log( _.select( got, '*/tokenName' ) );
   log( got );
   test.identical( got, expected );
 
@@ -1879,7 +1879,7 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
   var got = _.strTokenizeJs( code );
 
   log( code );
-  log( _.entitySelect( got, '*/tokenName' ) );
+  log( _.select( got, '*/tokenName' ) );
   log( got );
   test.identical( got, expected );
 
@@ -1894,16 +1894,16 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
   // var got = _.strTokenizeJs({ src : code, tokenizingUnknown : 1 });
   //
   // log( code );
-  // log( _.toStr( _.entitySelect( got, '*/match' ), { multiline : 0 } ) );
-  // log( _.entitySelect( got, '*/tokenName' ) );
+  // log( _.toStr( _.select( got, '*/match' ), { multiline : 0 } ) );
+  // log( _.select( got, '*/tokenName' ) );
   //
   // debugger;
   //
-  // var tokenNamesGot = _.entitySelect( got, '*/tokenName' );
+  // var tokenNamesGot = _.select( got, '*/tokenName' );
   // var tokenNamesExpected = [ 'whitespace', 'keyword', 'parenthes', 'whitespace', 'keyword', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'number', 'punctuation', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'punctuation', 'name', 'whitespace', 'punctuation', 'whitespace', 'number', 'punctuation', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'punctuation', 'whitespace', 'parenthes', 'whitespace', 'comment/singleline', 'whitespace' ];
   // test.identical( tokenNamesGot, tokenNamesExpected );
   //
-  // var matchesGot = _.entitySelect( got, '*/match' );
+  // var matchesGot = _.select( got, '*/match' );
   // var matchesExpected = [ '\n', 'for', '(', ' ', 'var', ' ', 'p', ' ', '=', ' ', '0', ',', 'pl', ' ', '=', ' ', 'polygon', '.', 'length', ' ', '/', ' ', '2', ';', ' ', 'p', ' ', '<', ' ', 'pl', ' ', ';', ' ', 'p', '++', ' ', ')', '\n  ', '// type : \'image/png\',', '\n' ];
   // test.identical( matchesGot, matchesExpected );
 
