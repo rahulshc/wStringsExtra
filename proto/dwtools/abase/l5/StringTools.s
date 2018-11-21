@@ -357,12 +357,14 @@ function strSearch( o )
     }
 
     if( o.nearestLines )
+    debugger;
+    if( o.nearestLines )
     it.nearest = _.strLinesNearest
     ({
       src : o.src,
       charsRange : it.charsRange,
       numberOfLines : o.nearestLines,
-    });
+    }).splits;
 
     if( o.determiningLineNumber )
     it.linesOffsets = [ first - _.strLinesCount( it.nearest[ 0 ] ) + 1, first, first + _.strLinesCount( it.nearest[ 1 ] ) ];
