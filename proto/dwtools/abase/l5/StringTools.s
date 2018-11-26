@@ -32,7 +32,7 @@ let _ObjectHasOwnProperty = Object.hasOwnProperty;
 
 // let __assert = _.assert;
 let _arraySlice = _.longSlice;
-let strTypeOf = _.strTypeOf;
+let strType = _.strType;
 
 _.assert( _.routineIs( _.sorted.addOnce ) );
 
