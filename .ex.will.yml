@@ -3,7 +3,7 @@ about :
 
   name : "wStringsExtra"
   description : "Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes."
-  version : "0.3.71"
+  version : "0.3.75"
   enabled : 1
   interpreters :
   - nodejs >= 6.0.0
@@ -43,6 +43,7 @@ build :
       proto : 1
       export : 1
       tar : 1
+      public : 1
     steps :
       - build::debug.raw
       - step::export.proto
