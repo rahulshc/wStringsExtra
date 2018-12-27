@@ -28,8 +28,7 @@
     "warraysparse": ""
   },
   "devDependencies": {
-    "wTesting": "",
-    "wstringsextra": "."
+    "wTesting": ""
   },
   "keywords": [
     "wTools",
