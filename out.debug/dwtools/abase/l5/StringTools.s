@@ -3,7 +3,8 @@
 'use strict';
 
 /**
-  @module Tools/base/l5/StringTools - Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.
+ * Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.
+  @module Tools/base/l5/StringTools
 */
 
 /**
