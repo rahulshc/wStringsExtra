@@ -1031,6 +1031,66 @@ strSorterParse.defaults =
   fields : null,
 }
 
+//
+
+// function jsonParse( o )
+// {
+//   let result;
+
+//   if( _.strIs( o ) )
+//   o = { src : o }
+//   _.routineOptions( jsonParse, o );
+//   _.assert( arguments.length === 1 );
+
+//   debugger; /* xxx: implement via GDF */
+
+//   try
+//   {
+//     result = JSON.parse( o.src );
+//   }
+//   catch( err )
+//   {
+//     let src = o.src;
+//     let position = /at position (\d+)/.exec( err.message );
+//     if( position )
+//     position = Number( position[ 1 ] );
+//     let first = 0;
+//     if( !isNaN( position ) )
+//     {
+//       let nearest = _.strLinesNearest( src, position );
+//       first = _.strLinesCount( src.substring( 0, nearest.spans[ 0 ] ) );
+//       src = nearest.splits.join( '' );
+//     }
+//     let err2 = _.err( 'Error parsing JSON\n', err, '\n', _.strLinesNumber( src, first ) );
+//     throw err2;
+//   }
+
+//   return result;
+// }
+
+function jsonParse( o )
+{
+  let result;
+
+  if( _.strIs( o ) )
+  o = { src : o }
+  _.routineOptions( jsonParse, o );
+  _.assert( arguments.length === 1 );
+
+  let selected = _.Gdf.Select({ in : 'string', out : 'structure', ext : 'json' });
+  _.assert( selected.length === 1 );
+  let jsonParser = selected[ 0 ];
+
+  result = jsonParser.encode({ data : o.src });
+
+  return result.data;
+}
+
+jsonParse.defaults =
+{
+  src : null,
+}
+
 // --
 // format
 // --
@@ -1984,60 +2044,61 @@ function strLattersSpectresSimilarity( src1, src2 )
 // declare
 // --
 
-let Proto =
+let Extend =
 {
 
-  strCamelize : strCamelize,
-  strToTitle : strToTitle,
+  strCamelize,
+  strToTitle,
 
-  strFilenameFor : strFilenameFor,
-  strVarNameFor : strVarNameFor,
-  strHtmlEscape : strHtmlEscape,
+  strFilenameFor,
+  strVarNameFor,
+  strHtmlEscape,
 
-  // strToRegexpTolerating : strToRegexpTolerating,
-  // strToRegexp : strToRegexp,
+  // strToRegexpTolerating,
+  // strToRegexp,
 
-  strSearch : strSearch,
-  strFindAll : strFindAll,
+  strSearch,
+  strFindAll,
 
-  _strReplaceMapPrepare : _strReplaceMapPrepare,
-  strReplaceAll : strReplaceAll, /* document me */
-  strTokenizeJs : strTokenizeJs,
-  strTokenizeCpp : strTokenizeCpp,
+  _strReplaceMapPrepare,
+  strReplaceAll, /* document me */
+  strTokenizeJs,
+  strTokenizeCpp,
 
-  strSubs : strSubs,
+  strSubs,
 
-  strSorterParse : strSorterParse,
+  strSorterParse,
+  jsonParse,
 
   // format
 
-  strToBytes : strToBytes,
-  strMetricFormat : strMetricFormat,
-  strMetricFormatBytes : strMetricFormatBytes,
+  strToBytes,
+  strMetricFormat,
+  strMetricFormatBytes,
 
-  strTimeFormat : strTimeFormat,
+  strTimeFormat,
 
-  strCsvFrom : strCsvFrom, /* experimental */
-  strToDom : strToDom, /* experimental */
-  strToConfig : strToConfig, /* experimental */
+  strCsvFrom, /* experimental */
+  strToDom, /* experimental */
+  strToConfig, /* experimental */
 
-  strToNumberMaybe : strToNumberMaybe,
-  strToMap : strToMap, /* qqq : cover it by tests */
-  strRequestParse : strRequestParse,
+  strToNumberMaybe,
+  strToMap, /* cover it by tests */
+  strRequestParse,
 
-  strJoinMap : strJoinMap, /* qqq : cover it by tests */
+  strJoinMap, /* qqq : cover it by tests */
 
-  strTable : strTable,
-  strsSort : strsSort,
+  strTable,
+  strsSort,
 
-  strSimilarity : strSimilarity, /* experimental */
-  strLattersSpectre : strLattersSpectre, /* experimental */
-  strLattersSpectresSimilarity : strLattersSpectresSimilarity,
-  // lattersSpectreComparison : lattersSpectreComparison, /* experimental */
+  strSimilarity, /* experimental */
+  strLattersSpectre, /* experimental */
+  strLattersSpectresSimilarity,
+  // lattersSpectreComparison, /* experimental */
 
 }
 
-_.mapExtend( Self, Proto );
+_.mapExtend( Self, Extend );
 
 // --
 // export
