@@ -4,7 +4,7 @@ about :
 
   name : "wStringsExtra"
   description : "Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes."
-  version : "0.3.84"
+  version : "0.3.86"
   enabled : 1
   interpreters :
   - nodejs >= 6.0.0
