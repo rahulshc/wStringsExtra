@@ -1469,13 +1469,13 @@ function strToDom( xmlStr )
       xmlDoc = parser.parseFromString( xmlStr, "text/xml" );
       if( parsererrorNS!= null && xmlDoc.getElementsByTagNameNS( parsererrorNS, "parsererror" ).length > 0 )
       {
-        throw 'Error parsing XML';
+        throw Error( 'Error parsing XML' );
         xmlDoc = null;
       }
     }
     catch( err )
     {
-      throw 'Error parsing XML';
+      throw Error( 'Error parsing XML' );
       xmlDoc = null;
     }
   }
@@ -2079,7 +2079,7 @@ let Extend =
   strTimeFormat,
 
   strCsvFrom, /* experimental */
-  strToDom, /* experimental */
+  strToDom, /* experimental */ // !!! move out
   strToConfig, /* experimental */
 
   strToNumberMaybe,
