@@ -1576,7 +1576,7 @@ function strToMap( o )
 
     if( a < src.length - 1 )
     {
-      let cuts = _.strIsolateEndOrAll( right,o.entryDelimeter );
+      let cuts = _.strIsolateRightOrAll( right,o.entryDelimeter );
       val = cuts[ 0 ];
       src[ a+0 ] = cuts[ 2 ];
     }
@@ -1655,7 +1655,7 @@ function strRequestParse( o )
   if( !o.src )
   return result;
 
-  /* should be strSplit, but not strIsolateBeginOrAll because of quoting */
+  /* should be strSplit, but not strIsolateLeftOrAll because of quoting */
 
   let commands = _.strSplit
   ({
@@ -1691,7 +1691,7 @@ function strRequestParse( o )
     }
     else
     {
-      let subjectAndKey = _.strIsolateEndOrAll( mapEntries[ 0 ], ' ' );
+      let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ], ' ' );
       subject = subjectAndKey[ 0 ];
       mapEntries[ 0 ] = subjectAndKey[ 2 ];
 
