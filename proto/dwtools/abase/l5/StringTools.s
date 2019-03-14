@@ -1930,16 +1930,14 @@ strTable.onCellAfter = ( cellStr, index2d, o ) => cellStr
 function strsSort( srcs )
 {
 
-  _.assert( _.arrayIs( srcs ) );
-
-  // debugger;
+  _.assert( _.strsAreAll( srcs ) );
 
   let result = srcs.sort( function( a, b )
   {
-    // a = a.toLowerCase();
-    // b = b.toLowerCase();
-    if( a < b ) return -1;
-    if( a > b ) return +1;
+    if( a < b )
+    return -1;
+    if( a > b )
+    return +1;
     return 0;
   });
 
