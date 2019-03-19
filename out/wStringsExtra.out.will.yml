@@ -5,7 +5,7 @@ about:
     Collection of sophisticated routines for operations on Strings.
     StringsToolsExtra leverages analyzing, parsing and formatting of String for
     special purposes.
-  version: 0.3.75
+  version: 0.3.88
   enabled: 1
   interpreters:
     - nodejs >= 6.0.0
@@ -15,28 +15,30 @@ about:
     - wTools
 execution:
   scripts:
-    test: wtest staging
+    test: wtest proto
     docgen: wdocgen staging
 path:
-  proto:
-    path: ./proto
   in:
-    path: .
+    path: ..
+  temp:
+    path: out
   out:
     path: out
   out.debug:
-    path: ./out.debug
+    path: ./out/debug
     criterion:
       debug: 1
   out.release:
-    path: ./out.release
+    path: ./out/release
     criterion:
       debug: 0
+  proto:
+    path: ./proto
   repository:
     path: 'git+https://github.com/Wandalen/wStringsExtra.git'
   bugs:
     path: 'https://github.com/Wandalen/wStringsExtra/issues'
-  exportedDir.0:
+  exportedDir.proto.export:
     path: ./proto
     criterion:
       default: 1
@@ -46,31 +48,18 @@ path:
       export: 1
       tar: 1
       public: 1
-  baseDir:
-    path: ..
-  exportedFiles.0:
+  exportedFiles.proto.export:
     path:
-      - .
-      - ./dwtools
-      - ./dwtools/Tools.s
-      - ./dwtools/abase
-      - ./dwtools/abase/l5
-      - ./dwtools/abase/l5/StringTools.s
-      - ./dwtools/abase/l5.test
-      - ./dwtools/abase/l5.test/StringTools.test.s
-    criterion:
-      default: 1
-      debug: 1
-      raw: 1
-      proto: 1
-      export: 1
-      tar: 1
-      public: 1
-  exportedTerminals.0:
-    path:
-      - ./dwtools/Tools.s
-      - ./dwtools/abase/l5/StringTools.s
-      - ./dwtools/abase/l5.test/StringTools.test.s
+      - proto
+      - proto/dwtools
+      - proto/dwtools/Tools.s
+      - proto/dwtools/abase
+      - proto/dwtools/abase/l5
+      - proto/dwtools/abase/l5/StringTools.s
+      - proto/dwtools/abase/l5.test
+      - proto/dwtools/abase/l5.test/StringTools.test.s
+      - proto/dwtools/amid
+      - proto/dwtools/atop
     criterion:
       default: 1
       debug: 1
@@ -81,12 +70,11 @@ path:
       public: 1
 submodule: {}
 reflector:
-  reflect.proto.0:
-    filePath:
-      ./proto: ./out.release
-    srcFilter:
+  reflect.proto.:
+    src:
       filePath:
-        ./proto: ./out.release
+        .: .
+      prefixPath: proto
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -99,19 +87,17 @@ reflector:
           - !<tag:yaml.org,2002:js/regexp> /\.debug($|\.|\/)/i
           - !<tag:yaml.org,2002:js/regexp> /\.test($|\.|\/)/i
           - !<tag:yaml.org,2002:js/regexp> /\.experiment($|\.|\/)/i
-      prefixPath: .
-    dstFilter:
-      prefixPath: .
+    dst:
+      prefixPath: out/release
     criterion:
       debug: 0
     inherit:
       - predefined.*
-  reflect.proto.1:
-    filePath:
-      ./proto: ./out.debug
-    srcFilter:
+  reflect.proto.debug:
+    src:
       filePath:
-        ./proto: ./out.debug
+        .: .
+      prefixPath: proto
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -122,15 +108,14 @@ reflector:
           - !<tag:yaml.org,2002:js/regexp> /\.DS_Store$/
           - !<tag:yaml.org,2002:js/regexp> /(^|\/)-/
           - !<tag:yaml.org,2002:js/regexp> /\.release($|\.|\/)/i
-      prefixPath: .
-    dstFilter:
-      prefixPath: .
+    dst:
+      prefixPath: out/debug
     criterion:
       debug: 1
     inherit:
       - predefined.*
   reflect.submodules:
-    srcFilter:
+    src:
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -141,38 +126,63 @@ reflector:
           - !<tag:yaml.org,2002:js/regexp> /\.DS_Store$/
           - !<tag:yaml.org,2002:js/regexp> /(^|\/)-/
           - !<tag:yaml.org,2002:js/regexp> /\.release($|\.|\/)/i
-      prefixPath: .
-    dstFilter:
-      prefixPath: .
     criterion:
       debug: 1
     inherit:
       - predefined.*
-  exported.0:
-    filePath: ./proto
-    srcFilter:
-      filePath: ./proto
-      prefixPath: .
-    dstFilter:
-      prefixPath: .
-  exportedFiles.0:
-    recursive: 0
-    filePath:
-      ./dwtools/Tools.s: true
-      ./dwtools/abase/l5/StringTools.s: true
-      ./dwtools/abase/l5.test/StringTools.test.s: true
-    srcFilter:
+  exported.proto.export:
+    src:
       filePath:
-        ./dwtools/Tools.s: true
-        ./dwtools/abase/l5/StringTools.s: true
-        ./dwtools/abase/l5.test/StringTools.test.s: true
+        .: null
+      prefixPath: proto
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+      public: 1
+  exportedFiles.proto.export:
+    recursive: 0
+    src:
+      filePath:
+        .: null
+        dwtools: null
+        dwtools/Tools.s: null
+        dwtools/abase: null
+        dwtools/abase/l5: null
+        dwtools/abase/l5/StringTools.s: null
+        dwtools/abase/l5.test: null
+        dwtools/abase/l5.test/StringTools.test.s: null
+        dwtools/amid: null
+        dwtools/atop: null
       basePath: .
       prefixPath: proto
-    dstFilter:
-      basePath: .
-      prefixPath: .
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+      public: 1
 step:
-  reflect.proto.0:
+  clean.out.:
+    criterion:
+      debug: 0
+    opts:
+      filePath: 'path::out.debug'
+    inherit:
+      - predefined.delete
+  clean.out.debug:
+    criterion:
+      debug: 1
+    opts:
+      filePath: 'path::out.debug'
+    inherit:
+      - predefined.delete
+  reflect.proto.:
     criterion:
       debug: 0
       raw: 0
@@ -180,7 +190,7 @@ step:
       reflector: 'reflector::reflect.proto.*=1'
     inherit:
       - predefined.reflect
-  reflect.proto.1:
+  reflect.proto.debug:
     criterion:
       debug: 1
       raw: 0
@@ -188,7 +198,7 @@ step:
       reflector: 'reflector::reflect.proto.*=1'
     inherit:
       - predefined.reflect
-  reflect.proto.2:
+  reflect.proto.raw:
     criterion:
       debug: 0
       raw: 1
@@ -196,7 +206,7 @@ step:
       reflector: 'reflector::reflect.proto.*=1'
     inherit:
       - predefined.reflect
-  reflect.proto.3:
+  reflect.proto.debug.raw:
     criterion:
       debug: 1
       raw: 1
@@ -204,7 +214,7 @@ step:
       reflector: 'reflector::reflect.proto.*=1'
     inherit:
       - predefined.reflect
-  reflect.submodules.0:
+  reflect.submodules.:
     criterion:
       debug: 1
       raw: 0
@@ -212,7 +222,7 @@ step:
       reflector: 'reflector::reflect.submodules*=1'
     inherit:
       - predefined.reflect
-  reflect.submodules.1:
+  reflect.submodules.raw:
     criterion:
       debug: 1
       raw: 1
@@ -228,7 +238,7 @@ step:
       export: 'path::proto'
       tar: 0
     inherit:
-      - export
+      - predefined.export
 build:
   debug.raw:
     criterion:
@@ -236,24 +246,28 @@ build:
       debug: 1
       raw: 1
     steps:
+      - 'step::clean.out*=1'
       - 'step::reflect.proto.*=1'
   debug.compiled:
     criterion:
       debug: 1
       raw: 0
     steps:
+      - 'step::clean.out*=1'
       - 'step::reflect.proto.*=1'
   release.raw:
     criterion:
       debug: 0
       raw: 1
     steps:
+      - 'step::clean.out*=1'
       - 'step::reflect.proto.*=1'
   release.compiled:
     criterion:
       debug: 0
       raw: 0
     steps:
+      - 'step::clean.out*=1'
       - 'step::reflect.proto.*=1'
   all:
     steps:
@@ -273,7 +287,7 @@ build:
       - 'step::export.proto'
 exported:
   proto.export:
-    version: 0.3.75
+    version: 0.3.88
     criterion:
       default: 1
       debug: 1
@@ -282,20 +296,7 @@ exported:
       export: 1
       tar: 1
       public: 1
-    exportedReflector: 'reflector::exported.0'
-    exportedFilesReflector: 'reflector::exportedFiles.0'
-    exportedDirPath: 'path::exportedDir.0'
-    exportedFilesPath: 'path::exportedFiles.0'
-    exportedTerminalsPath:
-      path:
-        - ./dwtools/Tools.s
-        - ./dwtools/abase/l5/StringTools.s
-        - ./dwtools/abase/l5.test/StringTools.test.s
-      criterion:
-        default: 1
-        debug: 1
-        raw: 1
-        proto: 1
-        export: 1
-        tar: 1
-        public: 1
+    exportedReflector: 'reflector::exported.proto.export'
+    exportedFilesReflector: 'reflector::exportedFiles.proto.export'
+    exportedDirPath: 'path::exportedDir.proto.export'
+    exportedFilesPath: 'path::exportedFiles.proto.export'
