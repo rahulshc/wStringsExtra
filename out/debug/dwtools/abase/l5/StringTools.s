@@ -1649,7 +1649,7 @@ function strRequestParse( o )
   result.subjects = [];
   result.maps = [];
   result.keyValDelimeter = o.keyValDelimeter;
-  result.subjectsDelimeter = o.subjectsDelimeter;
+  result.cmmandsDelimeter = o.cmmandsDelimeter;
 
   if( !o.src )
   return result;
@@ -1659,7 +1659,7 @@ function strRequestParse( o )
   let commands = _.strSplit
   ({
     src : o.src,
-    delimeter : o.subjectsDelimeter,
+    delimeter : o.cmmandsDelimeter,
     stripping : 1,
     quoting : 1,
     preservingDelimeters : 0,
@@ -1721,7 +1721,7 @@ function strRequestParse( o )
 
 var defaults = strRequestParse.defaults = Object.create( null );
 defaults.keyValDelimeter = ':';
-defaults.subjectsDelimeter = ';';
+defaults.cmmandsDelimeter = ';';
 defaults.parsingArrays = 1;
 defaults.src = null;
 
