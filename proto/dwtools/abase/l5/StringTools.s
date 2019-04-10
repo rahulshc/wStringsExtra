@@ -1639,10 +1639,9 @@ function strRequestParse( o )
 
   if( _.strIs( o ) )
   o = { src : o }
-
   _.assert( arguments.length === 0 || arguments.length === 1 );
   _.assert( _.strIs( o.src ) );
-  o = _.routineOptions( strRequestParse, arguments );
+  o = _.routineOptions( strRequestParse, o );
 
   let result = Object.create( null );
 
@@ -1651,7 +1650,7 @@ function strRequestParse( o )
   result.subjects = [];
   result.maps = [];
   result.keyValDelimeter = o.keyValDelimeter;
-  result.subjectsDelimeter = o.subjectsDelimeter;
+  result.cmmandsDelimeter = o.cmmandsDelimeter;
 
   if( !o.src )
   return result;
@@ -1661,7 +1660,7 @@ function strRequestParse( o )
   let commands = _.strSplit
   ({
     src : o.src,
-    delimeter : o.subjectsDelimeter,
+    delimeter : o.cmmandsDelimeter,
     stripping : 1,
     quoting : 1,
     preservingDelimeters : 0,
@@ -1673,7 +1672,12 @@ function strRequestParse( o )
   for( let c = 0 ; c < commands.length ; c++ )
   {
 
-    let mapEntries = _.strSplit
+    // if( !o.keyValDelimeter )
+    // debugger;
+
+    let mapEntries = [ commands[ c ] ];
+    if( o.keyValDelimeter )
+    mapEntries = _.strSplit
     ({
       src : commands[ c ],
       delimeter : o.keyValDelimeter,
@@ -1684,7 +1688,6 @@ function strRequestParse( o )
     });
 
     let subject, map;
-
     if( mapEntries.length === 1 )
     {
       subject = mapEntries[ 0 ];
@@ -1718,9 +1721,8 @@ function strRequestParse( o )
 }
 
 var defaults = strRequestParse.defaults = Object.create( null );
-
 defaults.keyValDelimeter = ':';
-defaults.subjectsDelimeter = ';';
+defaults.cmmandsDelimeter = ';';
 defaults.parsingArrays = 1;
 defaults.src = null;
 
