@@ -21,6 +21,13 @@ if( typeof module !== 'undefined' )
 
 }
 
+/**
+ * Collection of sophisticated routines for operations on Strings.
+  @namespace wTools(module:StringTools)
+  @memberof module:Tools/base/l5/StringTools
+  @augments wTools
+*/
+
 //
 
 let Self = _global_.wTools;
@@ -58,10 +65,10 @@ _.assert( _.routineIs( _.sorted.addOnce ) );
  * //returns testString
  * _.strCamelize( 'test-string' );
  *
- * @method strCamelize
+ * @function  strCamelize
  * @throws { Exception } Throws a exception if( srcStr ) is not a String.
  * @throws { Exception } Throws a exception if no argument provided.
- * @memberof wTools
+ * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
  *
  */
 
@@ -129,11 +136,11 @@ function strToTitle( srcStr )
  * let o = { 'delimeter':'#' };
  * _.strFilenameFor( "'example\\file?name.js",o );
  *
- * @method strFilenameFor
+ * @function strFilenameFor
  * @throws { Exception } Throws a exception if( srcStr ) is not a String.
  * @throws { Exception } Throws a exception if( o ) is not a Map.
  * @throws { Exception } Throws a exception if no arguments provided.
- * @memberof wTools
+ * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
  *
  */
 
@@ -163,6 +170,28 @@ strFilenameFor.defaults =
 
 //
 
+/**
+ * Replaces invalid characters from variable name `o.src` with special character `o.delimeter`.
+ *
+ * @description
+ * Accepts string as single arguments. In this case executes routine with default `o.delimeter`.
+ *
+ * @param {Object} o Options map.
+ * @param {String} o.src Source string.
+ * @param {String} o.delimeter='_' Replacer string.
+ *
+ * @example
+ * _.strVarNameFor( 'some:var');//some_var
+ *
+ * @returns {String} Returns string with result of replacements.
+ * @throws { Exception } Throws a exception if( srcStr ) is not a String.
+ * @throws { Exception } Throws a exception if( o ) is not a Map.
+ * @throws { Exception } Throws a exception if no arguments provided.
+ * @function strVarNameFor
+ * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
+ *
+ */
+
 function strVarNameFor( o )
 {
   if( _.strIs( o ) )
@@ -190,10 +219,9 @@ strVarNameFor.defaults =
 //
 
 /**
- * @name _strHtmlEscapeMap
- * @type {object}
- * @description Html escape symbols map.
- * @global
+ * @summary Html escape symbols map.
+ * @enum {String} _strHtmlEscapeMap
+ * @memberof module:Tools/base/l5/StringTools~
  */
 
 let _strHtmlEscapeMap =
@@ -207,7 +235,7 @@ let _strHtmlEscapeMap =
 }
 
 /**
- * Replaces all occurrences of html escape symbols from map( _strHtmlEscapeMap )
+ * Replaces all occurrences of html escape symbols from map {@link module:Tools/base/l5/StringTools~_strHtmlEscapeMap}
  * in source( str ) with their code equivalent like( '&' -> '&amp;' ).
  * Returns result of replacements as new string or original if nothing replaced.
  *
@@ -234,9 +262,9 @@ let _strHtmlEscapeMap =
  * //returns &lt;div class=&quot;cls&quot;&gt;&lt;&#x2F;div&gt;
  * _.strHtmlEscape('<div class="cls"></div>');
  *
- * @method strHtmlEscape
+ * @function  strHtmlEscape
  * @throws { Exception } Throws a exception if no argument provided.
- * @memberof wTools
+ * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
  *
  */
 
@@ -789,14 +817,14 @@ _strReplaceMapPrepare.defaults =
  * //returns axc
  * _.strReplaceAll( 'abc','b','x' );
  *
- * @method strReplaceAll
+ * @function  strReplaceAll
  * @throws { Exception } Throws a exception if no arguments provided.
  * @throws { Exception } Throws a exception if( src ) is not a String.
  * @throws { Exception } Throws a exception if( ins ) is not a String.
  * @throws { Exception } Throws a exception if( sub ) is not a String.
  * @throws { Exception } Throws a exception if( dictionary ) is not a Object.
  * @throws { Exception } Throws a exception if( dictionary ) key value is not a String.
- * @memberof wTools
+ * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
  *
  */
 
@@ -941,6 +969,23 @@ strTokenizeCpp.defaults =
 }
 
 //
+
+/**
+ * @summary Splits string into a parts using ranges from ( sparce ) sparce array.
+ * @param {String} srcStr - Source string to parse.
+ * @param {Array} sparse - Sparse array with ranges.
+ * @returns {Array} Returns array with parts of string.
+ *
+ * @example
+ * _.strSubs( 'aabbcc', [  ] );//
+ *
+ * @function strSubs
+ * @throws { Exception } If not enough argumets provided.
+ * @throws { Exception } If ( srcStr ) is not a string.
+ * @throws { Exception } If ( sparce ) is not a sparce array.
+ * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
+ *
+ */
 
 function strSubs( srcStr, sparse )
 {
@@ -1106,10 +1151,10 @@ jsonParse.defaults =
  * //returns [ 101, 120, 97, 109, 112, 108, 101 ]
  * _.strToBytes( 'example' );
  *
- * @method strToBytes
+ * @function  strToBytes
  * @throws { Exception } Throws a exception if( src ) is not a String.
  * @throws { Exception } Throws a exception if no argument provided.
- * @memberof wTools
+ * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
  *
  */
 
@@ -1131,12 +1176,42 @@ function strToBytes( src )
 
 //
 
-/**
- * @name _metrics
- * @type {object}
- * @description Contains metric prefixes.
- * @global
+ /**
+ * @summary Contains metric prefixes.
+ * @enum {} _metrics
+ * @memberof module:Tools/base/l5/StringTools~
  */
+
+let _metrics =
+{
+
+  '24'  : { name : 'yotta', symbol : 'Y' , word : 'septillion' },
+  '21'  : { name : 'zetta', symbol : 'Z' , word : 'sextillion' },
+  '18'  : { name : 'exa'  , symbol : 'E' , word : 'quintillion' },
+  '15'  : { name : 'peta' , symbol : 'P' , word : 'quadrillion' },
+  '12'  : { name : 'tera' , symbol : 'T' , word : 'trillion' },
+  '9'   : { name : 'giga' , symbol : 'G' , word : 'billion' },
+  '6'   : { name : 'mega' , symbol : 'M' , word : 'million' },
+  '3'   : { name : 'kilo' , symbol : 'k' , word : 'thousand' },
+  '2'   : { name : 'hecto', symbol : 'h' , word : 'hundred' },
+  '1'   : { name : 'deca' , symbol : 'da', word : 'ten' },
+
+  '0'   : { name : ''     , symbol : ''  , word : '' },
+
+  '-1'  : { name : 'deci' , symbol : 'd' , word : 'tenth' },
+  '-2'  : { name : 'centi', symbol : 'c' , word : 'hundredth' },
+  '-3'  : { name : 'milli', symbol : 'm' , word : 'thousandth' },
+  '-6'  : { name : 'micro', symbol : 'μ' , word : 'millionth' },
+  '-9'  : { name : 'nano' , symbol : 'n' , word : 'billionth' },
+  '-12' : { name : 'pico' , symbol : 'p' , word : 'trillionth' },
+  '-15' : { name : 'femto', symbol : 'f' , word : 'quadrillionth' },
+  '-18' : { name : 'atto' , symbol : 'a' , word : 'quintillionth' },
+  '-21' : { name : 'zepto', symbol : 'z' , word : 'sextillionth' },
+  '-24' : { name : 'yocto', symbol : 'y' , word : 'septillionth' },
+
+  range : [ -24,+24 ],
+
+}
 
 /**
  * Returns string that represents number( src ) with metric unit prefix that depends on options( o ).
@@ -1177,41 +1252,10 @@ function strToBytes( src )
  * //returns "10.0 h"
  * _.strMetricFormat( "10000", { divisor : 2, thousand : 10, dimensions : 3 } );
  *
- * @method strMetricFormat
- * @memberof wTools
+ * @function strMetricFormat
+ * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
  *
  */
-
-let _metrics =
-{
-
-  '24'  : { name : 'yotta', symbol : 'Y' , word : 'septillion' },
-  '21'  : { name : 'zetta', symbol : 'Z' , word : 'sextillion' },
-  '18'  : { name : 'exa'  , symbol : 'E' , word : 'quintillion' },
-  '15'  : { name : 'peta' , symbol : 'P' , word : 'quadrillion' },
-  '12'  : { name : 'tera' , symbol : 'T' , word : 'trillion' },
-  '9'   : { name : 'giga' , symbol : 'G' , word : 'billion' },
-  '6'   : { name : 'mega' , symbol : 'M' , word : 'million' },
-  '3'   : { name : 'kilo' , symbol : 'k' , word : 'thousand' },
-  '2'   : { name : 'hecto', symbol : 'h' , word : 'hundred' },
-  '1'   : { name : 'deca' , symbol : 'da', word : 'ten' },
-
-  '0'   : { name : ''     , symbol : ''  , word : '' },
-
-  '-1'  : { name : 'deci' , symbol : 'd' , word : 'tenth' },
-  '-2'  : { name : 'centi', symbol : 'c' , word : 'hundredth' },
-  '-3'  : { name : 'milli', symbol : 'm' , word : 'thousandth' },
-  '-6'  : { name : 'micro', symbol : 'μ' , word : 'millionth' },
-  '-9'  : { name : 'nano' , symbol : 'n' , word : 'billionth' },
-  '-12' : { name : 'pico' , symbol : 'p' , word : 'trillionth' },
-  '-15' : { name : 'femto', symbol : 'f' , word : 'quadrillionth' },
-  '-18' : { name : 'atto' , symbol : 'a' , word : 'quintillionth' },
-  '-21' : { name : 'zepto', symbol : 'z' , word : 'sextillionth' },
-  '-24' : { name : 'yocto', symbol : 'y' , word : 'septillionth' },
-
-  range : [ -24,+24 ],
-
-}
 
 function strMetricFormat( number,o )
 {
@@ -1316,8 +1360,8 @@ strMetricFormat.defaults =
  * //returns "1024.0 Mb"
  * _.strMetricFormatBytes( Math.pow( 2, 30 ) );
  *
- * @method strMetricFormatBytes
- * @memberof wTools
+ * @function  strMetricFormatBytes
+ * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
  *
  */
 
@@ -1361,8 +1405,8 @@ function strMetricFormatBytes( number,o )
  * //returns "78.125 s"
  * _.strTimeFormat( Math.pow( 5, 7 ) );
  *
- * @method strTimeFormat
- * @memberof wTools
+ * @function  strTimeFormat
+ * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
  *
  */
 

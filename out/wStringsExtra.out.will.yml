@@ -5,14 +5,17 @@ about:
     Collection of sophisticated routines for operations on Strings.
     StringsToolsExtra leverages analyzing, parsing and formatting of String for
     special purposes.
-  version: 0.3.88
   enabled: 1
-  interpreters:
-    - nodejs >= 6.0.0
-    - chrome >= 60.0.0
-    - firefox >= 60.0.0
-  keywords:
-    - wTools
+  version: 0.3.88
+  values:
+    enabled: 1
+    name: wStringsExtra
+    interpreters:
+      - nodejs >= 6.0.0
+      - chrome >= 60.0.0
+      - firefox >= 60.0.0
+    keywords:
+      - wTools
 execution:
   scripts:
     test: wtest proto
