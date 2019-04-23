@@ -23,7 +23,7 @@ if( typeof module !== 'undefined' )
 
 /**
  * Collection of sophisticated routines for operations on Strings.
-  @namespace wTools(module:StringTools)
+  @namespace Tools( module::StringTools )
   @memberof module:Tools/base/l5/StringTools
   @augments wTools
 */
@@ -68,7 +68,7 @@ _.assert( _.routineIs( _.sorted.addOnce ) );
  * @function  strCamelize
  * @throws { Exception } Throws a exception if( srcStr ) is not a String.
  * @throws { Exception } Throws a exception if no argument provided.
- * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
+ * @memberof module:Tools/base/l5/StringTools.Tools( module::StringTools )
  *
  */
 
@@ -140,7 +140,7 @@ function strToTitle( srcStr )
  * @throws { Exception } Throws a exception if( srcStr ) is not a String.
  * @throws { Exception } Throws a exception if( o ) is not a Map.
  * @throws { Exception } Throws a exception if no arguments provided.
- * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
+ * @memberof module:Tools/base/l5/StringTools.Tools( module::StringTools )
  *
  */
 
@@ -188,7 +188,7 @@ strFilenameFor.defaults =
  * @throws { Exception } Throws a exception if( o ) is not a Map.
  * @throws { Exception } Throws a exception if no arguments provided.
  * @function strVarNameFor
- * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
+ * @memberof module:Tools/base/l5/StringTools.Tools( module::StringTools )
  *
  */
 
@@ -264,7 +264,7 @@ let _strHtmlEscapeMap =
  *
  * @function  strHtmlEscape
  * @throws { Exception } Throws a exception if no argument provided.
- * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
+ * @memberof module:Tools/base/l5/StringTools.Tools( module::StringTools )
  *
  */
 
@@ -824,7 +824,7 @@ _strReplaceMapPrepare.defaults =
  * @throws { Exception } Throws a exception if( sub ) is not a String.
  * @throws { Exception } Throws a exception if( dictionary ) is not a Object.
  * @throws { Exception } Throws a exception if( dictionary ) key value is not a String.
- * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
+ * @memberof module:Tools/base/l5/StringTools.Tools( module::StringTools )
  *
  */
 
@@ -983,7 +983,7 @@ strTokenizeCpp.defaults =
  * @throws { Exception } If not enough argumets provided.
  * @throws { Exception } If ( srcStr ) is not a string.
  * @throws { Exception } If ( sparce ) is not a sparce array.
- * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
+ * @memberof module:Tools/base/l5/StringTools.Tools( module::StringTools )
  *
  */
 
@@ -1154,7 +1154,7 @@ jsonParse.defaults =
  * @function  strToBytes
  * @throws { Exception } Throws a exception if( src ) is not a String.
  * @throws { Exception } Throws a exception if no argument provided.
- * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
+ * @memberof module:Tools/base/l5/StringTools.Tools( module::StringTools )
  *
  */
 
@@ -1253,7 +1253,7 @@ let _metrics =
  * _.strMetricFormat( "10000", { divisor : 2, thousand : 10, dimensions : 3 } );
  *
  * @function strMetricFormat
- * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
+ * @memberof module:Tools/base/l5/StringTools.Tools( module::StringTools )
  *
  */
 
@@ -1361,7 +1361,7 @@ strMetricFormat.defaults =
  * _.strMetricFormatBytes( Math.pow( 2, 30 ) );
  *
  * @function  strMetricFormatBytes
- * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
+ * @memberof module:Tools/base/l5/StringTools.Tools( module::StringTools )
  *
  */
 
@@ -1406,7 +1406,7 @@ function strMetricFormatBytes( number,o )
  * _.strTimeFormat( Math.pow( 5, 7 ) );
  *
  * @function  strTimeFormat
- * @memberof module:Tools/base/l5/StringTools.wTools(module:StringTools)
+ * @memberof module:Tools/base/l5/StringTools.Tools( module::StringTools )
  *
  */
 
