@@ -48,6 +48,20 @@ _.assert( _.routineIs( _.sorted.addOnce ) );
 //
 // --
 
+// function strDecamelize( o )
+// {
+//
+//
+// }
+//
+// strDecamelize.defaults =
+// {
+//   src : null,
+//   delimeter : '-',
+// }
+
+//
+
 /**
  * Converts string to camelcase using special pattern.
  * If function finds character from this( '.','-','_','/' ) list before letter,
@@ -2092,6 +2106,7 @@ function strLattersSpectresSimilarity( src1, src2 )
 let Extend =
 {
 
+  // strDecamelize,
   strCamelize,
   strToTitle,
 
