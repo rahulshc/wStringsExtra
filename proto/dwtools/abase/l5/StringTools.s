@@ -1621,7 +1621,6 @@ function strToMap( o )
     stripping : 1,
     preservingEmpty : 1,
     preservingDelimeters : 0,
-    preservingQuoting : o.preservingQuoting,
   });
 
   let result = Object.create( null );
@@ -1687,7 +1686,6 @@ strToMap.defaults =
   src : null,
   keyValDelimeter : ':',
   entryDelimeter : ' ',
-  preservingQuoting : 1,
   parsingArrays : 0,
   toNumberMaybe : 1,
 }
@@ -1746,7 +1744,7 @@ function strRequestParse( o )
       preservingDelimeters : 1,
       preservingEmpty : 0,
     });
-
+    
     let subject, map;
     if( mapEntries.length === 1 )
     {
@@ -1754,18 +1752,22 @@ function strRequestParse( o )
       map = Object.create( null );
     }
     else
-    {
+    { 
       let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ], ' ' );
       subject = subjectAndKey[ 0 ];
       mapEntries[ 0 ] = subjectAndKey[ 2 ];
-
+      
       map = _.strToMap
       ({
         src : mapEntries.join( '' ),
         keyValDelimeter : o.keyValDelimeter,
         parsingArrays : o.parsingArrays,
-        preservingQuoting : o.preservingQuoting
       });
+      
+      if( o.quoting )
+      for( let k in map )
+      if( _.strIs( map[ k ] ) )
+      map[ k ] = _.strReplaceAll( map[ k ], '"', '' );
 
     }
 
@@ -1784,7 +1786,7 @@ function strRequestParse( o )
 var defaults = strRequestParse.defaults = Object.create( null );
 defaults.keyValDelimeter = ':';
 defaults.cmmandsDelimeter = ';';
-defaults.preservingQuoting = 1;
+defaults.quoting = 1;
 defaults.parsingArrays = 1;
 defaults.src = null;
 
