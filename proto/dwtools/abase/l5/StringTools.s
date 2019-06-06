@@ -1619,8 +1619,10 @@ function strToMap( o )
     src : src,
     delimeter : o.keyValDelimeter,
     stripping : 1,
+    quoting : o.quoting,
     preservingEmpty : 1,
     preservingDelimeters : 0,
+    preservingQuoting : o.quoting ? 0 : 1
   });
 
   let result = Object.create( null );
@@ -1686,6 +1688,7 @@ strToMap.defaults =
   src : null,
   keyValDelimeter : ':',
   entryDelimeter : ' ',
+  quoting : 1,
   parsingArrays : 0,
   toNumberMaybe : 1,
 }
@@ -1762,12 +1765,8 @@ function strRequestParse( o )
         src : mapEntries.join( '' ),
         keyValDelimeter : o.keyValDelimeter,
         parsingArrays : o.parsingArrays,
+        quoting : o.quoting
       });
-      
-      if( o.quoting )
-      for( let k in map )
-      if( _.strIs( map[ k ] ) )
-      map[ k ] = _.strReplaceAll( map[ k ], '"', '' );
 
     }
 
