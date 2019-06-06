@@ -2348,6 +2348,70 @@ function strTimeFormat( test )
 
 //
 
+function strRequestParse( test )
+{ 
+  let o = 
+  {
+    keyValDelimeter : ':',
+    cmmandsDelimeter : ';',
+    quoting : 1,
+    parsingArrays : 1
+  }
+  
+  test.case = 'only options';
+  var src = 'number : 1 str : abc array : [1,abc]'
+  var o2 = _.mapExtend( null, o, { src : src } );
+  var got = _.strRequestParse( o2 );
+  var expectedMap = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
+  test.identical( got.map, expectedMap )
+  
+  test.case = 'only commands';
+  var src = '.command1 ; .command2'
+  var o2 = _.mapExtend( null, o, { src : src } );
+  var got = _.strRequestParse( o2 );
+  var expectedMap = {};
+  test.identical( got.map, expectedMap )
+  test.identical( got.maps, [ {}, {} ] )
+  test.identical( got.subject, '.command1' )
+  test.identical( got.subjects, [ '.command1', '.command2' ] )
+  
+  test.case = 'command and option';
+  var src = '.set v : 10'
+  var o2 = _.mapExtend( null, o, { src : src } );
+  var got = _.strRequestParse( o2 );
+  var expectedMap = { v : 10 };
+  var expectedSubject = '.set';
+  test.identical( got.subject, expectedSubject )
+  test.identical( got.map, expectedMap )
+  
+  test.case = 'two command and option';
+  var src = '.build abc debug:0 ; .set v : 10'
+  var o2 = _.mapExtend( null, o, { src : src } );
+  var got = _.strRequestParse( o2 );
+  var expectedMap = { debug : 0 };
+  var expectedSubject = '.build abc';
+  test.identical( got.subject, expectedSubject )
+  test.identical( got.map, expectedMap )
+  test.identical( got.subjects, [ '.build abc', '.set' ] )
+  test.identical( got.maps, [ { debug : 0 }, { v : 10 } ] )
+  
+  test.case = 'quoted option value';
+  var src = 'path:"some/path"'
+  var o2 = _.mapExtend( null, o, { src : src } );
+  var got = _.strRequestParse( o2 );
+  var expectedMap = { path : 'some/path' };
+  test.identical( got.map, expectedMap )
+  
+  test.case = 'quoted windown path as value';
+  var src = 'path:"D:\\some\\path"'
+  var o2 = _.mapExtend( null, o, { src : src } );
+  var got = _.strRequestParse( o2 );
+  var expectedMap = { path : 'D:\\some\\path' };
+  test.identical( got.map, expectedMap )
+}
+
+//
+
 function strDifference( test )
 {
 
@@ -2453,6 +2517,8 @@ var Self =
     strMetricFormatBytes : strMetricFormatBytes,
     strToBytes : strToBytes,
     strTimeFormat : strTimeFormat,
+    
+    strRequestParse : strRequestParse,
 
     //
 
