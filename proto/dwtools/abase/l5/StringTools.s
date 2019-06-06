@@ -1764,6 +1764,7 @@ function strRequestParse( o )
         src : mapEntries.join( '' ),
         keyValDelimeter : o.keyValDelimeter,
         parsingArrays : o.parsingArrays,
+        preservingQuoting : o.preservingQuoting
       });
 
     }
@@ -1783,6 +1784,7 @@ function strRequestParse( o )
 var defaults = strRequestParse.defaults = Object.create( null );
 defaults.keyValDelimeter = ':';
 defaults.cmmandsDelimeter = ';';
+defaults.preservingQuoting = 1;
 defaults.parsingArrays = 1;
 defaults.src = null;
 
