@@ -1621,6 +1621,7 @@ function strToMap( o )
     stripping : 1,
     preservingEmpty : 1,
     preservingDelimeters : 0,
+    preservingQuoting : o.preservingQuoting,
   });
 
   let result = Object.create( null );
@@ -1686,6 +1687,7 @@ strToMap.defaults =
   src : null,
   keyValDelimeter : ':',
   entryDelimeter : ' ',
+  preservingQuoting : 1,
   parsingArrays : 0,
   toNumberMaybe : 1,
 }
