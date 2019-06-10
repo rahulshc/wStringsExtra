@@ -263,7 +263,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'b' ],
+      groups : [],
       match : 'b',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -279,7 +279,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'aa' ],
+      groups : [],
       match : 'aa',
       tokenId : 0,
       range : [ 0, 2 ],
@@ -287,7 +287,7 @@ function strFindAll( test )
       input : 'aabaa'
     },
     {
-      groups : [ 'aa' ],
+      groups : [],
       match : 'aa',
       tokenId : 0,
       range : [ 3, 5 ],
@@ -321,7 +321,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 0, 1 ],
@@ -337,7 +337,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'x' ],
+      groups : [],
       match : 'x',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -345,7 +345,7 @@ function strFindAll( test )
       input : 'gpxa'
     },
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 1,
       range : [ 3, 4 ],
@@ -361,7 +361,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'l' ],
+      groups : [],
       match : 'l',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -369,7 +369,7 @@ function strFindAll( test )
       input : 'hello'
     },
     {
-      groups : [ 'l' ],
+      groups : [],
       match : 'l',
       tokenId : 0,
       range : [ 3, 4 ],
@@ -421,7 +421,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'x' ],
+      groups : [],
       match : 'x',
       tokenId : 0,
       range : [ 0, 1 ],
@@ -443,7 +443,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'ab' ],
+      groups : [],
       match : 'ab',
       tokenId : 0,
       range : [ 0, 2 ],
@@ -451,7 +451,7 @@ function strFindAll( test )
       input : 'ababab'
     },
     {
-      groups : [ 'ab' ],
+      groups : [],
       match : 'ab',
       tokenId : 0,
       range : [ 2, 4 ],
@@ -459,7 +459,7 @@ function strFindAll( test )
       input : 'ababab'
     },
     {
-      groups : [ 'ab' ],
+      groups : [],
       match : 'ab',
       tokenId : 0,
       range : [ 4, 6 ],
@@ -475,7 +475,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'ab' ],
+      groups : [],
       match : 'ab',
       tokenId : 1,
       range : [ 0, 2 ],
@@ -483,7 +483,7 @@ function strFindAll( test )
       input : 'abaabab'
     },
     {
-      groups : [ 'aa' ],
+      groups : [],
       match : 'aa',
       tokenId : 0,
       range : [ 2, 4 ],
@@ -491,7 +491,7 @@ function strFindAll( test )
       input : 'abaabab'
     },
     {
-      groups : [ 'ab' ],
+      groups : [],
       match : 'ab',
       tokenId : 1,
       range : [ 5, 7 ],
@@ -507,7 +507,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'abc' ],
+      groups : [],
       match : 'abc',
       tokenId : 0,
       range : [ 0, 3 ],
@@ -515,7 +515,7 @@ function strFindAll( test )
       input : 'abcabc'
     },
     {
-      groups : [ 'abc' ],
+      groups : [],
       match : 'abc',
       tokenId : 0,
       range : [ 3, 6 ],
@@ -531,7 +531,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 0, 1 ],
@@ -539,7 +539,7 @@ function strFindAll( test )
       input : 'abcabc'
     },
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 3, 4 ],
@@ -560,7 +560,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'b' ],
+      groups : [],
       match : 'b',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -575,7 +575,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ '1' ],
+      groups : [],
       match : '1',
       tokenId : 0,
       range : [ 0, 1 ],
@@ -583,7 +583,7 @@ function strFindAll( test )
       input : '12345'
     },
     {
-      groups : [ '2' ],
+      groups : [],
       match : '2',
       tokenId : 0,
       range : [ 1, 2 ],
@@ -591,7 +591,7 @@ function strFindAll( test )
       input : '12345'
     },
     {
-      groups : [ '3' ],
+      groups : [],
       match : '3',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -606,7 +606,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'aa' ],
+      groups : [],
       match : 'aa',
       tokenId : 0,
       range : [ 3, 5 ],
@@ -621,7 +621,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'gpd', 'gp' ],
+      groups : [ 'gp' ],
       match : 'gpd',
       tokenId : 0,
       range : [ 6, 9 ],
@@ -636,7 +636,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -651,7 +651,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -666,7 +666,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -681,7 +681,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -689,7 +689,7 @@ function strFindAll( test )
       input : 'gpahpb'
     },
     {
-      groups : [ 'b' ],
+      groups : [],
       match : 'b',
       tokenId : 1,
       range : [ 5, 6 ],
@@ -704,7 +704,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -712,7 +712,7 @@ function strFindAll( test )
       input : 'gpahpb'
     },
     {
-      groups : [ 'b' ],
+      groups : [],
       match : 'b',
       tokenId : 1,
       range : [ 5, 6 ],
@@ -727,7 +727,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -735,7 +735,7 @@ function strFindAll( test )
       input : 'gpahpb'
     },
     {
-      groups : [ 'b' ],
+      groups : [],
       match : 'b',
       tokenId : 1,
       range : [ 5, 6 ],
@@ -750,7 +750,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -758,7 +758,7 @@ function strFindAll( test )
       input : 'gpahpb'
     },
     {
-      groups : [ 'b' ],
+      groups : [],
       match : 'b',
       tokenId : 1,
       range : [ 5, 6 ],
@@ -774,7 +774,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'hell' ],
+      groups : [],
       match : 'hell',
       tokenId : 0,
       range : [ 8, 12 ],
@@ -782,7 +782,7 @@ function strFindAll( test )
       input : 'this is hello from hell'
     },
     {
-      groups : [ 'hell' ],
+      groups : [],
       match : 'hell',
       tokenId : 0,
       range : [ 19, 23 ],
@@ -798,7 +798,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'hell' ],
+      groups : [],
       match : 'hell',
       tokenId : 0,
       range : [ 8, 12 ],
@@ -806,7 +806,7 @@ function strFindAll( test )
       input : 'this is hello from hell'
     },
     {
-      groups : [ 'hell' ],
+      groups : [],
       match : 'hell',
       tokenId : 0,
       range : [ 19, 23 ],
@@ -827,7 +827,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'b' ],
+      groups : [],
       match : 'b',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -842,7 +842,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ '1' ],
+      groups : [],
       match : '1',
       tokenId : 0,
       range : [ 0, 1 ],
@@ -850,7 +850,7 @@ function strFindAll( test )
       input : '12345'
     },
     {
-      groups : [ '2' ],
+      groups : [],
       match : '2',
       tokenId : 0,
       range : [ 1, 2 ],
@@ -858,7 +858,7 @@ function strFindAll( test )
       input : '12345'
     },
     {
-      groups : [ '3' ],
+      groups : [],
       match : '3',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -873,7 +873,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'aa' ],
+      groups : [],
       match : 'aa',
       tokenId : 0,
       range : [ 3, 5 ],
@@ -888,7 +888,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'gpd', 'gp' ],
+      groups : [ 'gp' ],
       match : 'gpd',
       tokenId : 0,
       range : [ 6, 9 ],
@@ -903,7 +903,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -918,7 +918,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -933,7 +933,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -948,7 +948,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -956,7 +956,7 @@ function strFindAll( test )
       input : 'gpahpb'
     },
     {
-      groups : [ 'b' ],
+      groups : [],
       match : 'b',
       tokenId : 1,
       range : [ 5, 6 ],
@@ -971,7 +971,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -979,7 +979,7 @@ function strFindAll( test )
       input : 'gpahpb'
     },
     {
-      groups : [ 'b' ],
+      groups : [],
       match : 'b',
       tokenId : 1,
       range : [ 5, 6 ],
@@ -994,7 +994,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -1002,7 +1002,7 @@ function strFindAll( test )
       input : 'gpahpb'
     },
     {
-      groups : [ 'b' ],
+      groups : [],
       match : 'b',
       tokenId : 1,
       range : [ 5, 6 ],
@@ -1017,7 +1017,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 2, 3 ],
@@ -1025,7 +1025,7 @@ function strFindAll( test )
       input : 'gpahpb'
     },
     {
-      groups : [ 'b' ],
+      groups : [],
       match : 'b',
       tokenId : 1,
       range : [ 5, 6 ],
@@ -1041,7 +1041,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'hell' ],
+      groups : [],
       match : 'hell',
       tokenId : 0,
       range : [ 8, 12 ],
@@ -1049,7 +1049,7 @@ function strFindAll( test )
       input : 'this is hello from hell'
     },
     {
-      groups : [ 'hell' ],
+      groups : [],
       match : 'hell',
       tokenId : 0,
       range : [ 19, 23 ],
@@ -1065,7 +1065,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'hell' ],
+      groups : [],
       match : 'hell',
       tokenId : 0,
       range : [ 8, 12 ],
@@ -1073,7 +1073,7 @@ function strFindAll( test )
       input : 'this is hello from hell'
     },
     {
-      groups : [ 'hell' ],
+      groups : [],
       match : 'hell',
       tokenId : 0,
       range : [ 19, 23 ],
@@ -1101,7 +1101,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'aa' ],
+      groups : [],
       match : 'aa',
       tokenId : 0,
       range : [ 0, 2 ],
@@ -1110,7 +1110,7 @@ function strFindAll( test )
       tokenName : 'manya'
     },
     {
-      groups : [ 'ba' ],
+      groups : [],
       match : 'ba',
       tokenId : 1,
       range : [ 2, 4 ],
@@ -1119,7 +1119,7 @@ function strFindAll( test )
       tokenName : 'ba'
     },
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 4, 5 ],
@@ -1149,7 +1149,7 @@ function strFindAll( test )
   var expected =
   [
     {
-      groups : [ 'aa' ],
+      groups : [],
       match : 'aa',
       tokenId : 0,
       range : [ 0, 2 ],
@@ -1158,7 +1158,7 @@ function strFindAll( test )
       tokenName : 'manya'
     },
     {
-      groups : [ 'ba' ],
+      groups : [],
       match : 'ba',
       tokenId : 1,
       range : [ 2, 4 ],
@@ -1167,7 +1167,7 @@ function strFindAll( test )
       tokenName : 'ba'
     },
     {
-      groups : [ 'a' ],
+      groups : [],
       match : 'a',
       tokenId : 0,
       range : [ 4, 5 ],
@@ -1199,7 +1199,7 @@ function strFindAll( test )
   [
     {
       match : 'x',
-      groups : [ 'x' ],
+      groups : [],
       tokenId : -1,
       range : [ 0, 1 ],
       counter : 0,
@@ -1208,7 +1208,7 @@ function strFindAll( test )
     },
     {
       match : 'aa',
-      groups : [ 'aa' ],
+      groups : [],
       tokenId : 0,
       range : [ 1, 3 ],
       counter : 1,
@@ -1217,7 +1217,7 @@ function strFindAll( test )
     },
     {
       match : 'yy',
-      groups : [ 'yy' ],
+      groups : [],
       tokenId : -1,
       range : [ 3, 5 ],
       counter : 2,
@@ -1226,7 +1226,7 @@ function strFindAll( test )
     },
     {
       match : 'ba',
-      groups : [ 'ba' ],
+      groups : [],
       tokenId : 1,
       range : [ 5, 7 ],
       counter : 3,
@@ -1235,7 +1235,7 @@ function strFindAll( test )
     },
     {
       match : 'a',
-      groups : [ 'a' ],
+      groups : [],
       tokenId : 0,
       range : [ 7, 8 ],
       counter : 4,
@@ -1244,7 +1244,7 @@ function strFindAll( test )
     },
     {
       match : 'z',
-      groups : [ 'z' ],
+      groups : [],
       tokenId : -1,
       range : [ 8, 9 ],
       counter : 5,
@@ -1279,7 +1279,7 @@ function strFindAll( test )
   [
     {
       match : '**',
-      groups : [ '**', '**' ],
+      groups : [ '**' ],
       tokenId : 2,
       range : [ 0, 2 ],
       counter : 1,
@@ -1541,7 +1541,7 @@ function strReplaceAll( test )
       expectedIt.range = [ 8,12 ];
       expectedIt.counter = 0;
       expectedIt.input = 'this is hello from hell';
-      expectedIt.groups = [ 'hell' ];
+      expectedIt.groups = [];
       expectedIt.tokenId = 0;
       test.identical( it, expectedIt );
     }
@@ -1552,7 +1552,7 @@ function strReplaceAll( test )
       expectedIt.range = [ 19,23 ];
       expectedIt.counter = 1;
       expectedIt.input = 'this is hello from hell';
-      expectedIt.groups = [ 'hell' ];
+      expectedIt.groups = [];
       expectedIt.tokenId = 0;
       test.identical( it, expectedIt );
     }
@@ -1667,7 +1667,7 @@ function strTokenizeJs( test )
   [
     {
       match : '\n',
-      groups : [ '\n' ],
+      groups : [],
       tokenId : 5,
       range : [ 0, 1 ],
       counter : 0,
@@ -1676,7 +1676,7 @@ function strTokenizeJs( test )
     },
     {
       match : `// type : 'image/png',`,
-      groups : [ `// type : 'image/png',` ],
+      groups : [],
       tokenId : 1,
       range : [ 1, 23 ],
       counter : 1,
@@ -1685,7 +1685,7 @@ function strTokenizeJs( test )
     },
     {
       match : '\n',
-      groups : [ '\n' ],
+      groups : [],
       tokenId : 5,
       range : [ 23, 24 ],
       counter : 2,
@@ -1712,7 +1712,7 @@ function strTokenizeJs( test )
   [
     {
       match : ' ',
-      groups : [ ' ' ],
+      groups : [],
       tokenId : 5,
       range : [ 0, 1 ],
       counter : 0,
@@ -1721,7 +1721,7 @@ function strTokenizeJs( test )
     },
     {
       match : '// divide by zero',
-      groups : [ '// divide by zero' ],
+      groups : [],
       tokenId : 1,
       range : [ 1, 18 ],
       counter : 1,
@@ -1776,7 +1776,7 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
   [
     {
       match : '\n  ',
-      groups : [ '\n  ' ],
+      groups : [],
       tokenId : 5,
       range : [ 0, 3 ],
       counter : 0,
@@ -1787,9 +1787,7 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
       match : `/**
    * @file File.js.
    */`,
-      groups : [ `/**
-   * @file File.js.
-   */` ],
+      groups : [],
       tokenId : 0,
       range : [ 3, 32 ],
       counter : 1,
@@ -1798,7 +1796,7 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
     },
     {
       match : '\n',
-      groups : [ '\n' ],
+      groups : [],
       tokenId : 5,
       range : [ 32, 33 ],
       counter : 2,
@@ -1824,7 +1822,7 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
   [
     {
       match : '/\d+/',
-      groups : [ '/\d+/', '\d+', '' ],
+      groups : [ '\d+', '' ],
       tokenId : 7,
       range : [ 0, 4 ],
       counter : 0,
@@ -1850,7 +1848,7 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
   [
     {
       match : '/\d+/ig',
-      groups : [ '/\d+/ig', '\d+', 'ig' ],
+      groups : [ '\d+', 'ig' ],
       tokenId : 7,
       range : [ 0, 6 ],
       counter : 0,

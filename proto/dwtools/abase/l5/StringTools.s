@@ -386,9 +386,6 @@ function strSearch( o )
   found.forEach( ( it ) =>
   {
 
-    // it.ins = execed[ 0 ];
-    // it.groups = _.longSlice( execed );
-
     it.charsRange = it.range;
     it.charsRangeRight = [ o.src.length - it.charsRange[ 0 ], o.src.length - it.charsRange[ 1 ] ];
 
@@ -677,14 +674,16 @@ function strFindAll( src, ins )
       if( _.strIs( originalIns ) )
       {
         foundIns = originalIns;
-        groups = [ foundIns ];
+        // groups = [ foundIns ];
+        groups = [];
       }
       else
       {
         let execed = execeds[ tokenId ];
         _.assert( !!execed );
         foundIns = execed[ 0 ];
-        groups = _.longSlice( execed, 0, execed.length );
+        // groups = _.longSlice( execed, 0, execed.length );
+        groups = _.longSlice( execed, 1, execed.length );
       }
 
       it.match = foundIns;
