@@ -1618,8 +1618,10 @@ function strToMap( o )
     src : src,
     delimeter : o.keyValDelimeter,
     stripping : 1,
+    quoting : o.quoting,
     preservingEmpty : 1,
     preservingDelimeters : 0,
+    preservingQuoting : o.quoting ? 0 : 1
   });
 
   let result = Object.create( null );
@@ -1685,6 +1687,7 @@ strToMap.defaults =
   src : null,
   keyValDelimeter : ':',
   entryDelimeter : ' ',
+  quoting : 1,
   parsingArrays : 0,
   toNumberMaybe : 1,
 }
@@ -1743,7 +1746,7 @@ function strRequestParse( o )
       preservingDelimeters : 1,
       preservingEmpty : 0,
     });
-
+    
     let subject, map;
     if( mapEntries.length === 1 )
     {
@@ -1751,16 +1754,17 @@ function strRequestParse( o )
       map = Object.create( null );
     }
     else
-    {
+    { 
       let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ], ' ' );
       subject = subjectAndKey[ 0 ];
       mapEntries[ 0 ] = subjectAndKey[ 2 ];
-
+      
       map = _.strToMap
       ({
         src : mapEntries.join( '' ),
         keyValDelimeter : o.keyValDelimeter,
         parsingArrays : o.parsingArrays,
+        quoting : o.quoting
       });
 
     }
@@ -1780,6 +1784,7 @@ function strRequestParse( o )
 var defaults = strRequestParse.defaults = Object.create( null );
 defaults.keyValDelimeter = ':';
 defaults.cmmandsDelimeter = ';';
+defaults.quoting = 1;
 defaults.parsingArrays = 1;
 defaults.src = null;
 
