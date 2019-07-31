@@ -1270,6 +1270,21 @@ let _metrics =
  *
  */
 
+/*
+  Dmytro : founded bug.
+  If divisor is used then check loop of number format transforms numbers:
+  0.000001 -> 0.0000009999 or 0.001 -> 0.000999 and so on. It is JavaScript feature.
+  So, this is cause of mistakes in result.
+  Test case with this kind of test is commented.
+
+  Also, assert
+
+  _.assert( _.numberIs( number ), '"number" should be Number' );
+
+  exists, but NaN has number type. Routine parseFloat() transforms regular strings
+  to NaN.
+*/
+
 function strMetricFormat( number,o )
 {
 
@@ -1746,7 +1761,7 @@ function strRequestParse( o )
       preservingDelimeters : 1,
       preservingEmpty : 0,
     });
-    
+
     let subject, map;
     if( mapEntries.length === 1 )
     {
@@ -1754,11 +1769,11 @@ function strRequestParse( o )
       map = Object.create( null );
     }
     else
-    { 
+    {
       let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ], ' ' );
       subject = subjectAndKey[ 0 ];
       mapEntries[ 0 ] = subjectAndKey[ 2 ];
-      
+
       map = _.strToMap
       ({
         src : mapEntries.join( '' ),
