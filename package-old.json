@@ -1,18 +1,17 @@
-
 {
   "name": "wstringsextra",
-  "version": "0.3.0",
-  "description": "___",
+  "version": "0.3.114",
+  "description": "Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.",
   "author": "Kostiantyn Wandalen <wanalen@willbe.so>",
   "license": "MIT",
-  "main": "proto/dwtools/amid/___",
+  "main": "proto/dwtools/abase/l5/StringTools.s",
   "files": [
-    "proto/dwtools/amid",
+    "proto/dwtools/abase/l5",
     "proto/dwtools/Tools.s",
     "production"
   ],
   "scripts": {
-    "test": "wtest proto",
+    "test": "wtest .run proto/**",
     "docgen": "wdocgen proto"
   },
   "repository": {
@@ -23,12 +22,16 @@
     "url": "https://github.com/Wandalen/wStringsExtra/issues"
   },
   "dependencies": {
-    "wTools": ""
+    "wTools": "",
+    "wstringer": "",
+    "warraysorted": "",
+    "warraysparse": ""
   },
   "devDependencies": {
     "wTesting": ""
   },
   "keywords": [
-    "wTools"
+    "wTools",
+    "wStringsExtra"
   ]
 }
