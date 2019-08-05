@@ -1277,6 +1277,9 @@ function strMetricFormat( number,o )
   number = parseFloat( number );
 
   o = _.routineOptions( strMetricFormat, o );
+  
+  if( !o.metrics )
+  o.metrics = _metrics;
 
   _.assert( _.numberIs( number ), '"number" should be Number' );
   _.assert( arguments.length === 1 || arguments.length === 2 );
@@ -1344,7 +1347,7 @@ strMetricFormat.defaults =
   fixed : 1,
   dimensions : 1,
   metric : 0,
-  metrics : _metrics,
+  metrics : null,
 }
 
 //
