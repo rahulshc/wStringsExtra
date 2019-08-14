@@ -2039,8 +2039,24 @@ function strMetricFormat( test )
   var expected = '1.0 M';
   test.identical( got,expected );
 
+  var got = _.strMetricFormat( '3200000000', { divisor : 3 } );
+  var expected = '3.2 G';
+  test.identical( got,expected );
+
+  var got = _.strMetricFormat( '2000', { divisor : 3 } );
+  var expected = '2.0 k';
+  test.identical( got,expected );
+
   var got = _.strMetricFormat( 0.000002, { divisor : 3 } );
   var expected = '2.0 μ';
+  test.identical( got,expected );
+
+  var got = _.strMetricFormat( 0.000000003, { divisor : 3 } );
+  var expected = '3.0 n';
+  test.identical( got,expected );
+
+  var got = _.strMetricFormat( 0.002, { divisor : 3 } );
+  var expected = '2.0 m';
   test.identical( got,expected );
 
   // var got = _.strMetricFormat( 0.000001, { divisor : 3 } );
