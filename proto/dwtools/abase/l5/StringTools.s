@@ -308,7 +308,7 @@ function strHtmlEscape( str )
 //     {
 //       prefix : '>->',
 //       postfix : '<-<',
-//       src : src,
+//       src,
 //     }
 //
 //     let strips = _.strExtractInlinedStereo( optionsExtract );
@@ -374,7 +374,7 @@ function strSearch( o )
 
   if( _.arrayIs( o.excludingTokens ) || _.strIs( o.excludingTokens ) )
   {
-    o.excludingTokens = _.path.globsToRegexp( o.excludingTokens );
+    o.excludingTokens = _.path.globsShortToRegexps( o.excludingTokens );
     o.excludingTokens = _.regexpsAny( o.excludingTokens );
   }
 
@@ -848,7 +848,7 @@ function strReplaceAll( src, ins, sub )
 
   if( arguments.length === 3 )
   {
-    o = { src : src };
+    o = { src };
     o.dictionary = [ [ ins, sub ] ]
   }
   else if( arguments.length === 2 )
@@ -1270,21 +1270,21 @@ let _metrics =
  *
  */
 
-/*
-  Dmytro : founded bug.
-  If divisor is used then check loop of number format transforms numbers:
-  0.000001 -> 0.0000009999 or 0.001 -> 0.000999 and so on. It is JavaScript feature.
-  So, this is cause of mistakes in result.
-  Test case with this kind of test is commented.
-
-  Also, assert
-
-  _.assert( _.numberIs( number ), '"number" should be Number' );
-
-  exists, but NaN has number type. Routine parseFloat() transforms regular strings
-  to NaN.
-*/
-
+ /*
+-  Dmytro : founded bug.
+-  If divisor is used then check loop of number format transforms numbers:
+-  0.000001 -> 0.0000009999 or 0.001 -> 0.000999 and so on. It is JavaScript feature.
+-  So, this is cause of mistakes in result.
+-  Test case with this kind of test is commented.
+-
+-  Also, assert
+-
+-  _.assert( _.numberIs( number ), '"number" should be Number' );
+-
+-  exists, but NaN has number type. Routine parseFloat() transforms regular strings
+-  to NaN.
++qqq : cover routine strMetricFormat
+ */
 function strMetricFormat( number,o )
 {
 
@@ -1292,8 +1292,8 @@ function strMetricFormat( number,o )
   number = parseFloat( number );
 
   o = _.routineOptions( strMetricFormat, o );
-  
-  if( !o.metrics )
+
+  if( o.metrics === null )
   o.metrics = _metrics;
 
   _.assert( _.numberIs( number ), '"number" should be Number' );
@@ -1616,24 +1616,39 @@ function strToNumberMaybe( src )
 
 //
 
-function strToMap( o )
+/*
+qqq : routine strStructureParse requires good coverage and extension
+*/
+
+function strStructureParse( o )
 {
 
-  if( _.strIs( o ) || _.arrayIs( o ) )
+  if( _.strIs( o ) )
   o = { src : o }
 
-  _.routineOptions( strToMap, o );
+  _.routineOptions( strStructureParse, o );
   _.assert( !!o.keyValDelimeter );
   _.assert( _.strIs( o.entryDelimeter ) );
-  _.assert( _.strIs( o.src ) || _.arrayIs( o.src ) );
+  _.assert( _.strIs( o.src ) );
   _.assert( arguments.length === 1 );
+  _.assert( _.arrayHas( [ 'map', 'array', 'string' ], o.defaultStructure ) );
 
-  let src = o.src;
+  if( o.arrayElementsDelimeter === null )
+  o.arrayElementsDelimeter = [ ' ', ',' ];
 
-  if( _.strIs( src ) )
+  let src = o.src.trim();
+
+  if( o.parsingArrays )
+  if( _.strIs( _.strInsideOf( src, o.arrayLeftDelimeter, o.arrayRightDelimeter ) ) )
+  {
+    let r = strToArrayMaybe( src );
+    if( _.arrayIs( r ) )
+    return r;
+  }
+
   src = _.strSplit
   ({
-    src : src,
+    src,
     delimeter : o.keyValDelimeter,
     stripping : 1,
     quoting : o.quoting,
@@ -1654,13 +1669,10 @@ function strToMap( o )
 
     if( a < src.length - 1 )
     {
-      let cuts = _.strIsolateRightOrAll( right,o.entryDelimeter );
+      let cuts = _.strIsolateRightOrAll( right, o.entryDelimeter );
       val = cuts[ 0 ];
-      src[ a+0 ] = cuts[ 2 ];
+      src[ a ] = cuts[ 2 ];
     }
-
-    // if( !isNaN( parseFloat( val ) ) )
-    // val = parseFloat( val );
 
     result[ left ] = val;
 
@@ -1672,6 +1684,21 @@ function strToMap( o )
 
   }
 
+  if( src.length === 1 && src[ 0 ] )
+  return src[ 0 ];
+
+  if( _.mapKeys( result ).length === 0 )
+  {
+    if( o.defaultStructure === 'map' )
+    return result;
+    else if( o.defaultStructure === 'array' )
+    return [];
+    else if( o.defaultStructure === 'string' )
+    return '';
+  }
+
+  return result;
+
   /**/
 
   function strToArrayMaybe( str )
@@ -1679,36 +1706,68 @@ function strToMap( o )
     let result = str;
     if( !_.strIs( result ) )
     return result;
-    let inside = _.strInsideOf( result, '[', ']' );
+    let inside = _.strInsideOf( result, o.arrayLeftDelimeter, o.arrayRightDelimeter );
     if( inside !== false )
     {
       let splits = _.strSplit
       ({
         src : inside,
-        delimeter : [ ' ', ',' ],
+        delimeter : o.arrayElementsDelimeter,
         stripping : 1,
         quoting : 1,
         preservingDelimeters : 0,
         preservingEmpty : 0,
       });
+      result = splits;
       if( o.toNumberMaybe )
-      result = splits.map( ( e ) => _.strToNumberMaybe( e ) );
+      result = result.map( ( e ) => _.strToNumberMaybe( e ) );
     }
     return result;
   }
 
-  return result;
 }
 
-strToMap.defaults =
+strStructureParse.defaults =
 {
   src : null,
   keyValDelimeter : ':',
   entryDelimeter : ' ',
+  arrayElementsDelimeter : null,
+  arrayLeftDelimeter : '[',
+  arrayRightDelimeter : ']',
   quoting : 1,
   parsingArrays : 0,
   toNumberMaybe : 1,
+  defaultStructure : 'map', /* map / array / string */
 }
+
+//
+
+/*
+qqq : routine strWebQueryParse requires good coverage and extension
+*/
+
+function strWebQueryParse( o )
+{
+
+  if( _.strIs( o ) )
+  o = { src : o }
+
+  _.routineOptions( strWebQueryParse, o );
+  _.assert( arguments.length === 1 );
+
+  if( o.keyValDelimeter === null )
+  o.keyValDelimeter = [ ':', '=' ];
+
+  return _.strStructureParse( o );
+}
+
+var defaults = strWebQueryParse.defaults = Object.create( strStructureParse.defaults );
+
+defaults.defaultStructure = 'map';
+defaults.parsingArrays = 0;
+defaults.keyValDelimeter = null; /* [ ':', '=' ] */
+defaults.entryDelimeter = '&';
 
 //
 
@@ -1750,9 +1809,6 @@ function strRequestParse( o )
   for( let c = 0 ; c < commands.length ; c++ )
   {
 
-    // if( !o.keyValDelimeter )
-    // debugger;
-
     let mapEntries = [ commands[ c ] ];
     if( o.keyValDelimeter )
     mapEntries = _.strSplit
@@ -1777,7 +1833,7 @@ function strRequestParse( o )
       subject = subjectAndKey[ 0 ];
       mapEntries[ 0 ] = subjectAndKey[ 2 ];
 
-      map = _.strToMap
+      map = _.strStructureParse
       ({
         src : mapEntries.join( '' ),
         keyValDelimeter : o.keyValDelimeter,
@@ -1811,7 +1867,7 @@ defaults.src = null;
 function strJoinMap( o )
 {
 
-  _.routineOptions( strToMap, o );
+  _.routineOptions( strJoinMap, o );
   _.assert( _.strIs( o.keyValDelimeter ) );
   _.assert( _.strIs( o.entryDelimeter ) );
   _.assert( _.objectIs( o.src ) );
@@ -2165,7 +2221,8 @@ let Extend =
   strToConfig, /* experimental */
 
   strToNumberMaybe,
-  strToMap, /* cover it by tests */
+  strStructureParse, /* qqq : cover it by tests */
+  strWebQueryParse, /* qqq : cover it by tests */
   strRequestParse,
 
   strJoinMap, /* qqq : cover it by tests */
@@ -2185,10 +2242,6 @@ _.mapExtend( Self, Extend );
 // --
 // export
 // --
-
-// if( typeof module !== 'undefined' )
-// if( _global_.WTOOLS_PRIVATE )
-// { /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

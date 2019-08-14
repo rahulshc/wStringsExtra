@@ -12,7 +12,8 @@ if( typeof module !== 'undefined' )
 
 }
 
-var _ = _global_.wTools;
+let select = _testerGlobal_.wTools.select;
+let _ = _global_.wTools;
 
 // --
 //
@@ -1193,7 +1194,6 @@ function strFindAll( test )
     ins : map,
     tokenizingUnknown : 1,
   });
-  debugger;
   log( got );
   var expected =
   [
@@ -1253,7 +1253,6 @@ function strFindAll( test )
     },
   ]
   log( got );
-  debugger;
   test.identical( got,expected );
 
   /**/
@@ -1467,9 +1466,7 @@ function strReplaceAll( test )
   test.identical( got,expected );
 
   test.case = 'no recursion should happen';
-  debugger;
   var got = _.strReplaceAll( 'abcabc',{ abc : 'a', a : 'b' } );
-  debugger;
   var expected = 'aa';
   test.identical( got,expected );
 
@@ -1694,12 +1691,10 @@ function strTokenizeJs( test )
     },
   ]
 
-  debugger;
   var got = _.strTokenizeJs( code );
 
   log( code );
-  log( _.select( got, '*/tokenName' ) );
-  debugger;
+  log( select( got, '*/tokenName' ) );
   log( got );
   test.identical( got, expected );
 
@@ -1733,7 +1728,7 @@ function strTokenizeJs( test )
   var got = _.strTokenizeJs( code );
 
   log( code );
-  log( _.select( got, '*/tokenName' ) );
+  log( select( got, '*/tokenName' ) );
   log( got );
   test.identical( got, expected );
 
@@ -1750,14 +1745,14 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
   var got = _.strTokenizeJs({ src : code, tokenizingUnknown : 1 });
 
   log( code );
-  log( _.toStr( _.select( got, '*/match' ), { multiline : 0 } ) );
-  log( _.select( got, '*/tokenName' ) );
+  log( _.toStr( select( got, '*/match' ), { multiline : 0 } ) );
+  log( select( got, '*/tokenName' ) );
 
-  var tokenNamesGot = _.select( got, '*/tokenName' );
+  var tokenNamesGot = select( got, '*/tokenName' );
   var tokenNamesExpected = [ 'whitespace', 'keyword', 'parenthes', 'whitespace', 'keyword', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'number', 'punctuation', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'punctuation', 'name', 'whitespace', 'punctuation', 'whitespace', 'number', 'punctuation', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'punctuation', 'whitespace', 'parenthes', 'whitespace', 'comment/singleline', 'whitespace' ];
   test.identical( tokenNamesGot, tokenNamesExpected );
 
-  var matchesGot = _.select( got, '*/match' );
+  var matchesGot = select( got, '*/match' );
   var matchesExpected = [ '\n', 'for', '(', ' ', 'var', ' ', 'p', ' ', '=', ' ', '0', ',', 'pl', ' ', '=', ' ', 'polygon', '.', 'length', ' ', '/', ' ', '2', ';', ' ', 'p', ' ', '<', ' ', 'pl', ' ', ';', ' ', 'p', '++', ' ', ')', '\n  ', '// type : \'image/png\',', '\n' ];
   test.identical( matchesGot, matchesExpected );
 
@@ -1808,7 +1803,7 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
   var got = _.strTokenizeJs( code );
 
   log( code );
-  log( _.select( got, '*/tokenName' ) );
+  log( select( got, '*/tokenName' ) );
   log( got );
   test.identical( got, expected );
 
@@ -1834,7 +1829,7 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
   var got = _.strTokenizeJs( code );
 
   log( code );
-  log( _.select( got, '*/tokenName' ) );
+  log( select( got, '*/tokenName' ) );
   log( got );
   test.identical( got, expected );
 
@@ -1860,13 +1855,13 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
   var got = _.strTokenizeJs( code );
 
   log( code );
-  log( _.select( got, '*/tokenName' ) );
+  log( select( got, '*/tokenName' ) );
   log( got );
   test.identical( got, expected );
 
   /* - */
 
-  // test.case = 'looking like regexp, but not';
+  // test.case = 'looks like regexp, but not';
   //
   // var x = / 2 , y /;
   // var code = `for( var p = x / 2 , y / 2 ; p < pl ; p++ )`;
@@ -1875,16 +1870,16 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
   // var got = _.strTokenizeJs({ src : code, tokenizingUnknown : 1 });
   //
   // log( code );
-  // log( _.toStr( _.select( got, '*/match' ), { multiline : 0 } ) );
-  // log( _.select( got, '*/tokenName' ) );
+  // log( _.toStr( select( got, '*/match' ), { multiline : 0 } ) );
+  // log( select( got, '*/tokenName' ) );
   //
   // debugger;
   //
-  // var tokenNamesGot = _.select( got, '*/tokenName' );
+  // var tokenNamesGot = select( got, '*/tokenName' );
   // var tokenNamesExpected = [ 'whitespace', 'keyword', 'parenthes', 'whitespace', 'keyword', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'number', 'punctuation', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'punctuation', 'name', 'whitespace', 'punctuation', 'whitespace', 'number', 'punctuation', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'punctuation', 'whitespace', 'parenthes', 'whitespace', 'comment/singleline', 'whitespace' ];
   // test.identical( tokenNamesGot, tokenNamesExpected );
   //
-  // var matchesGot = _.select( got, '*/match' );
+  // var matchesGot = select( got, '*/match' );
   // var matchesExpected = [ '\n', 'for', '(', ' ', 'var', ' ', 'p', ' ', '=', ' ', '0', ',', 'pl', ' ', '=', ' ', 'polygon', '.', 'length', ' ', '/', ' ', '2', ';', ' ', 'p', ' ', '<', ' ', 'pl', ' ', ';', ' ', 'p', '++', ' ', ')', '\n  ', '// type : \'image/png\',', '\n' ];
   // test.identical( matchesGot, matchesExpected );
 
@@ -2371,6 +2366,184 @@ function strTimeFormat( test )
 
 //
 
+function strTimeFormat( test )
+{
+
+  test.case = 'simple number';
+  var got = _.strTimeFormat( 0 );
+  var expected = '0.000 s';
+  test.identical( got,expected );
+
+  test.case = 'simple number';
+  var got = _.strTimeFormat( 1000 );
+  var expected = '1.000 s';
+  test.identical( got,expected );
+
+  test.case = 'simple number';
+  var got = _.strTimeFormat( 1 );
+  var expected = '1.000 ms';
+  test.identical( got,expected );
+
+  test.case = 'big number';
+  var got = _.strTimeFormat( Math.pow( 4,7 ) );
+  var expected = '16.384 s';
+  test.identical( got,expected );
+
+  test.case = 'very big number';
+  var got = _.strTimeFormat( Math.pow( 13,13 ) );
+  var expected = '302.875 Gs';
+  test.identical( got,expected );
+
+  // test.case = 'zero';
+  // var got = _.strTimeFormat( 0 );
+  // var expected = '0.000 ys';
+  // test.identical( got,expected );
+
+  test.case = 'from date';
+  var d = new Date( 1,2,3 )
+  var got = _.strTimeFormat( d );
+  var expected = '-2.172 Gs';
+  test.identical( got,expected );
+
+  /**/
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'not enough arguments';
+  test.shouldThrowError( () => _.strTimeFormat() );
+
+  test.case = 'too many arguments';
+  test.shouldThrowError( () => _.strTimeFormat( 1,1 ) );
+
+  test.case = 'bad arguments';
+  test.shouldThrowError( () => _.strTimeFormat( null ) );
+
+  test.case = 'bad arguments';
+  test.shouldThrowError( () => _.strTimeFormat( undefined ) );
+
+  test.case = 'bad arguments';
+  test.shouldThrowError( () => _.strTimeFormat( {} ) );
+
+  test.case = 'bad arguments';
+  test.shouldThrowError( () => _.strTimeFormat( [] ) );
+
+  test.case = 'bad arguments';
+  test.shouldThrowError( () => _.strTimeFormat( '24:00' ) );
+
+}
+
+//
+
+function strStructureParse( test )
+{
+
+  /* */
+
+  test.open( 'imply map' );
+
+  test.case = 'trivial, default';
+  var src = 'number : 1 str : abc'
+  var expected = { number : 1, str : 'abc' };
+  var got = _.strStructureParse( src );
+  test.identical( got, expected )
+
+  test.case = 'empty string, default';
+  var src = ''
+  var expected = {};
+  var got = _.strStructureParse( src );
+  test.identical( got, expected )
+
+  test.case = 'empty string, options';
+  var src = ''
+  var expected = {};
+  var got = _.strStructureParse({ src : src, parsingArrays : 1 });
+  test.identical( got, expected )
+
+  test.case = 'empty string, defaultStructure:string';
+  var src = ''
+  var expected = '';
+  var got = _.strStructureParse({ src : src, parsingArrays : 1, defaultStructure : 'string' });
+  test.identical( got, expected )
+
+  test.case = 'string';
+  var src = 'some string'
+  var expected = 'some string';
+  var got = _.strStructureParse({ src : src, parsingArrays : 1 });
+  test.identical( got, expected )
+
+  test.case = 'several';
+  var src = 'number : 1 str : abc array : [1,abc]'
+  var expected = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse({ src : src, parsingArrays : 1 });
+  test.identical( got, expected )
+
+  test.case = 'several, with extra spaces';
+  var src = ' number : 1  str:abc array :  [ 1  , abc ] '
+  var expected = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse({ src : src, parsingArrays : 1 });
+  test.identical( got, expected )
+
+  test.case = 'array';
+  var src = ' [ 1  , abc ] ';
+  var expected = '[ 1  , abc ]';
+  var got = _.strStructureParse({ src : src, parsingArrays : 0 });
+  test.identical( got, expected )
+
+  test.close( 'imply map' );
+
+  /* */
+
+  test.open( 'imply array' )
+
+  test.case = 'empty array';
+  var src = '[]'
+  var expected = [];
+  var got = _.strStructureParse({ src : src, parsingArrays : 1 });
+  test.identical( got, expected )
+
+  test.case = 'array';
+  var src = '[ 1  , abc ]'
+  var expected = [ 1, 'abc' ];
+  var got = _.strStructureParse({ src : src, parsingArrays : 1 });
+  test.identical( got, expected )
+
+  test.case = 'array with extra spaces';
+  var src = ' [ 1  , abc ] '
+  var expected = [ 1, 'abc' ];
+  var got = _.strStructureParse({ src : src, parsingArrays : 1 });
+  test.identical( got, expected )
+
+  test.close( 'imply array' )
+
+}
+
+//
+
+function strWebQueryParse( test )
+{
+
+  /* */
+
+  test.case = 'empty array';
+  var src = ''
+  var expected = {};
+  debugger;
+  var got = _.strWebQueryParse( src );
+  test.identical( got, expected )
+
+  test.case = 'trivial';
+  var src = 'abc:3&def:gh&this=is'
+  var expected = { 'abc' : 3, 'def' : 'gh', 'this' : 'is' };
+  var got = _.strWebQueryParse( src );
+  test.identical( got, expected )
+
+  /* */
+
+}
+
+//
+
 function strRequestParse( test )
 {
   let o =
@@ -2383,14 +2556,14 @@ function strRequestParse( test )
 
   test.case = 'only options';
   var src = 'number : 1 str : abc array : [1,abc]'
-  var o2 = _.mapExtend( null, o, { src : src } );
+  var o2 = _.mapExtend( null, o, { src } );
   var got = _.strRequestParse( o2 );
   var expectedMap = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
   test.identical( got.map, expectedMap )
 
   test.case = 'only commands';
   var src = '.command1 ; .command2'
-  var o2 = _.mapExtend( null, o, { src : src } );
+  var o2 = _.mapExtend( null, o, { src } );
   var got = _.strRequestParse( o2 );
   var expectedMap = {};
   test.identical( got.map, expectedMap )
@@ -2400,7 +2573,7 @@ function strRequestParse( test )
 
   test.case = 'command and option';
   var src = '.set v : 10'
-  var o2 = _.mapExtend( null, o, { src : src } );
+  var o2 = _.mapExtend( null, o, { src } );
   var got = _.strRequestParse( o2 );
   var expectedMap = { v : 10 };
   var expectedSubject = '.set';
@@ -2409,7 +2582,7 @@ function strRequestParse( test )
 
   test.case = 'two command and option';
   var src = '.build abc debug:0 ; .set v : 10'
-  var o2 = _.mapExtend( null, o, { src : src } );
+  var o2 = _.mapExtend( null, o, { src } );
   var got = _.strRequestParse( o2 );
   var expectedMap = { debug : 0 };
   var expectedSubject = '.build abc';
@@ -2420,14 +2593,14 @@ function strRequestParse( test )
 
   test.case = 'quoted option value';
   var src = 'path:"some/path"'
-  var o2 = _.mapExtend( null, o, { src : src } );
+  var o2 = _.mapExtend( null, o, { src } );
   var got = _.strRequestParse( o2 );
   var expectedMap = { path : 'some/path' };
   test.identical( got.map, expectedMap )
 
   test.case = 'quoted windown path as value';
   var src = 'path:"D:\\some\\path"'
-  var o2 = _.mapExtend( null, o, { src : src } );
+  var o2 = _.mapExtend( null, o, { src } );
   var got = _.strRequestParse( o2 );
   var expectedMap = { path : 'D:\\some\\path' };
   test.identical( got.map, expectedMap )
@@ -2521,32 +2694,34 @@ var Self =
   tests :
   {
 
-    strCamelize : strCamelize,
-    strToTitle : strToTitle,
+    strCamelize,
+    strToTitle,
 
-    strFilenameFor : strFilenameFor,
-    strHtmlEscape : strHtmlEscape,
-
-    //
-
-    strFindAll : strFindAll,
-    strReplaceAll : strReplaceAll,
-    strTokenizeJs : strTokenizeJs,
-    strSorterParse : strSorterParse,
+    strFilenameFor,
+    strHtmlEscape,
 
     //
 
-    strMetricFormat : strMetricFormat,
-    strMetricFormatBytes : strMetricFormatBytes,
-    strToBytes : strToBytes,
-    strTimeFormat : strTimeFormat,
-
-    strRequestParse : strRequestParse,
+    strFindAll,
+    strReplaceAll,
+    strTokenizeJs,
+    strSorterParse,
 
     //
 
-    strDifference : strDifference,
-    strLattersSpectre : strLattersSpectre,
+    strMetricFormat,
+    strMetricFormatBytes,
+    strToBytes,
+    strTimeFormat,
+
+    strStructureParse,
+    strWebQueryParse,
+    strRequestParse,
+
+    //
+
+    strDifference,
+    strLattersSpectre,
 
   }
 
