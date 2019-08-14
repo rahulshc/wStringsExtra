@@ -2000,49 +2000,101 @@ function strSorterParse( test )
 function strMetricFormat( test )
 {
 
-  test.case = 'default options';
-  var got = _.strMetricFormat( '100m', {} );
+  test.case = 'default options, number is integer';
+  var got = _.strMetricFormat( '100m' );
   var expected = '100.0 ';
   test.identical( got,expected );
+  test.notIdentical( got, '100 ' );
 
-  test.case = 'default options';
-  var got = _.strMetricFormat( 0.005 );
-  var expected = '5.0 m';
+  test.case = 'default options, number is float';
+  var got = _.strMetricFormat( 0.001, undefined );
+  var expected = '1.0 m';
   test.identical( got,expected );
+  test.notIdentical( got, '0.005 ' );
 
   test.case = 'number to million';
   var got = _.strMetricFormat( 1, { metric : 6 } );
   var expected = '1.0 M';
   test.identical( got,expected );
+  test.notIdentical( got, '1000000 ' );
+
+  test.case = 'number to milli';
+  var got = _.strMetricFormat( 1, { metric : -3 } );
+  var expected = '1.0 m';
+  test.identical( got,expected );
+  test.notIdentical( got, '0.001 ' );
 
   test.case = 'metric out of range';
-  var got = _.strMetricFormat( 1, { metric : 25 } );
-  var expected = '1.0 ';
+  var got = _.strMetricFormat( 10, { metric : 25 } );
+  var expected = '10.0 ';
   test.identical( got,expected );
+  test.notIdentical( got, '10.0 y' );
 
   test.case = 'fixed : 0';
   var got = _.strMetricFormat( '1300', { fixed : 0 } );
   var expected = '1 k';
   test.identical( got,expected );
 
-  test.case = 'divisor, thousand test';
-  var got = _.strMetricFormat( '1000000',{ divisor : 2, thousand:100 } );
+  var got = _.strMetricFormat( '0.005', { fixed : 0 } );
+  var expected = '5 m';
+  test.identical( got,expected );
+
+  test.case = 'divisor only ';
+  var got = _.strMetricFormat( '1000000', { divisor : 3 } );
   var expected = '1.0 M';
   test.identical( got,expected );
 
-  test.case = 'divisor, thousand,dimensions,metric test';
-  var got = _.strMetricFormat( '10000', { divisor : 2, thousand : 10, dimensions : 3,metric: 1 } );
-  var expected = '10.0 k'
+  var got = _.strMetricFormat( 0.000002, { divisor : 3 } );
+  var expected = '2.0 μ';
   test.identical( got,expected );
 
-  test.case = 'divisor, thousand,dimensions test';
+  // var got = _.strMetricFormat( 0.000001, { divisor : 3 } );
+  // var expected = '1.0 μ';
+  // test.identical( got,expected );
+
+  test.case = 'divisor, thousand test';
+  var got = _.strMetricFormat( '1000000', { divisor : 2, thousand:100 } );
+  var expected = '1.0 M';
+  test.identical( got,expected );
+
+  var got = _.strMetricFormat( 0.000002, { divisor : 2, thousand:100 } );
+  var expected = '2.0 μ';
+  test.identical( got,expected );
+
+  // var got = _.strMetricFormat( 0.000001,{ divisor : 2, thousand:100 } );
+  // var expected = '1.0 μ';
+  // test.identical( got,expected );
+
+  test.case = 'divisor, thousand,dimensions, metric test';
+  var got = _.strMetricFormat( '10000', { divisor : 2, thousand : 10, dimensions : 3, metric: 1 } );
+  var expected = '10.0 k';
+  test.identical( got,expected );
+
+  var got = _.strMetricFormat( '-0.0001', { divisor : 3, thousand : 10, dimensions : 3, metric: 0 } );
+  var expected = '-100.0 μ';
+  test.identical( got,expected );
+
+  test.case = 'divisor, thousand, dimensions test';
   var got = _.strMetricFormat( '10000', { divisor : 2, thousand : 10, dimensions : 3 } );
   var expected = '10.0 h';
   test.identical( got,expected );
 
-  test.case = 'divisor, thousand,dimensions,fixed test';
+  var got = _.strMetricFormat( '0.0001', { divisor : 3, thousand : 10, dimensions : 3 } );
+  var expected = '100.0 μ';
+  test.identical( got,expected );
+
+  test.case = 'divisor, thousand, dimensions, fixed test';
   var got = _.strMetricFormat( '10000', { divisor : 2, thousand : 10, dimensions : 3, fixed : 0 } );
   var expected = '10 h';
+  test.identical( got,expected );
+
+  var got = _.strMetricFormat( '0.0001', { divisor : 3, thousand : 10, dimensions : 3, fixed : 0 } );
+  var expected = '100 μ';
+  test.identical( got,expected );
+
+  test.case = 'first arg is Not a Number';
+  var got = _.strMetricFormat( '[a]', undefined );
+  var expected = 'NaN ';
   test.identical( got,expected );
 
   /**/
@@ -2050,54 +2102,27 @@ function strMetricFormat( test )
   if( !Config.debug )
   return;
 
-  test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
-  {
-    _.strMetricFormat( '1', { fixed : 0 }, '3' );
-  });
-
-  test.case = 'invalid first argument type';
-  test.shouldThrowError( function()
-  {
-    _.strMetricFormat( [ 1, 2, 3 ] );
-  });
-
-  test.case = 'invalid second argument type';
-  test.shouldThrowError( function()
-  {
-    _.strMetricFormat( 11, '0' );
-  });
-
-  test.case = 'no arguments';
-  test.shouldThrowError( function()
-  {
-    _.strMetricFormat();
-  });
-
-  test.case = 'fixed out of range';
-  test.shouldThrowError( function()
-  {
-    _.strMetricFormat( '1300', { fixed : 21 } );
-  });
-
-  test.case = 'not enough arguments';
+  test.case = 'without arguments';
   test.shouldThrowError( () => _.strMetricFormat() );
 
-  test.case = 'too many arguments';
-  test.shouldThrowError( () => _.strMetricFormat( 1,1 ) );
+  test.case = 'extra arguments';
+  test.shouldThrowError( () => _.strMetricFormat( '1', { fixed : 0 }, '3' ) );
 
-  test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strMetricFormat( null ) );
+  test.case = 'wrong first argument';
+  test.shouldThrowError( () => _.strMetricFormat( null, { fixed : 1 } ) );
+  test.shouldThrowError( () => _.strMetricFormat( undefined, { fixed : 1 } ) );
+  test.shouldThrowError( () => _.strMetricFormat( { 1 : 1}, { fixed : 1 } ) );
+  test.shouldThrowError( () => _.strMetricFormat( [ 1 ], { fixed : 1 } ) );
 
-  test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strMetricFormat( undefined ) );
+  test.case = 'wrong second argument';
+  test.shouldThrowError( () => _.strMetricFormat( 1, 1 ) );
+  test.shouldThrowError( () => _.strMetricFormat( 1, '0' ) );
 
-  test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strMetricFormat( {} ) );
+  test.case = 'fixed out of range';
+  test.shouldThrowError( () => _.strMetricFormat( '1300', { fixed : 21 } ) );
 
-  test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strMetricFormat( [] ) );
-
+  test.case = 'fixed is not a number';
+  test.shouldThrowError( () => _.strMetricFormat( '1300', { fixed : [ 1 ] } ) );
 }
 
 //
@@ -2347,22 +2372,22 @@ function strTimeFormat( test )
 //
 
 function strRequestParse( test )
-{ 
-  let o = 
+{
+  let o =
   {
     keyValDelimeter : ':',
     cmmandsDelimeter : ';',
     quoting : 1,
     parsingArrays : 1
   }
-  
+
   test.case = 'only options';
   var src = 'number : 1 str : abc array : [1,abc]'
   var o2 = _.mapExtend( null, o, { src : src } );
   var got = _.strRequestParse( o2 );
   var expectedMap = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
   test.identical( got.map, expectedMap )
-  
+
   test.case = 'only commands';
   var src = '.command1 ; .command2'
   var o2 = _.mapExtend( null, o, { src : src } );
@@ -2372,7 +2397,7 @@ function strRequestParse( test )
   test.identical( got.maps, [ {}, {} ] )
   test.identical( got.subject, '.command1' )
   test.identical( got.subjects, [ '.command1', '.command2' ] )
-  
+
   test.case = 'command and option';
   var src = '.set v : 10'
   var o2 = _.mapExtend( null, o, { src : src } );
@@ -2381,7 +2406,7 @@ function strRequestParse( test )
   var expectedSubject = '.set';
   test.identical( got.subject, expectedSubject )
   test.identical( got.map, expectedMap )
-  
+
   test.case = 'two command and option';
   var src = '.build abc debug:0 ; .set v : 10'
   var o2 = _.mapExtend( null, o, { src : src } );
@@ -2392,14 +2417,14 @@ function strRequestParse( test )
   test.identical( got.map, expectedMap )
   test.identical( got.subjects, [ '.build abc', '.set' ] )
   test.identical( got.maps, [ { debug : 0 }, { v : 10 } ] )
-  
+
   test.case = 'quoted option value';
   var src = 'path:"some/path"'
   var o2 = _.mapExtend( null, o, { src : src } );
   var got = _.strRequestParse( o2 );
   var expectedMap = { path : 'some/path' };
   test.identical( got.map, expectedMap )
-  
+
   test.case = 'quoted windown path as value';
   var src = 'path:"D:\\some\\path"'
   var o2 = _.mapExtend( null, o, { src : src } );
@@ -2515,7 +2540,7 @@ var Self =
     strMetricFormatBytes : strMetricFormatBytes,
     strToBytes : strToBytes,
     strTimeFormat : strTimeFormat,
-    
+
     strRequestParse : strRequestParse,
 
     //
