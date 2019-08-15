@@ -2039,13 +2039,29 @@ function strMetricFormat( test )
   var expected = '1.0 M';
   test.identical( got,expected );
 
+  var got = _.strMetricFormat( '3200000000', { divisor : 3 } );
+  var expected = '3.2 G';
+  test.identical( got,expected );
+
+  var got = _.strMetricFormat( '2000', { divisor : 3 } );
+  var expected = '2.0 k';
+  test.identical( got,expected );
+
   var got = _.strMetricFormat( 0.000002, { divisor : 3 } );
   var expected = '2.0 μ';
   test.identical( got,expected );
 
-  // var got = _.strMetricFormat( 0.000001, { divisor : 3 } );
-  // var expected = '1.0 μ';
-  // test.identical( got,expected );
+  var got = _.strMetricFormat( 0.000000003, { divisor : 3 } );
+  var expected = '3.0 n';
+  test.identical( got,expected );
+
+  var got = _.strMetricFormat( 0.002, { divisor : 3 } );
+  var expected = '2.0 m';
+  test.identical( got,expected );
+
+  var got = _.strMetricFormat( 0.000001, { divisor : 3 } );
+  var expected = '1.0 μ';
+  test.identical( got,expected );
 
   test.case = 'divisor, thousand test';
   var got = _.strMetricFormat( '1000000', { divisor : 2, thousand:100 } );
@@ -2056,9 +2072,9 @@ function strMetricFormat( test )
   var expected = '2.0 μ';
   test.identical( got,expected );
 
-  // var got = _.strMetricFormat( 0.000001,{ divisor : 2, thousand:100 } );
-  // var expected = '1.0 μ';
-  // test.identical( got,expected );
+  var got = _.strMetricFormat( 0.000001,{ divisor : 2, thousand:100 } );
+  var expected = '1.0 μ';
+  test.identical( got,expected );
 
   test.case = 'divisor, thousand,dimensions, metric test';
   var got = _.strMetricFormat( '10000', { divisor : 2, thousand : 10, dimensions : 3, metric: 1 } );
@@ -2081,6 +2097,11 @@ function strMetricFormat( test )
   test.case = 'divisor, thousand, dimensions, fixed test';
   var got = _.strMetricFormat( '10000', { divisor : 2, thousand : 10, dimensions : 3, fixed : 0 } );
   var expected = '10 h';
+  test.identical( got,expected );
+
+  test.case = 'o.metrics';
+  var got = _.strMetricFormat( '10000', { metrics : { '3' : { name : 'kilo' , symbol : 'k' , word : 'thousand' }, range : [ 0, 30 ] } } );
+  var expected = '10.0 k';
   test.identical( got,expected );
 
   var got = _.strMetricFormat( '0.0001', { divisor : 3, thousand : 10, dimensions : 3, fixed : 0 } );
@@ -2142,7 +2163,7 @@ function strMetricFormatBytes( test )
 
   test.case = 'default options';
   var got = _.strMetricFormatBytes( 1024 );
-  var expected = '1024.0 b';
+  var expected = '1.0 kb';
   test.identical( got,expected );
 
   test.case = 'default options';
