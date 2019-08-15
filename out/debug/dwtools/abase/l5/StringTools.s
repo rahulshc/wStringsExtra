@@ -1310,10 +1310,10 @@ function strMetricFormat( number,o )
   if( number !== 0 )
   {
 
-    if( Math.abs( number ) > o.thousand )
+    if( Math.abs( number ) >= o.thousand )
     {
 
-      while( Math.abs( number ) > o.thousand || !o.metrics[ String( o.metric ) ] )
+      while( Math.abs( number ) >= o.thousand || !o.metrics[ String( o.metric ) ] )
       {
 
         if( o.metric + o.divisor > o.metrics.range[ 1 ] ) break;
@@ -1336,6 +1336,9 @@ function strMetricFormat( number,o )
         o.metric -= o.divisor;
 
       }
+
+      if( number / o.thousand > 1 )
+      return strMetricFormat( number, { thousand : o.thousand, metric : o.metric, fixed : o.fixed, divisor : o.divisor, metrics : o.metrics, dimensions : o.dimensions } );
 
     }
 
