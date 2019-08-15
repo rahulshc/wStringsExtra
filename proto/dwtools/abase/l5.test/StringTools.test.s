@@ -2163,7 +2163,7 @@ function strMetricFormatBytes( test )
 
   test.case = 'default options';
   var got = _.strMetricFormatBytes( 1024 );
-  var expected = '1024.0 b';
+  var expected = '1.0 kb';
   test.identical( got,expected );
 
   test.case = 'default options';
