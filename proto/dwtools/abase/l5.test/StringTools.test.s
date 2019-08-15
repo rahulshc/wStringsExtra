@@ -2099,6 +2099,11 @@ function strMetricFormat( test )
   var expected = '10 h';
   test.identical( got,expected );
 
+  test.case = 'o.metrics';
+  var got = _.strMetricFormat( '10000', { metrics : { '3' : { name : 'kilo' , symbol : 'k' , word : 'thousand' }, range : [ 0, 30 ] } } );
+  var expected = '10 k';
+  test.identical( got,expected );
+
   var got = _.strMetricFormat( '0.0001', { divisor : 3, thousand : 10, dimensions : 3, fixed : 0 } );
   var expected = '100 μ';
   test.identical( got,expected );
