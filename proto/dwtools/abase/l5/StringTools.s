@@ -1337,12 +1337,12 @@ function strMetricFormat( number,o )
 
       }
 
+      if( number / o.thousand > 1 )
+      return strMetricFormat( number, { thousand : o.thousand, metric : o.metric, fixed : o.fixed, divisor : o.divisor, metrics : o.metrics, dimensions : o.dimensions } );
+
     }
 
   }
-
-  if( number / o.thousand > 1 )
-  return strMetricFormat( number, { thousand : o.thousand, metric : o.metric, fixed : o.fixed, divisor : o.divisor } );
 
   let result = '';
 
