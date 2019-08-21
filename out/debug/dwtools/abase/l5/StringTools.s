@@ -674,7 +674,6 @@ function strFindAll( src, ins )
       if( _.strIs( originalIns ) )
       {
         foundIns = originalIns;
-        // groups = [ foundIns ];
         groups = [];
       }
       else
@@ -682,7 +681,6 @@ function strFindAll( src, ins )
         let execed = execeds[ tokenId ];
         _.assert( !!execed );
         foundIns = execed[ 0 ];
-        // groups = _.longSlice( execed, 0, execed.length );
         groups = _.longSlice( execed, 1, execed.length );
       }
 
@@ -841,6 +839,10 @@ _strReplaceMapPrepare.defaults =
  *
  */
 
+/*
+qqq : extend coverage
+*/
+
 function strReplaceAll( src, ins, sub )
 {
   let o;
@@ -871,21 +873,30 @@ function strReplaceAll( src, ins, sub )
   /* */
 
   let found = _.strFindAll( o.src, o.ins );
+  let result = [];
+  let index = 0;
 
-  var result = '';
-  var index = 0;
   found.forEach( ( it ) =>
   {
     let sub = o.sub[ it.tokenId ];
-    result += o.src.substring( index, it.range[ 0 ] );
+    let unknown = o.src.substring( index, it.range[ 0 ] );
+    if( unknown )
+    if( o.onUnknown )
+    unknown = o.onUnknown( unknown, it, o );
+    if( unknown !== '' )
+    result.push( unknown );
     if( _.routineIs( sub ) )
     sub = sub.call( o, it.match, it );
-    _.assert( _.strIs( sub ) );
-    result += sub;
+    // _.assert( _.strIs( sub ) );
+    if( sub !== '' )
+    result.push( sub );
     index = it.range[ 1 ];
   });
 
-  result += o.src.substring( index, o.src.length );
+  result.push( o.src.substring( index, o.src.length ) );
+
+  if( o.joining )
+  result = result.join( '' )
 
   return result;
 }
@@ -896,7 +907,9 @@ strReplaceAll.defaults =
   dictionary : null,
   ins : null,
   sub : null,
-  counter : 0,
+  joining : 1,
+  onUnknown : null,
+  // counter : 0,
 }
 
 //
