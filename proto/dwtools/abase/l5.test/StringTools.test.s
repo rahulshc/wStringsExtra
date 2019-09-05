@@ -2537,6 +2537,102 @@ function strStructureParse( test )
 
   test.close( 'imply array' )
 
+  /* */
+
+  test.open( 'keys with spaces' );
+
+  test.case = 'single key with space';
+  var src = 'a1 a1 : v1'
+  var expected = { 'a1 a1' : 'v1' };
+  var got = _.strStructureParse({ src : src });
+  test.identical( got, expected )
+
+  test.case = 'two keys with space';
+  var src = 'a1 a1 : v1 b2 b2 : v2'
+  var expected = { 'a1 a1' : 'v1 b2', 'b2' : 'v2' };
+  var got = _.strStructureParse({ src : src });
+  test.identical( got, expected )
+
+  test.case = 'three keys with space';
+  var src = 'a1 a1 : v1 b2 b2 : v2 c3 c3 : v3'
+  var expected = { 'a1 a1' : 'v1 b2', 'b2' : 'v2 c3', 'c3' : 'v3' };
+  var got = _.strStructureParse({ src : src });
+  test.identical( got, expected )
+
+  test.case = 'three keys, middle key with space';
+  var src = 'a1 : v1 a2 a2 : v2 c3 : v3'
+  var expected = { 'a1' : 'v1 a2', 'a2' : 'v2', 'c3' : 'v3' };
+  var got = _.strStructureParse({ src : src });
+  test.identical( got, expected )
+
+  test.close( 'keys with spaces' );
+
+  /* */
+
+  test.open( 'vals with spaces' );
+
+  test.case = 'single key, value with space';
+  var src = 'a1 : v1 v2'
+  var expected = { 'a1' : 'v1 v2' };
+  var got = _.strStructureParse({ src : src });
+  test.identical( got, expected )
+
+  test.case = 'single key, value with space';
+  var src = 'a1 : v1 v2 v3'
+  var expected = { 'a1' : 'v1 v2 v3' };
+  var got = _.strStructureParse({ src : src });
+  test.identical( got, expected )
+
+  test.case = 'two keys, value with space';
+  var src = 'a1 : v1 v1 b2 : v2 v2'
+  var expected = { 'a1' : 'v1 v1', 'b2' : 'v2 v2' };
+  var got = _.strStructureParse({ src : src });
+  test.identical( got, expected )
+
+  test.case = 'two keys, value with space';
+  var src = 'a1 : v1 v1 v1 b2 : v2 v2 v2'
+  var expected = { 'a1' : 'v1 v1 v1', 'b2' : 'v2 v2 v2' };
+  var got = _.strStructureParse({ src : src });
+  test.identical( got, expected )
+
+  test.case = 'three keys, value with space';
+  var src = 'a1 : v1 v1 b2 : v2 v2 c3 : v3 v3'
+  var expected = { 'a1' : 'v1 v1', 'b2' : 'v2 v2', 'c3' : 'v3 v3' };
+  var got = _.strStructureParse({ src : src });
+  test.identical( got, expected )
+
+  test.close( 'vals with spaces' );
+
+  /* */
+
+  test.open( 'toNumberMaybe' );
+
+  test.case = 'number like string as value';
+  var src = 'a : 1a'
+  var expected = { 'a' : 1 };
+  var got = _.strStructureParse({ src : src });
+  test.identical( got, expected )
+
+  test.case = 'number like string as value';
+  var src = 'a : 1 a'
+  var expected = { 'a' : 1 };
+  var got = _.strStructureParse({ src : src });
+  test.identical( got, expected )
+
+  test.case = 'number like string as value';
+  var src = 'a : 1 a b : 2 b'
+  var expected = { 'a' : 1, 'b' : 2 };
+  var got = _.strStructureParse({ src : src });
+  test.identical( got, expected )
+
+  test.case = 'number like string as value';
+  var src = 'a : 1 a b : 2 b'
+  var expected = { 'a' : '1 a', 'b' : '2 b' };
+  var got = _.strStructureParse({ src : src, toNumberMaybe : 0 });
+  test.identical( got, expected )
+
+  test.close( 'toNumberMaybe' );
+
 }
 
 //
@@ -2736,10 +2832,10 @@ function strCommandParse( test )
   var o2 = _.mapExtend( null, o, { src } );
   var got = _.strCommandParse( o2 );
   var expectedMap = { debug : 0, v : 10 };
-  var expectedSubject = '.build abc ; .set';
+  var expectedSubject = '.build abc';
   test.identical( got.subject, expectedSubject )
   test.identical( got.map, expectedMap )
-  test.identical( got.subjects, [ '.build abc ; .set'] )
+  test.identical( got.subjects, [ '.build abc'] )
   test.identical( got.maps, [ { debug : 0, v : 10 } ] )
 
   test.case = 'quoted option value';
@@ -2814,16 +2910,27 @@ function strCommandParse( test )
   test.identical( got.subjects, [ '.run D:\\some\\path' ] )
   test.identical( got.maps, [ { v:10 } ] )
 
-  test.case = 'two complex commands, second with windows path as subject';
+  test.case = 'two complex commands, second with windows path as subject, option have number like string';
   var src = '.imply v :10 ; .run D:\\some\\path n : 2'
   var o2 = _.mapExtend( null, o, { src } );
   var got = _.strCommandParse( o2 );
   var expectedMap = { v:10, n : 2 };
-  var expectedSubject = '.imply ; .run D:\\some\\path';
+  var expectedSubject = '.imply';
   test.identical( got.subject, expectedSubject )
   test.identical( got.map, expectedMap )
-  test.identical( got.subjects, [ '.imply ; .run D:\\some\\path' ] )
+  test.identical( got.subjects, [ '.imply' ] )
   test.identical( got.maps, [ { v:10, n : 2 } ] )
+
+  test.case = 'two complex commands, second with windows path as subject';
+  var src = '.with module:module ; .run D:\\some\\path n : 2'
+  var o2 = _.mapExtend( null, o, { src } );
+  var got = _.strCommandParse( o2 );
+  var expectedMap = { 'module' : 'module ; .run D:\\some\\path', n : 2 };
+  var expectedSubject = '.with';
+  test.identical( got.subject, expectedSubject )
+  test.identical( got.map, expectedMap )
+  test.identical( got.subjects, [ expectedSubject ] )
+  test.identical( got.maps, [ expectedMap ] )
 }
 
 //
@@ -2860,9 +2967,11 @@ function strCommandParseFormat( test )
   test.identical( got.map, {} )
   test.identical( got.subject, src )
 
-  test.case = 'no options in src, format: subject';
+  test.case = 'no subject in src, format: subject';
   var src = 'v : 2 n : 3'
-  test.shouldThrowErrorSync( () => _.strCommandParse({ src, commandFormat : 'subject' }) );
+  var got = _.strCommandParse({ src, commandFormat : 'subject' })
+  test.identical( got.map, {} );
+  test.identical( got.subject, src );
 
   test.case = 'subject in src, format : subject?';
   var src = '.run v : 2 n : 3'

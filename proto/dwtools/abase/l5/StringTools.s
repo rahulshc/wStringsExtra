@@ -1892,6 +1892,11 @@ function strCommandParse( o )
 
   _.each( tokens, ( token ) => _.assert( _.arrayHas( [ '?', 'subject', 'options' ], token ), 'Unknown token:', token ) );
 
+  let subjectToken = _.strHas( o.commandFormat, 'subject' );
+  let subjectTokenMaybe = _.strHas( o.commandFormat, 'subject?' );
+  let optionsToken = _.strHas( o.commandFormat, 'options' );
+  let optionsTokenMaybe = _.strHas( o.commandFormat, 'options?' );
+
   let result = Object.create( null );
 
   result.subject = '';
@@ -1918,35 +1923,57 @@ function strCommandParse( o )
     preservingEmpty : 0,
   });
 
-  let subject, map;
+  let subject = '';
+  let map = Object.create( null );
+
   if( mapEntries.length === 1 )
   {
+    if( subjectToken )
     subject = mapEntries[ 0 ];
-    map = Object.create( null );
   }
   else
   {
-    let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ], ' ' );
-    subject = subjectAndKey[ 0 ];
-    mapEntries[ 0 ] = subjectAndKey[ 2 ];
+    if( subjectToken )
+    {
+      if( !optionsToken )
+      subject = o.src;
+      else if( _.strBegins( o.commandFormat, 'subject' ) )
+      {
+        let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ], ' ' );
+        subject = subjectAndKey[ 0 ];
+        mapEntries[ 0 ] = subjectAndKey[ 2 ];
+      }
+      else
+      {
+        let subjectAndKey = _.strIsolateLeftOrAll( mapEntries[ mapEntries.length - 1 ], ' ' );
+        subject = subjectAndKey[ 2 ];
+        mapEntries[ mapEntries.length - 1 ] = subjectAndKey[ 0 ];
+      }
+    }
 
-    map = _.strStructureParse
-    ({
-      src : mapEntries.join( '' ),
-      keyValDelimeter : o.keyValDelimeter,
-      parsingArrays : o.parsingArrays,
-      quoting : o.quoting
-    });
-
+    if( optionsToken )
+    {
+      map = _.strStructureParse
+      ({
+        src : mapEntries.join( '' ),
+        keyValDelimeter : o.keyValDelimeter,
+        parsingArrays : o.parsingArrays,
+        quoting : o.quoting
+      });
+    }
   }
+
+  if( subjectToken )
+  _.sure( subjectTokenMaybe || subject.length, 'No subject found in string:', o.src )
+
+  if( optionsToken )
+  _.sure( optionsTokenMaybe || _.mapKeys( map ).length, 'No options found in string:', o.src )
 
   result.subjects.push( subject );
   result.maps.push( map );
 
-  if( result.subjects.length )
-  result.subject = result.subjects[ 0 ];
-  if( result.maps.length )
-  result.map = result.maps[ 0 ];
+  result.subject = subject;
+  result.map = map;
 
   return result;
 }
