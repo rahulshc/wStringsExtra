@@ -2831,23 +2831,23 @@ function strCommandParse( test )
 function strCommandParseFormat( test )
 {
   test.case = 'options in src, format : options';
-  var src = 'subject v : 2 n : 3'
+  var src = '.run v : 2 n : 3'
   var got = _.strCommandParse({ src, commandFormat : 'options' });
-  test.identical( got.map, { v : 2, n : 3 } )
+  test.identical( got.map, { '.run v' : 2, n : 3 } )
   test.identical( got.subject, '' )
 
   test.case = 'no options in src, format: options';
-  var src = 'subject'
+  var src = '.run'
   test.shouldThrowErrorSync( () => _.strCommandParse({ src, commandFormat : 'options' }) );
 
   test.case = 'options in src, format : options?';
-  var src = 'subject v : 2 n : 3'
+  var src = '.run v : 2 n : 3'
   var got = _.strCommandParse({ src, commandFormat : 'options?' });
-  test.identical( got.map, { v : 2, n : 3 } )
+  test.identical( got.map, { '.run v' : 2, n : 3 } )
   test.identical( got.subject, '' )
 
   test.case = 'no options in src, format : options?';
-  var src = 'subject'
+  var src = '.run'
   var got = _.strCommandParse({ src, commandFormat : 'options?' });
   test.identical( got.map, { } )
   test.identical( got.subject, '' )
@@ -2855,52 +2855,52 @@ function strCommandParseFormat( test )
   //
 
   test.case = 'subject in src, format : subject';
-  var src = 'subject v : 2 n : 3'
+  var src = '.run v : 2 n : 3'
   var got = _.strCommandParse({ src, commandFormat : 'subject' });
   test.identical( got.map, {} )
-  test.identical( got.subject, 'subject' )
+  test.identical( got.subject, src )
 
   test.case = 'no options in src, format: subject';
   var src = 'v : 2 n : 3'
   test.shouldThrowErrorSync( () => _.strCommandParse({ src, commandFormat : 'subject' }) );
 
   test.case = 'subject in src, format : subject?';
-  var src = 'subject v : 2 n : 3'
+  var src = '.run v : 2 n : 3'
   var got = _.strCommandParse({ src, commandFormat : 'subject?' });
-  test.identical( got.map, { v : 2, n : 3 } )
-  test.identical( got.subject, '' )
+  test.identical( got.map, {} )
+  test.identical( got.subject, src )
 
   test.case = 'no subject in src, format : subject?';
   var src = 'v : 2 n : 3'
   var got = _.strCommandParse({ src, commandFormat : 'subject?' });
   test.identical( got.map, { } )
-  test.identical( got.subject, '' )
+  test.identical( got.subject, src )
 
   //
 
   test.case = 'complex src, format : subject options';
-  var src = 'subject v : 2 n : 3'
+  var src = '.run v : 2 n : 3'
   var got = _.strCommandParse({ src, commandFormat : 'subject options' });
   test.identical( got.map, { v : 2, n : 3 } )
-  test.identical( got.subject, 'subject' )
+  test.identical( got.subject, '.run' )
 
   test.case = 'complex src, format : subject? options?';
-  var src = 'subject v : 2 n : 3'
+  var src = '.run v : 2 n : 3'
   var got = _.strCommandParse({ src, commandFormat : 'subject? options?' });
   test.identical( got.map, { v : 2, n : 3 } )
-  test.identical( got.subject, 'subject' )
+  test.identical( got.subject, '.run' )
 
   test.case = 'complex src, format : subject? options';
-  var src = 'subject v : 2 n : 3'
+  var src = '.run v : 2 n : 3'
   var got = _.strCommandParse({ src, commandFormat : 'subject? options' });
   test.identical( got.map, { v : 2, n : 3 } )
-  test.identical( got.subject, 'subject' )
+  test.identical( got.subject, '.run' )
 
   test.case = 'complex src, format : subject options?';
-  var src = 'subject v : 2 n : 3'
+  var src = '.run v : 2 n : 3'
   var got = _.strCommandParse({ src, commandFormat : 'subject options?' });
   test.identical( got.map, { v : 2, n : 3 } )
-  test.identical( got.subject, 'subject' )
+  test.identical( got.subject, '.run' )
 
   //
 
@@ -2912,7 +2912,7 @@ function strCommandParseFormat( test )
   var src = 'v : 2 n : 3'
   var got = _.strCommandParse({ src, commandFormat : 'subject? options?' });
   test.identical( got.map, { v : 2, n : 3 } )
-  test.identical( got.subject, 'subject' )
+  test.identical( got.subject, '' )
 
   test.case = 'only options, format : subject? options';
   var got = _.strCommandParse({ src, commandFormat : 'subject? options' });
@@ -2926,30 +2926,30 @@ function strCommandParseFormat( test )
   //
 
   test.case = 'only subject, format : subject options';
-  var src = 'subject'
+  var src = '.run'
   test.shouldThrowErrorSync( () => _.strCommandParse({ src, commandFormat : 'subject options' }) );
 
   test.case = 'only subject, format : subject? options?';
-  var src = 'subject'
+  var src = '.run'
   var got = _.strCommandParse({ src, commandFormat : 'subject? options?' });
   test.identical( got.map, {} )
-  test.identical( got.subject, 'subject' )
+  test.identical( got.subject, '.run' )
 
   test.case = 'only subject, format : subject? options';
-  var src = 'subject'
+  var src = '.run'
   test.shouldThrowErrorSync( () => _.strCommandParse({ src, commandFormat : 'subject? options' }) );
 
   test.case = 'only subject, format : subject options?';
-  var src = 'subject'
+  var src = '.run'
   var got = _.strCommandParse({ src, commandFormat : 'subject? options?' });
   test.identical( got.map, {} )
-  test.identical( got.subject, 'subject' )
+  test.identical( got.subject, '.run' )
 
   if( Config.debug )
   return;
 
   test.case = 'unexpected token in commandFormat';
-  test.shouldThrowErrorSync( () => _.strCommandParse({ src : 'src', commandFormat : 'subject2' }) );
+  test.shouldThrowErrorSync( () => _.strCommandParse({ src : '.run', commandFormat : 'subject2' }) );
 }
 
 //
