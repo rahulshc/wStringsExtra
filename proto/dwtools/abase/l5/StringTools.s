@@ -1880,6 +1880,139 @@ defaults.src = null;
 
 //
 
+function strCommandParse( o )
+{
+  if( _.strIs( o ) )
+  o = { src : o }
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+  _.assert( _.strIs( o.src ) );
+  o = _.routineOptions( strCommandParse, o );
+
+  let tokens = _.strSplit({ src : o.commandFormat, delimeter : [ '?', 'subject', 'options' ], preservingEmpty : 0 });
+
+  _.each( tokens, ( token ) => _.assert( _.arrayHas( [ '?', 'subject', 'options' ], token ), 'Unknown token:', token ) );
+
+  let result = Object.create( null );
+
+  result.subject = '';
+  result.map = Object.create( null );
+  result.subjects = [];
+  result.maps = [];
+  result.keyValDelimeter = o.keyValDelimeter;
+  result.cmmandsDelimeter = o.cmmandsDelimeter;
+
+  if( !o.src )
+  return result;
+
+  /* */
+
+  let mapEntries = [ o.src ];
+  if( o.keyValDelimeter )
+  mapEntries = _.strSplit
+  ({
+    src : o.src,
+    delimeter : o.keyValDelimeter,
+    stripping : 1,
+    quoting : 1,
+    preservingDelimeters : 1,
+    preservingEmpty : 0,
+  });
+
+  let subject, map;
+  if( mapEntries.length === 1 )
+  {
+    subject = mapEntries[ 0 ];
+    map = Object.create( null );
+  }
+  else
+  {
+    let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ], ' ' );
+    subject = subjectAndKey[ 0 ];
+    mapEntries[ 0 ] = subjectAndKey[ 2 ];
+
+    map = _.strStructureParse
+    ({
+      src : mapEntries.join( '' ),
+      keyValDelimeter : o.keyValDelimeter,
+      parsingArrays : o.parsingArrays,
+      quoting : o.quoting
+    });
+
+  }
+
+  result.subjects.push( subject );
+  result.maps.push( map );
+
+  if( result.subjects.length )
+  result.subject = result.subjects[ 0 ];
+  if( result.maps.length )
+  result.map = result.maps[ 0 ];
+
+  return result;
+}
+
+var defaults = strCommandParse.defaults = Object.create( null );
+defaults.keyValDelimeter = /:(?!\\)/;
+defaults.quoting = 1;
+defaults.parsingArrays = 1;
+defaults.src = null;
+defaults.commandFormat = 'subject? options?'
+
+//
+
+function strCommandsParse( o )
+{
+  if( _.strIs( o ) )
+  o = { src : o }
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+  _.assert( _.strIs( o.src ) );
+  o = _.routineOptions( strCommandsParse, o );
+
+  let result = Object.create( null );
+
+  result.subject = '';
+  result.map = Object.create( null );
+  result.subjects = [];
+  result.maps = [];
+  result.keyValDelimeter = o.keyValDelimeter;
+  result.cmmandsDelimeter = o.cmmandsDelimeter;
+
+  if( !o.src )
+  return result;
+
+  /* should be strSplit, but not strIsolateLeftOrAll because of quoting */
+
+  let commands = _.strSplit
+  ({
+    src : o.src,
+    delimeter : o.cmmandsDelimeter,
+    stripping : 1,
+    quoting : 1,
+    preservingDelimeters : 0,
+    preservingEmpty : 0,
+  });
+
+  let o2 = _.mapOnly( o, strCommandParse.defaults );
+
+  for( let c = 0 ; c < commands.length ; c++ )
+  {
+    o2.src = commands[ c ];
+    let parsedCommand = _.strCommandParse( o2 );
+    _.arrayAppendArray( result.subjects, parsedCommand.subjects );
+    _.arrayAppendArray( result.maps, parsedCommand.maps );
+  }
+
+  result.subject = result.subjects[ 0 ];
+  result.map = result.maps[ 0 ];
+
+  return result;
+}
+
+var defaults = strCommandsParse.defaults = Object.create( strCommandParse.defaults );
+defaults.cmmandsDelimeter = ';';
+
+//
+
 function strJoinMap( o )
 {
 
@@ -2240,6 +2373,8 @@ let Extend =
   strStructureParse, /* qqq : cover it by tests */
   strWebQueryParse, /* qqq : cover it by tests */
   strRequestParse,
+  strCommandParse,
+  strCommandsParse,
 
   strJoinMap, /* qqq : cover it by tests */
 
