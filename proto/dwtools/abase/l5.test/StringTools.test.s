@@ -2569,7 +2569,6 @@ function strRequestParse( test )
 {
   let o =
   {
-    keyValDelimeter : ':',
     cmmandsDelimeter : ';',
     quoting : 1,
     parsingArrays : 1
@@ -2625,6 +2624,75 @@ function strRequestParse( test )
   var got = _.strRequestParse( o2 );
   var expectedMap = { path : 'D:\\some\\path' };
   test.identical( got.map, expectedMap )
+
+  test.case = 'unqouted windown path as value';
+  var src = 'path:D:\\some\\path'
+  var o2 = _.mapExtend( null, o, { src } );
+  var got = _.strRequestParse( o2 );
+  var expectedMap = { path : 'D:\\some\\path' };
+  test.identical( got.map, expectedMap )
+
+  test.case = 'unqouted windown path as value';
+  var src = 'path : D:\\some\\path'
+  var o2 = _.mapExtend( null, o, { src } );
+  var got = _.strRequestParse( o2 );
+  var expectedMap = { path : 'D:\\some\\path' };
+  test.identical( got.map, expectedMap )
+
+  test.case = 'unqouted windown path as subject';
+  var src = 'D:\\some\\path'
+  var o2 = _.mapExtend( null, o, { src } );
+  var got = _.strRequestParse( o2 );
+  var expectedMap = {};
+  var expectedSubject = 'D:\\some\\path';
+  test.identical( got.subject, expectedSubject )
+  test.identical( got.map, expectedMap )
+  test.identical( got.subjects, [ 'D:\\some\\path' ] )
+  test.identical( got.maps, [ {} ] )
+
+  test.case = '.run v:10 ';
+  var src = '.run v:10'
+  var o2 = _.mapExtend( null, o, { src } );
+  var got = _.strRequestParse( o2 );
+  var expectedMap = { v : 10 };
+  var expectedSubject = '.run';
+  test.identical( got.subject, expectedSubject )
+  test.identical( got.map, expectedMap )
+  test.identical( got.subjects, [ '.run' ] )
+  test.identical( got.maps, [ { v : 10 } ] )
+
+  test.case = 'command and unqouted windows path';
+  var src = '.run D:\\some\\path'
+  var o2 = _.mapExtend( null, o, { src } );
+  var got = _.strRequestParse( o2 );
+  var expectedMap = {};
+  var expectedSubject = '.run D:\\some\\path';
+  test.identical( got.subject, expectedSubject )
+  test.identical( got.map, expectedMap )
+  test.identical( got.subjects, [ '.run D:\\some\\path' ] )
+  test.identical( got.maps, [ {} ] )
+
+  test.case = 'command and unqouted windows path with option';
+  var src = '.run D:\\some\\path v:10'
+  var o2 = _.mapExtend( null, o, { src } );
+  var got = _.strRequestParse( o2 );
+  var expectedMap = { v : 10 };
+  var expectedSubject = '.run D:\\some\\path';
+  test.identical( got.subject, expectedSubject )
+  test.identical( got.map, expectedMap )
+  test.identical( got.subjects, [ '.run D:\\some\\path' ] )
+  test.identical( got.maps, [ { v:10 } ] )
+
+  test.case = 'two complex commands, second with windows path as subject';
+  var src = '.imply v :10 ; .run D:\\some\\path n : 2'
+  var o2 = _.mapExtend( null, o, { src } );
+  var got = _.strRequestParse( o2 );
+  var expectedMap = { v : 10 };
+  var expectedSubject = '.imply';
+  test.identical( got.subject, expectedSubject )
+  test.identical( got.map, expectedMap )
+  test.identical( got.subjects, [ '.imply', '.run D:\\some\\path' ] )
+  test.identical( got.maps, [ { v:10 }, { n : 2} ] )
 }
 
 //

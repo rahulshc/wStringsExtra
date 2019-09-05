@@ -1872,7 +1872,7 @@ function strRequestParse( o )
 }
 
 var defaults = strRequestParse.defaults = Object.create( null );
-defaults.keyValDelimeter = ':';
+defaults.keyValDelimeter = /:(?!\\)/;
 defaults.cmmandsDelimeter = ';';
 defaults.quoting = 1;
 defaults.parsingArrays = 1;
