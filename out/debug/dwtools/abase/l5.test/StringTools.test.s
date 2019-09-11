@@ -48,25 +48,25 @@ function strCamelize( test )
   return;
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strCamelize( 'one','two' );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strCamelize( );
   });
 
   test.case = 'wrong argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strCamelize( 111 );
   });
 
   test.case = 'wrong argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strCamelize( [ ] );
   });
@@ -149,46 +149,46 @@ function strFilenameFor( test )
   return;
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strFilenameFor( 'one','two','three' );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strFilenameFor( );
   });
 
   test.case = 'first argument is wrong';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strFilenameFor( 111 );
   });
 
   test.case = 'second argument is wrong';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strFilenameFor( '"example\\file?name.txt','wrong' );
   });
 
   test.case = 'not enough arguments';
-  test.shouldThrowError( () => _.strFilenameFor() );
+  test.shouldThrowErrorOfAnyKind( () => _.strFilenameFor() );
 
   test.case = 'too many arguments';
-  test.shouldThrowError( () => _.strFilenameFor( 1,1 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strFilenameFor( 1,1 ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strFilenameFor( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strFilenameFor( null ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strFilenameFor( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strFilenameFor( undefined ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strFilenameFor( {} ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strFilenameFor( {} ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strFilenameFor( [] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strFilenameFor( [] ) );
 
 }
 
@@ -228,13 +228,13 @@ function strHtmlEscape( test )
   return;
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strHtmlEscape( 'one','two' );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strHtmlEscape( );
   });
@@ -1298,70 +1298,70 @@ function strFindAll( test )
   test.open( 'throwing' );
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strFindAll( '1', '2', '3', '4' );
   });
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strFindAll( '1', '2', '3' );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strFindAll( );
   });
 
   test.case = 'first argument is wrong';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strFindAll( 1, '2','3' );
   });
 
   test.case = 'second argument is wrong';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strFindAll( '1', 2, '3' );
   });
 
   test.case = 'third argument is wrong';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strFindAll( '1','2', 3 );
   });
 
   test.case = 'second arg is not a Object';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strFindAll( '1', 2 );
   });
 
   test.case = 'argument is not a Object';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strFindAll( '1' );
   });
 
   test.case = 'wrong type of dictionary value';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strFindAll( { dst : 'gpx', dictionary : { 'a' : [ 1, 2 ] } } )
   });
 
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strFindAll( 'gpahpb',[ 'a' ], [ 'c', 'd' ] );
   });
 
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strFindAll( 'gpahpb',[ 'a', 'b' ], [ 'x' ] );
   });
 
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strFindAll( 'gpahpb',{ 'a' : [ 'x' ] } );
   });
@@ -1577,64 +1577,64 @@ function strReplaceAll( test )
   test.open( 'throwing' );
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strReplaceAll( '1', '2', '3', '4' );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strReplaceAll( );
   });
 
   test.case = 'first argument is wrong';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strReplaceAll( 1, '2','3');
   });
 
   test.case = 'second argument is wrong';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strReplaceAll( '1', 2, '3');
   });
 
   test.case = 'third argument is wrong';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strReplaceAll( '1','2', 3);
   });
 
   test.case = 'second arg is not a Object';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strReplaceAll( '1', 2);
   });
 
   test.case = 'argument is not a Object';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strReplaceAll( '1' );
   });
 
   test.case = 'wrong type of dictionary value';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strReplaceAll( { dst : 'gpx', dictionary : { 'a' : [ 1, 2 ] } } )
   });
 
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strReplaceAll( 'gpahpb',[ 'a' ], [ 'c', 'd' ] );
   });
 
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strReplaceAll( 'gpahpb',[ 'a', 'b' ], [ 'x' ] );
   });
 
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strReplaceAll( 'gpahpb',{ 'a' : [ 'x' ] } );
   });
@@ -1980,12 +1980,12 @@ function strSorterParse( test )
   test.case = 'with fields';
   var fields = { a : 'a', b : 'b' };
   src = 'a>b>c>'
-  test.shouldThrowError( () => _.strSorterParse( src, fields ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strSorterParse( src, fields ) );
 
   test.case = 'src must be str, fields must be objectLike';
   src = 'a>b';
   fields = [];
-  test.shouldThrowError( () => _.strSorterParse( src, fields ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strSorterParse( src, fields ) );
 }
 
 // --
@@ -2119,26 +2119,26 @@ function strMetricFormat( test )
   return;
 
   test.case = 'without arguments';
-  test.shouldThrowError( () => _.strMetricFormat() );
+  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat() );
 
   test.case = 'extra arguments';
-  test.shouldThrowError( () => _.strMetricFormat( '1', { fixed : 0 }, '3' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( '1', { fixed : 0 }, '3' ) );
 
   test.case = 'wrong first argument';
-  test.shouldThrowError( () => _.strMetricFormat( null, { fixed : 1 } ) );
-  test.shouldThrowError( () => _.strMetricFormat( undefined, { fixed : 1 } ) );
-  test.shouldThrowError( () => _.strMetricFormat( { 1 : 1}, { fixed : 1 } ) );
-  test.shouldThrowError( () => _.strMetricFormat( [ 1 ], { fixed : 1 } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( null, { fixed : 1 } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( undefined, { fixed : 1 } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( { 1 : 1}, { fixed : 1 } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( [ 1 ], { fixed : 1 } ) );
 
   test.case = 'wrong second argument';
-  test.shouldThrowError( () => _.strMetricFormat( 1, 1 ) );
-  test.shouldThrowError( () => _.strMetricFormat( 1, '0' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( 1, 1 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( 1, '0' ) );
 
   test.case = 'fixed out of range';
-  test.shouldThrowError( () => _.strMetricFormat( '1300', { fixed : 21 } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( '1300', { fixed : 21 } ) );
 
   test.case = 'fixed is not a number';
-  test.shouldThrowError( () => _.strMetricFormat( '1300', { fixed : [ 1 ] } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( '1300', { fixed : [ 1 ] } ) );
 }
 
 //
@@ -2193,46 +2193,46 @@ function strMetricFormatBytes( test )
   return;
 
   test.case = 'invalid first argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strMetricFormatBytes( [ '1', '2', '3' ] );
   });
 
   test.case = 'invalid second argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strMetricFormatBytes( 0, '0' );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strMetricFormatBytes();
   });
 
   test.case = 'fixed out of range';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strMetricFormatBytes( '1300', { fixed : 22 } );
   });
 
   test.case = 'not enough arguments';
-  test.shouldThrowError( () => _.strMetricFormatBytes() );
+  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormatBytes() );
 
   test.case = 'too many arguments';
-  test.shouldThrowError( () => _.strMetricFormatBytes( 1,1 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormatBytes( 1,1 ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strMetricFormatBytes( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormatBytes( null ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strMetricFormatBytes( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormatBytes( undefined ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strMetricFormatBytes( {} ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormatBytes( {} ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strMetricFormatBytes( [] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormatBytes( [] ) );
 
 }
 
@@ -2243,17 +2243,17 @@ function strToBytes( test )
 
   test.case = 'simple string';
   var got = _.strToBytes( 'abcd' );
-  var expected = new Uint8Array ( [ 97, 98, 99, 100 ] );
+  var expected = new U8x ( [ 97, 98, 99, 100 ] );
   test.identical( got,expected );
 
   test.case = 'escaping';
   var got = _.strToBytes( '\u001bABC\n\t' );
-  var expected = new Uint8Array ( [ 27, 65, 66, 67, 10, 9 ] );
+  var expected = new U8x ( [ 27, 65, 66, 67, 10, 9 ] );
   test.identical( got,expected );
 
   test.case = 'zero length';
   var got = _.strToBytes( '' );
-  var expected = new Uint8Array ( [ ] );
+  var expected = new U8x ( [ ] );
   test.identical( got,expected );
 
   test.case = 'returns the typed-array';
@@ -2267,52 +2267,52 @@ function strToBytes( test )
   return;
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strToBytes( '1', '2' );
   });
 
   test.case = 'invalid argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strToBytes( 0 );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strToBytes();
   });
 
   test.case = 'argument is wrong';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strToBytes( [  ] );
   } );
 
   test.case = 'argument is wrong';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strToBytes( 13 );
   } );
 
   test.case = 'not enough arguments';
-  test.shouldThrowError( () => _.strToBytes() );
+  test.shouldThrowErrorOfAnyKind( () => _.strToBytes() );
 
   test.case = 'too many arguments';
-  test.shouldThrowError( () => _.strToBytes( 1,1 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strToBytes( 1,1 ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strToBytes( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strToBytes( null ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strToBytes( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strToBytes( undefined ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strToBytes( {} ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strToBytes( {} ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strToBytes( [] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strToBytes( [] ) );
 
 }
 
@@ -2363,25 +2363,25 @@ function strTimeFormat( test )
   return;
 
   test.case = 'not enough arguments';
-  test.shouldThrowError( () => _.strTimeFormat() );
+  test.shouldThrowErrorOfAnyKind( () => _.strTimeFormat() );
 
   test.case = 'too many arguments';
-  test.shouldThrowError( () => _.strTimeFormat( 1,1 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strTimeFormat( 1,1 ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strTimeFormat( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strTimeFormat( null ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strTimeFormat( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strTimeFormat( undefined ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strTimeFormat( {} ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strTimeFormat( {} ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strTimeFormat( [] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strTimeFormat( [] ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strTimeFormat( '24:00' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strTimeFormat( '24:00' ) );
 
 }
 
@@ -2432,25 +2432,25 @@ function strTimeFormat( test )
   return;
 
   test.case = 'not enough arguments';
-  test.shouldThrowError( () => _.strTimeFormat() );
+  test.shouldThrowErrorOfAnyKind( () => _.strTimeFormat() );
 
   test.case = 'too many arguments';
-  test.shouldThrowError( () => _.strTimeFormat( 1,1 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strTimeFormat( 1,1 ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strTimeFormat( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strTimeFormat( null ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strTimeFormat( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strTimeFormat( undefined ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strTimeFormat( {} ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strTimeFormat( {} ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strTimeFormat( [] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strTimeFormat( [] ) );
 
   test.case = 'bad arguments';
-  test.shouldThrowError( () => _.strTimeFormat( '24:00' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strTimeFormat( '24:00' ) );
 
 }
 
@@ -2653,25 +2653,25 @@ function strDifference( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strDifference( );
   } );
 
   test.case = 'first argument is wrong';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strDifference( [  ], 'abc' );
   } );
 
   test.case = 'second argument is wrong';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strDifference( 'abc', 13 );
   } );
 
   test.case = 'not enough arguments';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strDifference( 'abc' );
   } );
@@ -2694,7 +2694,7 @@ function strLattersSpectre( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strLattersSpectre( );
   } );

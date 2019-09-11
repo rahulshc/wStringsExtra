@@ -1190,7 +1190,7 @@ function strToBytes( src )
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.strIs( src ) );
 
-  let result = new Uint8Array( src.length );
+  let result = new U8x( src.length );
 
   for( let s = 0, sl = src.length ; s < sl ; s++ )
   {
@@ -1947,7 +1947,9 @@ function strTable( o )
   function makeWidth( propertyName, def, len )
   {
     let property = o[ propertyName ];
-    let _property = _.arrayFillTimes( [], len, def );
+    debugger;
+    let _property = _.longFill( [], def, len );
+    // let _property = _.longFillTimes( [], len, def );
     if( property )
     {
       _.assert( _.mapIs( property ) || _.longIs( property ) , 'routine expects colWidths/rowWidths property as Object or Array-Like' );
