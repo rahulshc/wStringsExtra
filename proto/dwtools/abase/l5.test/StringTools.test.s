@@ -2937,128 +2937,282 @@ function strCommandParse( test )
 
 function strCommandParseFormat( test )
 {
-  test.case = 'options in src, format : options';
-  var src = '.run v : 2 n : 3'
+
+  test.open( 'subject* options*' );
+
+  var src = 'C:\\tests v:5';
+  var got = _.strCommandParse({ src, commandFormat : 'subject options?' });
+  test.identical( got.map, { v : 5 } )
+  test.identical( got.subject, 'C:\\tests' )
+
+  var src = 'C:\\tests v:5';
+  var got = _.strCommandParse({ src, commandFormat : 'subject? options' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '' )
+
+  var src = 'C:\\tests v:5';
+  var got = _.strCommandParse({ src, commandFormat : 'subject? options?' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '' )
+
+  var src = 'C:\\tests v:5';
+  var got = _.strCommandParse({ src, commandFormat : 'subject options' });
+  test.identical( got.map, { v : 5 } )
+  test.identical( got.subject, 'C:\\tests' )
+
+  var src = 'C:\\tests v:5';
+  var got = _.strCommandParse({ src, commandFormat : 'options?' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '' )
+
+  var src = 'C:\\tests v:5';
   var got = _.strCommandParse({ src, commandFormat : 'options' });
-  test.identical( got.map, { '.run v' : 2, n : 3 } )
+  test.identical( got.map, { C : '\\tests', v : 5 } )
   test.identical( got.subject, '' )
 
-  test.case = 'no options in src, format: options';
-  var src = '.run'
-  test.shouldThrowErrorSync( () => _.strCommandParse({ src, commandFormat : 'options' }) );
-
-  test.case = 'options in src, format : options?';
-  var src = '.run v : 2 n : 3'
-  var got = _.strCommandParse({ src, commandFormat : 'options?' });
-  test.identical( got.map, { '.run v' : 2, n : 3 } )
-  test.identical( got.subject, '' )
-
-  test.case = 'no options in src, format : options?';
-  var src = '.run'
-  var got = _.strCommandParse({ src, commandFormat : 'options?' });
+  var src = 'C:\\tests v:5';
+  var got = _.strCommandParse({ src, commandFormat : 'subject?' });
   test.identical( got.map, { } )
-  test.identical( got.subject, '' )
+  test.identical( got.subject, src )
 
-  //
+  var src = 'C:\\tests v:5';
+  var got = _.strCommandParse({ src, commandFormat : 'subject' });
+  test.identical( got.map, { } )
+  test.identical( got.subject, src )
 
-  test.case = 'subject in src, format : subject';
-  var src = '.run v : 2 n : 3'
+  /*  */
+
+  var src = '.run C:\\tests v:5 ';
+  var got = _.strCommandParse({ src, commandFormat : 'subject options?' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '.run' )
+
+  var src = '.run C:\\tests v:5 ';
+  var got = _.strCommandParse({ src, commandFormat : 'subject? options' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '.run' )
+
+  var src = '.run C:\\tests v:5 ';
+  var got = _.strCommandParse({ src, commandFormat : 'subject? options?' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '.run' )
+
+  var src = '.run C:\\tests v:5 ';
+  var got = _.strCommandParse({ src, commandFormat : 'subject options' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '.run' )
+
+  var src = '.run C:\\tests v:5 ';
   var got = _.strCommandParse({ src, commandFormat : 'subject' });
   test.identical( got.map, {} )
-  test.identical( got.subject, src )
+  test.identical( got.subject, '.run C:\\tests v:5' )
 
-  test.case = 'no subject in src, format: subject';
-  var src = 'v : 2 n : 3'
-  var got = _.strCommandParse({ src, commandFormat : 'subject' })
-  test.identical( got.map, {} );
-  test.identical( got.subject, src );
-
-  test.case = 'subject in src, format : subject?';
-  var src = '.run v : 2 n : 3'
+  var src = '.run C:\\tests v:5 ';
   var got = _.strCommandParse({ src, commandFormat : 'subject?' });
   test.identical( got.map, {} )
-  test.identical( got.subject, src )
+  test.identical( got.subject, '.run C:\\tests v:5' )
 
-  test.case = 'no subject in src, format : subject?';
-  var src = 'v : 2 n : 3'
+  var src = '.run C:\\tests v:5 ';
+  var got = _.strCommandParse({ src, commandFormat : 'options' });
+  test.identical( got.map, { '.run C' : '\\tests', v : 5 } )
+  test.identical( got.subject, '' )
+
+  var src = '.run C:\\tests v:5 ';
+  var got = _.strCommandParse({ src, commandFormat : 'options?' });
+  test.identical( got.map, { '.run C' : '\\tests', v : 5 } )
+  test.identical( got.subject, '' )
+
+  /*  */
+
+  var src = '.run abc C:\\tests v:5 ';
+  var got = _.strCommandParse({ src, commandFormat : 'subject options?' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '.run abc' )
+
+  var src = '.run abc C:\\tests v:5 ';
+  var got = _.strCommandParse({ src, commandFormat : 'subject? options' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '.run abc' )
+
+  var src = '.run abc C:\\tests v:5 ';
+  var got = _.strCommandParse({ src, commandFormat : 'subject? options?' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '.run abc' )
+
+  var src = '.run abc C:\\tests v:5 ';
+  var got = _.strCommandParse({ src, commandFormat : 'subject options' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '.run abc' )
+
+  var src = '.run abc C:\\tests v:5 ';
+  var got = _.strCommandParse({ src, commandFormat : 'subject' });
+  test.identical( got.map, {} )
+  test.identical( got.subject, '.run abc C:\\tests v:5' )
+
+  var src = '.run abc C:\\tests v:5 ';
+  var got = _.strCommandParse({ src, commandFormat : 'subject?' });
+  test.identical( got.map, {} )
+  test.identical( got.subject, '.run abc C:\\tests v:5' )
+
+  var src = '.run abc C:\\tests v:5 ';
+  var got = _.strCommandParse({ src, commandFormat : 'options' });
+  test.identical( got.map, { '.run abc C' : '\\tests', v : 5 } )
+  test.identical( got.subject, '' )
+
+  var src = '.run abc C:\\tests v:5 ';
+  var got = _.strCommandParse({ src, commandFormat : 'options?' });
+  test.identical( got.map, { '.run abc C' : '\\tests', v : 5 } )
+  test.identical( got.subject, '' )
+
+  test.close( 'subject* options*' );
+
+  /*  */
+
+  test.open( 'options* subject*' );
+
+  var src = 'v:5 C:\\tests';
+  var got = _.strCommandParse({ src, commandFormat : 'options? subject' });
+  test.identical( got.map, { v : 5 } )
+  test.identical( got.subject, 'C:\\tests' )
+
+  var src = 'v:5 C:\\tests';
+  var got = _.strCommandParse({ src, commandFormat : 'options subject?' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '' )
+
+  var src = 'v:5 C:\\tests';
+  var got = _.strCommandParse({ src, commandFormat : 'options? subject?' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '' )
+
+  var src = 'v:5 C:\\tests';
+  var got = _.strCommandParse({ src, commandFormat : 'options subject' });
+  test.identical( got.map, { v : 5 } )
+  test.identical( got.subject, 'C:\\tests' )
+
+  var src = 'v:5 C:\\tests';
+  var got = _.strCommandParse({ src, commandFormat : 'options?' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '' )
+
+  var src = 'v:5 C:\\tests';
+  var got = _.strCommandParse({ src, commandFormat : 'options' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '' )
+
+  var src = 'v:5 C:\\tests';
   var got = _.strCommandParse({ src, commandFormat : 'subject?' });
   test.identical( got.map, { } )
   test.identical( got.subject, src )
 
-  //
+  var src = 'v:5 C:\\tests';
+  var got = _.strCommandParse({ src, commandFormat : 'subject' });
+  test.identical( got.map, { } )
+  test.identical( got.subject, src )
 
-  test.case = 'complex src, format : subject options';
-  var src = '.run v : 2 n : 3'
+  /*  */
+
+  var src = 'v:5 C:\\tests .run ';
+  var got = _.strCommandParse({ src, commandFormat : 'options? subject' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '.run' )
+
+  var src = 'v:5 C:\\tests .run ';
+  var got = _.strCommandParse({ src, commandFormat : 'options subject?' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '.run' )
+
+  var src = 'v:5 C:\\tests .run ';
+  var got = _.strCommandParse({ src, commandFormat : 'options? subject?' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '.run' )
+
+  var src = 'v:5 C:\\tests .run ';
+  var got = _.strCommandParse({ src, commandFormat : 'options subject' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '.run' )
+
+  var src = 'v:5 C:\\tests .run ';
+  var got = _.strCommandParse({ src, commandFormat : 'subject' });
+  test.identical( got.map, {} )
+  test.identical( got.subject, 'v:5 C:\\tests .run' )
+
+  var src = 'v:5 C:\\tests .run ';
+  var got = _.strCommandParse({ src, commandFormat : 'subject?' });
+  test.identical( got.map, {} )
+  test.identical( got.subject, 'v:5 C:\\tests .run' )
+
+  var src = 'v:5 C:\\tests .run';
+  var got = _.strCommandParse({ src, commandFormat : 'options' });
+  test.identical( got.map, { 'C' : '\\tests .run', v : 5 } )
+  test.identical( got.subject, '' )
+
+  var src = 'v:5 C:\\tests .run';
+  var got = _.strCommandParse({ src, commandFormat : 'options?' });
+  test.identical( got.map, { 'C' : '\\tests .run', v : 5 } )
+  test.identical( got.subject, '' )
+
+  /*  */
+
+  var src = 'v:5 C:\\tests .run abc';
+  var got = _.strCommandParse({ src, commandFormat : 'options? subject' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '.run abc' )
+
+  var src = 'v:5 C:\\tests .run abc';
+  var got = _.strCommandParse({ src, commandFormat : 'options subject?' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '.run abc' )
+
+  var src = 'v:5 C:\\tests .run abc';
+  var got = _.strCommandParse({ src, commandFormat :  'options? subject?' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '.run abc' )
+
+  var src = 'v:5 C:\\tests .run abc';
+  var got = _.strCommandParse({ src, commandFormat : 'options subject' });
+  test.identical( got.map, { C : '\\tests', v : 5 } )
+  test.identical( got.subject, '.run abc' )
+
+  var src = 'v:5 C:\\tests .run abc';
+  var got = _.strCommandParse({ src, commandFormat : 'subject' });
+  test.identical( got.map, {} )
+  test.identical( got.subject, 'v:5 C:\\tests .run abc' )
+
+  var src = 'v:5 C:\\tests .run abc';
+  var got = _.strCommandParse({ src, commandFormat : 'subject?' });
+  test.identical( got.map, {} )
+  test.identical( got.subject, 'v:5 C:\\tests .run abc' )
+
+  var src = 'v:5 C:\\tests .run abc';
+  var got = _.strCommandParse({ src, commandFormat : 'options' });
+  test.identical( got.map, { 'C' : '\\tests .run abc', v : 5 } )
+  test.identical( got.subject, '' )
+
+  var src = 'v:5 C:\\tests .run abc';
+  var got = _.strCommandParse({ src, commandFormat : 'options?' });
+  test.identical( got.map, { 'C' : '\\tests .run abc', v : 5 } )
+  test.identical( got.subject, '' )
+
+  test.close( 'options* subject*' );
+
+  /*  */
+
+  var src = '.run C:\\tests v:5';
   var got = _.strCommandParse({ src, commandFormat : 'subject options' });
-  test.identical( got.map, { v : 2, n : 3 } )
+  test.identical( got.map, { 'C' : '\\tests', v : 5 } )
   test.identical( got.subject, '.run' )
 
-  test.case = 'complex src, format : subject? options?';
-  var src = '.run v : 2 n : 3'
-  var got = _.strCommandParse({ src, commandFormat : 'subject? options?' });
-  test.identical( got.map, { v : 2, n : 3 } )
-  test.identical( got.subject, '.run' )
+  var src = 'v:5 .run C:\\tests';
+  var got = _.strCommandParse({ src, commandFormat : 'options subject' });
+  test.identical( got.map, { v : 5 } )
+  test.identical( got.subject, '.run C:\\tests' )
 
-  test.case = 'complex src, format : subject? options';
-  var src = '.run v : 2 n : 3'
-  var got = _.strCommandParse({ src, commandFormat : 'subject? options' });
-  test.identical( got.map, { v : 2, n : 3 } )
-  test.identical( got.subject, '.run' )
+  var src = 'C:\\tests .run v:5';
+  var got = _.strCommandParse({ src, commandFormat : 'subject options' });
+  test.identical( got.map, { '.run v' : 5 } )
+  test.identical( got.subject, 'C:\\tests' )
 
-  test.case = 'complex src, format : subject options?';
-  var src = '.run v : 2 n : 3'
-  var got = _.strCommandParse({ src, commandFormat : 'subject options?' });
-  test.identical( got.map, { v : 2, n : 3 } )
-  test.identical( got.subject, '.run' )
-
-  //
-
-  test.case = 'only options, format : subject options';
-  var src = 'v : 2 n : 3'
-  test.shouldThrowErrorSync( () => _.strCommandParse({ src, commandFormat : 'subject options' }) );
-
-  test.case = 'only options, format : subject? options?';
-  var src = 'v : 2 n : 3'
-  var got = _.strCommandParse({ src, commandFormat : 'subject? options?' });
-  test.identical( got.map, { v : 2, n : 3 } )
-  test.identical( got.subject, '' )
-
-  test.case = 'only options, format : subject? options';
-  var got = _.strCommandParse({ src, commandFormat : 'subject? options' });
-  test.identical( got.map, { v : 2, n : 3 } )
-  test.identical( got.subject, '' )
-
-  test.case = 'complex src, format : subject options?';
-  var src = 'v : 2 n : 3'
-  test.shouldThrowErrorSync( () => _.strCommandParse({ src, commandFormat : 'subject options?' }) );
-
-  //
-
-  test.case = 'only subject, format : subject options';
-  var src = '.run'
-  test.shouldThrowErrorSync( () => _.strCommandParse({ src, commandFormat : 'subject options' }) );
-
-  test.case = 'only subject, format : subject? options?';
-  var src = '.run'
-  var got = _.strCommandParse({ src, commandFormat : 'subject? options?' });
-  test.identical( got.map, {} )
-  test.identical( got.subject, '.run' )
-
-  test.case = 'only subject, format : subject? options';
-  var src = '.run'
-  test.shouldThrowErrorSync( () => _.strCommandParse({ src, commandFormat : 'subject? options' }) );
-
-  test.case = 'only subject, format : subject options?';
-  var src = '.run'
-  var got = _.strCommandParse({ src, commandFormat : 'subject? options?' });
-  test.identical( got.map, {} )
-  test.identical( got.subject, '.run' )
-
-  if( Config.debug )
-  return;
-
-  test.case = 'unexpected token in commandFormat';
-  test.shouldThrowErrorSync( () => _.strCommandParse({ src : '.run', commandFormat : 'subject2' }) );
 }
 
 //

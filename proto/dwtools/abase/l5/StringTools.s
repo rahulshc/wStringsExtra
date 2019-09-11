@@ -1935,19 +1935,38 @@ function strCommandParse( o )
   {
     if( subjectToken )
     {
+      let subjectAndKey;
+
       if( !optionsToken )
-      subject = o.src;
+      subject = _.strStrip( o.src );
       else if( _.strBegins( o.commandFormat, 'subject' ) )
       {
-        let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ], ' ' );
+        subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ], ' ' );
         subject = subjectAndKey[ 0 ];
         mapEntries[ 0 ] = subjectAndKey[ 2 ];
+
+        if( !subject.length && !subjectTokenMaybe )
+        {
+          let src = mapEntries.splice( 0, 3 ).join( '' );
+          subjectAndKey = _.strIsolateLeftOrAll( src, ' ' );
+          subject = subjectAndKey[ 0 ];
+          mapEntries.unshift( subjectAndKey[ 2 ] )
+        }
       }
       else
       {
-        let subjectAndKey = _.strIsolateLeftOrAll( mapEntries[ mapEntries.length - 1 ], ' ' );
+        subjectAndKey = _.strIsolateLeftOrAll( mapEntries[ mapEntries.length - 1 ], ' ' );
         subject = subjectAndKey[ 2 ];
         mapEntries[ mapEntries.length - 1 ] = subjectAndKey[ 0 ];
+
+        if( !subject.length && !subjectTokenMaybe )
+        {
+          let src = mapEntries.splice( -3 ).join( '' );
+          subjectAndKey = _.strIsolateLeftOrAll( src, ' ' );
+          subject = subjectAndKey[ 2 ];
+          mapEntries.push( subjectAndKey[ 0 ] )
+        }
+
       }
     }
 
@@ -1979,7 +1998,7 @@ function strCommandParse( o )
 }
 
 var defaults = strCommandParse.defaults = Object.create( null );
-defaults.keyValDelimeter = /:(?!\\)/;
+defaults.keyValDelimeter = ':';
 defaults.quoting = 1;
 defaults.parsingArrays = 1;
 defaults.src = null;
