@@ -3444,7 +3444,7 @@ function strLattersSpectre( test )
 var Self =
 {
 
-  name : 'Tools/base/StringsExtra',
+  name : 'Tools.base.StringsExtra',
   silencing : 1,
   enabled : 1, //
 

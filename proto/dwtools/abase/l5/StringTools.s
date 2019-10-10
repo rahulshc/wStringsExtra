@@ -1787,6 +1787,26 @@ defaults.entryDelimeter = '&';
 
 //
 
+/*
+qqq : routine strWebQueryStr requires good coverage
+*/
+
+function strWebQueryStr( o )
+{
+  if( _.strIs( o ) )
+  return o;
+
+  let result = _.mapToStr( o );
+
+  return result;
+}
+
+var defaults = strWebQueryStr.defaults = Object.create( null );
+defaults.keyValDelimeter = ':';
+defaults.entryDelimeter = '&';
+
+//
+
 function strRequestParse( o )
 {
 
@@ -2420,6 +2440,7 @@ let Extend =
   strToNumberMaybe,
   strStructureParse, /* qqq : cover it by tests */
   strWebQueryParse, /* qqq : cover it by tests */
+  strWebQueryStr,
   strRequestParse,
   strCommandParse,
   strCommandsParse,
