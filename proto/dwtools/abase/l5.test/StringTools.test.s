@@ -2665,7 +2665,7 @@ function strRequestParse( test )
 {
   let o =
   {
-    cmmandsDelimeter : ';',
+    commandsDelimeter : ';',
     quoting : 1,
     parsingArrays : 1
   }
@@ -3237,7 +3237,7 @@ function strCommandsParse( test )
 {
   let o =
   {
-    cmmandsDelimeter : ';',
+    commandsDelimeter : ';',
     quoting : 1,
     parsingArrays : 1
   }

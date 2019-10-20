@@ -1823,7 +1823,8 @@ function strRequestParse( o )
   result.subjects = [];
   result.maps = [];
   result.keyValDelimeter = o.keyValDelimeter;
-  result.cmmandsDelimeter = o.cmmandsDelimeter;
+  result.commandsDelimeter = o.commandsDelimeter;
+  result.original = o.src;
 
   if( !o.src )
   return result;
@@ -1833,7 +1834,7 @@ function strRequestParse( o )
   let commands = _.strSplit
   ({
     src : o.src,
-    delimeter : o.cmmandsDelimeter,
+    delimeter : o.commandsDelimeter,
     stripping : 1,
     quoting : 1,
     preservingDelimeters : 0,
@@ -1893,7 +1894,7 @@ function strRequestParse( o )
 
 var defaults = strRequestParse.defaults = Object.create( null );
 defaults.keyValDelimeter = ':';
-defaults.cmmandsDelimeter = ';';
+defaults.commandsDelimeter = ';';
 defaults.quoting = 1;
 defaults.parsingArrays = 1;
 defaults.src = null;
@@ -1924,7 +1925,7 @@ function strCommandParse( o )
   result.subjects = [];
   result.maps = [];
   result.keyValDelimeter = o.keyValDelimeter;
-  result.cmmandsDelimeter = o.cmmandsDelimeter;
+  result.commandsDelimeter = o.commandsDelimeter;
 
   if( !o.src )
   return result;
@@ -2041,7 +2042,7 @@ function strCommandsParse( o )
   result.subjects = [];
   result.maps = [];
   result.keyValDelimeter = o.keyValDelimeter;
-  result.cmmandsDelimeter = o.cmmandsDelimeter;
+  result.commandsDelimeter = o.commandsDelimeter;
 
   if( !o.src )
   return result;
@@ -2051,7 +2052,7 @@ function strCommandsParse( o )
   let commands = _.strSplit
   ({
     src : o.src,
-    delimeter : o.cmmandsDelimeter,
+    delimeter : o.commandsDelimeter,
     stripping : 1,
     quoting : 1,
     preservingDelimeters : 0,
@@ -2075,7 +2076,7 @@ function strCommandsParse( o )
 }
 
 var defaults = strCommandsParse.defaults = Object.create( strCommandParse.defaults );
-defaults.cmmandsDelimeter = ';';
+defaults.commandsDelimeter = ';';
 
 //
 
