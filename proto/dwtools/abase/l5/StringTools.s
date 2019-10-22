@@ -1901,6 +1901,38 @@ defaults.src = null;
 
 //
 
+function strRequestStr( o )
+{
+
+  o = _.routineOptions( strRequestStr, arguments );
+  _.assert( arguments.length === 1 );
+
+  if( o.original )
+  {
+    _.assert( _.strIs( o.original ) );
+    return o.original;
+  }
+
+  let result = '';
+
+  _.assert( 0, 'not implemented' );
+  /* qqq : implement, document, cover please */
+
+  return result;
+}
+
+var defaults = strRequestStr.defaults = Object.create( null );
+
+defaults.subject = null;
+defaults.map = null;
+defaults.subjects = null;
+defaults.maps = null;
+defaults.keyValDelimeter = strRequestParse.defaults.keyValDelimeter;
+defaults.commandsDelimeter = strRequestParse.defaults.commandsDelimeter;
+defaults.original = null;
+
+//
+
 function strCommandParse( o )
 {
   if( _.strIs( o ) )
@@ -2443,6 +2475,7 @@ let Extend =
   strWebQueryParse, /* qqq : cover it by tests */
   strWebQueryStr,
   strRequestParse,
+  strRequestStr,
   strCommandParse,
   strCommandsParse,
 
