@@ -1647,7 +1647,7 @@ function strStructureParse( o )
   _.assert( _.strIs( o.entryDelimeter ) );
   _.assert( _.strIs( o.src ) );
   _.assert( arguments.length === 1 );
-  _.assert( _.arrayHas( [ 'map', 'array', 'string' ], o.defaultStructure ) );
+  _.assert( _.longHas( [ 'map', 'array', 'string' ], o.defaultStructure ) );
 
   if( o.arrayElementsDelimeter === null )
   o.arrayElementsDelimeter = [ ' ', ',' ];
@@ -1655,7 +1655,7 @@ function strStructureParse( o )
   let src = o.src.trim();
 
   if( o.parsingArrays )
-  if( _.strIs( _.strInsideOf( src, o.arrayLeftDelimeter, o.arrayRightDelimeter ) ) )
+  if( _.strIs( _.strInsideOf( src, o.longLeftDelimeter, o.longRightDelimeter ) ) )
   {
     let r = strToArrayMaybe( src );
     if( _.arrayIs( r ) )
@@ -1722,7 +1722,7 @@ function strStructureParse( o )
     let result = str;
     if( !_.strIs( result ) )
     return result;
-    let inside = _.strInsideOf( result, o.arrayLeftDelimeter, o.arrayRightDelimeter );
+    let inside = _.strInsideOf( result, o.longLeftDelimeter, o.longRightDelimeter );
     if( inside !== false )
     {
       let splits = _.strSplit
@@ -1749,8 +1749,8 @@ strStructureParse.defaults =
   keyValDelimeter : ':',
   entryDelimeter : ' ',
   arrayElementsDelimeter : null,
-  arrayLeftDelimeter : '[',
-  arrayRightDelimeter : ']',
+  longLeftDelimeter : '[',
+  longRightDelimeter : ']',
   quoting : 1,
   parsingArrays : 0,
   toNumberMaybe : 1,
@@ -1943,7 +1943,7 @@ function strCommandParse( o )
 
   let tokens = _.strSplit({ src : o.commandFormat, delimeter : [ '?', 'subject', 'options' ], preservingEmpty : 0 });
 
-  _.each( tokens, ( token ) => _.assert( _.arrayHas( [ '?', 'subject', 'options' ], token ), 'Unknown token:', token ) );
+  _.each( tokens, ( token ) => _.assert( _.longHas( [ '?', 'subject', 'options' ], token ), 'Unknown token:', token ) );
 
   let subjectToken = _.strHas( o.commandFormat, 'subject' );
   let subjectTokenMaybe = _.strHas( o.commandFormat, 'subject?' );
