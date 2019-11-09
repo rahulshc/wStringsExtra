@@ -18,11 +18,11 @@
   }, 
   "dependencies" : 
   {
-    "wTools" : "", 
-    "wstringer" : "", 
-    "warraysorted" : "", 
-    "warraysparse" : ""
+    "wTools" : "alpha", 
+    "wstringer" : "alpha", 
+    "warraysorted" : "alpha", 
+    "warraysparse" : "alpha"
   }, 
-  "devDependencies" : { "wTesting" : "" }, 
+  "devDependencies" : { "wTesting" : "alpha" }, 
   "keywords" : [ "wTools", "wStringsExtra" ]
 }
