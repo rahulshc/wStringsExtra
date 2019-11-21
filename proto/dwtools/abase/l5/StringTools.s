@@ -1632,10 +1632,6 @@ function strToNumberMaybe( src )
 
 //
 
-/*
-qqq : routine strStructureParse requires good coverage and extension
-*/
-
 function strStructureParse( o )
 {
 
@@ -1666,42 +1662,71 @@ function strStructureParse( o )
   ({
     src,
     delimeter : o.keyValDelimeter,
-    stripping : 1,
+    stripping : 0,
     quoting : o.quoting,
     preservingEmpty : 1,
-    preservingDelimeters : 0,
+    preservingDelimeters : 1,
     preservingQuoting : o.quoting ? 0 : 1
   });
 
-  let result = Object.create( null );
-  for( let a = 1 ; a < src.length ; a++ )
+  if( src.length === 1 && src[ 0 ] )
+  return src[ 0 ];
+
+  /* */
+
+  let pairs = [];
+  for( let a = 0 ; a < src.length-2 ; a += 2 )
   {
-    let left = src[ a-1 ];
-    let right = src[ a+0 ];
-    let val = right;
+    let left = src[ a ];
+    let right = src[ a+2 ].trim();
 
     _.assert( _.strIs( left ) );
     _.assert( _.strIs( right ) );
 
-    if( a < src.length - 1 )
+    while( a < src.length-3 )
     {
       let cuts = _.strIsolateRightOrAll( right, o.entryDelimeter );
-      val = cuts[ 0 ];
-      src[ a ] = cuts[ 2 ];
+      if( cuts[ 1 ] === undefined )
+      {
+        right = src[ a+2 ] = src[ a+2 ] + src[ a+3 ] + src[ a+4 ];
+        right = right.trim();
+        src.splice( a+2, 2 );
+        continue;
+      }
+      right = cuts[ 0 ];
+      src[ a+2 ] = cuts[ 2 ];
+      break;
     }
 
-    result[ left ] = val;
+    pairs.push( left.trim(), right.trim() );
+  }
+
+  /* */
+
+  _.assert( pairs.length % 2 === 0 );
+  let result = Object.create( null );
+  for( let a = 0 ; a < pairs.length-1 ; a += 2 )
+  {
+    let left = pairs[ a ];
+    let right = pairs[ a+1 ];
+
+    _.assert( _.strIs( left ) );
+    _.assert( _.strIs( right ) );
 
     if( o.toNumberMaybe )
-    result[ left ] = _.strToNumberMaybe( result[ left ] );
+    right = _.strToNumberMaybe( right );
 
     if( o.parsingArrays )
-    result[ left ] = strToArrayMaybe( result[ left ] );
+    right = strToArrayMaybe( right );
+
+    result[ left ] = right;
 
   }
 
-  if( src.length === 1 && src[ 0 ] )
-  return src[ 0 ];
+  // if( src.length === 1 && src[ 0 ] )
+  // return src[ 0 ];
+  //
+  // debugger;
 
   if( _.mapKeys( result ).length === 0 )
   {
@@ -1756,6 +1781,168 @@ strStructureParse.defaults =
   toNumberMaybe : 1,
   defaultStructure : 'map', /* map / array / string */
 }
+
+/*
+qqq : routine strStructureParse requires good coverage and extension
+*/
+
+// function strStructureParse( o )
+// {
+//
+//   if( _.strIs( o ) )
+//   o = { src : o }
+//
+//   _.routineOptions( strStructureParse, o );
+//   _.assert( !!o.keyValDelimeter );
+//   _.assert( _.strIs( o.entryDelimeter ) );
+//   _.assert( _.strIs( o.src ) );
+//   _.assert( arguments.length === 1 );
+//   _.assert( _.longHas( [ 'map', 'array', 'string' ], o.defaultStructure ) );
+//
+//   if( o.arrayElementsDelimeter === null )
+//   o.arrayElementsDelimeter = [ ' ', ',' ];
+//
+//   let src = o.src.trim();
+//
+//   if( o.parsingArrays )
+//   if( _.strIs( _.strInsideOf( src, o.longLeftDelimeter, o.longRightDelimeter ) ) )
+//   {
+//     let r = strToArrayMaybe( src );
+//     if( _.arrayIs( r ) )
+//     return r;
+//   }
+//
+//   src = _.strSplit
+//   ({
+//     src,
+//     delimeter : o.keyValDelimeter,
+//     stripping : 1,
+//     quoting : o.quoting,
+//     preservingEmpty : 1,
+//     preservingDelimeters : 0,
+//     preservingQuoting : o.quoting ? 0 : 1
+//   });
+//
+//   /* */
+//
+//   // let pairs = [];
+//   // for( let a = 0 ; a < src.length ; a++ )
+//   // {
+//   //   let left = src[ a ];
+//   //   let right = src[ a+1 ];
+//   //
+//   //   _.assert( _.strIs( left ) );
+//   //   _.assert( _.strIs( right ) );
+//   //
+//   //   debugger;
+//   //   while( a < src.length - 1 )
+//   //   {
+//   //     let cuts = _.strIsolateRightOrAll( right, o.entryDelimeter );
+//   //     if( cuts[ 1 ] === undefined )
+//   //     {
+//   //       right = src[ a+1 ] = src[ a ] + src[ a+1 ] + src[ a+1 ];
+//   //       src.splice( a+1, 1 );
+//   //       continue;
+//   //     }
+//   //     right = cuts[ 0 ];
+//   //     src[ a ] = cuts[ 2 ];
+//   //     break;
+//   //   }
+//   //
+//   // }
+//
+//   /* */
+//
+//   let result = Object.create( null );
+//   for( let a = 1 ; a < src.length ; a++ )
+//   {
+//     let left = src[ a-1 ];
+//     let right = src[ a+0 ];
+//
+//     _.assert( _.strIs( left ) );
+//     _.assert( _.strIs( right ) );
+//
+//     // debugger;
+//     while( a < src.length - 1 )
+//     {
+//       let cuts = _.strIsolateRightOrAll( right, o.entryDelimeter );
+//       // if( cuts[ 1 ] === undefined )
+//       // {
+//       //   right = src[ a ] = src[ a ] + src[ a+1 ];
+//       //   src.splice( a+1, 1 );
+//       //   continue;
+//       // }
+//       right = cuts[ 0 ];
+//       src[ a ] = cuts[ 2 ];
+//       break;
+//     }
+//
+//     result[ left ] = right;
+//
+//     if( o.toNumberMaybe )
+//     result[ left ] = _.strToNumberMaybe( result[ left ] );
+//
+//     if( o.parsingArrays )
+//     result[ left ] = strToArrayMaybe( result[ left ] );
+//
+//   }
+//
+//   if( src.length === 1 && src[ 0 ] )
+//   return src[ 0 ];
+//
+//   if( _.mapKeys( result ).length === 0 )
+//   {
+//     if( o.defaultStructure === 'map' )
+//     return result;
+//     else if( o.defaultStructure === 'array' )
+//     return [];
+//     else if( o.defaultStructure === 'string' )
+//     return '';
+//   }
+//
+//   return result;
+//
+//   /**/
+//
+//   function strToArrayMaybe( str )
+//   {
+//     let result = str;
+//     if( !_.strIs( result ) )
+//     return result;
+//     let inside = _.strInsideOf( result, o.longLeftDelimeter, o.longRightDelimeter );
+//     if( inside !== false )
+//     {
+//       let splits = _.strSplit
+//       ({
+//         src : inside,
+//         delimeter : o.arrayElementsDelimeter,
+//         stripping : 1,
+//         quoting : 1,
+//         preservingDelimeters : 0,
+//         preservingEmpty : 0,
+//       });
+//       result = splits;
+//       if( o.toNumberMaybe )
+//       result = result.map( ( e ) => _.strToNumberMaybe( e ) );
+//     }
+//     return result;
+//   }
+//
+// }
+//
+// strStructureParse.defaults =
+// {
+//   src : null,
+//   keyValDelimeter : ':',
+//   entryDelimeter : ' ',
+//   arrayElementsDelimeter : null,
+//   longLeftDelimeter : '[',
+//   longRightDelimeter : ']',
+//   quoting : 1,
+//   parsingArrays : 0,
+//   toNumberMaybe : 1,
+//   defaultStructure : 'map', /* map / array / string */
+// }
 
 //
 
@@ -1814,10 +2001,15 @@ function strRequestParse( o )
   o = { src : o }
   _.assert( arguments.length === 0 || arguments.length === 1 );
   _.assert( _.strIs( o.src ) );
+  // _.assert( !!o.keyValDelimeter );
   o = _.routineOptions( strRequestParse, o );
 
-  let result = Object.create( null );
+  if( _.boolLike( o.quoting ) && o.quoting )
+  o.quoting = [ '"', '`', '\'' ];
+  if( o.quoting )
+  o.quoting = _.strQuotePairsNormalize( o.quoting );
 
+  let result = Object.create( null );
   result.subject = '';
   result.map = Object.create( null );
   result.subjects = [];
@@ -1826,17 +2018,27 @@ function strRequestParse( o )
   result.commandsDelimeter = o.commandsDelimeter;
   result.original = o.src;
 
+  o.src = o.src.trim();
+
   if( !o.src )
   return result;
 
-  /* should be strSplit, but not strIsolateLeftOrAll because of quoting */
+  if( o.unquoting && o.quoting )
+  {
+    // let isolated = _.strIsolateInsideLeft( o.src, o.quoting );
+    // if( isolated[ 0 ] === '' && isolated[ 4 ] === '' )
+    // o.src = isolated[ 2 ];
+    o.src = _.strUnquote( o.src, o.quoting );
+  }
+
+  /* should be strSplit, not strIsolateLeftOrAll because of quoting */
 
   let commands = _.strSplit
   ({
     src : o.src,
     delimeter : o.commandsDelimeter,
     stripping : 1,
-    quoting : 1,
+    quoting : o.quoting,
     preservingDelimeters : 0,
     preservingEmpty : 0,
   });
@@ -1846,27 +2048,45 @@ function strRequestParse( o )
   for( let c = 0 ; c < commands.length ; c++ )
   {
 
-    let mapEntries = [ commands[ c ] ];
+    /* xxx : imlement template parsing
+      b ?** ':' ** e
+      b ?** ':' ?** ':' ** e
+      b ?*+ s+ ??*+ ':' *+ e
+      b ( ?*+ )? <&( s+ )&> ( ??*+ ':' *+ )? e
+    */
+
+    let mapEntries = [ commands[ c ], null, '' ];
+
+    // if( o.keyValDelimeter )
+    // mapEntries = _.strSplit
+    // ({
+    //   src : commands[ c ],
+    //   delimeter : o.keyValDelimeter,
+    //   stripping : 1,
+    //   quoting : o.quoting,
+    //   preservingDelimeters : 1,
+    //   preservingEmpty : 0,
+    // });
+
     if( o.keyValDelimeter )
-    mapEntries = _.strSplit
+    mapEntries = _.strIsolateLeftOrAll
     ({
       src : commands[ c ],
       delimeter : o.keyValDelimeter,
-      stripping : 1,
-      quoting : 1,
-      preservingDelimeters : 1,
-      preservingEmpty : 0,
-    });
+      quote : o.quoting,
+    })
 
     let subject, map;
-    if( mapEntries.length === 1 )
+    // if( mapEntries.length === 1 )
+    if( !mapEntries[ 1 ] )
     {
       subject = mapEntries[ 0 ];
       map = Object.create( null );
     }
     else
     {
-      let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ], ' ' );
+      // debugger;
+      let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ].trim(), ' ' );
       subject = subjectAndKey[ 0 ];
       mapEntries[ 0 ] = subjectAndKey[ 2 ];
 
@@ -1875,10 +2095,44 @@ function strRequestParse( o )
         src : mapEntries.join( '' ),
         keyValDelimeter : o.keyValDelimeter,
         parsingArrays : o.parsingArrays,
-        quoting : o.quoting
+        quoting : o.quoting,
       });
 
     }
+
+    // let mapEntries = [ commands[ c ] ];
+    // if( o.keyValDelimeter )
+    // mapEntries = _.strSplit
+    // ({
+    //   src : commands[ c ],
+    //   delimeter : o.keyValDelimeter,
+    //   stripping : 1,
+    //   quoting : o.quoting,
+    //   preservingDelimeters : 1,
+    //   preservingEmpty : 0,
+    // });
+    //
+    // let subject, map;
+    // if( mapEntries.length === 1 )
+    // {
+    //   subject = mapEntries[ 0 ];
+    //   map = Object.create( null );
+    // }
+    // else
+    // {
+    //   let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ], ' ' );
+    //   subject = subjectAndKey[ 0 ];
+    //   mapEntries[ 0 ] = subjectAndKey[ 2 ];
+    //
+    //   map = _.strStructureParse
+    //   ({
+    //     src : mapEntries.join( '' ),
+    //     keyValDelimeter : o.keyValDelimeter,
+    //     parsingArrays : o.parsingArrays,
+    //     quoting : o.quoting,
+    //   });
+    //
+    // }
 
     result.subjects.push( subject );
     result.maps.push( map );
@@ -1896,6 +2150,7 @@ var defaults = strRequestParse.defaults = Object.create( null );
 defaults.keyValDelimeter = ':';
 defaults.commandsDelimeter = ';';
 defaults.quoting = 1;
+defaults.unquoting = 1;
 defaults.parsingArrays = 1;
 defaults.src = null;
 
@@ -2055,7 +2310,7 @@ defaults.keyValDelimeter = ':';
 defaults.quoting = 1;
 defaults.parsingArrays = 1;
 defaults.src = null;
-defaults.commandFormat = 'subject? options?'
+defaults.commandFormat = 'subject? options?';
 
 //
 
@@ -2467,7 +2722,7 @@ let Extend =
   strTimeFormat,
 
   strCsvFrom, /* experimental */
-  strToDom, /* experimental */ // !!! move out
+  strToDom, /* experimental */ // xxx : move it out
   strToConfig, /* experimental */
 
   strToNumberMaybe,
