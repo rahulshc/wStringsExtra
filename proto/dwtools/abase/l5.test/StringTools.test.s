@@ -2736,8 +2736,8 @@ function strRequestParse( test )
   var got = _.strRequestParse( o2 );
   var expectedMap = { v : 10 };
   var expectedSubject = '.set';
-  test.identical( got.subject, expectedSubject )
-  test.identical( got.map, expectedMap )
+  test.identical( got.subject, expectedSubject );
+  test.identical( got.map, expectedMap );
 
   test.case = 'two command and option';
   var src = '.build abc debug:0 ; .set v : 10'
@@ -2844,12 +2844,19 @@ function strRequestParse( test )
   var src = '.imply v :10 ; .run D:\\some\\path n : 2'
   var o2 = _.mapExtend( null, o, { src } );
   var got = _.strRequestParse( o2 );
-  // var expectedMap = { v : 10 };
-  // var expectedSubject = '.imply';
   test.identical( got.subject, '.imply' )
   test.identical( got.map, { v : 10 } )
   test.identical( got.subjects, [ '.imply', '.run' ] )
   test.identical( got.maps, [ { v:10 }, { n : 2, 'D' : '\\some\\path' } ] )
+
+  test.case = 'subject in quotes';
+  var src = '/some/app "v:7 beeping:0"'
+  var o2 = _.mapExtend( null, o, { src } );
+  var got = _.strRequestParse( o2 );
+  test.identical( got.subject, '/some/app "v:7 beeping:0"' )
+  test.identical( got.map, {} )
+  test.identical( got.subjects, [ '/some/app "v:7 beeping:0"' ] )
+  test.identical( got.maps, [ {} ] )
 
 }
 

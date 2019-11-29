@@ -1460,7 +1460,7 @@ function strMetricFormatBytes( number,o )
 function strTimeFormat( time )
 {
   _.assert( arguments.length === 1 );
-  time = _.timeFrom( time );
+  time = _.time.from( time );
   let result = _.strMetricFormat( time*0.001,{ fixed : 3 } ) + 's';
   return result;
 }
@@ -2068,6 +2068,7 @@ function strRequestParse( o )
     //   preservingEmpty : 0,
     // });
 
+    // debugger;
     if( o.keyValDelimeter )
     mapEntries = _.strIsolateLeftOrAll
     ({
@@ -2076,7 +2077,19 @@ function strRequestParse( o )
       quote : o.quoting,
     })
 
-    let subject, map;
+    // let subjectAndKey = _.strIsolateRightOrAll
+    // ({
+    //   src : mapEntries[ 0 ].trim(),
+    //   delimeter : ' ',
+    //   quote : o.quoting,
+    // })
+    // let subject = subjectAndKey[ 0 ];
+    // mapEntries[ 0 ] = subjectAndKey[ 2 ];
+
+
+    let subject;
+    let map;
+    // let subject, map;
     // if( mapEntries.length === 1 )
     if( !mapEntries[ 1 ] )
     {
@@ -2086,7 +2099,16 @@ function strRequestParse( o )
     else
     {
       // debugger;
-      let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ].trim(), ' ' );
+      // let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ].trim(), ' ' );
+      // subject = subjectAndKey[ 0 ];
+      // mapEntries[ 0 ] = subjectAndKey[ 2 ];
+
+      let subjectAndKey = _.strIsolateRightOrAll
+      ({
+        src : mapEntries[ 0 ].trim(),
+        delimeter : ' ',
+        quote : o.quoting,
+      })
       subject = subjectAndKey[ 0 ];
       mapEntries[ 0 ] = subjectAndKey[ 2 ];
 
