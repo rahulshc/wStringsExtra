@@ -3527,6 +3527,44 @@ function strLattersSpectre( test )
 
 };
 
+//
+
+// function experiment()
+// {
+//   let times = 100;
+//   let size = 500000;
+//   let array = new U8x( size );
+//
+//   var counter = 0;
+//   var time = _.time.now();
+//   for( let i = times ; i > 0; i-- )
+//   var result = forLoop( array, () => counter += 1 );
+//   console.log( `For loop took ${_.time.spent( time )} on Njs ${process.version}` );
+//   console.info( `Output ${counter} to avoid unwanted optimization` );
+//
+//   var counter = 0;
+//   var time = _.time.now();
+//   for( let i = times ; i > 0; i-- )
+//   var result = forEach( array, () => counter += 1 );
+//   console.log( `For each took ${_.time.spent( time )} on Njs ${process.version}` );
+//   console.info( `Output ${counter} to avoid unwanted optimization` );
+//
+//   function forLoop( src, onEach )
+//   {
+//     for( let k = 0 ; k < src.length ; k++ )
+//     onEach( src[ k ], k, src );
+//     return src
+//   }
+//
+//   function forEach( src, onEach )
+//   {
+//     src.forEach( ( e, k, src ) => onEach( e, k, src ) );
+//     return src;
+//   }
+// }
+//
+// experiment.experimental = 1;
+
 // --
 //
 // --
