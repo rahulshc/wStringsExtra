@@ -2048,11 +2048,16 @@ function strRequestParse( o )
   for( let c = 0 ; c < commands.length ; c++ )
   {
 
-    /* xxx : imlement template parsing
+    /* xxx : imlement parsing with template
+
       b ?** ':' ** e
       b ?** ':' ?** ':' ** e
       b ?*+ s+ ??*+ ':' *+ e
       b ( ?*+ )? <&( s+ )&> ( ??*+ ':' *+ )? e
+
+    // test.identical( _.strCount( op.output, /program.end(.|\n|\r)*timeout1/mg ), 1 );
+    test.identical( _.strCount( op.output, `'program.end'**'timeout1'` ), 1 );
+
     */
 
     let mapEntries = [ commands[ c ], null, '' ];
