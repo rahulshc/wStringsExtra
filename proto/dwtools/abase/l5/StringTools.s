@@ -293,64 +293,6 @@ function strHtmlEscape( str )
 }
 
 //
-//
-// function strToRegexpTolerating( src )
-// {
-//   let result = src;
-//
-//   _.assert( arguments.length === 1, 'Expects single argument' );
-//   _.assert( _.strIs( src ) || _.regexpIs( src ) );
-//
-//   if( _.strIs( src ) )
-//   {
-//
-//     let optionsExtract =
-//     {
-//       prefix : '>->',
-//       postfix : '<-<',
-//       src,
-//     }
-//
-//     let strips = _.strExtractInlinedStereo( optionsExtract );
-//
-//     for( let s = 0 ; s < strips.length ; s++ )
-//     {
-//       let strip = strips[ s ];
-//
-//       if( s % 2 === 0 )
-//       {
-//         strip = _.regexpEscape( strip );
-//         strip = strip.replace( /\s+/g,'\\s*' );
-//       }
-//
-//       strips[ s ] = strip;
-//     }
-//
-//     result = RegExp( strips.join( '' ),'g' );
-//   }
-//
-//   return result;
-// }
-//
-//
-//
-// function strToRegexp( src )
-// {
-//   let result = [];
-//
-//   _.assert( arguments.length === 1, 'Expects single argument' );
-//   _.assert( _.strIs( src ) || _.regexpIs( src ) );
-//
-//   if( _.strIs( src ) )
-//   {
-//     src = _.regexpEscape( src );
-//     src = RegExp( src,'g' );
-//   }
-//
-//   return src;
-// }
-//
-//
 
 /*
 qqq : tests required
@@ -2723,9 +2665,6 @@ let Extend =
   strFilenameFor,
   strVarNameFor,
   strHtmlEscape,
-
-  // strToRegexpTolerating,
-  // strToRegexp,
 
   strSearch,
   strFindAll,
