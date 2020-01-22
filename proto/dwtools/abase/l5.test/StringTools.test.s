@@ -244,23 +244,55 @@ function strHtmlEscape( test )
 //
 
 /*
-  qqq : duplicate test cases for fast : 1
+  qqq : duplicate test cases for fast : 1 | Dmytro : improved test routine and added test cases with fast : 1
 */
 
 function strFindAll( test )
 {
+  test.open( 'ins - string, fast - 0' );
 
-  function log( src )
-  {
-    logger.log( _.toStr( src, { levels : 3 } ) );
-  }
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strFindAll( '', '' );
+  var expected = [];
+  test.identical( got, expected );
 
-  /* - */
+  test.case = 'src - empty string, ins - string';
+  var got = _.strFindAll( '', 'x' );
+  var expected = [];
+  test.identical( got, expected );
 
-  test.open( 'string' );
+  test.case = 'src - string, ins - empty string';
+  var got = _.strFindAll( 'abc', '' );
+  var expected = [];
+  test.identical( got, expected );
 
-  test.case = 'simple replace';
-  var got = _.strFindAll( 'aabaa','b' );
+  test.case = 'src - string, ins - string, not entry';
+  var got = _.strFindAll( 'hello', 'x' );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty array';
+  var got = _.strFindAll( 'hello', [] );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src === ins';
+  var got = _.strFindAll( 'abc', 'abc' );
+  var expected =
+  [
+    {
+      groups : [],
+      match : 'abc',
+      tokenId : 0,
+      range : [ 0, 3 ],
+      counter : 0,
+      input : 'abc'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, one entry';
+  var got = _.strFindAll( 'aabaa', 'b' );
   var expected =
   [
     {
@@ -271,12 +303,11 @@ function strFindAll( test )
       counter : 0,
       input : 'aabaa'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
-  test.case = 'simple replace';
-  var got = _.strFindAll( 'aabaa','aa' );
+  test.case = 'ins - string, two entries';
+  var got = _.strFindAll( 'aabaa', 'aa' );
   var expected =
   [
     {
@@ -295,70 +326,11 @@ function strFindAll( test )
       counter : 1,
       input : 'aabaa'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
-  test.case = 'first two args empty strings';
-  var got = _.strFindAll( '', '' );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'secong argument is empty string';
-  var got = _.strFindAll( 'a', '' );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'all three args empty strings';
-  var got = _.strFindAll( '', '' );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'third arg is empty string ';
-  var got = _.strFindAll( 'a', 'a' );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 0, 1 ],
-      counter : 0,
-      input : 'a'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'one argument call';
-  var got = _.strFindAll({ src : 'gpxa', ins : [ 'x' , 'a' ] });
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'x',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpxa'
-    },
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 1,
-      range : [ 3, 4 ],
-      counter : 1,
-      input : 'gpxa'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'two arguments call';
-  var got = _.strFindAll( 'hello', [ 'l' ] );
+  test.case = 'ins - array of strings, has empty string, two entries of single ins';
+  var got = _.strFindAll( 'hello', [ 'l', '', 'x' ] );
   var expected =
   [
     {
@@ -377,102 +349,11 @@ function strFindAll( test )
       counter : 1,
       input : 'hello'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
-  test.case = 'no occurrences returns origin';
-  var got = _.strFindAll( 'hello', 'x' );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'empty array';
-  var got = _.strFindAll( 'hello', [] );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'empty by empty, empty src';
-  var got = _.strFindAll( '','' );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'not empty by empty, empty src';
-  var got = _.strFindAll( '','x' );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'empty by not empty, empty src';
-  var got = _.strFindAll( '','' );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'empty by empty, not empty src';
-  var got = _.strFindAll( 'x','' );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'not empty by empty, not empty src';
-  var got = _.strFindAll( 'x','x' );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'x',
-      tokenId : 0,
-      range : [ 0, 1 ],
-      counter : 0,
-      input : 'x'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'empty by not empty, not empty src';
-  var got = _.strFindAll( 'x','' );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'repeat';
-  var got = _.strFindAll( 'ababab','ab' );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'ab',
-      tokenId : 0,
-      range : [ 0, 2 ],
-      counter : 0,
-      input : 'ababab'
-    },
-    {
-      groups : [],
-      match : 'ab',
-      tokenId : 0,
-      range : [ 2, 4 ],
-      counter : 1,
-      input : 'ababab'
-    },
-    {
-      groups : [],
-      match : 'ab',
-      tokenId : 0,
-      range : [ 4, 6 ],
-      counter : 2,
-      input : 'ababab'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'repeat';
-  var got = _.strFindAll( 'abaabab',[ 'aa','ab' ] );
+  test.case = 'ins - array of strings, entries';
+  var got = _.strFindAll( 'abaabab', [ 'aa', 'ab', 'a' ] );
   var expected =
   [
     {
@@ -499,11 +380,10 @@ function strFindAll( test )
       counter : 2,
       input : 'abaabab'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
-  test.case = 'no recursion should happen';
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
   var got = _.strFindAll( 'abcabc', [ 'abc', 'a' ] );
   var expected =
   [
@@ -523,11 +403,10 @@ function strFindAll( test )
       counter : 1,
       input : 'abcabc'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
-  test.case = 'no recursion should happen';
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
   var got = _.strFindAll( 'abcabc', [ 'a', 'abc' ] );
   var expected =
   [
@@ -547,254 +426,103 @@ function strFindAll( test )
       counter : 1,
       input : 'abcabc'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
-  test.close( 'string' );
+  test.close( 'ins - string, fast - 0' );
 
   /* - */
 
-  test.open( 'regexp with no flags' );
+  test.open( 'ins - string, fast - 1' );
 
-  var got = _.strFindAll( 'aabaa', /b/ );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'aabaa'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( '12345', /[1-3]/ );
-  var expected =
-  [
-    {
-      groups : [],
-      match : '1',
-      tokenId : 0,
-      range : [ 0, 1 ],
-      counter : 0,
-      input : '12345'
-    },
-    {
-      groups : [],
-      match : '2',
-      tokenId : 0,
-      range : [ 1, 2 ],
-      counter : 1,
-      input : '12345'
-    },
-    {
-      groups : [],
-      match : '3',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 2,
-      input : '12345'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpbaac', /a+/ );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'aa',
-      tokenId : 0,
-      range : [ 3, 5 ],
-      counter : 0,
-      input : 'gpbaac'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpbgpcgpd', /(gp)+[^bc]$/ );
-  var expected =
-  [
-    {
-      groups : [ 'gp' ],
-      match : 'gpd',
-      tokenId : 0,
-      range : [ 6, 9 ],
-      counter : 0,
-      input : 'gpbgpcgpd'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpa', [ 'a' ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpa'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpa', [ /a/ ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpa'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpa', [ /a/ ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpa'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpahpb', [ 'a', 'b' ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpahpb'
-    },
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 1,
-      range : [ 5, 6 ],
-      counter : 1,
-      input : 'gpahpb'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpahpb', [ /a/, /b/ ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpahpb'
-    },
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 1,
-      range : [ 5, 6 ],
-      counter : 1,
-      input : 'gpahpb'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpahpb', [ /a/, 'b' ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpahpb'
-    },
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 1,
-      range : [ 5, 6 ],
-      counter : 1,
-      input : 'gpahpb'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpahpb', [ 'a', /b/ ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpahpb'
-    },
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 1,
-      range : [ 5, 6 ],
-      counter : 1,
-      input : 'gpahpb'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'trivial ins:string sub:routine';
-  var got = _.strFindAll( 'this is hello from hell', 'hell' );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'hell',
-      tokenId : 0,
-      range : [ 8, 12 ],
-      counter : 0,
-      input : 'this is hello from hell'
-    },
-    {
-      groups : [],
-      match : 'hell',
-      tokenId : 0,
-      range : [ 19, 23 ],
-      counter : 1,
-      input : 'this is hello from hell'
-    }
-  ]
-  log( got );
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strFindAll( { src : '', ins : '', fast : 1 } );
+  var expected = [];
   test.identical( got, expected );
 
-  test.case = 'trivial ins:regexp sub:routine';
+  test.case = 'src - empty string, ins - string';
+  var got = _.strFindAll( { src : '', ins : 'x', fast : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty string';
+  var got = _.strFindAll( { src : 'abc', ins : '', fast : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - string, not entry';
+  var got = _.strFindAll( { src : 'hello', ins : 'x', fast : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty array';
+  var got = _.strFindAll( { src : 'hello', ins : [], fast : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src === ins';
+  var got = _.strFindAll( { src : 'abc', ins : 'abc', fast : 1 } );
+  var expected = [ [ 0, 3, 0 ] ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, one entry';
+  var got = _.strFindAll( { src : 'aabaa', ins : 'b', fast : 1 } );
+  var expected = [ [ 2, 3, 0 ] ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, two entries';
+  var got = _.strFindAll( { src : 'aabaa', ins : 'aa', fast : 1 } );
+  var expected =
+  [
+    [ 0, 2, 0 ],
+    [ 3, 5, 0 ]
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, has empty string, two entries of single ins';
+  var got = _.strFindAll( { src : 'hello', ins : [ 'l', '', 'x' ], fast : 1 } );
+  var expected =
+  [
+    [ 2, 3, 0 ],
+    [ 3, 4, 0 ]
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, entries';
+  var got = _.strFindAll( { src : 'abaabab', ins : [ 'aa', 'ab', 'a' ], fast : 1 } );
+  var expected =
+  [
+    [ 0, 2, 1 ],
+    [ 2, 4, 0 ],
+    [ 5, 7, 1 ]
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strFindAll( { src : 'abcabc', ins : [ 'abc', 'a' ], fast : 1 } );
+  var expected =
+  [
+    [ 0, 3, 0 ],
+    [ 3, 6, 0 ]
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strFindAll( { src : 'abcabc', ins : [ 'a', 'abc' ], fast : 1 } );
+  var expected =
+  [
+    [ 0, 1, 0 ],
+    [ 3, 4, 0 ]
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - string, fast - 1' );
+
+  /* - */
+
+  test.open( 'ins - regexp, fast - 0' );
+
+  test.case = 'ins - simple regexp, two entries';
   var got = _.strFindAll( 'this is hello from hell', /hell/ );
   var expected =
   [
@@ -814,31 +542,10 @@ function strFindAll( test )
       counter : 1,
       input : 'this is hello from hell'
     }
-  ]
-  log( got );
+  ];
   test.identical( got, expected );
 
-  test.close( 'regexp with no flags' );
-
-  /* - */
-
-  test.open( 'regexp with gm' );
-
-  var got = _.strFindAll( 'aabaa', /b/gm );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'aabaa'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
+  test.case = 'ins - regexp for numbers, flag "gm", three entries';
   var got = _.strFindAll( '12345', /[1-3]/gm );
   var expected =
   [
@@ -866,11 +573,11 @@ function strFindAll( test )
       counter : 2,
       input : '12345'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
-  var got = _.strFindAll( 'gpbaac', /a+/gm );
+  test.case = 'ins - regexp for a few "a", entry';
+  var got = _.strFindAll( 'gpbaac', /a+/ );
   var expected =
   [
     {
@@ -881,10 +588,10 @@ function strFindAll( test )
       counter : 0,
       input : 'gpbaac'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
+  test.case = 'ins - complex regexp, flag "gm"';
   var got = _.strFindAll( 'gpbgpcgpd', /(gp)+[^bc]$/gm );
   var expected =
   [
@@ -896,209 +603,137 @@ function strFindAll( test )
       counter : 0,
       input : 'gpbgpcgpd'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpa', [ 'a' ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpa'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpa', [ /a/ ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpa'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpa', [ /a/gm ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpa'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpahpb', [ 'a', 'b' ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpahpb'
-    },
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 1,
-      range : [ 5, 6 ],
-      counter : 1,
-      input : 'gpahpb'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpahpb', [ /a/gm, /b/gm ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpahpb'
-    },
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 1,
-      range : [ 5, 6 ],
-      counter : 1,
-      input : 'gpahpb'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpahpb', [ /a/gm, 'b' ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpahpb'
-    },
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 1,
-      range : [ 5, 6 ],
-      counter : 1,
-      input : 'gpahpb'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpahpb', [ 'a', /b/gm ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpahpb'
-    },
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 1,
-      range : [ 5, 6 ],
-      counter : 1,
-      input : 'gpahpb'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'trivial ins:string sub:routine';
-  var got = _.strFindAll( 'this is hello from hell', 'hell' );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'hell',
-      tokenId : 0,
-      range : [ 8, 12 ],
-      counter : 0,
-      input : 'this is hello from hell'
-    },
-    {
-      groups : [],
-      match : 'hell',
-      tokenId : 0,
-      range : [ 19, 23 ],
-      counter : 1,
-      input : 'this is hello from hell'
-    }
-  ]
-  log( got );
+  ];
   test.identical( got, expected );
 
-  test.case = 'trivial ins:regexp sub:routine';
-  var got = _.strFindAll( 'this is hello from hell', /hell/gm );
+  test.case = 'ins - array of regexps, one entry';
+  var got = _.strFindAll( 'gpa', [ /^d/, /p$/, /a/ ] );
   var expected =
   [
     {
       groups : [],
-      match : 'hell',
-      tokenId : 0,
-      range : [ 8, 12 ],
+      match : 'a',
+      tokenId : 2,
+      range : [ 2, 3 ],
       counter : 0,
-      input : 'this is hello from hell'
+      input : 'gpa'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, flag "gm", two entries';
+  var got = _.strFindAll( 'gpahpb', [ /a/, /b/gm ] );
+  var expected =
+  [
+    {
+      groups : [],
+      match : 'a',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpahpb'
     },
     {
       groups : [],
-      match : 'hell',
-      tokenId : 0,
-      range : [ 19, 23 ],
+      match : 'b',
+      tokenId : 1,
+      range : [ 5, 6 ],
       counter : 1,
-      input : 'this is hello from hell'
+      input : 'gpahpb'
     }
-  ]
-  log( got );
+  ];
   test.identical( got, expected );
 
-  test.close( 'regexp with gm' );
+  test.case = 'ins - array of regexps and strings, flag "gm", entries';
+  var got = _.strFindAll( 'gpahpb', [ /a/gm, 'f', /k$/, 'b' ] );
+  var expected =
+  [
+    {
+      groups : [],
+      match : 'a',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpahpb'
+    },
+    {
+      groups : [],
+      match : 'b',
+      tokenId : 3,
+      range : [ 5, 6 ],
+      counter : 1,
+      input : 'gpahpb'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - regexp, fast - 0' );
 
   /* - */
 
-  test.open( 'complex' );
+  test.open( 'ins - regexp, fast - 1' );
+
+  test.case = 'ins - simple regexp, two entries';
+  var got = _.strFindAll( { src : 'this is hello from hell', ins : /hell/, fast : 1 } );
+  var expected =
+  [
+    [ 8, 12, 0 ],
+    [ 19, 23, 0 ]
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp for numbers, flag "gm", three entries';
+  var got = _.strFindAll( { src : '12345', ins : /[1-3]/gm, fast : 1 } );
+  var expected =
+  [
+    [ 0, 1, 0 ],
+    [ 1, 2, 0 ],
+    [ 2, 3, 0 ]
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp for a few "a", entry';
+  var got = _.strFindAll( { src : 'gpbaac', ins : /a+/, fast : 1 } );
+  var expected = [ [ 3, 5, 0 ] ];
+  test.identical( got, expected );
+
+  test.case = 'ins - complex regexp, flag "gm"';
+  var got = _.strFindAll( { src : 'gpbgpcgpd', ins : /(gp)+[^bc]$/gm, fast : 1 } );
+  var expected = [ [ 6, 9, 0 ] ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, one entry';
+  var got = _.strFindAll( { src : 'gpa', ins : [ /^d/, /p$/, /a/ ], fast : 1 } );
+  var expected = [ [ 2, 3, 2 ] ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, flag "gm", two entries';
+  var got = _.strFindAll( { src : 'gpahpb', ins : [ /a/, /b/gm ], fast : 1 } );
+  var expected =
+  [
+    [ 2, 3, 0 ],
+    [ 5, 6, 1 ]
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps and strings, flag "gm", entries';
+  var got = _.strFindAll( { src : 'gpahpb', ins : [ /a/gm, 'f', /k$/, 'b' ], fast : 1 } );
+  var expected =
+  [
+    [ 2, 3, 0 ],
+    [ 5, 6, 3 ]
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - regexp, fast - 1' );
+
+  /* - */
+
+  test.open( 'ins - map, fast - 0' );
 
   test.case = 'map';
-  var map =
-  {
-    manya : /a+/,
-    ba : /ba/,
-  }
+  var map = { manyA : /a+/, ba : /ba/ };
   var got = _.strFindAll( 'aabaa', map );
-  log( got );
   var expected =
   [
     {
@@ -1108,7 +743,7 @@ function strFindAll( test )
       range : [ 0, 2 ],
       counter : 0,
       input : 'aabaa',
-      tokenName : 'manya'
+      tokenName : 'manyA'
     },
     {
       groups : [],
@@ -1126,27 +761,21 @@ function strFindAll( test )
       range : [ 4, 5 ],
       counter : 2,
       input : 'aabaa',
-      tokenName : 'manya'
+      tokenName : 'manyA'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
-  /**/
+  /* */
 
-  test.case = 'map with tokenizingUnknwon : 1, but not unknown';
-  var map =
-  {
-    manya : /a+/,
-    ba : /ba/,
-  }
+  test.case = 'ins - map, tokenizingUnknwon - 1, but not unknown';
+  var map = { manyA : /a+/, ba : /ba/ };
   var got = _.strFindAll
   ({
     src : 'aabaa',
     ins : map,
     tokenizingUnknown : 1,
   });
-  log( got );
   var expected =
   [
     {
@@ -1156,7 +785,7 @@ function strFindAll( test )
       range : [ 0, 2 ],
       counter : 0,
       input : 'aabaa',
-      tokenName : 'manya'
+      tokenName : 'manyA'
     },
     {
       groups : [],
@@ -1174,27 +803,21 @@ function strFindAll( test )
       range : [ 4, 5 ],
       counter : 2,
       input : 'aabaa',
-      tokenName : 'manya'
+      tokenName : 'manyA'
     }
   ]
-  log( got );
-  test.identical( got,expected );
+  test.identical( got, expected );
 
   /* */
 
   test.case = 'map with tokenizingUnknwon : 1 and unknown';
-  var map =
-  {
-    manya : /a+/,
-    ba : /ba/,
-  }
+  var map = { manyA : /a+/, ba : /ba/ };
   var got = _.strFindAll
   ({
-    src : 'xaayybaaz',
+    src : 'xaabaazb',
     ins : map,
     tokenizingUnknown : 1,
   });
-  log( got );
   var expected =
   [
     {
@@ -1203,7 +826,7 @@ function strFindAll( test )
       tokenId : -1,
       range : [ 0, 1 ],
       counter : 0,
-      input : 'xaayybaaz',
+      input : 'xaabaazb',
       tokenName : undefined,
     },
     {
@@ -1212,53 +835,42 @@ function strFindAll( test )
       tokenId : 0,
       range : [ 1, 3 ],
       counter : 1,
-      input : 'xaayybaaz',
-      tokenName : 'manya',
-    },
-    {
-      match : 'yy',
-      groups : [],
-      tokenId : -1,
-      range : [ 3, 5 ],
-      counter : 2,
-      input : 'xaayybaaz',
-      tokenName : undefined,
+      input : 'xaabaazb',
+      tokenName : 'manyA',
     },
     {
       match : 'ba',
       groups : [],
       tokenId : 1,
-      range : [ 5, 7 ],
-      counter : 3,
-      input : 'xaayybaaz',
+      range : [ 3, 5 ],
+      counter : 2,
+      input : 'xaabaazb',
       tokenName : 'ba'
     },
     {
       match : 'a',
       groups : [],
       tokenId : 0,
-      range : [ 7, 8 ],
-      counter : 4,
-      input : 'xaayybaaz',
-      tokenName : 'manya'
+      range : [ 5, 6 ],
+      counter : 3,
+      input : 'xaabaazb',
+      tokenName : 'manyA'
     },
     {
-      match : 'z',
+      match : 'zb',
       groups : [],
       tokenId : -1,
-      range : [ 8, 9 ],
-      counter : 5,
-      input : 'xaayybaaz',
+      range : [ 6, 8 ],
+      counter : 4,
+      input : 'xaabaazb',
       tokenName : undefined,
     },
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
-  /**/
+  /* */
 
-  test.case = 'options map';
-
+  test.case = 'ins - array of regexps, counter - 1';
   var o =
   {
     src : '**',
@@ -1284,11 +896,88 @@ function strFindAll( test )
       counter : 1,
       input : '**',
     }
-  ]
-  log( got );
+  ];
   test.identical( got, expected );
 
-  test.close( 'complex' );
+  test.close( 'ins - map, fast - 0' );
+
+  /* - */
+
+  test.open( 'ins - map, fast - 1' );
+
+  test.case = 'map';
+  var map = { manyA : /a+/, ba : /ba/ };
+  var got = _.strFindAll( { src : 'aabaa', ins : map, fast : 1 } );
+  var expected =
+  [
+    [ 0, 2, 0 ],
+    [ 2, 4, 1 ],
+    [ 4, 5, 0 ]
+  ];
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'ins - map, tokenizingUnknwon - 1, but not unknown';
+  var map = { manyA : /a+/, ba : /ba/ };
+  var got = _.strFindAll
+  ({
+    src : 'aabaa',
+    ins : map,
+    fast : 1,
+    tokenizingUnknown : 1,
+  });
+  var expected =
+  [
+    [ 0, 2, 0 ],
+    [ 2, 4, 1 ],
+    [ 4, 5, 0 ]
+  ]
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'map with tokenizingUnknwon : 1 and unknown';
+  var map = { manyA : /a+/, ba : /ba/ };
+  var got = _.strFindAll
+  ({
+    src : 'xaabaazb',
+    ins : map,
+    fast : 1,
+    tokenizingUnknown : 1,
+  });
+  var expected =
+  [
+    [ 0, 1, -1 ],
+    [ 1, 3, 0 ],
+    [ 3, 5, 1 ],
+    [ 5, 6, 0 ],
+    [ 6, 8, -1 ]
+  ];
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'ins - array of regexps, counter - 1';
+  var o =
+  {
+    src : '**',
+    ins :
+    [
+      /\./g,
+      /([!?*@+]+)\((.*?(?:\|(.*?))*)\)/g,
+      /(\*\*\/|\*\*)/g,
+      /(\*)/g,
+      /(\?)/g
+    ],
+    fast : 1,
+    counter : 1,
+  }
+  var got = _.strFindAll( o );
+  var expected = [ [ 0, 2, 2 ] ];
+  test.identical( got, expected );
+
+  test.close( 'ins - map, fast - 1' );
 
   /* - */
 
@@ -1297,74 +986,23 @@ function strFindAll( test )
 
   test.open( 'throwing' );
 
-  test.case = 'invalid arguments count';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( '1', '2', '3', '4' );
-  });
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strFindAll() );
 
-  test.case = 'invalid arguments count';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( '1', '2', '3' );
-  });
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strFindAll( '1', '2', '3' ) );
 
-  test.case = 'no arguments';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( );
-  });
+  test.case = 'single argument is not a map';
+  test.shouldThrowErrorSync( () => _.strFindAll( '1' ) );
 
-  test.case = 'first argument is wrong';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( 1, '2','3' );
-  });
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.strFindAll( 1, '2' ) );
 
-  test.case = 'second argument is wrong';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( '1', 2, '3' );
-  });
+  test.case = 'wrong type of ins';
+  test.shouldThrowErrorSync( () => _.strFindAll( '1', 2 ) );
 
-  test.case = 'third argument is wrong';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( '1','2', 3 );
-  });
-
-  test.case = 'second arg is not a Object';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( '1', 2 );
-  });
-
-  test.case = 'argument is not a Object';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( '1' );
-  });
-
-  test.case = 'wrong type of dictionary value';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( { dst : 'gpx', dictionary : { 'a' : [ 1, 2 ] } } )
-  });
-
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( 'gpahpb',[ 'a' ], [ 'c', 'd' ] );
-  });
-
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( 'gpahpb',[ 'a', 'b' ], [ 'x' ] );
-  });
-
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( 'gpahpb',{ 'a' : [ 'x' ] } );
-  });
+  test.case = 'unknown option in map options';
+  test.shouldThrowErrorSync( () => _.strFindAll( { dst : 'gpx', dictionary : [ 'a', 'b' ] } ) );
 
   test.close( 'throwing' );
 }

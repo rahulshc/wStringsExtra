@@ -449,6 +449,7 @@ function strFindAll( src, ins )
 
   ins.forEach( ( ins, tokenId ) =>
   {
+    // Dmytro : not optimal - double check
     _.assert( _.strIs( ins ) || _.regexpIs( ins ) );
     if( _.regexpIs( ins ) )
     _.assert( !ins.sticky );
