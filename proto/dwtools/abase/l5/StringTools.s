@@ -517,6 +517,9 @@ function strFindAll( src, ins )
     }
     else
     {
+      if( _.regexpIdentical( ins, /(?:)/g ) ) // Dmytro : missed, it's regexp for empty string
+      result = src.length;
+      else
       result = findWithRegexp( o.src, ins, tokenId );
     }
 
@@ -529,7 +532,7 @@ function strFindAll( src, ins )
   function findWithString( src, ins )
   {
 
-    if( !ins.length )
+    if( !ins.length ) // Dmytro : duplicate from previous subroutine
     return src.length;
 
     let index = src.indexOf( ins, currentIndex );
