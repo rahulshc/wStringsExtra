@@ -245,6 +245,8 @@ function strHtmlEscape( test )
 
 function strSearchDefaultOptions( test ) 
 {
+  test.open( 'ins - string' );
+
   test.case = 'src - empty string, ins - empty string';
   var got = _.strSearch( { src : '', ins : '' } );
   var expected = [];
@@ -461,6 +463,228 @@ function strSearchDefaultOptions( test )
     } 
   ];
   test.identical( got, expected );
+
+  test.close( 'ins - string' );
+
+  /* - */
+
+  test.open( 'ins - regexp' );
+
+  test.case = 'src - empty string, ins - regexp for empty strings';
+  var got = _.strSearch( { src : '', ins : /(?:)/g } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - regexp';
+  var got = _.strSearch( { src : '', ins : /x/ } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp for empty string';
+  var got = _.strSearch( { src : 'abc', ins : /(?:)/g } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp, not entry';
+  var got = _.strSearch( { src : 'hello', ins : /x/ } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src === ins';
+  var got = _.strSearch( { src : 'abc', ins : /abc/ } );
+  var expected = 
+  [
+    {
+      'match' : 'abc', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 0, 3 ], 
+      'counter' : 0, 
+      'input' : 'abc', 
+      'charsRange' : [ 0, 3 ], 
+      'charsRangeRight' : [ 3, 0 ], 
+      'nearest' : [ '', 'abc', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, one entry';
+  var got = _.strSearch( { src : 'aabaa', ins : /b+/ } );
+  var expected =
+  [
+    {
+      'match' : 'b', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 2, 3 ], 
+      'counter' : 0, 
+      'input' : 'aabaa', 
+      'charsRange' : [ 2, 3 ], 
+      'charsRangeRight' : [ 3, 2 ], 
+      'nearest' : [ 'aa', 'b', 'aa' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, two entries';
+  var got = _.strSearch( { src : 'aabaa', ins : /a+/ } );
+  var expected =
+  [
+    {
+      'match' : 'aa', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 0, 2 ], 
+      'counter' : 0, 
+      'input' : 'aabaa', 
+      'charsRange' : [ 0, 2  ], 
+      'charsRangeRight' : [ 5, 3 ], 
+      'nearest' : [ '', 'aa', 'baa' ]
+    },
+    {
+      'match' : 'aa', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 3, 5 ], 
+      'counter' : 1, 
+      'input' : 'aabaa', 
+      'charsRange' : [ 3, 5  ], 
+      'charsRangeRight' : [ 2, 0 ], 
+      'nearest' : [ 'aab', 'aa', '' ]
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'hello', ins : [ /l/gm, /(?:)/g, /x/ ] } );
+  var expected =
+  [
+    {
+      'match' : 'l', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 2, 3 ], 
+      'counter' : 0, 
+      'input' : 'hello', 
+      'charsRange' : [ 2, 3  ], 
+      'charsRangeRight' : [ 3, 2 ], 
+      'nearest' : [ 'he', 'l', 'lo' ]
+    },
+    {
+      'match' : 'l', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 3, 4 ], 
+      'counter' : 1, 
+      'input' : 'hello', 
+      'charsRange' : [ 3, 4  ], 
+      'charsRangeRight' : [ 2, 1 ], 
+      'nearest' : [ 'hel', 'l', 'o' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, entries';
+  var got = _.strSearch( { src : 'abaabab', ins : [ /aa+/, /ab/g, 'a' ] } );
+  var expected =
+  [
+    {
+      'match' : 'ab', 
+      'groups' : [], 
+      'tokenId' : 1, 
+      'range' : [ 0, 2 ], 
+      'counter' : 0, 
+      'input' : 'abaabab', 
+      'charsRange' : [ 0, 2 ], 
+      'charsRangeRight' : [ 7, 5 ], 
+      'nearest' : [ '', 'ab', 'aabab' ]
+    },
+    {
+      'match' : 'aa', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 2, 4 ], 
+      'counter' : 1, 
+      'input' : 'abaabab', 
+      'charsRange' : [ 2, 4 ], 
+      'charsRangeRight' : [ 5, 3 ], 
+      'nearest' : [ 'ab', 'aa', 'bab' ]
+    },
+    {
+      'match' : 'ab', 
+      'groups' : [], 
+      'tokenId' : 1, 
+      'range' : [ 5, 7 ], 
+      'counter' : 2, 
+      'input' : 'abaabab', 
+      'charsRange' : [ 5, 7 ], 
+      'charsRangeRight' : [ 2, 0 ], 
+      'nearest' : [ 'abaab', 'ab', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : 'abcabc', ins : [ /abc/g, /a/ ] } );
+  var expected =
+  [
+   {
+      'match' : 'abc', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 0, 3 ], 
+      'counter' : 0,
+      'input' : 'abcabc',
+      'charsRange' : [ 0, 3 ],
+      'charsRangeRight' : [ 6, 3 ],
+      'nearest' : [ '', 'abc', 'abc' ]
+    },
+    {
+      'match' : 'abc', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 3, 6 ], 
+      'counter' : 1, 
+      'input' : 'abcabc', 
+      'charsRange' : [ 3, 6 ], 
+      'charsRangeRight' : [ 3, 0 ], 
+      'nearest' : [ 'abc', 'abc', '' ]
+    } 
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : 'abcabc', ins : [ /a+/, /abc/g ] } );
+  var expected =
+  [
+    {
+      'match' : 'a', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 0, 1 ], 
+      'counter' : 0,
+      'input' : 'abcabc',
+      'charsRange' : [ 0, 1 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' : [ '', 'a', 'bcabc' ]
+    },
+    {
+      'match' : 'a', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 3, 4 ], 
+      'counter' : 1, 
+      'input' : 'abcabc', 
+      'charsRange' : [ 3, 4 ], 
+      'charsRangeRight' : [ 3, 2 ], 
+      'nearest' : [ 'abc', 'a', 'bc' ]
+    } 
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - regexp' );
+
+  /* - */
 
   if( !Config.debug )
   return;
