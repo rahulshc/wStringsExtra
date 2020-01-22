@@ -9,6 +9,7 @@ if( typeof module !== 'undefined' )
 
   _.include( 'wTesting' );
   require( '../l5/StringTools.s' );
+  _.include( 'wSelector' );
 
 }
 
@@ -700,6 +701,891 @@ function strSearchDefaultOptions( test )
 
   test.case = 'wrong type onTokenize';
   test.shouldThrowErrorSync( () => _.strSearch( { src : 'abc', ins : 'a', onTokenize : [] } ) );
+}
+
+//
+
+function strSearchOptionNearestLines( test )
+{
+  test.open( 'ins - string, nearestLines - 2' );
+
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strSearch( { src : '', ins : '',  nearestLines : 2 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - string';
+  var got = _.strSearch( { src : '', ins : 'x',  nearestLines : 2 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty string';
+  var got = _.strSearch( { src : 'abc', ins : '',  nearestLines : 2 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - string, not entry';
+  var got = _.strSearch( { src : 'hello', ins : 'x',  nearestLines : 2 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty array';
+  var got = _.strSearch( { src : 'hello', ins : [],  nearestLines : 2 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : 'abc',  nearestLines : 2 } );
+  var expected = 
+  [
+    {
+      'match' : 'abc', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 4, 7 ], 
+      'counter' : 0, 
+      'input' : 'f\nf\nabc\nf\nf', 
+      'charsRange' : [ 4, 7 ], 
+      'charsRangeRight' : [ 7, 4 ], 
+      'nearest' : [ 'f\n', 'abc', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'b',  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'b', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 5, 6 ], 
+      'counter' : 0, 
+      'input' : 'f\naa\nb\naa\nf', 
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' : [ 'aa\n', 'b', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'aa',  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'aa', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 2, 4 ], 
+      'counter' : 0, 
+      'input' : 'f\naa\nb\naa\nf', 
+      'charsRange' : [ 2, 4  ], 
+      'charsRangeRight' : [ 9, 7 ], 
+      'nearest' : [ 'f\n', 'aa', '' ]
+    },
+    {
+      'match' : 'aa', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 7, 9 ], 
+      'counter' : 1, 
+      'input' : 'f\naa\nb\naa\nf', 
+      'charsRange' : [ 7, 9  ], 
+      'charsRangeRight' : [ 4, 2 ], 
+      'nearest' : [ 'b\n', 'aa', '' ]
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ 'l', '', 'x' ],  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'l', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 6, 7 ], 
+      'counter' : 0, 
+      'input' : 'f\nf\nhello\nf\nf', 
+      'charsRange' : [ 6, 7  ], 
+      'charsRangeRight' : [ 7, 6 ], 
+      'nearest' : [ 'f\nhe', 'l', 'lo' ]
+    },
+    {
+      'match' : 'l', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 7, 8 ], 
+      'counter' : 1, 
+      'input' : 'f\nf\nhello\nf\nf', 
+      'charsRange' : [ 7, 8  ], 
+      'charsRangeRight' : [ 6, 5 ], 
+      'nearest' : [ 'f\nhel', 'l', 'o' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ 'aa', 'ab', 'a' ],  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'ab', 
+      'groups' : [], 
+      'tokenId' : 1, 
+      'range' : [ 0, 2 ], 
+      'counter' : 0, 
+      'input' : 'ab\naa\nb\nab', 
+      'charsRange' : [ 0, 2 ], 
+      'charsRangeRight' : [ 10, 8 ], 
+      'nearest' : [ '', 'ab', '' ]
+    },
+    {
+      'match' : 'aa', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 3, 5 ], 
+      'counter' : 1, 
+      'input' : 'ab\naa\nb\nab', 
+      'charsRange' : [ 3, 5 ], 
+      'charsRangeRight' : [ 7, 5 ], 
+      'nearest' : [ 'ab\n', 'aa', '' ]
+    },
+    {
+      'match' : 'ab', 
+      'groups' : [], 
+      'tokenId' : 1, 
+      'range' : [ 8, 10 ], 
+      'counter' : 2, 
+      'input' : 'ab\naa\nb\nab', 
+      'charsRange' : [ 8, 10 ], 
+      'charsRangeRight' : [ 2, 0 ], 
+      'nearest' : [ 'b\n', 'ab', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  nearestLines : 2 } );
+  var expected =
+  [
+   {
+      'match' : 'abc', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 1, 4 ], 
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' : [ '\n', 'abc', '' ]
+    },
+    {
+      'match' : 'abc', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 5, 8 ], 
+      'counter' : 1, 
+      'input' : '\nabc\nabc\n', 
+      'charsRange' : [ 5, 8 ], 
+      'charsRangeRight' : [ 4, 1 ], 
+      'nearest' : [ 'abc\n', 'abc', '' ]
+    } 
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'a', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 1, 2 ], 
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'nearest' : [ '\n', 'a', 'bc' ]
+    },
+    {
+      'match' : 'a', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 5, 6 ], 
+      'counter' : 1, 
+      'input' : '\nabc\nabc\n', 
+      'charsRange' : [ 5, 6 ], 
+      'charsRangeRight' : [ 4, 3 ], 
+      'nearest' : [ 'abc\n', 'a', 'bc' ]
+    } 
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - string, nearestLines - 2' );
+
+  /* - */
+
+  test.open( 'ins - regexp, nearestLines - 2' );
+
+  test.case = 'src - empty string, ins - regexp for empty strings';
+  var got = _.strSearch( { src : '', ins : /(?:)/g,  nearestLines : 2 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - regexp';
+  var got = _.strSearch( { src : '', ins : /x/,  nearestLines : 2 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp for empty string';
+  var got = _.strSearch( { src : 'abc', ins : /(?:)/g,  nearestLines : 2 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp, not entry';
+  var got = _.strSearch( { src : 'hello', ins : /x/,  nearestLines : 2 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : /abc/g,  nearestLines : 2 } );
+  var expected = 
+  [
+    {
+      'match' : 'abc', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 4, 7 ], 
+      'counter' : 0, 
+      'input' : 'f\nf\nabc\nf\nf', 
+      'charsRange' : [ 4, 7 ], 
+      'charsRangeRight' : [ 7, 4 ], 
+      'nearest' : [ 'f\n', 'abc', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /b+/g,  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'b', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 5, 6 ], 
+      'counter' : 0, 
+      'input' : 'f\naa\nb\naa\nf', 
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' : [ 'aa\n', 'b', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /a+/,  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'aa', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 2, 4 ], 
+      'counter' : 0, 
+      'input' : 'f\naa\nb\naa\nf', 
+      'charsRange' : [ 2, 4  ], 
+      'charsRangeRight' : [ 9, 7 ], 
+      'nearest' : [ 'f\n', 'aa', '' ]
+    },
+    {
+      'match' : 'aa', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 7, 9 ], 
+      'counter' : 1, 
+      'input' : 'f\naa\nb\naa\nf', 
+      'charsRange' : [ 7, 9  ], 
+      'charsRangeRight' : [ 4, 2 ], 
+      'nearest' : [ 'b\n', 'aa', '' ]
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ /[las]/, /a/, /x/ ],  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'l', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 6, 7 ], 
+      'counter' : 0, 
+      'input' : 'f\nf\nhello\nf\nf', 
+      'charsRange' : [ 6, 7  ], 
+      'charsRangeRight' : [ 7, 6 ], 
+      'nearest' : [ 'f\nhe', 'l', 'lo' ]
+    },
+    {
+      'match' : 'l', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 7, 8 ], 
+      'counter' : 1, 
+      'input' : 'f\nf\nhello\nf\nf', 
+      'charsRange' : [ 7, 8  ], 
+      'charsRangeRight' : [ 6, 5 ], 
+      'nearest' : [ 'f\nhel', 'l', 'o' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ /aa/g, /ab/, /a+/ ],  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'ab', 
+      'groups' : [], 
+      'tokenId' : 1, 
+      'range' : [ 0, 2 ], 
+      'counter' : 0, 
+      'input' : 'ab\naa\nb\nab', 
+      'charsRange' : [ 0, 2 ], 
+      'charsRangeRight' : [ 10, 8 ], 
+      'nearest' : [ '', 'ab', '' ]
+    },
+    {
+      'match' : 'aa', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 3, 5 ], 
+      'counter' : 1, 
+      'input' : 'ab\naa\nb\nab', 
+      'charsRange' : [ 3, 5 ], 
+      'charsRangeRight' : [ 7, 5 ], 
+      'nearest' : [ 'ab\n', 'aa', '' ]
+    },
+    {
+      'match' : 'ab', 
+      'groups' : [], 
+      'tokenId' : 1, 
+      'range' : [ 8, 10 ], 
+      'counter' : 2, 
+      'input' : 'ab\naa\nb\nab', 
+      'charsRange' : [ 8, 10 ], 
+      'charsRangeRight' : [ 2, 0 ], 
+      'nearest' : [ 'b\n', 'ab', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  nearestLines : 2 } );
+  var expected =
+  [
+   {
+      'match' : 'abc', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 1, 4 ], 
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' : [ '\n', 'abc', '' ]
+    },
+    {
+      'match' : 'abc', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 5, 8 ], 
+      'counter' : 1, 
+      'input' : '\nabc\nabc\n', 
+      'charsRange' : [ 5, 8 ], 
+      'charsRangeRight' : [ 4, 1 ], 
+      'nearest' : [ 'abc\n', 'abc', '' ]
+    } 
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'a', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 1, 2 ], 
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'nearest' : [ '\n', 'a', 'bc' ]
+    },
+    {
+      'match' : 'a', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 5, 6 ], 
+      'counter' : 1, 
+      'input' : '\nabc\nabc\n', 
+      'charsRange' : [ 5, 6 ], 
+      'charsRangeRight' : [ 4, 3 ], 
+      'nearest' : [ 'abc\n', 'a', 'bc' ]
+    } 
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - regexp, nearestLines - 2' );
+
+  /* - */
+
+  test.open( 'ins - string, nearestLines - 4' );
+
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strSearch( { src : '', ins : '',  nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - string';
+  var got = _.strSearch( { src : '', ins : 'x',  nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty string';
+  var got = _.strSearch( { src : 'abc', ins : '',  nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - string, not entry';
+  var got = _.strSearch( { src : 'hello', ins : 'x',  nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty array';
+  var got = _.strSearch( { src : 'hello', ins : [],  nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : 'abc',  nearestLines : 4 } );
+  var expected = 
+  [
+    {
+      'match' : 'abc', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 4, 7 ], 
+      'counter' : 0, 
+      'input' : 'f\nf\nabc\nf\nf', 
+      'charsRange' : [ 4, 7 ], 
+      'charsRangeRight' : [ 7, 4 ], 
+      'nearest' : [ 'f\nf\n', 'abc', '\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'b',  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'b', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 5, 6 ], 
+      'counter' : 0, 
+      'input' : 'f\naa\nb\naa\nf', 
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' : [ 'f\naa\n', 'b', '\naa' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'aa',  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'aa', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 2, 4 ], 
+      'counter' : 0, 
+      'input' : 'f\naa\nb\naa\nf', 
+      'charsRange' : [ 2, 4  ], 
+      'charsRangeRight' : [ 9, 7 ], 
+      'nearest' : [ 'f\n', 'aa', '\nb' ]
+    },
+    {
+      'match' : 'aa', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 7, 9 ], 
+      'counter' : 1, 
+      'input' : 'f\naa\nb\naa\nf', 
+      'charsRange' : [ 7, 9  ], 
+      'charsRangeRight' : [ 4, 2 ], 
+      'nearest' : [ 'aa\nb\n', 'aa', '\nf' ]
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ 'l', '', 'x' ],  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'l', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 6, 7 ], 
+      'counter' : 0, 
+      'input' : 'f\nf\nhello\nf\nf', 
+      'charsRange' : [ 6, 7  ], 
+      'charsRangeRight' : [ 7, 6 ], 
+      'nearest' : [ 'f\nf\nhe', 'l', 'lo\nf' ]
+    },
+    {
+      'match' : 'l', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 7, 8 ], 
+      'counter' : 1, 
+      'input' : 'f\nf\nhello\nf\nf', 
+      'charsRange' : [ 7, 8  ], 
+      'charsRangeRight' : [ 6, 5 ], 
+      'nearest' : [ 'f\nf\nhel', 'l', 'o\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ 'aa', 'ab', 'a' ],  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'ab', 
+      'groups' : [], 
+      'tokenId' : 1, 
+      'range' : [ 0, 2 ], 
+      'counter' : 0, 
+      'input' : 'ab\naa\nb\nab', 
+      'charsRange' : [ 0, 2 ], 
+      'charsRangeRight' : [ 10, 8 ], 
+      'nearest' : [ '', 'ab', '\naa' ]
+    },
+    {
+      'match' : 'aa', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 3, 5 ], 
+      'counter' : 1, 
+      'input' : 'ab\naa\nb\nab', 
+      'charsRange' : [ 3, 5 ], 
+      'charsRangeRight' : [ 7, 5 ], 
+      'nearest' : [ 'ab\n', 'aa', '\nb' ]
+    },
+    {
+      'match' : 'ab', 
+      'groups' : [], 
+      'tokenId' : 1, 
+      'range' : [ 8, 10 ], 
+      'counter' : 2, 
+      'input' : 'ab\naa\nb\nab', 
+      'charsRange' : [ 8, 10 ], 
+      'charsRangeRight' : [ 2, 0 ], 
+      'nearest' : [ 'aa\nb\n', 'ab', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  nearestLines : 4 } );
+  var expected =
+  [
+   {
+      'match' : 'abc', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 1, 4 ], 
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' : [ '\n', 'abc', '\nabc' ]
+    },
+    {
+      'match' : 'abc', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 5, 8 ], 
+      'counter' : 1, 
+      'input' : '\nabc\nabc\n', 
+      'charsRange' : [ 5, 8 ], 
+      'charsRangeRight' : [ 4, 1 ], 
+      'nearest' : [ '\nabc\n', 'abc', '\n' ]
+    } 
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'a', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 1, 2 ], 
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'nearest' : [ '\n', 'a', 'bc\nabc' ]
+    },
+    {
+      'match' : 'a', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 5, 6 ], 
+      'counter' : 1, 
+      'input' : '\nabc\nabc\n', 
+      'charsRange' : [ 5, 6 ], 
+      'charsRangeRight' : [ 4, 3 ], 
+      'nearest' : [ '\nabc\n', 'a', 'bc\n' ]
+    } 
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - string, nearestLines - 4' );
+
+  /* - */
+
+  test.open( 'ins - regexp, nearestLines - 4' );
+
+  test.case = 'src - empty string, ins - regexp for empty strings';
+  var got = _.strSearch( { src : '', ins : /(?:)/g,  nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - regexp';
+  var got = _.strSearch( { src : '', ins : /x/,  nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp for empty string';
+  var got = _.strSearch( { src : 'abc', ins : /(?:)/g,  nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp, not entry';
+  var got = _.strSearch( { src : 'hello', ins : /x/,  nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : /abc/g,  nearestLines : 4 } );
+  var expected = 
+  [
+    {
+      'match' : 'abc', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 4, 7 ], 
+      'counter' : 0, 
+      'input' : 'f\nf\nabc\nf\nf', 
+      'charsRange' : [ 4, 7 ], 
+      'charsRangeRight' : [ 7, 4 ], 
+      'nearest' : [ 'f\nf\n', 'abc', '\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /b+/g,  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'b', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 5, 6 ], 
+      'counter' : 0, 
+      'input' : 'f\naa\nb\naa\nf', 
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' : [ 'f\naa\n', 'b', '\naa' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /a+/,  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'aa', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 2, 4 ], 
+      'counter' : 0, 
+      'input' : 'f\naa\nb\naa\nf', 
+      'charsRange' : [ 2, 4  ], 
+      'charsRangeRight' : [ 9, 7 ], 
+      'nearest' : [ 'f\n', 'aa', '\nb' ]
+    },
+    {
+      'match' : 'aa', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 7, 9 ], 
+      'counter' : 1, 
+      'input' : 'f\naa\nb\naa\nf', 
+      'charsRange' : [ 7, 9  ], 
+      'charsRangeRight' : [ 4, 2 ], 
+      'nearest' : [ 'aa\nb\n', 'aa', '\nf' ]
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ /[las]/, /a/, /x/ ],  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'l', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 6, 7 ], 
+      'counter' : 0, 
+      'input' : 'f\nf\nhello\nf\nf', 
+      'charsRange' : [ 6, 7  ], 
+      'charsRangeRight' : [ 7, 6 ], 
+      'nearest' : [ 'f\nf\nhe', 'l', 'lo\nf' ]
+    },
+    {
+      'match' : 'l', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 7, 8 ], 
+      'counter' : 1, 
+      'input' : 'f\nf\nhello\nf\nf', 
+      'charsRange' : [ 7, 8  ], 
+      'charsRangeRight' : [ 6, 5 ], 
+      'nearest' : [ 'f\nf\nhel', 'l', 'o\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ /aa/g, /ab/, /a+/ ],  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'ab', 
+      'groups' : [], 
+      'tokenId' : 1, 
+      'range' : [ 0, 2 ], 
+      'counter' : 0, 
+      'input' : 'ab\naa\nb\nab', 
+      'charsRange' : [ 0, 2 ], 
+      'charsRangeRight' : [ 10, 8 ], 
+      'nearest' : [ '', 'ab', '\naa' ]
+    },
+    {
+      'match' : 'aa', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 3, 5 ], 
+      'counter' : 1, 
+      'input' : 'ab\naa\nb\nab', 
+      'charsRange' : [ 3, 5 ], 
+      'charsRangeRight' : [ 7, 5 ], 
+      'nearest' : [ 'ab\n', 'aa', '\nb' ]
+    },
+    {
+      'match' : 'ab', 
+      'groups' : [], 
+      'tokenId' : 1, 
+      'range' : [ 8, 10 ], 
+      'counter' : 2, 
+      'input' : 'ab\naa\nb\nab', 
+      'charsRange' : [ 8, 10 ], 
+      'charsRangeRight' : [ 2, 0 ], 
+      'nearest' : [ 'aa\nb\n', 'ab', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  nearestLines : 4 } );
+  var expected =
+  [
+   {
+      'match' : 'abc', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 1, 4 ], 
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' : [ '\n', 'abc', '\nabc' ]
+    },
+    {
+      'match' : 'abc', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 5, 8 ], 
+      'counter' : 1, 
+      'input' : '\nabc\nabc\n', 
+      'charsRange' : [ 5, 8 ], 
+      'charsRangeRight' : [ 4, 1 ], 
+      'nearest' : [ '\nabc\n', 'abc', '\n' ]
+    } 
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'a', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 1, 2 ], 
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'nearest' : [ '\n', 'a', 'bc\nabc' ]
+    },
+    {
+      'match' : 'a', 
+      'groups' : [], 
+      'tokenId' : 0, 
+      'range' : [ 5, 6 ], 
+      'counter' : 1, 
+      'input' : '\nabc\nabc\n', 
+      'charsRange' : [ 5, 6 ], 
+      'charsRangeRight' : [ 4, 3 ], 
+      'nearest' : [ '\nabc\n', 'a', 'bc\n' ]
+    } 
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - regexp, nearestLines - 4' );
 }
 
 //
@@ -3686,6 +4572,8 @@ var Self =
     //
 
     strSearchDefaultOptions,
+    strSearchOptionNearestLines,
+    // strSearchOnTokenize,
 
     strFindAll,
     strReplaceAll,
