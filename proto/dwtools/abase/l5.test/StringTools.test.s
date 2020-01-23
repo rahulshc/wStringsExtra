@@ -244,7 +244,7 @@ function strHtmlEscape( test )
 
 //
 
-function strSearchDefaultOptions( test ) 
+function strSearchDefaultOptions( test )
 {
   test.open( 'ins - string' );
 
@@ -275,17 +275,17 @@ function strSearchDefaultOptions( test )
 
   test.case = 'src === ins';
   var got = _.strSearch( { src : 'abc', ins : 'abc' } );
-  var expected = 
+  var expected =
   [
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 0, 3 ], 
-      'counter' : 0, 
-      'input' : 'abc', 
-      'charsRange' : [ 0, 3 ], 
-      'charsRangeRight' : [ 3, 0 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 3 ],
+      'counter' : 0,
+      'input' : 'abc',
+      'charsRange' : [ 0, 3 ],
+      'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ '', 'abc', '' ]
     }
   ];
@@ -296,14 +296,14 @@ function strSearchDefaultOptions( test )
   var expected =
   [
     {
-      'match' : 'b', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 2, 3 ], 
-      'counter' : 0, 
-      'input' : 'aabaa', 
-      'charsRange' : [ 2, 3 ], 
-      'charsRangeRight' : [ 3, 2 ], 
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 3 ],
+      'counter' : 0,
+      'input' : 'aabaa',
+      'charsRange' : [ 2, 3 ],
+      'charsRangeRight' : [ 3, 2 ],
       'nearest' : [ 'aa', 'b', 'aa' ]
     }
   ];
@@ -314,25 +314,25 @@ function strSearchDefaultOptions( test )
   var expected =
   [
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 0, 2 ], 
-      'counter' : 0, 
-      'input' : 'aabaa', 
-      'charsRange' : [ 0, 2  ], 
-      'charsRangeRight' : [ 5, 3 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'aabaa',
+      'charsRange' : [ 0, 2  ],
+      'charsRangeRight' : [ 5, 3 ],
       'nearest' : [ '', 'aa', 'baa' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 5 ], 
-      'counter' : 1, 
-      'input' : 'aabaa', 
-      'charsRange' : [ 3, 5  ], 
-      'charsRangeRight' : [ 2, 0 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'aabaa',
+      'charsRange' : [ 3, 5  ],
+      'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'aab', 'aa', '' ]
     }
   ]
@@ -343,25 +343,25 @@ function strSearchDefaultOptions( test )
   var expected =
   [
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 2, 3 ], 
-      'counter' : 0, 
-      'input' : 'hello', 
-      'charsRange' : [ 2, 3  ], 
-      'charsRangeRight' : [ 3, 2 ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 3 ],
+      'counter' : 0,
+      'input' : 'hello',
+      'charsRange' : [ 2, 3  ],
+      'charsRangeRight' : [ 3, 2 ],
       'nearest' : [ 'he', 'l', 'lo' ]
     },
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 4 ], 
-      'counter' : 1, 
-      'input' : 'hello', 
-      'charsRange' : [ 3, 4  ], 
-      'charsRangeRight' : [ 2, 1 ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 4 ],
+      'counter' : 1,
+      'input' : 'hello',
+      'charsRange' : [ 3, 4  ],
+      'charsRangeRight' : [ 2, 1 ],
       'nearest' : [ 'hel', 'l', 'o' ]
     }
   ];
@@ -372,36 +372,36 @@ function strSearchDefaultOptions( test )
   var expected =
   [
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 0, 2 ], 
-      'counter' : 0, 
-      'input' : 'abaabab', 
-      'charsRange' : [ 0, 2 ], 
-      'charsRangeRight' : [ 7, 5 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'abaabab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 7, 5 ],
       'nearest' : [ '', 'ab', 'aabab' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 2, 4 ], 
-      'counter' : 1, 
-      'input' : 'abaabab', 
-      'charsRange' : [ 2, 4 ], 
-      'charsRangeRight' : [ 5, 3 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 1,
+      'input' : 'abaabab',
+      'charsRange' : [ 2, 4 ],
+      'charsRangeRight' : [ 5, 3 ],
       'nearest' : [ 'ab', 'aa', 'bab' ]
     },
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 5, 7 ], 
-      'counter' : 2, 
-      'input' : 'abaabab', 
-      'charsRange' : [ 5, 7 ], 
-      'charsRangeRight' : [ 2, 0 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 5, 7 ],
+      'counter' : 2,
+      'input' : 'abaabab',
+      'charsRange' : [ 5, 7 ],
+      'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'abaab', 'ab', '' ]
     }
   ];
@@ -412,10 +412,10 @@ function strSearchDefaultOptions( test )
   var expected =
   [
    {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 0, 3 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 3 ],
       'counter' : 0,
       'input' : 'abcabc',
       'charsRange' : [ 0, 3 ],
@@ -423,16 +423,16 @@ function strSearchDefaultOptions( test )
       'nearest' : [ '', 'abc', 'abc' ]
     },
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 6 ], 
-      'counter' : 1, 
-      'input' : 'abcabc', 
-      'charsRange' : [ 3, 6 ], 
-      'charsRangeRight' : [ 3, 0 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 6 ],
+      'counter' : 1,
+      'input' : 'abcabc',
+      'charsRange' : [ 3, 6 ],
+      'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ 'abc', 'abc', '' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -441,10 +441,10 @@ function strSearchDefaultOptions( test )
   var expected =
   [
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 0, 1 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 1 ],
       'counter' : 0,
       'input' : 'abcabc',
       'charsRange' : [ 0, 1 ],
@@ -452,16 +452,16 @@ function strSearchDefaultOptions( test )
       'nearest' : [ '', 'a', 'bcabc' ]
     },
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 4 ], 
-      'counter' : 1, 
-      'input' : 'abcabc', 
-      'charsRange' : [ 3, 4 ], 
-      'charsRangeRight' : [ 3, 2 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 4 ],
+      'counter' : 1,
+      'input' : 'abcabc',
+      'charsRange' : [ 3, 4 ],
+      'charsRangeRight' : [ 3, 2 ],
       'nearest' : [ 'abc', 'a', 'bc' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -493,17 +493,17 @@ function strSearchDefaultOptions( test )
 
   test.case = 'src === ins';
   var got = _.strSearch( { src : 'abc', ins : /abc/ } );
-  var expected = 
+  var expected =
   [
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 0, 3 ], 
-      'counter' : 0, 
-      'input' : 'abc', 
-      'charsRange' : [ 0, 3 ], 
-      'charsRangeRight' : [ 3, 0 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 3 ],
+      'counter' : 0,
+      'input' : 'abc',
+      'charsRange' : [ 0, 3 ],
+      'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ '', 'abc', '' ]
     }
   ];
@@ -514,14 +514,14 @@ function strSearchDefaultOptions( test )
   var expected =
   [
     {
-      'match' : 'b', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 2, 3 ], 
-      'counter' : 0, 
-      'input' : 'aabaa', 
-      'charsRange' : [ 2, 3 ], 
-      'charsRangeRight' : [ 3, 2 ], 
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 3 ],
+      'counter' : 0,
+      'input' : 'aabaa',
+      'charsRange' : [ 2, 3 ],
+      'charsRangeRight' : [ 3, 2 ],
       'nearest' : [ 'aa', 'b', 'aa' ]
     }
   ];
@@ -532,25 +532,25 @@ function strSearchDefaultOptions( test )
   var expected =
   [
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 0, 2 ], 
-      'counter' : 0, 
-      'input' : 'aabaa', 
-      'charsRange' : [ 0, 2  ], 
-      'charsRangeRight' : [ 5, 3 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'aabaa',
+      'charsRange' : [ 0, 2  ],
+      'charsRangeRight' : [ 5, 3 ],
       'nearest' : [ '', 'aa', 'baa' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 5 ], 
-      'counter' : 1, 
-      'input' : 'aabaa', 
-      'charsRange' : [ 3, 5  ], 
-      'charsRangeRight' : [ 2, 0 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'aabaa',
+      'charsRange' : [ 3, 5  ],
+      'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'aab', 'aa', '' ]
     }
   ]
@@ -561,25 +561,25 @@ function strSearchDefaultOptions( test )
   var expected =
   [
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 2, 3 ], 
-      'counter' : 0, 
-      'input' : 'hello', 
-      'charsRange' : [ 2, 3  ], 
-      'charsRangeRight' : [ 3, 2 ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 3 ],
+      'counter' : 0,
+      'input' : 'hello',
+      'charsRange' : [ 2, 3  ],
+      'charsRangeRight' : [ 3, 2 ],
       'nearest' : [ 'he', 'l', 'lo' ]
     },
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 4 ], 
-      'counter' : 1, 
-      'input' : 'hello', 
-      'charsRange' : [ 3, 4  ], 
-      'charsRangeRight' : [ 2, 1 ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 4 ],
+      'counter' : 1,
+      'input' : 'hello',
+      'charsRange' : [ 3, 4  ],
+      'charsRangeRight' : [ 2, 1 ],
       'nearest' : [ 'hel', 'l', 'o' ]
     }
   ];
@@ -590,36 +590,36 @@ function strSearchDefaultOptions( test )
   var expected =
   [
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 0, 2 ], 
-      'counter' : 0, 
-      'input' : 'abaabab', 
-      'charsRange' : [ 0, 2 ], 
-      'charsRangeRight' : [ 7, 5 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'abaabab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 7, 5 ],
       'nearest' : [ '', 'ab', 'aabab' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 2, 4 ], 
-      'counter' : 1, 
-      'input' : 'abaabab', 
-      'charsRange' : [ 2, 4 ], 
-      'charsRangeRight' : [ 5, 3 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 1,
+      'input' : 'abaabab',
+      'charsRange' : [ 2, 4 ],
+      'charsRangeRight' : [ 5, 3 ],
       'nearest' : [ 'ab', 'aa', 'bab' ]
     },
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 5, 7 ], 
-      'counter' : 2, 
-      'input' : 'abaabab', 
-      'charsRange' : [ 5, 7 ], 
-      'charsRangeRight' : [ 2, 0 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 5, 7 ],
+      'counter' : 2,
+      'input' : 'abaabab',
+      'charsRange' : [ 5, 7 ],
+      'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'abaab', 'ab', '' ]
     }
   ];
@@ -630,10 +630,10 @@ function strSearchDefaultOptions( test )
   var expected =
   [
    {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 0, 3 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 3 ],
       'counter' : 0,
       'input' : 'abcabc',
       'charsRange' : [ 0, 3 ],
@@ -641,16 +641,16 @@ function strSearchDefaultOptions( test )
       'nearest' : [ '', 'abc', 'abc' ]
     },
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 6 ], 
-      'counter' : 1, 
-      'input' : 'abcabc', 
-      'charsRange' : [ 3, 6 ], 
-      'charsRangeRight' : [ 3, 0 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 6 ],
+      'counter' : 1,
+      'input' : 'abcabc',
+      'charsRange' : [ 3, 6 ],
+      'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ 'abc', 'abc', '' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -659,10 +659,10 @@ function strSearchDefaultOptions( test )
   var expected =
   [
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 0, 1 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 1 ],
       'counter' : 0,
       'input' : 'abcabc',
       'charsRange' : [ 0, 1 ],
@@ -670,16 +670,16 @@ function strSearchDefaultOptions( test )
       'nearest' : [ '', 'a', 'bcabc' ]
     },
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 4 ], 
-      'counter' : 1, 
-      'input' : 'abcabc', 
-      'charsRange' : [ 3, 4 ], 
-      'charsRangeRight' : [ 3, 2 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 4 ],
+      'counter' : 1,
+      'input' : 'abcabc',
+      'charsRange' : [ 3, 4 ],
+      'charsRangeRight' : [ 3, 2 ],
       'nearest' : [ 'abc', 'a', 'bc' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -736,17 +736,17 @@ function strSearchOptionNearestLines( test )
 
   test.case = 'src - multiline';
   var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : 'abc',  nearestLines : 2 } );
-  var expected = 
+  var expected =
   [
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 4, 7 ], 
-      'counter' : 0, 
-      'input' : 'f\nf\nabc\nf\nf', 
-      'charsRange' : [ 4, 7 ], 
-      'charsRangeRight' : [ 7, 4 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
       'nearest' : [ 'f\n', 'abc', '' ]
     }
   ];
@@ -757,12 +757,12 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'b', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 6 ], 
-      'counter' : 0, 
-      'input' : 'f\naa\nb\naa\nf', 
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
       'charsRange' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ 'aa\n', 'b', '' ]
@@ -775,25 +775,25 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 2, 4 ], 
-      'counter' : 0, 
-      'input' : 'f\naa\nb\naa\nf', 
-      'charsRange' : [ 2, 4  ], 
-      'charsRangeRight' : [ 9, 7 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
       'nearest' : [ 'f\n', 'aa', '' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 7, 9 ], 
-      'counter' : 1, 
-      'input' : 'f\naa\nb\naa\nf', 
-      'charsRange' : [ 7, 9  ], 
-      'charsRangeRight' : [ 4, 2 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
       'nearest' : [ 'b\n', 'aa', '' ]
     }
   ]
@@ -804,25 +804,25 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 6, 7 ], 
-      'counter' : 0, 
-      'input' : 'f\nf\nhello\nf\nf', 
-      'charsRange' : [ 6, 7  ], 
-      'charsRangeRight' : [ 7, 6 ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
       'nearest' : [ 'f\nhe', 'l', 'lo' ]
     },
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 7, 8 ], 
-      'counter' : 1, 
-      'input' : 'f\nf\nhello\nf\nf', 
-      'charsRange' : [ 7, 8  ], 
-      'charsRangeRight' : [ 6, 5 ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ 'f\nhel', 'l', 'o' ]
     }
   ];
@@ -833,36 +833,36 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 0, 2 ], 
-      'counter' : 0, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 0, 2 ], 
-      'charsRangeRight' : [ 10, 8 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
       'nearest' : [ '', 'ab', '' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 5 ], 
-      'counter' : 1, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 3, 5 ], 
-      'charsRangeRight' : [ 7, 5 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
       'nearest' : [ 'ab\n', 'aa', '' ]
     },
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 8, 10 ], 
-      'counter' : 2, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 8, 10 ], 
-      'charsRangeRight' : [ 2, 0 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'b\n', 'ab', '' ]
     }
   ];
@@ -873,10 +873,10 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
    {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 1, 4 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
       'charsRange' : [ 1, 4 ],
@@ -884,16 +884,16 @@ function strSearchOptionNearestLines( test )
       'nearest' : [ '\n', 'abc', '' ]
     },
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 8 ], 
-      'counter' : 1, 
-      'input' : '\nabc\nabc\n', 
-      'charsRange' : [ 5, 8 ], 
-      'charsRangeRight' : [ 4, 1 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
       'nearest' : [ 'abc\n', 'abc', '' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -902,10 +902,10 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 1, 2 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
       'charsRange' : [ 1, 2 ],
@@ -913,16 +913,16 @@ function strSearchOptionNearestLines( test )
       'nearest' : [ '\n', 'a', 'bc' ]
     },
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 6 ], 
-      'counter' : 1, 
-      'input' : '\nabc\nabc\n', 
-      'charsRange' : [ 5, 6 ], 
-      'charsRangeRight' : [ 4, 3 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
       'nearest' : [ 'abc\n', 'a', 'bc' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -954,17 +954,17 @@ function strSearchOptionNearestLines( test )
 
   test.case = 'src - multiline';
   var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : /abc/g,  nearestLines : 2 } );
-  var expected = 
+  var expected =
   [
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 4, 7 ], 
-      'counter' : 0, 
-      'input' : 'f\nf\nabc\nf\nf', 
-      'charsRange' : [ 4, 7 ], 
-      'charsRangeRight' : [ 7, 4 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
       'nearest' : [ 'f\n', 'abc', '' ]
     }
   ];
@@ -975,12 +975,12 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'b', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 6 ], 
-      'counter' : 0, 
-      'input' : 'f\naa\nb\naa\nf', 
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
       'charsRange' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ 'aa\n', 'b', '' ]
@@ -993,25 +993,25 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 2, 4 ], 
-      'counter' : 0, 
-      'input' : 'f\naa\nb\naa\nf', 
-      'charsRange' : [ 2, 4  ], 
-      'charsRangeRight' : [ 9, 7 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
       'nearest' : [ 'f\n', 'aa', '' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 7, 9 ], 
-      'counter' : 1, 
-      'input' : 'f\naa\nb\naa\nf', 
-      'charsRange' : [ 7, 9  ], 
-      'charsRangeRight' : [ 4, 2 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
       'nearest' : [ 'b\n', 'aa', '' ]
     }
   ]
@@ -1022,25 +1022,25 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 6, 7 ], 
-      'counter' : 0, 
-      'input' : 'f\nf\nhello\nf\nf', 
-      'charsRange' : [ 6, 7  ], 
-      'charsRangeRight' : [ 7, 6 ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
       'nearest' : [ 'f\nhe', 'l', 'lo' ]
     },
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 7, 8 ], 
-      'counter' : 1, 
-      'input' : 'f\nf\nhello\nf\nf', 
-      'charsRange' : [ 7, 8  ], 
-      'charsRangeRight' : [ 6, 5 ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ 'f\nhel', 'l', 'o' ]
     }
   ];
@@ -1051,36 +1051,36 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 0, 2 ], 
-      'counter' : 0, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 0, 2 ], 
-      'charsRangeRight' : [ 10, 8 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
       'nearest' : [ '', 'ab', '' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 5 ], 
-      'counter' : 1, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 3, 5 ], 
-      'charsRangeRight' : [ 7, 5 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
       'nearest' : [ 'ab\n', 'aa', '' ]
     },
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 8, 10 ], 
-      'counter' : 2, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 8, 10 ], 
-      'charsRangeRight' : [ 2, 0 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'b\n', 'ab', '' ]
     }
   ];
@@ -1091,10 +1091,10 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
    {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 1, 4 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
       'charsRange' : [ 1, 4 ],
@@ -1102,16 +1102,16 @@ function strSearchOptionNearestLines( test )
       'nearest' : [ '\n', 'abc', '' ]
     },
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 8 ], 
-      'counter' : 1, 
-      'input' : '\nabc\nabc\n', 
-      'charsRange' : [ 5, 8 ], 
-      'charsRangeRight' : [ 4, 1 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
       'nearest' : [ 'abc\n', 'abc', '' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -1120,10 +1120,10 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 1, 2 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
       'charsRange' : [ 1, 2 ],
@@ -1131,16 +1131,16 @@ function strSearchOptionNearestLines( test )
       'nearest' : [ '\n', 'a', 'bc' ]
     },
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 6 ], 
-      'counter' : 1, 
-      'input' : '\nabc\nabc\n', 
-      'charsRange' : [ 5, 6 ], 
-      'charsRangeRight' : [ 4, 3 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
       'nearest' : [ 'abc\n', 'a', 'bc' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -1177,17 +1177,17 @@ function strSearchOptionNearestLines( test )
 
   test.case = 'src - multiline';
   var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : 'abc',  nearestLines : 4 } );
-  var expected = 
+  var expected =
   [
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 4, 7 ], 
-      'counter' : 0, 
-      'input' : 'f\nf\nabc\nf\nf', 
-      'charsRange' : [ 4, 7 ], 
-      'charsRangeRight' : [ 7, 4 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
       'nearest' : [ 'f\nf\n', 'abc', '\nf' ]
     }
   ];
@@ -1198,12 +1198,12 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'b', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 6 ], 
-      'counter' : 0, 
-      'input' : 'f\naa\nb\naa\nf', 
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
       'charsRange' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ 'f\naa\n', 'b', '\naa' ]
@@ -1216,25 +1216,25 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 2, 4 ], 
-      'counter' : 0, 
-      'input' : 'f\naa\nb\naa\nf', 
-      'charsRange' : [ 2, 4  ], 
-      'charsRangeRight' : [ 9, 7 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
       'nearest' : [ 'f\n', 'aa', '\nb' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 7, 9 ], 
-      'counter' : 1, 
-      'input' : 'f\naa\nb\naa\nf', 
-      'charsRange' : [ 7, 9  ], 
-      'charsRangeRight' : [ 4, 2 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
       'nearest' : [ 'aa\nb\n', 'aa', '\nf' ]
     }
   ]
@@ -1245,25 +1245,25 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 6, 7 ], 
-      'counter' : 0, 
-      'input' : 'f\nf\nhello\nf\nf', 
-      'charsRange' : [ 6, 7  ], 
-      'charsRangeRight' : [ 7, 6 ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
       'nearest' : [ 'f\nf\nhe', 'l', 'lo\nf' ]
     },
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 7, 8 ], 
-      'counter' : 1, 
-      'input' : 'f\nf\nhello\nf\nf', 
-      'charsRange' : [ 7, 8  ], 
-      'charsRangeRight' : [ 6, 5 ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ 'f\nf\nhel', 'l', 'o\nf' ]
     }
   ];
@@ -1274,36 +1274,36 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 0, 2 ], 
-      'counter' : 0, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 0, 2 ], 
-      'charsRangeRight' : [ 10, 8 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
       'nearest' : [ '', 'ab', '\naa' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 5 ], 
-      'counter' : 1, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 3, 5 ], 
-      'charsRangeRight' : [ 7, 5 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
       'nearest' : [ 'ab\n', 'aa', '\nb' ]
     },
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 8, 10 ], 
-      'counter' : 2, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 8, 10 ], 
-      'charsRangeRight' : [ 2, 0 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'aa\nb\n', 'ab', '' ]
     }
   ];
@@ -1314,10 +1314,10 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
    {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 1, 4 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
       'charsRange' : [ 1, 4 ],
@@ -1325,16 +1325,16 @@ function strSearchOptionNearestLines( test )
       'nearest' : [ '\n', 'abc', '\nabc' ]
     },
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 8 ], 
-      'counter' : 1, 
-      'input' : '\nabc\nabc\n', 
-      'charsRange' : [ 5, 8 ], 
-      'charsRangeRight' : [ 4, 1 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
       'nearest' : [ '\nabc\n', 'abc', '\n' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -1343,10 +1343,10 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 1, 2 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
       'charsRange' : [ 1, 2 ],
@@ -1354,16 +1354,16 @@ function strSearchOptionNearestLines( test )
       'nearest' : [ '\n', 'a', 'bc\nabc' ]
     },
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 6 ], 
-      'counter' : 1, 
-      'input' : '\nabc\nabc\n', 
-      'charsRange' : [ 5, 6 ], 
-      'charsRangeRight' : [ 4, 3 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
       'nearest' : [ '\nabc\n', 'a', 'bc\n' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -1395,17 +1395,17 @@ function strSearchOptionNearestLines( test )
 
   test.case = 'src - multiline';
   var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : /abc/g,  nearestLines : 4 } );
-  var expected = 
+  var expected =
   [
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 4, 7 ], 
-      'counter' : 0, 
-      'input' : 'f\nf\nabc\nf\nf', 
-      'charsRange' : [ 4, 7 ], 
-      'charsRangeRight' : [ 7, 4 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
       'nearest' : [ 'f\nf\n', 'abc', '\nf' ]
     }
   ];
@@ -1416,12 +1416,12 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'b', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 6 ], 
-      'counter' : 0, 
-      'input' : 'f\naa\nb\naa\nf', 
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
       'charsRange' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ 'f\naa\n', 'b', '\naa' ]
@@ -1434,25 +1434,25 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 2, 4 ], 
-      'counter' : 0, 
-      'input' : 'f\naa\nb\naa\nf', 
-      'charsRange' : [ 2, 4  ], 
-      'charsRangeRight' : [ 9, 7 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
       'nearest' : [ 'f\n', 'aa', '\nb' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 7, 9 ], 
-      'counter' : 1, 
-      'input' : 'f\naa\nb\naa\nf', 
-      'charsRange' : [ 7, 9  ], 
-      'charsRangeRight' : [ 4, 2 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
       'nearest' : [ 'aa\nb\n', 'aa', '\nf' ]
     }
   ]
@@ -1463,25 +1463,25 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 6, 7 ], 
-      'counter' : 0, 
-      'input' : 'f\nf\nhello\nf\nf', 
-      'charsRange' : [ 6, 7  ], 
-      'charsRangeRight' : [ 7, 6 ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
       'nearest' : [ 'f\nf\nhe', 'l', 'lo\nf' ]
     },
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 7, 8 ], 
-      'counter' : 1, 
-      'input' : 'f\nf\nhello\nf\nf', 
-      'charsRange' : [ 7, 8  ], 
-      'charsRangeRight' : [ 6, 5 ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ 'f\nf\nhel', 'l', 'o\nf' ]
     }
   ];
@@ -1492,36 +1492,36 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 0, 2 ], 
-      'counter' : 0, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 0, 2 ], 
-      'charsRangeRight' : [ 10, 8 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
       'nearest' : [ '', 'ab', '\naa' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 5 ], 
-      'counter' : 1, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 3, 5 ], 
-      'charsRangeRight' : [ 7, 5 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
       'nearest' : [ 'ab\n', 'aa', '\nb' ]
     },
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 8, 10 ], 
-      'counter' : 2, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 8, 10 ], 
-      'charsRangeRight' : [ 2, 0 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'aa\nb\n', 'ab', '' ]
     }
   ];
@@ -1532,10 +1532,10 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
    {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 1, 4 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
       'charsRange' : [ 1, 4 ],
@@ -1543,16 +1543,16 @@ function strSearchOptionNearestLines( test )
       'nearest' : [ '\n', 'abc', '\nabc' ]
     },
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 8 ], 
-      'counter' : 1, 
-      'input' : '\nabc\nabc\n', 
-      'charsRange' : [ 5, 8 ], 
-      'charsRangeRight' : [ 4, 1 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
       'nearest' : [ '\nabc\n', 'abc', '\n' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -1561,10 +1561,10 @@ function strSearchOptionNearestLines( test )
   var expected =
   [
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 1, 2 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
       'charsRange' : [ 1, 2 ],
@@ -1572,16 +1572,901 @@ function strSearchOptionNearestLines( test )
       'nearest' : [ '\n', 'a', 'bc\nabc' ]
     },
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 6 ], 
-      'counter' : 1, 
-      'input' : '\nabc\nabc\n', 
-      'charsRange' : [ 5, 6 ], 
-      'charsRangeRight' : [ 4, 3 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
       'nearest' : [ '\nabc\n', 'a', 'bc\n' ]
-    } 
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - regexp, nearestLines - 4' );
+}
+
+//
+
+function strSearchOptionNearestSplitting( test )
+{
+  test.open( 'ins - string, nearestLines - 2' );
+
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strSearch( { src : '', ins : '',  nearestLines : 2, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - string';
+  var got = _.strSearch( { src : '', ins : 'x',  nearestLines : 2, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty string';
+  var got = _.strSearch( { src : 'abc', ins : '',  nearestLines : 2, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - string, not entry';
+  var got = _.strSearch( { src : 'hello', ins : 'x',  nearestLines : 2, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty array';
+  var got = _.strSearch( { src : 'hello', ins : [],  nearestLines : 2, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : 'abc',  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
+      'nearest' :  'f\nabc'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'b',  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  'aa\nb'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'aa',  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
+      'nearest' :  'f\naa'
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
+      'nearest' :  'b\naa'
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ 'l', '', 'x' ],  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'nearest' :  'f\nhello'
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  'f\nhello'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ 'aa', 'ab', 'a' ],  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
+      'nearest' :  'ab'
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'nearest' :  'ab\naa'
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' :  'b\nab'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' :  '\nabc'
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'nearest' :  'abc\nabc'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'nearest' :  '\nabc'
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
+      'nearest' :  'abc\nabc'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - string, nearestLines - 2' );
+
+  /* - */
+
+  test.open( 'ins - regexp, nearestLines - 2' );
+
+  test.case = 'src - empty string, ins - regexp for empty strings';
+  var got = _.strSearch( { src : '', ins : /(?:)/g,  nearestLines : 2, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - regexp';
+  var got = _.strSearch( { src : '', ins : /x/,  nearestLines : 2, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp for empty string';
+  var got = _.strSearch( { src : 'abc', ins : /(?:)/g,  nearestLines : 2, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp, not entry';
+  var got = _.strSearch( { src : 'hello', ins : /x/,  nearestLines : 2, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : /abc/g,  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
+      'nearest' :  'f\nabc'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /b+/g,  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  'aa\nb'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /a+/,  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
+      'nearest' :  'f\naa'
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
+      'nearest' :  'b\naa'
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ /[las]/, /a/, /x/ ],  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'nearest' :  'f\nhello'
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  'f\nhello'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ /aa/g, /ab/, /a+/ ],  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
+      'nearest' :  'ab'
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'nearest' :  'ab\naa'
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' :  'b\nab'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' :  '\nabc'
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'nearest' :  'abc\nabc'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'nearest' :  '\nabc'
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
+      'nearest' :  'abc\nabc'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - regexp, nearestLines - 2' );
+
+  /* - */
+
+  test.open( 'ins - string, nearestLines - 4' );
+
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strSearch( { src : '', ins : '',  nearestLines : 4, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - string';
+  var got = _.strSearch( { src : '', ins : 'x',  nearestLines : 4, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty string';
+  var got = _.strSearch( { src : 'abc', ins : '',  nearestLines : 4, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - string, not entry';
+  var got = _.strSearch( { src : 'hello', ins : 'x',  nearestLines : 4, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty array';
+  var got = _.strSearch( { src : 'hello', ins : [],  nearestLines : 4, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : 'abc',  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
+      'nearest' :  'f\nf\nabc\nf'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'b',  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  'f\naa\nb\naa'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'aa',  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
+      'nearest' :  'f\naa\nb'
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
+      'nearest' :  'aa\nb\naa\nf'
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ 'l', '', 'x' ],  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'nearest' :  'f\nf\nhello\nf'
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  'f\nf\nhello\nf'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ 'aa', 'ab', 'a' ],  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
+      'nearest' :  'ab\naa'
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'nearest' :  'ab\naa\nb'
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' :  'aa\nb\nab'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' :  '\nabc\nabc'
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'nearest' :  '\nabc\nabc\n'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'nearest' :  '\nabc\nabc'
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
+      'nearest' :  '\nabc\nabc\n'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - string, nearestLines - 4' );
+
+  /* - */
+
+  test.open( 'ins - regexp, nearestLines - 4' );
+
+  test.case = 'src - empty string, ins - regexp for empty strings';
+  var got = _.strSearch( { src : '', ins : /(?:)/g,  nearestLines : 4, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - regexp';
+  var got = _.strSearch( { src : '', ins : /x/,  nearestLines : 4, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp for empty string';
+  var got = _.strSearch( { src : 'abc', ins : /(?:)/g,  nearestLines : 4, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp, not entry';
+  var got = _.strSearch( { src : 'hello', ins : /x/,  nearestLines : 4, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : /abc/g,  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
+      'nearest' :  'f\nf\nabc\nf'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /b+/g,  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  'f\naa\nb\naa'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /a+/,  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
+      'nearest' :  'f\naa\nb'
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
+      'nearest' :  'aa\nb\naa\nf'
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ /[las]/, /a/, /x/ ],  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'nearest' :  'f\nf\nhello\nf'
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  'f\nf\nhello\nf'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ /aa/g, /ab/, /a+/ ],  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
+      'nearest' :  'ab\naa'
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'nearest' :  'ab\naa\nb'
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' :  'aa\nb\nab'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' :  '\nabc\nabc'
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'nearest' :  '\nabc\nabc\n'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'nearest' : '\nabc\nabc'
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
+      'nearest' : '\nabc\nabc\n'
+    }
   ];
   test.identical( got, expected );
 
@@ -1621,16 +2506,16 @@ function strSearchOptiondeterminingLineNumber( test )
 
   test.case = 'src - multiline';
   var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : 'abc',  determiningLineNumber : 1 } );
-  var expected = 
+  var expected =
   [
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 4, 7 ], 
-      'counter' : 0, 
-      'input' : 'f\nf\nabc\nf\nf', 
-      'charsRange' : [ 4, 7 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
       'charsRangeRight' : [ 7, 4 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
@@ -1644,12 +2529,12 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'b', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 6 ], 
-      'counter' : 0, 
-      'input' : 'f\naa\nb\naa\nf', 
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
       'charsRange' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'linesRange' : [ 3, 4 ],
@@ -1664,27 +2549,27 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 2, 4 ], 
-      'counter' : 0, 
-      'input' : 'f\naa\nb\naa\nf', 
-      'charsRange' : [ 2, 4  ], 
-      'charsRangeRight' : [ 9, 7 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
       'nearest' : [ 'f\n', 'aa', '\nb' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 7, 9 ], 
-      'counter' : 1, 
-      'input' : 'f\naa\nb\naa\nf', 
-      'charsRange' : [ 7, 9  ], 
-      'charsRangeRight' : [ 4, 2 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
       'linesRange' : [ 4, 5 ],
       'linesOffsets' : [ 3, 4, 5 ],
       'nearest' : [ 'b\n', 'aa', '\nf' ]
@@ -1697,27 +2582,27 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 6, 7 ], 
-      'counter' : 0, 
-      'input' : 'f\nf\nhello\nf\nf', 
-      'charsRange' : [ 6, 7  ], 
-      'charsRangeRight' : [ 7, 6 ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
       'nearest' : [ 'f\nhe', 'l', 'lo\nf' ]
     },
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 7, 8 ], 
-      'counter' : 1, 
-      'input' : 'f\nf\nhello\nf\nf', 
-      'charsRange' : [ 7, 8  ], 
-      'charsRangeRight' : [ 6, 5 ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
       'nearest' : [ 'f\nhel', 'l', 'o\nf' ]
@@ -1730,40 +2615,40 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 0, 2 ], 
-      'counter' : 0, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 0, 2 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
       'charsRangeRight' : [ 10, 8 ],
       'linesRange' : [ 1, 2 ],
       'linesOffsets' : [ 1, 1, 2 ],
       'nearest' : [ '', 'ab', '\naa' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 5 ], 
-      'counter' : 1, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 3, 5 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
       'nearest' : [ 'ab\n', 'aa', '\nb' ]
     },
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 8, 10 ], 
-      'counter' : 2, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 8, 10 ], 
-      'charsRangeRight' : [ 2, 0 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
       'linesRange' : [ 4, 5 ],
       'linesOffsets' : [ 3, 4, 5 ],
       'nearest' : [ 'b\n', 'ab', '' ]
@@ -1776,10 +2661,10 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
    {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 1, 4 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
       'charsRange' : [ 1, 4 ],
@@ -1791,18 +2676,18 @@ function strSearchOptiondeterminingLineNumber( test )
       'nearest' : [ '\n', 'abc', '\nabc' ]
     },
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 8 ], 
-      'counter' : 1, 
-      'input' : '\nabc\nabc\n', 
-      'charsRange' : [ 5, 8 ], 
-      'charsRangeRight' : [ 4, 1 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
       'nearest' : [ 'abc\n', 'abc', '\n' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -1811,10 +2696,10 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 1, 2 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
       'charsRange' : [ 1, 2 ],
@@ -1824,18 +2709,18 @@ function strSearchOptiondeterminingLineNumber( test )
       'nearest' : [ '\n', 'a', 'bc\nabc' ]
     },
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 6 ], 
-      'counter' : 1, 
-      'input' : '\nabc\nabc\n', 
-      'charsRange' : [ 5, 6 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
       'charsRangeRight' : [ 4, 3 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
       'nearest' : [ 'abc\n', 'a', 'bc\n' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -1867,16 +2752,16 @@ function strSearchOptiondeterminingLineNumber( test )
 
   test.case = 'src - multiline';
   var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : /abc/g,  determiningLineNumber : 1 } );
-  var expected = 
+  var expected =
   [
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 4, 7 ], 
-      'counter' : 0, 
-      'input' : 'f\nf\nabc\nf\nf', 
-      'charsRange' : [ 4, 7 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
       'charsRangeRight' : [ 7, 4 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
@@ -1890,12 +2775,12 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'b', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 6 ], 
-      'counter' : 0, 
-      'input' : 'f\naa\nb\naa\nf', 
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
       'charsRange' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'linesRange' : [ 3, 4 ],
@@ -1910,27 +2795,27 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 2, 4 ], 
-      'counter' : 0, 
-      'input' : 'f\naa\nb\naa\nf', 
-      'charsRange' : [ 2, 4  ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
       'charsRangeRight' : [ 9, 7 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
       'nearest' : [ 'f\n', 'aa', '\nb' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 7, 9 ], 
-      'counter' : 1, 
-      'input' : 'f\naa\nb\naa\nf', 
-      'charsRange' : [ 7, 9  ], 
-      'charsRangeRight' : [ 4, 2 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
       'linesRange' : [ 4, 5 ],
       'linesOffsets' : [ 3, 4, 5 ],
       'nearest' : [ 'b\n', 'aa', '\nf' ]
@@ -1943,26 +2828,26 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 6, 7 ], 
-      'counter' : 0, 
-      'input' : 'f\nf\nhello\nf\nf', 
-      'charsRange' : [ 6, 7  ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
       'nearest' : [ 'f\nhe', 'l', 'lo\nf' ]
     },
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 7, 8 ], 
-      'counter' : 1, 
-      'input' : 'f\nf\nhello\nf\nf', 
-      'charsRange' : [ 7, 8  ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
       'charsRangeRight' : [ 6, 5 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
@@ -1976,39 +2861,39 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 0, 2 ], 
-      'counter' : 0, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 0, 2 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
       'charsRangeRight' : [ 10, 8 ],
       'linesRange' : [ 1, 2 ],
       'linesOffsets' : [ 1, 1, 2 ],
       'nearest' : [ '', 'ab', '\naa' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 5 ], 
-      'counter' : 1, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 3, 5 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
       'nearest' : [ 'ab\n', 'aa', '\nb' ]
     },
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 8, 10 ], 
-      'counter' : 2, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 8, 10 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
       'charsRangeRight' : [ 2, 0 ],
       'linesRange' : [ 4, 5 ],
       'linesOffsets' : [ 3, 4, 5 ],
@@ -2022,10 +2907,10 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
    {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 1, 4 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
       'charsRange' : [ 1, 4 ],
@@ -2035,18 +2920,18 @@ function strSearchOptiondeterminingLineNumber( test )
       'nearest' : [ '\n', 'abc', '\nabc' ]
     },
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 8 ], 
-      'counter' : 1, 
-      'input' : '\nabc\nabc\n', 
-      'charsRange' : [ 5, 8 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
       'charsRangeRight' : [ 4, 1 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
       'nearest' : [ 'abc\n', 'abc', '\n' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -2055,10 +2940,10 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 1, 2 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
       'charsRange' : [ 1, 2 ],
@@ -2068,18 +2953,18 @@ function strSearchOptiondeterminingLineNumber( test )
       'nearest' : [ '\n', 'a', 'bc\nabc' ]
     },
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 6 ], 
-      'counter' : 1, 
-      'input' : '\nabc\nabc\n', 
-      'charsRange' : [ 5, 6 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
       'charsRangeRight' : [ 4, 3 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
       'nearest' : [ 'abc\n', 'a', 'bc\n' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -2116,16 +3001,16 @@ function strSearchOptiondeterminingLineNumber( test )
 
   test.case = 'src - multiline';
   var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : 'abc',  determiningLineNumber : 1, nearestLines : 4 } );
-  var expected = 
+  var expected =
   [
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 4, 7 ], 
-      'counter' : 0, 
-      'input' : 'f\nf\nabc\nf\nf', 
-      'charsRange' : [ 4, 7 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
       'charsRangeRight' : [ 7, 4 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
@@ -2139,12 +3024,12 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'b', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 6 ], 
-      'counter' : 0, 
-      'input' : 'f\naa\nb\naa\nf', 
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
       'charsRange' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'linesRange' : [ 3, 4 ],
@@ -2159,27 +3044,27 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 2, 4 ], 
-      'counter' : 0, 
-      'input' : 'f\naa\nb\naa\nf', 
-      'charsRange' : [ 2, 4  ], 
-      'charsRangeRight' : [ 9, 7 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
       'nearest' : [ 'f\n', 'aa', '\nb' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 7, 9 ], 
-      'counter' : 1, 
-      'input' : 'f\naa\nb\naa\nf', 
-      'charsRange' : [ 7, 9  ], 
-      'charsRangeRight' : [ 4, 2 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
       'linesRange' : [ 4, 5 ],
       'linesOffsets' : [ 2, 4, 5 ],
       'nearest' : [ 'aa\nb\n', 'aa', '\nf' ]
@@ -2192,27 +3077,27 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 6, 7 ], 
-      'counter' : 0, 
-      'input' : 'f\nf\nhello\nf\nf', 
-      'charsRange' : [ 6, 7  ], 
-      'charsRangeRight' : [ 7, 6 ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
       'nearest' : [ 'f\nf\nhe', 'l', 'lo\nf' ]
     },
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 7, 8 ], 
-      'counter' : 1, 
-      'input' : 'f\nf\nhello\nf\nf', 
-      'charsRange' : [ 7, 8  ], 
-      'charsRangeRight' : [ 6, 5 ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
       'nearest' : [ 'f\nf\nhel', 'l', 'o\nf' ]
@@ -2225,40 +3110,40 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 0, 2 ], 
-      'counter' : 0, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 0, 2 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
       'charsRangeRight' : [ 10, 8 ],
       'linesRange' : [ 1, 2 ],
       'linesOffsets' : [ 1, 1, 2 ],
       'nearest' : [ '', 'ab', '\naa' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 5 ], 
-      'counter' : 1, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 3, 5 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
       'nearest' : [ 'ab\n', 'aa', '\nb' ]
     },
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 8, 10 ], 
-      'counter' : 2, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 8, 10 ], 
-      'charsRangeRight' : [ 2, 0 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
       'linesRange' : [ 4, 5 ],
       'linesOffsets' : [ 2, 4, 5 ],
       'nearest' : [ 'aa\nb\n', 'ab', '' ]
@@ -2271,10 +3156,10 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
    {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 1, 4 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
       'charsRange' : [ 1, 4 ],
@@ -2286,18 +3171,18 @@ function strSearchOptiondeterminingLineNumber( test )
       'nearest' : [ '\n', 'abc', '\nabc' ]
     },
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 8 ], 
-      'counter' : 1, 
-      'input' : '\nabc\nabc\n', 
-      'charsRange' : [ 5, 8 ], 
-      'charsRangeRight' : [ 4, 1 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
       'nearest' : [ '\nabc\n', 'abc', '\n' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -2306,10 +3191,10 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 1, 2 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
       'charsRange' : [ 1, 2 ],
@@ -2319,18 +3204,18 @@ function strSearchOptiondeterminingLineNumber( test )
       'nearest' : [ '\n', 'a', 'bc\nabc' ]
     },
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 6 ], 
-      'counter' : 1, 
-      'input' : '\nabc\nabc\n', 
-      'charsRange' : [ 5, 6 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
       'charsRangeRight' : [ 4, 3 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
       'nearest' : [ '\nabc\n', 'a', 'bc\n' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -2362,16 +3247,16 @@ function strSearchOptiondeterminingLineNumber( test )
 
   test.case = 'src - multiline';
   var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : /abc/g,  determiningLineNumber : 1, nearestLines : 4 } );
-  var expected = 
+  var expected =
   [
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 4, 7 ], 
-      'counter' : 0, 
-      'input' : 'f\nf\nabc\nf\nf', 
-      'charsRange' : [ 4, 7 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
       'charsRangeRight' : [ 7, 4 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
@@ -2385,12 +3270,12 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'b', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 6 ], 
-      'counter' : 0, 
-      'input' : 'f\naa\nb\naa\nf', 
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
       'charsRange' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'linesRange' : [ 3, 4 ],
@@ -2405,27 +3290,27 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 2, 4 ], 
-      'counter' : 0, 
-      'input' : 'f\naa\nb\naa\nf', 
-      'charsRange' : [ 2, 4  ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
       'charsRangeRight' : [ 9, 7 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
       'nearest' : [ 'f\n', 'aa', '\nb' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 7, 9 ], 
-      'counter' : 1, 
-      'input' : 'f\naa\nb\naa\nf', 
-      'charsRange' : [ 7, 9  ], 
-      'charsRangeRight' : [ 4, 2 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
       'linesRange' : [ 4, 5 ],
       'linesOffsets' : [ 2, 4, 5 ],
       'nearest' : [ 'aa\nb\n', 'aa', '\nf' ]
@@ -2438,26 +3323,26 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 6, 7 ], 
-      'counter' : 0, 
-      'input' : 'f\nf\nhello\nf\nf', 
-      'charsRange' : [ 6, 7  ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
       'nearest' : [ 'f\nf\nhe', 'l', 'lo\nf' ]
     },
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 7, 8 ], 
-      'counter' : 1, 
-      'input' : 'f\nf\nhello\nf\nf', 
-      'charsRange' : [ 7, 8  ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
       'charsRangeRight' : [ 6, 5 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
@@ -2471,39 +3356,39 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 0, 2 ], 
-      'counter' : 0, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 0, 2 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
       'charsRangeRight' : [ 10, 8 ],
       'linesRange' : [ 1, 2 ],
       'linesOffsets' : [ 1, 1, 2 ],
       'nearest' : [ '', 'ab', '\naa' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 5 ], 
-      'counter' : 1, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 3, 5 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
       'nearest' : [ 'ab\n', 'aa', '\nb' ]
     },
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 8, 10 ], 
-      'counter' : 2, 
-      'input' : 'ab\naa\nb\nab', 
-      'charsRange' : [ 8, 10 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
       'charsRangeRight' : [ 2, 0 ],
       'linesRange' : [ 4, 5 ],
       'linesOffsets' : [ 2, 4, 5 ],
@@ -2517,10 +3402,10 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
    {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 1, 4 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
       'charsRange' : [ 1, 4 ],
@@ -2530,18 +3415,18 @@ function strSearchOptiondeterminingLineNumber( test )
       'nearest' : [ '\n', 'abc', '\nabc' ]
     },
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 8 ], 
-      'counter' : 1, 
-      'input' : '\nabc\nabc\n', 
-      'charsRange' : [ 5, 8 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
       'charsRangeRight' : [ 4, 1 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
       'nearest' : [ '\nabc\n', 'abc', '\n' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -2550,10 +3435,10 @@ function strSearchOptiondeterminingLineNumber( test )
   var expected =
   [
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 1, 2 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
       'charsRange' : [ 1, 2 ],
@@ -2563,18 +3448,18 @@ function strSearchOptiondeterminingLineNumber( test )
       'nearest' : [ '\n', 'a', 'bc\nabc' ]
     },
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 5, 6 ], 
-      'counter' : 1, 
-      'input' : '\nabc\nabc\n', 
-      'charsRange' : [ 5, 6 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
       'charsRangeRight' : [ 4, 3 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
       'nearest' : [ '\nabc\n', 'a', 'bc\n' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -2583,7 +3468,7 @@ function strSearchOptiondeterminingLineNumber( test )
 
 //
 
-function strSearchOptionStringWithRegexp( test ) 
+function strSearchOptionStringWithRegexp( test )
 {
   test.open( 'ins - simple string' );
 
@@ -2614,17 +3499,17 @@ function strSearchOptionStringWithRegexp( test )
 
   test.case = 'src === ins';
   var got = _.strSearch( { src : 'abc', ins : 'abc',  stringWithRegexp : 1 } );
-  var expected = 
+  var expected =
   [
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 0, 3 ], 
-      'counter' : 0, 
-      'input' : 'abc', 
-      'charsRange' : [ 0, 3 ], 
-      'charsRangeRight' : [ 3, 0 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 3 ],
+      'counter' : 0,
+      'input' : 'abc',
+      'charsRange' : [ 0, 3 ],
+      'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ '', 'abc', '' ]
     }
   ];
@@ -2635,14 +3520,14 @@ function strSearchOptionStringWithRegexp( test )
   var expected =
   [
     {
-      'match' : 'b', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 2, 3 ], 
-      'counter' : 0, 
-      'input' : 'aabaa', 
-      'charsRange' : [ 2, 3 ], 
-      'charsRangeRight' : [ 3, 2 ], 
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 3 ],
+      'counter' : 0,
+      'input' : 'aabaa',
+      'charsRange' : [ 2, 3 ],
+      'charsRangeRight' : [ 3, 2 ],
       'nearest' : [ 'aa', 'b', 'aa' ]
     }
   ];
@@ -2653,25 +3538,25 @@ function strSearchOptionStringWithRegexp( test )
   var expected =
   [
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 0, 2 ], 
-      'counter' : 0, 
-      'input' : 'aabaa', 
-      'charsRange' : [ 0, 2  ], 
-      'charsRangeRight' : [ 5, 3 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'aabaa',
+      'charsRange' : [ 0, 2  ],
+      'charsRangeRight' : [ 5, 3 ],
       'nearest' : [ '', 'aa', 'baa' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 5 ], 
-      'counter' : 1, 
-      'input' : 'aabaa', 
-      'charsRange' : [ 3, 5  ], 
-      'charsRangeRight' : [ 2, 0 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'aabaa',
+      'charsRange' : [ 3, 5  ],
+      'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'aab', 'aa', '' ]
     }
   ]
@@ -2682,25 +3567,25 @@ function strSearchOptionStringWithRegexp( test )
   var expected =
   [
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 2, 3 ], 
-      'counter' : 0, 
-      'input' : 'hello', 
-      'charsRange' : [ 2, 3  ], 
-      'charsRangeRight' : [ 3, 2 ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 3 ],
+      'counter' : 0,
+      'input' : 'hello',
+      'charsRange' : [ 2, 3  ],
+      'charsRangeRight' : [ 3, 2 ],
       'nearest' : [ 'he', 'l', 'lo' ]
     },
     {
-      'match' : 'l', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 4 ], 
-      'counter' : 1, 
-      'input' : 'hello', 
-      'charsRange' : [ 3, 4  ], 
-      'charsRangeRight' : [ 2, 1 ], 
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 4 ],
+      'counter' : 1,
+      'input' : 'hello',
+      'charsRange' : [ 3, 4  ],
+      'charsRangeRight' : [ 2, 1 ],
       'nearest' : [ 'hel', 'l', 'o' ]
     }
   ];
@@ -2711,36 +3596,36 @@ function strSearchOptionStringWithRegexp( test )
   var expected =
   [
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 0, 2 ], 
-      'counter' : 0, 
-      'input' : 'abaabab', 
-      'charsRange' : [ 0, 2 ], 
-      'charsRangeRight' : [ 7, 5 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'abaabab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 7, 5 ],
       'nearest' : [ '', 'ab', 'aabab' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 2, 4 ], 
-      'counter' : 1, 
-      'input' : 'abaabab', 
-      'charsRange' : [ 2, 4 ], 
-      'charsRangeRight' : [ 5, 3 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 1,
+      'input' : 'abaabab',
+      'charsRange' : [ 2, 4 ],
+      'charsRangeRight' : [ 5, 3 ],
       'nearest' : [ 'ab', 'aa', 'bab' ]
     },
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 5, 7 ], 
-      'counter' : 2, 
-      'input' : 'abaabab', 
-      'charsRange' : [ 5, 7 ], 
-      'charsRangeRight' : [ 2, 0 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 5, 7 ],
+      'counter' : 2,
+      'input' : 'abaabab',
+      'charsRange' : [ 5, 7 ],
+      'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'abaab', 'ab', '' ]
     }
   ];
@@ -2751,10 +3636,10 @@ function strSearchOptionStringWithRegexp( test )
   var expected =
   [
    {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 0, 3 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 3 ],
       'counter' : 0,
       'input' : 'abcabc',
       'charsRange' : [ 0, 3 ],
@@ -2762,16 +3647,16 @@ function strSearchOptionStringWithRegexp( test )
       'nearest' : [ '', 'abc', 'abc' ]
     },
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 6 ], 
-      'counter' : 1, 
-      'input' : 'abcabc', 
-      'charsRange' : [ 3, 6 ], 
-      'charsRangeRight' : [ 3, 0 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 6 ],
+      'counter' : 1,
+      'input' : 'abcabc',
+      'charsRange' : [ 3, 6 ],
+      'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ 'abc', 'abc', '' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -2780,10 +3665,10 @@ function strSearchOptionStringWithRegexp( test )
   var expected =
   [
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 0, 1 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 1 ],
       'counter' : 0,
       'input' : 'abcabc',
       'charsRange' : [ 0, 1 ],
@@ -2791,16 +3676,16 @@ function strSearchOptionStringWithRegexp( test )
       'nearest' : [ '', 'a', 'bcabc' ]
     },
     {
-      'match' : 'a', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 4 ], 
-      'counter' : 1, 
-      'input' : 'abcabc', 
-      'charsRange' : [ 3, 4 ], 
-      'charsRangeRight' : [ 3, 2 ], 
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 4 ],
+      'counter' : 1,
+      'input' : 'abcabc',
+      'charsRange' : [ 3, 4 ],
+      'charsRangeRight' : [ 3, 2 ],
       'nearest' : [ 'abc', 'a', 'bc' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -2808,7 +3693,7 @@ function strSearchOptionStringWithRegexp( test )
 
   /* - */
 
-  test.open( 'ins - string with special symbols' );
+  test.open( 'ins - string with double slashes' );
 
   test.case = 'src - string, ins - has one symbol and double slash, not entry, stringWithRegexp - 0';
   var got = _.strSearch( { src : 'hello', ins : 'o//',  stringWithRegexp : 0 } );
@@ -2827,17 +3712,17 @@ function strSearchOptionStringWithRegexp( test )
 
   test.case = 'ins - symbols separated by double slash, stringWithRegexp - 1';
   var got = _.strSearch( { src : 'abc', ins : 'a//b//c',  stringWithRegexp : 1 } );
-  var expected = 
+  var expected =
   [
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 0, 3 ], 
-      'counter' : 0, 
-      'input' : 'abc', 
-      'charsRange' : [ 0, 3 ], 
-      'charsRangeRight' : [ 3, 0 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 3 ],
+      'counter' : 0,
+      'input' : 'abc',
+      'charsRange' : [ 0, 3 ],
+      'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ '', 'abc', '' ]
     }
   ];
@@ -2850,28 +3735,28 @@ function strSearchOptionStringWithRegexp( test )
 
   test.case = 'ins - symbols separated by double slash, two entries, stringWithRegexp - 1';
   var got = _.strSearch( { src : 'aabaa', ins : 'a//a//',  stringWithRegexp : 1 } );
-  var expected = 
+  var expected =
   [
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 0, 2 ], 
-      'counter' : 0, 
-      'input' : 'aabaa', 
-      'charsRange' : [ 0, 2  ], 
-      'charsRangeRight' : [ 5, 3 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'aabaa',
+      'charsRange' : [ 0, 2  ],
+      'charsRangeRight' : [ 5, 3 ],
       'nearest' : [ '', 'aa', 'baa' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 5 ], 
-      'counter' : 1, 
-      'input' : 'aabaa', 
-      'charsRange' : [ 3, 5  ], 
-      'charsRangeRight' : [ 2, 0 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'aabaa',
+      'charsRange' : [ 3, 5  ],
+      'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'aab', 'aa', '' ]
     }
   ];
@@ -2887,36 +3772,36 @@ function strSearchOptionStringWithRegexp( test )
   var expected =
   [
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 0, 2 ], 
-      'counter' : 0, 
-      'input' : 'abaabab', 
-      'charsRange' : [ 0, 2 ], 
-      'charsRangeRight' : [ 7, 5 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'abaabab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 7, 5 ],
       'nearest' : [ '', 'ab', 'aabab' ]
     },
     {
-      'match' : 'aa', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 2, 4 ], 
-      'counter' : 1, 
-      'input' : 'abaabab', 
-      'charsRange' : [ 2, 4 ], 
-      'charsRangeRight' : [ 5, 3 ], 
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 1,
+      'input' : 'abaabab',
+      'charsRange' : [ 2, 4 ],
+      'charsRangeRight' : [ 5, 3 ],
       'nearest' : [ 'ab', 'aa', 'bab' ]
     },
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 1, 
-      'range' : [ 5, 7 ], 
-      'counter' : 2, 
-      'input' : 'abaabab', 
-      'charsRange' : [ 5, 7 ], 
-      'charsRangeRight' : [ 2, 0 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 5, 7 ],
+      'counter' : 2,
+      'input' : 'abaabab',
+      'charsRange' : [ 5, 7 ],
+      'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'abaab', 'ab', '' ]
     }
   ];
@@ -2932,10 +3817,10 @@ function strSearchOptionStringWithRegexp( test )
   var expected =
   [
    {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 0, 3 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 3 ],
       'counter' : 0,
       'input' : 'abcabc',
       'charsRange' : [ 0, 3 ],
@@ -2943,16 +3828,16 @@ function strSearchOptionStringWithRegexp( test )
       'nearest' : [ '', 'abc', 'abc' ]
     },
     {
-      'match' : 'abc', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 6 ], 
-      'counter' : 1, 
-      'input' : 'abcabc', 
-      'charsRange' : [ 3, 6 ], 
-      'charsRangeRight' : [ 3, 0 ], 
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 6 ],
+      'counter' : 1,
+      'input' : 'abcabc',
+      'charsRange' : [ 3, 6 ],
+      'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ 'abc', 'abc', '' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
@@ -2966,10 +3851,10 @@ function strSearchOptionStringWithRegexp( test )
   var expected =
   [
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 0, 2 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'abcabc',
       'charsRange' : [ 0, 2 ],
@@ -2977,20 +3862,20 @@ function strSearchOptionStringWithRegexp( test )
       'nearest' : [ '', 'ab', 'cabc' ]
     },
     {
-      'match' : 'ab', 
-      'groups' : [], 
-      'tokenId' : 0, 
-      'range' : [ 3, 5 ], 
-      'counter' : 1, 
-      'input' : 'abcabc', 
-      'charsRange' : [ 3, 5 ], 
-      'charsRangeRight' : [ 3, 1 ], 
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'abcabc',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 3, 1 ],
       'nearest' : [ 'abc', 'ab', 'c' ]
-    } 
+    }
   ];
   test.identical( got, expected );
 
-  test.close( 'ins - string with special symbols' );
+  test.close( 'ins - string with double slashes' );
 }
 
 //
@@ -5978,6 +6863,7 @@ var Self =
 
     strSearchDefaultOptions,
     strSearchOptionNearestLines,
+    strSearchOptionNearestSplitting,
     strSearchOptiondeterminingLineNumber,
     strSearchOptionStringWithRegexp,
 
