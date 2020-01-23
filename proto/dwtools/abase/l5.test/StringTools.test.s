@@ -4952,7 +4952,6 @@ function strReplaceAllDefaultOptions( test )
   var expected = 'this is paradiseo from paradise';
   test.identical( got, expected );
 
-
   test.close( 'string' );
 
   /* - */
@@ -5073,6 +5072,185 @@ function strReplaceAllDefaultOptions( test )
   test.shouldThrowErrorSync( () => _.strReplaceAll( 'gpahpb', { 'a' : [ 'x' ] } ) );
 
   test.close( 'throwing' );
+}
+
+//
+
+function strReplaceAllOptionJoining( test )
+{
+  test.open( 'string' );
+
+  test.case = 'src - empty, ins - empty, but - empty';
+  var got = _.strReplaceAll( { src : '', dictionary : [ [ '', '' ] ], joining : 0 } );
+  var expected = [ '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - string, but - empty';
+  var got = _.strReplaceAll( { src : '', dictionary : [ [ 'x', '' ] ], joining : 0 } );
+  var expected = [ '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - empty, but - string';
+  var got = _.strReplaceAll( { src : '', dictionary : [ [ '', 'x' ] ], joining : 0 } );
+  var expected = [ '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - empty';
+  var got = _.strReplaceAll( { src : 'x', dictionary : [ [ '', '' ] ], joining : 0 } );
+  var expected = [ 'x' ];
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - strings, no occurrences, returns origin';
+  var got = _.strReplaceAll( { src : 'hello', dictionary : [ [ 'x', 'y' ] ], joining : 0 } );
+  var expected = [ 'hello' ];
+  test.identical( got, expected );
+
+  test.case = 'src === ins, but - empty';
+  var got = _.strReplaceAll( { src : 'x', dictionary : [ [ 'x', '' ] ], joining : 0 } );
+  var expected = [ '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - string';
+  var got = _.strReplaceAll( { src : 'x', dictionary : [ [ '', 'x' ] ], joining : 0 } );
+  var expected = [ 'x' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - repeats in src, but - string';
+  var got = _.strReplaceAll( { src : 'ababab', dictionary : [ [ 'ab', 'ac' ] ], joining : 0 } );
+  var expected = [ 'ac', 'ac', 'ac', '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - char, but - char';
+  var got = _.strReplaceAll( { src : 'aabaa', dictionary : [ [ 'b', 'c' ] ], joining : 0 } );
+  var expected = [ 'aa', 'c', 'aa' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of strings, but - array of strings';
+  var got = _.strReplaceAll( { src : 'gpahpb', dictionary : [ [ 'a', 'b' ], [ 'c', 'd' ] ], joining : 0 } );
+  var expected = [ 'gp', 'b', 'hpb' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty map';
+  var got = _.strReplaceAll( { src : 'hello', dictionary : {}, joining : 0 } );
+  var expected = [ 'hello' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty array';
+  var got = _.strReplaceAll( { src : 'hello', dictionary : [], joining : 0 } );
+  var expected = [ 'hello' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - map, no recursion should happen';
+  var got = _.strReplaceAll( { src : 'abcabc', dictionary : { abc : 'a', a : 'b' }, joining : 0 } );
+  var expected = [ 'a', 'a', '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll( { src : 'abcabc', dictionary : [ [ 'abc', 'a' ], [ 'a', 'b' ] ], joining : 0 } );
+  var expected = [ 'a', 'a', '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll( { src : 'abcabc', dictionary : [ [ 'a', 'b' ], [ 'abc', 'a' ] ], joining : 0 } );
+  var expected = [ 'b', 'bc', 'b', 'bc' ];
+  test.identical( got, expected );
+
+  test.case = 'one argument call, map and dictionary';
+  var got = _.strReplaceAll( { src : 'gpx', dictionary : { 'x' : 'a' }, joining : 0 } );
+  var expected = [ 'gp', 'a', '' ];
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - string, but - routine';
+  var got = _.strReplaceAll( { src : 'this is hello from hell', dictionary : [ [ 'hell', ( e, it ) => 'paradise' ] ], joining : 0 } );
+  var expected = [ 'this is ', 'paradise', 'o from ', 'paradise', '' ];
+  test.identical( got, expected );
+
+  test.close( 'string' );
+
+  /* - */
+
+  test.open( 'regexp' );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll( { src : '', dictionary : [ [ /(?:)/gm, '' ] ], joining : 0 } );
+  var expected = [ '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - string, but - empty';
+  var got = _.strReplaceAll( { src : '', dictionary : [ [ /x/, '' ] ], joining : 0 } );
+  var expected = [ '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll( { src : '', dictionary : [ [ /(?:)/g, 'x' ] ], joining : 0 } );
+  var expected = [ '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll( { src : 'x', dictionary : [ [ /(?:)/g, '' ] ], joining : 0 } );
+  var expected = [ 'x' ];
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - regexp - empty string, no occurrences, returns origin';
+  var got = _.strReplaceAll( { src : 'hello', dictionary : [ [ /x/, 'y' ] ], joining : 0 } );
+  var expected = [ 'hello' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - any symbols, but - empty';
+  var got = _.strReplaceAll( { src : 'x', dictionary : [ [ /.*/, '' ] ], joining : 0 } );
+  var expected = [ '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll( { src : 'x', dictionary : [ [ /(?:)/gm, 'x' ] ], joining : 0 } );
+  var expected = [ 'x' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - char, returns original';
+  var got = _.strReplaceAll( { src : 'aabaa', dictionary : [ [ /(?:)/g, 'c' ] ], joining : 0 } );
+  var expected = [ 'aabaa' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - simple string, but - char, one entry';
+  var got = _.strReplaceAll( { src : 'aabaa', dictionary : [ [ /b/gm, 'c' ] ], joining : 0 } );
+  var expected = [ 'aa', 'c', 'aa' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - range of chars, but - char, three entries';
+  var got = _.strReplaceAll( { src : '12345', dictionary : [ [ /[1-3]/gm, '0' ] ], joining : 0 } );
+  var expected = [ '0', '0', '0', '45' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - one and more, but - char, entry';
+  var got = _.strReplaceAll( { src : 'gpbaac', dictionary : [ [ /a+/gm, 'b' ] ], joining : 0 } );
+  var expected = [ 'gpb', 'b', 'c' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - group and end, but - char, entry';
+  var got = _.strReplaceAll( { src : 'gpbgpcgpd', dictionary : [ [ /(gp)+[^bc]$/gm, 'x' ] ], joining : 0 } );
+  var expected = [ 'gpbgpc', 'x', '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps, but - array of strings, three entries';
+  var got = _.strReplaceAll( { src : 'gpahpb', dictionary : [ [ [ /a/gm, /b/gm ], [ 'c', 'd' ] ] ], joining : 0 } );
+  var expected = [ 'gp', 'c', 'hp', 'd', '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps and strings, but - array of strings, three entries';
+  var got = _.strReplaceAll( { src : 'gpahpb', dictionary : [ [ [ /a/gm, 'b' ], [ 'c', 'd' ] ] ], joining : 0 } );
+  var expected = [ 'gp', 'c', 'hp', 'd', '' ];
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - regexp, but - routine';
+  var got = _.strReplaceAll( { src : 'this is hello from hell', dictionary : [ [ /hell/g, ( e, it ) => 'paradise' ] ], joining : 0 } );
+  var expected = [ 'this is ', 'paradise', 'o from ', 'paradise', '' ];
+  test.identical( got, expected );
+
+  test.close( 'regexp' );
 }
 
 //
@@ -7029,6 +7207,7 @@ var Self =
     strFindAll,
 
     strReplaceAllDefaultOptions,
+    strReplaceAllOptionJoining,
 
     strTokenizeJs,
     strSorterParse,
