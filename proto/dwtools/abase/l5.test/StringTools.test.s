@@ -5255,6 +5255,1369 @@ function strReplaceAllOptionJoining( test )
 
 //
 
+function strReplaceAllOptionOnUnknown( test )
+{
+  test.open( 'onUnknown returns empty string' );
+
+  test.open( 'string' );
+
+  test.case = 'src - empty, ins - empty, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ '', '' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ 'x', '' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - empty, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ '', 'x' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ '', '' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - strings, no occurrences, returns origin';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [ [ 'x', 'y' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src === ins, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ 'x', '' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ '', 'x' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - repeats in src, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'ababab',
+    dictionary : [ [ 'ab', 'ac' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'acacac';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - char, but - char';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ 'b', 'c' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'caa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of strings, but - array of strings';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ 'a', 'b' ], [ 'c', 'd' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'bhpb';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty map';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : {},
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty array';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - map, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : { abc : 'a', a : 'b' },
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'aa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : [ [ 'abc', 'a' ], [ 'a', 'b' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'aa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : [ [ 'a', 'b' ], [ 'abc', 'a' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'bbbc';
+  test.identical( got, expected );
+
+  test.case = 'one argument call, map and dictionary';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpx',
+    dictionary : { 'x' : 'a' },
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'a';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - string, but - routine';
+  var got = _.strReplaceAll
+  ({
+    src : 'this is hello from hell',
+    dictionary : [ [ 'hell', ( e, it ) => 'paradise' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'paradiseparadise';
+  test.identical( got, expected );
+
+  test.close( 'string' );
+
+  /* - */
+
+  test.open( 'regexp' );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /(?:)/gm, '' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /x/, '' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /(?:)/g, 'x' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /(?:)/g, '' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - regexp - empty string, no occurrences, returns origin';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [ [ /x/, 'y' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - any symbols, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /.*/, '' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /(?:)/gm, 'x' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - char, returns original';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ /(?:)/g, 'c' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'aabaa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - simple string, but - char, one entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ /b/gm, 'c' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'caa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - range of chars, but - char, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : '12345',
+    dictionary : [ [ /[1-3]/gm, '0' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = '00045';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - one and more, but - char, entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpbaac',
+    dictionary : [ [ /a+/gm, 'b' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'bc';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - group and end, but - char, entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpbgpcgpd',
+    dictionary : [ [ /(gp)+[^bc]$/gm, 'x' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps, but - array of strings, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ [ /a/gm, /b/gm ], [ 'c', 'd' ] ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'cd';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps and strings, but - array of strings, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ [ /a/gm, 'b' ], [ 'c', 'd' ] ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'cd';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - regexp, but - routine';
+  var got = _.strReplaceAll
+  ({
+    src : 'this is hello from hell',
+    dictionary : [ [ /hell/g, ( e, it ) => 'paradise' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'paradiseparadise';
+  test.identical( got, expected );
+
+  test.close( 'regexp' );
+
+  test.close( 'onUnknown returns empty string' );
+
+  /* - */
+
+  test.open( 'onUnknown returns element' );
+
+  test.open( 'string' );
+
+  test.case = 'src - empty, ins - empty, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ '', '' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ 'x', '' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - empty, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ '', 'x' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ '', '' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - strings, no occurrences, returns origin';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [ [ 'x', 'y' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src === ins, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ 'x', '' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ '', 'x' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - repeats in src, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'ababab',
+    dictionary : [ [ 'ab', 'ac' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'acacac';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - char, but - char';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ 'b', 'c' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'aacaa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of strings, but - array of strings';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ 'a', 'b' ], [ 'c', 'd' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'gpbhpb';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty map';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : {},
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty array';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - map, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : { abc : 'a', a : 'b' },
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'aa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : [ [ 'abc', 'a' ], [ 'a', 'b' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'aa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : [ [ 'a', 'b' ], [ 'abc', 'a' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'bbcbbc';
+  test.identical( got, expected );
+
+  test.case = 'one argument call, map and dictionary';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpx',
+    dictionary : { 'x' : 'a' },
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'gpa';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - string, but - routine';
+  var got = _.strReplaceAll
+  ({
+    src : 'this is hello from hell',
+    dictionary : [ [ 'hell', ( e, it ) => 'paradise' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'this is paradiseo from paradise';
+  test.identical( got, expected );
+
+  test.close( 'string' );
+
+  /* - */
+
+  test.open( 'regexp' );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /(?:)/gm, '' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /x/, '' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /(?:)/g, 'x' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /(?:)/g, '' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - regexp - empty string, no occurrences, returns origin';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [ [ /x/, 'y' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - any symbols, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /.*/, '' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /(?:)/gm, 'x' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - char, returns original';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ /(?:)/g, 'c' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'aabaa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - simple string, but - char, one entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ /b/gm, 'c' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'aacaa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - range of chars, but - char, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : '12345',
+    dictionary : [ [ /[1-3]/gm, '0' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = '00045';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - one and more, but - char, entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpbaac',
+    dictionary : [ [ /a+/gm, 'b' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'gpbbc';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - group and end, but - char, entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpbgpcgpd',
+    dictionary : [ [ /(gp)+[^bc]$/gm, 'x' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'gpbgpcx';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps, but - array of strings, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ [ /a/gm, /b/gm ], [ 'c', 'd' ] ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'gpchpd';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps and strings, but - array of strings, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ [ /a/gm, 'b' ], [ 'c', 'd' ] ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'gpchpd';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - regexp, but - routine';
+  var got = _.strReplaceAll
+  ({
+    src : 'this is hello from hell',
+    dictionary : [ [ /hell/g, ( e, it ) => 'paradise' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'this is paradiseo from paradise';
+  test.identical( got, expected );
+
+  test.close( 'regexp' );
+
+  test.close( 'onUnknown returns element' );
+
+  /* - */
+
+  test.open( 'onUnknown returns element and tokenId' );
+
+  test.open( 'string' );
+
+  test.case = 'src - empty, ins - empty, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ '', '' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ 'x', '' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - empty, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ '', 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ '', '' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - strings, no occurrences, returns origin';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [ [ 'x', 'y' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src === ins, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ 'x', '' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ '', 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - repeats in src, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'ababab',
+    dictionary : [ [ 'ab', 'ac' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'acacac';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - char, but - char';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ 'b', 'c' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'aa0caa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of strings, but - array of strings';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ 'a', 'b' ], [ 'c', 'd' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'gp0bhpb';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty map';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : {},
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty array';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - map, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : { abc : 'a', a : 'b' },
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'aa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : [ [ 'abc', 'a' ], [ 'a', 'b' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'aa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : [ [ 'a', 'b' ], [ 'abc', 'a' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'bbc0bbc';
+  test.identical( got, expected );
+
+  test.case = 'one argument call, map and dictionary';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpx',
+    dictionary : { 'x' : 'a' },
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'gp0a';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - string, but - routine';
+  var got = _.strReplaceAll
+  ({
+    src : 'this is hello from hell',
+    dictionary : [ [ 'hell', ( e, it ) => 'paradise' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'this is 0paradiseo from 0paradise';
+  test.identical( got, expected );
+
+  test.close( 'string' );
+
+  /* - */
+
+  test.open( 'regexp' );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /(?:)/gm, '' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /x/, '' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /(?:)/g, 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /(?:)/g, '' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - regexp - empty string, no occurrences, returns origin';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [ [ /x/, 'y' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - any symbols, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /.*/, '' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /(?:)/gm, 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - char, returns original';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ /(?:)/g, 'c' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'aabaa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - simple string, but - char, one entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ /b/gm, 'c' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'aa0caa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - range of chars, but - char, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : '12345',
+    dictionary : [ [ /[1-3]/gm, '0' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = '00045';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - one and more, but - char, entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpbaac',
+    dictionary : [ [ /a+/gm, 'b' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'gpb0bc';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - group and end, but - char, entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpbgpcgpd',
+    dictionary : [ [ /(gp)+[^bc]$/gm, 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'gpbgpc0x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps, but - array of strings, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ [ /a/gm, /b/gm ], [ 'c', 'd' ] ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'gp0chp1d';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps and strings, but - array of strings, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ [ /a/gm, 'b' ], [ 'c', 'd' ] ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'gp0chp1d';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - regexp, but - routine';
+  var got = _.strReplaceAll
+  ({
+    src : 'this is hello from hell',
+    dictionary : [ [ /hell/g, ( e, it ) => 'paradise' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'this is 0paradiseo from 0paradise';
+  test.identical( got, expected );
+
+  test.close( 'regexp' );
+
+  test.close( 'onUnknown returns element and tokenId' );
+
+  /* - */
+
+  test.open( 'onUnknown returns element and map ins[ 0 ]' );
+
+  test.open( 'string' );
+
+  test.case = 'src - empty, ins - empty, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ '', '' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ 'x', '' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - empty, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ '', 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ '', '' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - strings, no occurrences, returns origin';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [ [ 'x', 'y' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src === ins, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ 'x', '' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ '', 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - repeats in src, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'ababab',
+    dictionary : [ [ 'ab', 'ac' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'acacac';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - char, but - char';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ 'b', 'c' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'aabcaa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of strings, but - array of strings';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ 'a', 'b' ], [ 'c', 'd' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'gpabhpb';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty map';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : {},
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty array';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - map, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : { abc : 'a', a : 'b' },
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'aa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : [ [ 'abc', 'a' ], [ 'a', 'b' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'aa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : [ [ 'a', 'b' ], [ 'abc', 'a' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'bbcabbc';
+  test.identical( got, expected );
+
+  test.case = 'one argument call, map and dictionary';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpx',
+    dictionary : { 'x' : 'a' },
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'gpxa';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - string, but - routine';
+  var got = _.strReplaceAll
+  ({
+    src : 'this is hello from hell',
+    dictionary : [ [ 'hell', ( e, it ) => 'paradise' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'this is hellparadiseo from hellparadise';
+  test.identical( got, expected );
+
+  test.close( 'string' );
+
+  /* - */
+
+  test.open( 'regexp' );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /(?:)/gm, '' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /x/, '' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /(?:)/g, 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /(?:)/g, '' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - regexp - empty string, no occurrences, returns origin';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [ [ /x/, 'y' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - any symbols, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /.*/, '' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /(?:)/gm, 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - char, returns original';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ /(?:)/g, 'c' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'aabaa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - simple string, but - char, one entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ /b/gm, 'c' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'aa/b/gmcaa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - range of chars, but - char, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : '12345',
+    dictionary : [ [ /[1-3]/gm, '0' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = '00045';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - one and more, but - char, entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpbaac',
+    dictionary : [ [ /a+/gm, 'b' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'gpb/a+/gmbc';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - group and end, but - char, entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpbgpcgpd',
+    dictionary : [ [ /(gp)+[^bc]$/gm, 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'gpbgpc/(gp)+[^bc]$/gmx';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps, but - array of strings, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ [ /a/gm, /b/gm ], [ 'c', 'd' ] ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'gp/a/gmchp/a/gmd';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps and strings, but - array of strings, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ [ /a/gm, 'b' ], [ 'c', 'd' ] ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'gp/a/gmchp/a/gmd';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - regexp, but - routine';
+  var got = _.strReplaceAll
+  ({
+    src : 'this is hello from hell',
+    dictionary : [ [ /hell/g, ( e, it ) => 'paradise' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'this is /hell/gparadiseo from /hell/gparadise';
+  test.identical( got, expected );
+
+  test.close( 'regexp' );
+
+  test.close( 'onUnknown returns element and map ins[ 0 ]' );
+}
+
+//
+
 function strTokenizeJs( test )
 {
 
@@ -7208,6 +8571,7 @@ var Self =
 
     strReplaceAllDefaultOptions,
     strReplaceAllOptionJoining,
+    strReplaceAllOptionOnUnknown,
 
     strTokenizeJs,
     strSorterParse,
