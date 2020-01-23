@@ -375,7 +375,8 @@ function strSearch( o )
     }
 
     if( !o.nearestSplitting )
-    it.nearest.join( '' );
+    it.nearest = it.nearest.join( '' );
+    // it.nearest.join( '' ); // Dmytro : has not influence on the result
 
     result.push( it );
   });
@@ -392,8 +393,8 @@ strSearch.defaults =
   determiningLineNumber : 0,
   stringWithRegexp : 0,
   toleratingSpaces : 0,
-  onTokenize : null,
-  excludingTokens : null,
+  onTokenize : null, // Dmytro : has bugs
+  excludingTokens : null, // Dmytro : onTokenize has influence on this option
 }
 
 //
