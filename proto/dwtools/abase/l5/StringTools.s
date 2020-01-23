@@ -295,7 +295,7 @@ function strHtmlEscape( str )
 //
 
 /*
-qqq : tests required
+qqq : tests required | Dmytro : covered all options without onTokenize and excludingTokens because it's not works properly
 */
 
 function strSearch( o )
@@ -518,7 +518,7 @@ function strFindAll( src, ins )
     }
     else
     {
-      if( _.regexpIdentical( ins, /(?:)/g ) ) // Dmytro : missed, it's regexp for empty string
+      if( ins.source === '(?:)' ) // Dmytro : missed, it's regexp for empty string
       result = src.length;
       else
       result = findWithRegexp( o.src, ins, tokenId );
@@ -749,31 +749,28 @@ _strReplaceMapPrepare.defaults =
 
 /**
  * Replaces each occurrence of string( ins ) in source( src ) with string( sub ).
- * Returns result of replacements as new string or original string if no matches finded in source( src ).
+ * Returns result of replacements as new string or original string if no matches found in source( src ).
  * Function can be called in three different ways:
  * - One argument: object that contains options: source( src ) and dictionary.
  * - Two arguments: source string( src ), map( dictionary ).
  * - Three arguments: source string( src ), pattern string( ins ), replacement( sub ).
  * @param {string} src - Source string to parse.
  * @param {string} ins - String to find in source( src ).
- * @param {string} sub - String that replaces finded occurrence( ins ).
+ * @param {string} sub - String that replaces found occurrence( ins ).
  * @param {object} dictionary - Map that contains pattern/replacement pairs like ( { 'ins' : 'sub' } ).
  * @returns {string} Returns string with result of replacements.
  *
  * @example
- * //one argument
- * //returns xbc
  * _.strReplaceAll( { src : 'abc', dictionary : { 'a' : 'x' } } );
+ * //returns xbc
  *
  * @example
- * //two arguments
+ * _.strReplaceAll( 'abc', { 'a' : '1', 'b' : '2' } );
  * //returns a12
- * _.strReplaceAll( 'abc',{ 'a' : '1', 'b' : '2' } );
  *
  * @example
- * //three arguments
+ * _.strReplaceAll( 'abc', 'b', 'x' );
  * //returns axc
- * _.strReplaceAll( 'abc','b','x' );
  *
  * @function  strReplaceAll
  * @throws { Exception } Throws a exception if no arguments provided.
@@ -808,12 +805,16 @@ function strReplaceAll( src, ins, sub )
   {
     o = arguments[ 0 ];
   }
+  else
+  {
+    _.assert( 0 );
+  }
 
   /* verify */
 
   _.routineOptions( strReplaceAll, o );
-  _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
   _.assert( _.strIs( o.src ) );
+  // _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 ); // Dmytro : added to checking of arguments
 
   _._strReplaceMapPrepare( o );
 
@@ -2675,7 +2676,7 @@ let Extend =
   strFindAll,
 
   _strReplaceMapPrepare,
-  strReplaceAll, /* document me */
+  strReplaceAll, /* qqq : document me */
   strTokenizeJs,
   strTokenizeCpp,
 
