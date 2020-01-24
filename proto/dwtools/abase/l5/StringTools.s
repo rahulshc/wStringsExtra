@@ -1603,9 +1603,9 @@ function strToNumberMaybe( src )
   if( _.numberIs( src ) )
   return src;
 
-  let prased = parseFloat( src );
-  if( !isNaN( prased ) )
-  return prased;
+  let parsed = parseFloat( src );
+  if( !isNaN( parsed ) )
+  return parsed;
 
   return src
 }
