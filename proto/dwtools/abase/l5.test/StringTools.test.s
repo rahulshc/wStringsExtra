@@ -7681,6 +7681,60 @@ function strStructureParse( test )
 
 //
 
+function strStructureParseExperiment( test )
+{
+  test.case = 'NaN || not sure it is need';
+  var src = 'a : NaN';
+  var expected = { 'a' : 'NaN' };
+  var expected2 = { 'a' : NaN };
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+  test.notIdentical( got, expected2 );
+
+  test.case = 'BigInt || BigInt always skips';
+  var src = 'a : 1n, b : 2n, c : 3n';
+  var expected = { 'a' : 1, 'b' : 2, 'c' : 3 };
+  var expected2 = { 'a' : 1n, 'b' : 2n, 'c' : 3n };
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+  test.notIdentical( got, expected2 );
+
+  test.case = 'BigInt';
+  var src = '[ 1n, 2a, 3n, a2 ]';
+  var expected = [ 1, 2, 3, 'a2' ];
+  var expected2 = [ 1n, 2, 3n, 'a2' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+  test.notIdentical( got, expected2 );
+
+  test.case = 'values is a complex structure || maybe, option for complex structure search needs';
+  var src = 'a : { a : 1, b : 2 }';
+  var expected = { 'a' : '{', 'a' : 1, 'b' : 2 };
+  var expected2 = { 'a' : { 'a' : 1, b : 2 } };
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+  test.notIdentical( got, expected2 );
+
+  test.case = 'values is a complex structure || maybe level of recursion need';
+  var src = '[ [ a, a ], [ b, b ], [ [], [] ] ]';
+  var expected = [ '[', 'a', 'a', ']', '[', 'b', 'b', ']', '[', '[]', '[]', ']' ];
+  var expected2 = [ [ 'a', 'a' ], [ 'b', 'b' ], [ [], [] ] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+  test.notIdentical( got, expected2 );
+
+  test.case = 'values is a complex structure || maybe level of recursion need';
+  var src = '[ { a : a } ]';
+  var expected = [ '{', 'a', ':', 'a', '}' ];
+  var expected2 = [ { 'a' : 'a' } ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+  test.notIdentical( got, expected2 );
+}
+strStructureParseExperiment.experimental = 1;
+
+//
+
 function strWebQueryParse( test )
 {
 
