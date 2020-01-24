@@ -7676,6 +7676,121 @@ function strWebQueryParse( test )
 
 //
 
+function strWebQueryStr( test ) 
+{
+  test.case = 'src - empty string';
+  var src = '';
+  var got = _.strWebQueryStr( src );
+  test.identical( got, '' );
+
+  test.case = 'src - string';
+  var src = 'abc';
+  var got = _.strWebQueryStr( src );
+  test.identical( got, 'abc' );
+
+  test.case = 'src - primitive';
+  var src = 1;
+  var got = _.strWebQueryStr( { src : src } );
+  test.identical( got, '' );
+
+  /* - */
+
+  test.open( 'default options' );
+
+  test.case = 'src - empty map';
+  var src = {};
+  var got = _.strWebQueryStr( { src : src } );
+  test.identical( got, '' );
+
+  test.case = 'src - map with empty string key';
+  var src = { '' : 'empty', 'path' : '/', 'level' : 2 };
+  var got = _.strWebQueryStr( { src : src } );
+  test.identical( got, ':empty&path:/&level:2' );
+
+  test.case = 'src - map with primitives in values';
+  var src = { number : 1, null : null, undefined : undefined, str : 'str', empty : '', '' : 'empty', false : false };
+  var got = _.strWebQueryStr( { src : src } );
+  test.identical( got, 'number:1&null:null&undefined:undefined&str:str&empty:&:empty&false:false' );
+
+  test.case = 'src - map with strings, keys and values has spaces';
+  var src = { 'one space' : 'in value', 'two spaces in' : 'key and value' };
+  var got = _.strWebQueryStr( { src : src } );
+  test.identical( got, 'one space:in value&two spaces in:key and value' );
+
+  test.close( 'default options' );
+
+  /* - */
+
+  test.open( 'keyValDelimeter - "#"' );
+
+  test.case = 'src - empty map';
+  var src = {};
+  var got = _.strWebQueryStr( { src : src, keyValDelimeter : '#' } );
+  test.identical( got, '' );
+
+  test.case = 'src - map with empty string key';
+  var src = { '' : 'empty', 'path' : '/', 'level' : 2 };
+  var got = _.strWebQueryStr( { src : src, keyValDelimeter : '#' } );
+  test.identical( got, '#empty&path#/&level#2' );
+
+  test.case = 'src - map with primitives in values';
+  var src = { number : 1, null : null, undefined : undefined, str : 'str', empty : '', '' : 'empty', false : false };
+  var got = _.strWebQueryStr( { src : src, keyValDelimeter : '#' } );
+  test.identical( got, 'number#1&null#null&undefined#undefined&str#str&empty#&#empty&false#false' );
+
+  test.case = 'src - map with strings, keys and values has spaces';
+  var src = { 'one space' : 'in value', 'two spaces in' : 'key and value' };
+  var got = _.strWebQueryStr( { src : src, keyValDelimeter : '#' } );
+  test.identical( got, 'one space#in value&two spaces in#key and value' );
+
+  test.close( 'keyValDelimeter - "#"' );
+
+  /* - */
+
+  test.open( 'entryDelimeter - "?"' );
+
+  test.case = 'src - empty map';
+  var src = {};
+  var got = _.strWebQueryStr( { src : src, entryDelimeter : '?' } );
+  test.identical( got, '' );
+
+  test.case = 'src - map with empty string key';
+  var src = { '' : 'empty', 'path' : '/', 'level' : 2 };
+  var got = _.strWebQueryStr( { src : src, entryDelimeter : '?' } );
+  test.identical( got, ':empty?path:/?level:2' );
+
+  test.case = 'src - map with primitives in values';
+  var src = { number : 1, null : null, undefined : undefined, str : 'str', empty : '', '' : 'empty', false : false };
+  var got = _.strWebQueryStr( { src : src, entryDelimeter : '?' } );
+  test.identical( got, 'number:1?null:null?undefined:undefined?str:str?empty:?:empty?false:false' );
+
+  test.case = 'src - map with strings, keys and values has spaces';
+  var src = { 'one space' : 'in value', 'two spaces in' : 'key and value' };
+  var got = _.strWebQueryStr( { src : src, entryDelimeter : '?' } );
+  test.identical( got, 'one space:in value?two spaces in:key and value' );
+
+  test.close( 'entryDelimeter - "?"' );
+
+  /* - */
+  
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strWebQueryStr() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strWebQueryStr( 'a', 'extra' ) );
+
+  test.case = 'wrong type of options map';
+  test.shouldThrowErrorSync( () => _.strWebQueryStr( [] ) );
+
+  test.case = 'unknown option in options map';
+  test.shouldThrowErrorSync( () => _.strWebQueryStr( { src : {}, delimeter : '' } ) );
+}
+
+//
+
 function strRequestParse( test )
 {
 
@@ -8686,6 +8801,7 @@ var Self =
 
     strStructureParse,
     strWebQueryParse,
+    strWebQueryStr,
     strRequestParse,
     strCommandParse,
     strCommandsParse,
