@@ -1276,21 +1276,8 @@ let _metrics =
  *
  */
 
- /*
--  Dmytro : founded bug.
--  If divisor is used then check loop of number format transforms numbers:
--  0.000001 -> 0.0000009999 or 0.001 -> 0.000999 and so on. It is JavaScript feature.
--  So, this is cause of mistakes in result.
--  Test case with this kind of test is commented.
--
--  Also, assert
--
--  _.assert( _.numberIs( number ), '"number" should be Number' );
--
--  exists, but NaN has number type. Routine parseFloat() transforms regular strings
--  to NaN.
-+qqq : cover routine strMetricFormat
- */
+/* qqq : cover routine strMetricFormat | Dmytro : covered */
+
 function strMetricFormat( number,o )
 {
 
@@ -1625,6 +1612,10 @@ function strToNumberMaybe( src )
 
 //
 
+/*
+qqq : routine strStructureParse requires good coverage and extension 
+*/
+
 function strStructureParse( o )
 {
 
@@ -1774,10 +1765,6 @@ strStructureParse.defaults =
   toNumberMaybe : 1,
   defaultStructure : 'map', /* map / array / string */
 }
-
-/*
-qqq : routine strStructureParse requires good coverage and extension
-*/
 
 // function strStructureParse( o )
 // {
@@ -2751,7 +2738,7 @@ let Extend =
   strCommandParse,
   strCommandsParse,
 
-  strJoinMap, /* qqq : cover it by tests */
+  strJoinMap, /* qqq : cover it by tests | Dmytro : covered */
 
   strTable,
   strsSort,

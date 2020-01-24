@@ -7093,26 +7093,26 @@ function strMetricFormat( test )
   return;
 
   test.case = 'without arguments';
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat() );
+  test.shouldThrowErrorSync( () => _.strMetricFormat() );
 
   test.case = 'extra arguments';
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( '1', { fixed : 0 }, '3' ) );
+  test.shouldThrowErrorSync( () => _.strMetricFormat( '1', { fixed : 0 }, '3' ) );
 
   test.case = 'wrong first argument';
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( null, { fixed : 1 } ) );
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( undefined, { fixed : 1 } ) );
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( { 1 : 1}, { fixed : 1 } ) );
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( [ 1 ], { fixed : 1 } ) );
+  test.shouldThrowErrorSync( () => _.strMetricFormat( null, { fixed : 1 } ) );
+  test.shouldThrowErrorSync( () => _.strMetricFormat( undefined, { fixed : 1 } ) );
+  test.shouldThrowErrorSync( () => _.strMetricFormat( { 1 : 1}, { fixed : 1 } ) );
+  test.shouldThrowErrorSync( () => _.strMetricFormat( [ 1 ], { fixed : 1 } ) );
 
   test.case = 'wrong second argument';
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( 1, 1 ) );
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( 1, '0' ) );
+  test.shouldThrowErrorSync( () => _.strMetricFormat( 1, 1 ) );
+  test.shouldThrowErrorSync( () => _.strMetricFormat( 1, '0' ) );
 
   test.case = 'fixed out of range';
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( '1300', { fixed : 21 } ) );
+  test.shouldThrowErrorSync( () => _.strMetricFormat( '1300', { fixed : 21 } ) );
 
   test.case = 'fixed is not a number';
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( '1300', { fixed : [ 1 ] } ) );
+  test.shouldThrowErrorSync( () => _.strMetricFormat( '1300', { fixed : [ 1 ] } ) );
 }
 
 //
@@ -7661,7 +7661,6 @@ function strWebQueryParse( test )
   test.case = 'empty array';
   var src = ''
   var expected = {};
-  debugger;
   var got = _.strWebQueryParse( src );
   test.identical( got, expected )
 
@@ -8429,6 +8428,108 @@ function strCommandsParse( test )
 
 //
 
+function strJoinMap( test ) 
+{
+  test.open( 'default options' );
+
+  test.case = 'src - empty map';
+  var src = {};
+  var got = _.strJoinMap( { src : src } );
+  test.identical( got, '' );
+
+  test.case = 'src - map with empty string key';
+  var src = { '' : 'empty', 'path' : '/', 'level' : 2 };
+  var got = _.strJoinMap( { src : src } );
+  test.identical( got, ':empty path:/ level:2' );
+
+  test.case = 'src - map with primitives in values';
+  var src = { number : 1, null : null, undefined : undefined, str : 'str', empty : '', '' : 'empty', false : false };
+  var got = _.strJoinMap( { src : src } );
+  test.identical( got, 'number:1 null:null undefined:undefined str:str empty: :empty false:false' );
+
+  test.case = 'src - map with strings, keys and values has spaces';
+  var src = { 'one space' : 'in value', 'two spaces in' : 'key and value' };
+  var got = _.strJoinMap( { src : src } );
+  test.identical( got, 'one space:in value two spaces in:key and value' );
+
+  test.close( 'default options' );
+
+  /* - */
+
+  test.open( 'keyValDelimeter - "::"' );
+
+  test.case = 'src - empty map';
+  var src = {};
+  var got = _.strJoinMap( { src : src, keyValDelimeter : '::' } );
+  test.identical( got, '' );
+
+  test.case = 'src - map with empty string key';
+  var src = { '' : 'empty', 'path' : '/', 'level' : 2 };
+  var got = _.strJoinMap( { src : src, keyValDelimeter : '::' } );
+  test.identical( got, '::empty path::/ level::2' );
+
+  test.case = 'src - map with primitives in values';
+  var src = { number : 1, null : null, undefined : undefined, str : 'str', empty : '', '' : 'empty', false : false };
+  var got = _.strJoinMap( { src : src, keyValDelimeter : '::' } );
+  test.identical( got, 'number::1 null::null undefined::undefined str::str empty:: ::empty false::false' );
+
+  test.case = 'src - map with strings, keys and values has spaces';
+  var src = { 'one space' : 'in value', 'two spaces in' : 'key and value' };
+  var got = _.strJoinMap( { src : src, keyValDelimeter : '::' } );
+  test.identical( got, 'one space::in value two spaces in::key and value' );
+
+  test.close( 'keyValDelimeter - "::"' );
+
+  /* - */
+
+  test.open( 'entryDelimeter - "|"' );
+
+  test.case = 'src - empty map';
+  var src = {};
+  var got = _.strJoinMap( { src : src, entryDelimeter : '|' } );
+  test.identical( got, '' );
+
+  test.case = 'src - map with empty string key';
+  var src = { '' : 'empty', 'path' : '/', 'level' : 2 };
+  var got = _.strJoinMap( { src : src, entryDelimeter : '|' } );
+  test.identical( got, ':empty|path:/|level:2' );
+
+  test.case = 'src - map with primitives in values';
+  var src = { number : 1, null : null, undefined : undefined, str : 'str', empty : '', '' : 'empty', false : false };
+  var got = _.strJoinMap( { src : src, entryDelimeter : '|' } );
+  test.identical( got, 'number:1|null:null|undefined:undefined|str:str|empty:|:empty|false:false' );
+
+  test.case = 'src - map with strings, keys and values has spaces';
+  var src = { 'one space' : 'in value', 'two spaces in' : 'key and value' };
+  var got = _.strJoinMap( { src : src, entryDelimeter : '|' } );
+  test.identical( got, 'one space:in value|two spaces in:key and value' );
+
+  test.close( 'entryDelimeter - "|"' );
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strJoinMap() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strJoinMap( { src : { a : 'a' } }, ' ' ) );
+
+  test.case = 'wrong type of options map';
+  test.shouldThrowErrorSync( () => _.strJoinMap( 'wrong' ) );
+
+  test.case = 'unknown option in options map';
+  test.shouldThrowErrorSync( () => _.strJoinMap( { src : { a : 'a' }, delimeter : '' } ) );
+
+  test.case = 'wrong type of keyValDelimeter';
+  test.shouldThrowErrorSync( () => _.strJoinMap( { src : { a : 'a' }, keyValDelimeter : 1 } ) );
+
+  test.case = 'wrong type of entryDelimeter';
+  test.shouldThrowErrorSync( () => _.strJoinMap( { src : { a : 'a' }, entryDelimeter : 1 } ) );
+}
+
+//
+
 function strDifference( test )
 {
 
@@ -8588,6 +8689,8 @@ var Self =
     strRequestParse,
     strCommandParse,
     strCommandsParse,
+
+    strJoinMap,
 
     //
 
