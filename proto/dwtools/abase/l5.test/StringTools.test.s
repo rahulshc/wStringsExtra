@@ -7432,90 +7432,87 @@ function strTimeFormat( test )
 
 function strStructureParse( test )
 {
-
-  /* */
-
   test.open( 'imply map' );
 
-  test.case = 'trivial, default';
-  var src = 'number : 1 str : abc'
-  var expected = { number : 1, str : 'abc' };
-  var got = _.strStructureParse( src );
-  test.identical( got, expected )
-
-  test.case = 'empty string, default';
-  var src = ''
+  test.case = 'src -empty string, default';
+  var src = '';
   var expected = {};
   var got = _.strStructureParse( src );
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'empty string, options';
-  var src = ''
+  var src = '';
   var expected = {};
   var got = _.strStructureParse({ src : src, parsingArrays : 1 });
-  test.identical( got, expected )
+  test.identical( got, expected );
+
+  test.case = 'empty string, defaultStructure:string';
+  var src = '';
+  var expected = '';
+  var got = _.strStructureParse({ src : src, parsingArrays : 1, defaultStructure : 'string' });
+  test.identical( got, expected );
 
   test.case = 'spaces';
   var src = '   ';
   var expected = {};
   var got = _.strStructureParse({ src : src, parsingArrays : 1 });
-  test.identical( got, expected )
-
-  test.case = 'empty string, defaultStructure:string';
-  var src = ''
-  var expected = '';
-  var got = _.strStructureParse({ src : src, parsingArrays : 1, defaultStructure : 'string' });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'string';
-  var src = 'some string'
+  var src = 'some string';
   var expected = 'some string';
   var got = _.strStructureParse({ src : src, parsingArrays : 1 });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
-  test.case = 'several';
-  var src = 'number : 1 str : abc array : [1,abc]'
+  test.case = 'src - string with pairs key-value';
+  var src = 'number : 1 str : abc';
+  var expected = { number : 1, str : 'abc' };
+  var got = _.strStructureParse( src );
+  test.identical( got, expected );
+
+  test.case = 'several pairs, array in value';
+  var src = 'number : 1 str : abc array : [1,abc]';
   var expected = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
   var got = _.strStructureParse({ src : src, parsingArrays : 1 });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'several, with extra spaces';
-  var src = ' number : 1  str:abc array :  [ 1  , abc ] '
+  var src = ' number : 1  str:abc array :  [ 1  , abc ] ';
   var expected = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
   var got = _.strStructureParse({ src : src, parsingArrays : 1 });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
-  test.case = 'array';
+  test.case = 'array, parsingArrays - 0';
   var src = ' [ 1  , abc ] ';
   var expected = '[ 1  , abc ]';
   var got = _.strStructureParse({ src : src, parsingArrays : 0 });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
-  test.case = 'quoted left';
-  var src = { src : '"path:D":\\some\\path', keyValDelimeter : ':', quoting : 1 }
+  test.case = 'quoted left, quoting - 1';
+  var src = { src : '"path:D":\\some\\path', keyValDelimeter : ':', quoting : 1 };
   var expected = { 'path:D' : '\\some\\path' };
   var got = _.strStructureParse( src );
-  test.identical( got, expected )
+  test.identical( got, expected );
 
-  test.case = 'quoted right';
-  var src = { src : 'path:"D:\\some\\path"', keyValDelimeter : ':', quoting : 1 }
+  test.case = 'quoted right, quoting - 1';
+  var src = { src : 'path:"D:\\some\\path"', keyValDelimeter : ':', quoting : 1 };
   var expected = { path : 'D:\\some\\path' };
   var got = _.strStructureParse( src );
-  test.identical( got, expected )
+  test.identical( got, expected );
 
-  test.case = 'not quoted';
-  var src = { src : 'path:D:\\some\\path', keyValDelimeter : ':', quoting : 1 }
+  test.case = 'not quoted, quoting - 1';
+  var src = { src : 'path:D:\\some\\path', keyValDelimeter : ':', quoting : 1 };
   var expected = { path : 'D:\\some\\path' };
   var got = _.strStructureParse( src );
-  test.identical( got, expected )
+  test.identical( got, expected );
 
-  test.case = 'path:D:\\some\\path';
+  test.case = 'two keyValDelimeters - path:D:\\some\\path';
   var src = 'path:D:\\some\\path';
   var expected = { path : 'D:\\some\\path' };
   var got = _.strStructureParse( src );
   test.identical( got, expected );
 
-  test.case = ' path : D : \\some\\ path ';
+  test.case = 'two keyValDelimeters, extra spaces - path : D : \\some\\ path ';
   var src = ' path : D : \\some\\ path ';
   var expected = { path : 'D : \\some\\ path' };
   var got = _.strStructureParse( src );
@@ -7528,28 +7525,28 @@ function strStructureParse( test )
   test.open( 'imply array' )
 
   test.case = 'empty array';
-  var src = '[]'
+  var src = '[]';
   var expected = [];
   var got = _.strStructureParse({ src : src, parsingArrays : 1 });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'array';
-  var src = '[ 1  , abc ]'
+  var src = '[ 1, abc ]';
   var expected = [ 1, 'abc' ];
   var got = _.strStructureParse({ src : src, parsingArrays : 1 });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'array with extra spaces';
-  var src = ' [ 1  , abc ] '
+  var src = ' [ 1  , abc ] ';
   var expected = [ 1, 'abc' ];
   var got = _.strStructureParse({ src : src, parsingArrays : 1 });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'array with spaces';
   var src = ' [ 1  ab cd ] ';
   var expected = [ 1, 'ab', 'cd' ];
   var got = _.strStructureParse({ src : src, parsingArrays : 1 });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.close( 'imply array' )
 
@@ -7558,28 +7555,28 @@ function strStructureParse( test )
   test.open( 'keys with spaces' );
 
   test.case = 'single key with space';
-  var src = 'a1 a1 : v1'
+  var src = 'a1 a1 : v1';
   var expected = { 'a1 a1' : 'v1' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'two keys with space';
-  var src = 'a1 a1 : v1 b2 b2 : v2'
+  var src = 'a1 a1 : v1 b2 b2 : v2';
   var expected = { 'a1 a1' : 'v1 b2', 'b2' : 'v2' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'three keys with space';
-  var src = 'a1 a1 : v1 b2 b2 : v2 c3 c3 : v3'
+  var src = 'a1 a1 : v1 b2 b2 : v2 c3 c3 : v3';
   var expected = { 'a1 a1' : 'v1 b2', 'b2' : 'v2 c3', 'c3' : 'v3' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'three keys, middle key with space';
-  var src = 'a1 : v1 a2 a2 : v2 c3 : v3'
+  var src = 'a1 : v1 a2 a2 : v2 c3 : v3';
   var expected = { 'a1' : 'v1 a2', 'a2' : 'v2', 'c3' : 'v3' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.close( 'keys with spaces' );
 
@@ -7588,34 +7585,34 @@ function strStructureParse( test )
   test.open( 'vals with spaces' );
 
   test.case = 'single key, value with space';
-  var src = 'a1 : v1 v2'
+  var src = 'a1 : v1 v2';
   var expected = { 'a1' : 'v1 v2' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'single key, value with space';
-  var src = 'a1 : v1 v2 v3'
+  var src = 'a1 : v1 v2 v3';
   var expected = { 'a1' : 'v1 v2 v3' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'two keys, value with space';
-  var src = 'a1 : v1 v1 b2 : v2 v2'
+  var src = 'a1 : v1 v1 b2 : v2 v2';
   var expected = { 'a1' : 'v1 v1', 'b2' : 'v2 v2' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'two keys, value with space';
-  var src = 'a1 : v1 v1 v1 b2 : v2 v2 v2'
+  var src = 'a1 : v1 v1 v1 b2 : v2 v2 v2';
   var expected = { 'a1' : 'v1 v1 v1', 'b2' : 'v2 v2 v2' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'three keys, value with space';
-  var src = 'a1 : v1 v1 b2 : v2 v2 c3 : v3 v3'
+  var src = 'a1 : v1 v1 b2 : v2 v2 c3 : v3 v3';
   var expected = { 'a1' : 'v1 v1', 'b2' : 'v2 v2', 'c3' : 'v3 v3' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.close( 'vals with spaces' );
 
@@ -7624,31 +7621,62 @@ function strStructureParse( test )
   test.open( 'toNumberMaybe' );
 
   test.case = 'number like string as value';
-  var src = 'a : 1a'
+  var src = 'a : 1a';
   var expected = { 'a' : 1 };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'number like string as value';
-  var src = 'a : 1 a'
+  var src = 'a : 1 a';
   var expected = { 'a' : 1 };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'number like string as value';
-  var src = 'a : 1 a b : 2 b'
+  var src = 'a : 1 a b : 2 b';
   var expected = { 'a' : 1, 'b' : 2 };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'number like string as value';
-  var src = 'a : 1 a b : 2 b'
+  var src = 'a : 1 a b : 2 b';
   var expected = { 'a' : '1 a', 'b' : '2 b' };
   var got = _.strStructureParse({ src : src, toNumberMaybe : 0 });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.close( 'toNumberMaybe' );
 
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strStructureParse() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : 'a' }, 'extra' ) );
+
+  test.case = 'wrong type of options map';
+  test.shouldThrowErrorSync( () => _.strStructureParse( [ [ 'src', 'a' ] ] ) );
+
+  test.case = 'unknown option in options map';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : 'a', delimeter : ' ' } ) );
+
+  test.case = 'keyValDelimeter is empty string';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : 'a', keyValDelimeter : '' } ) );
+
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : [] } ) );
+
+  test.case = 'wrong type of keyValDelimeter';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : 'a', keyValDelimeter : 1 } ) );
+
+  test.case = 'wrong type of entryDelimeter';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : 'a', entryDelimeter : 1 } ) );
+
+  test.case = 'defaultStructure is not "array", "map", "string"';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : 'a', defaultStructure : 'hashmap' } ) );
 }
 
 //
@@ -7676,7 +7704,7 @@ function strWebQueryParse( test )
 
 //
 
-function strWebQueryStr( test ) 
+function strWebQueryStr( test )
 {
   test.case = 'src - empty string';
   var src = '';
@@ -7772,7 +7800,7 @@ function strWebQueryStr( test )
   test.close( 'entryDelimeter - "?"' );
 
   /* - */
-  
+
   if( !Config.debug )
   return;
 
@@ -8543,7 +8571,7 @@ function strCommandsParse( test )
 
 //
 
-function strJoinMap( test ) 
+function strJoinMap( test )
 {
   test.open( 'default options' );
 
@@ -8800,6 +8828,7 @@ var Self =
     strTimeFormat,
 
     strStructureParse,
+    strStructureParseExperiment,
     strWebQueryParse,
     strWebQueryStr,
     strRequestParse,
