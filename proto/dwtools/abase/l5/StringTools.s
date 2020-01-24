@@ -748,43 +748,88 @@ _strReplaceMapPrepare.defaults =
 //
 
 /**
- * Replaces each occurrence of string( ins ) in source( src ) with string( sub ).
+ * Routine strReplaceAll() searches each occurrence of element of {-ins-} container in source string {-src-}
+ * and replaces it to corresponding element in {-sub-} container.
  * Returns result of replacements as new string or original string if no matches found in source( src ).
- * Function can be called in three different ways:
- * - One argument: object that contains options: source( src ) and dictionary.
- * - Two arguments: source string( src ), map( dictionary ).
- * - Three arguments: source string( src ), pattern string( ins ), replacement( sub ).
- * @param {string} src - Source string to parse.
- * @param {string} ins - String to find in source( src ).
- * @param {string} sub - String that replaces found occurrence( ins ).
- * @param {object} dictionary - Map that contains pattern/replacement pairs like ( { 'ins' : 'sub' } ).
- * @returns {string} Returns string with result of replacements.
+ *
+ * Routine can be called in three different ways.
+ *
+ * Three arguments:
+ * @param { String } src - Source string to parse.
+ * @param { String|RegExp|Long } ins - String or regexp pattern to search in source string. Also, it can be a
+ * set of string and regexp patterns passed as Long. If {-ins-} is a Long, then {-but-} should be long with the 
+ * same length.
+ * @param { String|Long } but - String or a Long with strings to replace occurrences {-ins-}. If {-but-} is a 
+ * Long, then it should contains only strings and {-ins-} should be a long with the same length.
+ *
+ * Two arguments: 
+ * @param { String } src - Source string to parse.
+ * @param { Long|Map } dictionary - Long or map that contains pattern/replacement pairs. If {-dictionary-} is a
+ * Long, then it looks like [ [ ins1, sub1 ], [ ins2, sub2 ] ], otherwise, it is like { ins1 : sub1, ins2 : sub2 }.
+ *
+ * One argument:
+ * @param { ObjectLike } o - Object, which can contains options:
+ * @param { String } o.src - Source string to parse.
+ * @param { Long|Map } o.dictionary - Long or map that contains pattern/replacement pairs, transforms to {-o.ins-}
+ * and {-o.but-}. If {-dictionary-} is a Long, then it looks like [ [ ins1, sub1 ], [ ins2, sub2 ] ], otherwise, it
+ *  is like { ins1 : sub1, ins2 : sub2 }.
+ * @param { Long } o.ins - A Long with string or regexp patterns to search in source string {-o.src-}.
+ * @param { Long } o.sub - String that replaces found occurrence( ins ).
+ * Note. If {-o.ins-} and {-o.sub-} options is used, then {-o.dictionary-} should be not provided, otherwise,
+ * {-o.dictionary-} values replace elements of {-o.ins-} and {-o.sub-}
+ * @param { BoolLike } o.joining - A parameter which control output value. If {-o.joining-} is true, then routine 
+ * returns string, otherwise, the array with parsed parts of source string is returned. Default value is 1.
+ * @param { Routine } o.onUnknown - A callback, which transforms parts of source string that not found by a pattern.
+ * {-o.onUnknown-} accepts three parameters: {-unknown-} - part of string, {-it-} - data structure with information 
+ * about found pattern in format of routine strFindAll(), {-o-} - the map options.
+ * Option {-o.onUnknown-} does not transforms part of source string after last entry of a {-o.ins-} pattern.
  *
  * @example
- * _.strReplaceAll( { src : 'abc', dictionary : { 'a' : 'x' } } );
- * //returns xbc
+ * _.strReplaceAll( 'abcdef', 'b', 'w' );
+ * //returns 'awcdef'
  *
  * @example
- * _.strReplaceAll( 'abc', { 'a' : '1', 'b' : '2' } );
- * //returns a12
+ * _.strReplaceAll( 'abcdef', [ 'b', /d/g, 'f' ], [ 'w', 'x', 'y' ] );
+ * //returns 'awcxey'
  *
  * @example
- * _.strReplaceAll( 'abc', 'b', 'x' );
- * //returns axc
+ * _.strReplaceAll( 'abcdef', [ [ 'b', 'w' ], [ 'd', 'x' ], [ /f$/g, 'y' ] ] );
+ * //returns 'awcxey'
  *
+ * @example
+ * _.strReplaceAll( 'abcdef', { 'b' : 'w', 'd' : 'x', 'f' : 'y' } );
+ * //returns 'awcxey'
+ *
+ * @example
+ * _.strReplaceAll( { src : 'abcdef', dictionary : [ [ 'b', 'w' ], [ 'd', 'x' ], [ 'f', 'y' ] ] } );
+ * //returns 'awcxey'
+ *
+ * @example
+ * _.strReplaceAll( { src : 'abcdef', dictionary : { 'b' : 'w', 'd' : 'x', 'f' : 'y' }, joining : 0 } );
+ * //returns [ 'a', 'w', 'c', 'x', 'e', 'y' ]
+ *
+ * @example
+ * _.strReplaceAll( { src : 'abcdefg', ins : [ 'b', 'd', 'f' ], but : [ 'w', 'x', 'y' ], onUnknown : ( e, c, o ) => '|' } );
+ * //returns '|w|x|yg'
+ *
+ * @returns { String|Long } - By default, routine returns string with result of replacements. If map options is used and 
+ * option {-o.joining-} is false like, then routine returns array with parts of resulted string.
  * @function  strReplaceAll
- * @throws { Exception } Throws a exception if no arguments provided.
- * @throws { Exception } Throws a exception if( src ) is not a String.
- * @throws { Exception } Throws a exception if( ins ) is not a String.
- * @throws { Exception } Throws a exception if( sub ) is not a String.
- * @throws { Exception } Throws a exception if( dictionary ) is not a Object.
- * @throws { Exception } Throws a exception if( dictionary ) key value is not a String.
- * @memberof module:Tools/base/l5/StringTools.Tools( module::StringTools )
+ * @throws { Error } If arguments.length is less then one or more then three.
+ * @throws { Error } If {-src-} or {-o.src-} is not a String.
+ * @throws { Error } If {-ins-} is not a String, not a RegExp or not a Long with strings and regexps.
+ * @throws { Error } If {-sub-} is not a String or not a Long with strings.
+ * @throws { Error } If one of the {-ins-} or {-sub-} is a Long, and the other is not.
+ * @throws { Error } If {-ins-} and {-sub-} is Longs, and has different length.
+ * @throws { Error } If {-dictionary-} or {-o.dictionary-} is not an Object or Long.
+ * @throws { Error } If {-o.onUnknown-} is not a routine or not null.
+ * @throws { Error } If map options {-o-} has unnecessary fields.
+ * @memberof wTools
  *
  */
 
 /*
-qqq : extend coverage
+qqq : extend coverage | Dmytro : extended
 */
 
 function strReplaceAll( src, ins, sub )
@@ -2676,7 +2721,7 @@ let Extend =
   strFindAll,
 
   _strReplaceMapPrepare,
-  strReplaceAll, /* qqq : document me */
+  strReplaceAll, /* qqq : document me | Dmytro : extended documentation */
   strTokenizeJs,
   strTokenizeCpp,
 
