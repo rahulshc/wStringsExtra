@@ -1960,8 +1960,12 @@ qqq : routine strWebQueryStr requires good coverage
 
 function strWebQueryStr( o )
 {
+  _.assert( arguments.length === 1, 'Expects single argument' ); // Dmytro : missed
+
   if( _.strIs( o ) )
   return o;
+
+  _.routineOptions( strWebQueryStr, o ); // Dmytro : missed
 
   let result = _.mapToStr( o );
 
@@ -1969,6 +1973,7 @@ function strWebQueryStr( o )
 }
 
 var defaults = strWebQueryStr.defaults = Object.create( null );
+defaults.src = null; // Dmytro : missed
 defaults.keyValDelimeter = ':';
 defaults.entryDelimeter = '&';
 
