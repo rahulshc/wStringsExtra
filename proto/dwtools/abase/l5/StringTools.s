@@ -1604,6 +1604,8 @@ function strToNumberMaybe( src )
   return src;
 
   let parsed = parseFloat( src );
+  // if( parsed.toString().length === src.length && !isNaN( parsed ) ) // Dmytro : this condition prevent returning number if src has string value like parseFloat( '1a' )
+  // return parsed;
   if( !isNaN( parsed ) )
   return parsed;
 
@@ -1674,7 +1676,8 @@ function strStructureParse( o )
       {
         right = src[ a+2 ] = src[ a+2 ] + src[ a+3 ] + src[ a+4 ];
         right = right.trim();
-        src.splice( a+2, 2 );
+        // src.splice( a+2, 2 ); // Dmytro : splices new src[ a+2 ] and next iteration deletes previous 2 elements
+        src.splice( a+3, 2 );
         continue;
       }
       right = cuts[ 0 ];
@@ -1951,11 +1954,12 @@ defaults.defaultStructure = 'map';
 defaults.parsingArrays = 0;
 defaults.keyValDelimeter = null; /* [ ':', '=' ] */
 defaults.entryDelimeter = '&';
+defaults.toNumberMaybe = 0; // Dmytro : missed, produces bug if value in key-value pairs starts with number literal or need improve condition in routine strToNumberMaybe
 
 //
 
 /*
-qqq : routine strWebQueryStr requires good coverage
+qqq : routine strWebQueryStr requires good coverage | Dmytro : covered
 */
 
 function strWebQueryStr( o )
