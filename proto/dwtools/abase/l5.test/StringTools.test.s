@@ -9218,6 +9218,254 @@ function strWebQueryParseOptionKeyValDelimeter( test )
 
 //
 
+function strWebQueryParseOptionQuoting( test ) 
+{
+  test.open( 'quoting - 0' );
+
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = '"some string"';
+  var expected = '"some string"';
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number:1&"str"=abc';
+  var expected = { number : '1', '"str"' : 'abc' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, values in square parentheses';
+  var src = 'number : 1&str = "abc"&array : [1,abc]';
+  var expected = { number : '1', str : '"abc"', array : '[1,abc]' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' number = 1 & str:"abc"& array :  [ 1  , abc ] ';
+  var expected = { number : '1', str : '"abc"', array : '[ 1  , abc ]' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path=D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = { '"path' : 'D":\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path="D:\\some\\path"';
+  var expected = { path : '"D:\\some\\path"' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path=D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path = "D : \\some\\ path" ';
+  var expected = { path : '"D : \\some\\ path"' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 "v1& b2" b2 = v2 v2& c3 c3 : v3 v3';
+  var expected = { 'a1 a1' : 'v1 "v1', 'b2" b2' : 'v2 v2', 'c3 c3' : 'v3 v3' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1&b : "2a,&c" = 3 a&d : 4abc&e = 5 abc';
+  var expected = { 'a' : '1', 'b' : '"2a,', 'c"' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '"[]"';
+  var expected = '"[]"';
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ "1,& abc" ]';
+  var expected = '[ "1,& abc" ]';
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  ,& "abc" ] ';
+  var expected = '[ 1  ,& "abc" ]';
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1  "ab& cd" ] ';
+  var expected = '[ 1  "ab& cd" ]';
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+  
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '[number : "1& str" = abc]';
+  var expected = { '[number' : '"1', 'str"' : 'abc]' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.close( 'quoting - 0' );
+
+  /* - */
+
+  test.open( 'quoting - 1' );
+
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = '"some string"';
+  var expected = 'some string';
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number:1&"str"=abc';
+  var expected = { number : '1', 'str' : 'abc' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, values in square parentheses';
+  var src = 'number : 1&str = "abc"&array : [1,abc]';
+  var expected = { number : '1', str : 'abc', array : '[1,abc]' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' number = 1 & str:"abc"& array :  [ 1  , abc ] ';
+  var expected = { number : '1', str : 'abc', array : '[ 1  , abc ]' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path=D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = { 'path:D' : '\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path="D:\\some\\path"';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path=D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path = "D : \\some\\ path" ';
+  var expected = { path : 'D : \\some\\ path' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 "v1& b2" b2 = v2 v2& c3 c3 : v3 v3';
+  var expected = { 'a1 a1' : 'v1 v1', 'b2 b2' : 'v2 v2', 'c3 c3' : 'v3 v3' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1&b : "2a,&c" = 3 a&d : 4abc&e = 5 abc';
+  var expected = { 'a' : '1', 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '"[]"';
+  var expected = '[]';
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ "1,& abc" ]';
+  var expected = '[ 1,& abc ]';
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  ,& "abc" ] ';
+  var expected = '[ 1  ,& abc ]';
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1  "ab& cd" ] ';
+  var expected = '[ 1  ab& cd ]';
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+  
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '[number : "1& str" = abc]';
+  var expected = { '[number' : '1', 'str' : 'abc]' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.close( 'quoting - 1' );
+
+}
+
+//
+
 function strWebQueryParse( test )
 {
 
@@ -10376,7 +10624,9 @@ var Self =
 
     strWebQueryParseDefaultOptions,
     strWebQueryParseOptionKeyValDelimeter,
+    strWebQueryParseOptionQuoting,
     strWebQueryParse,
+
     strWebQueryStr,
     strRequestParse,
     strCommandParse,
