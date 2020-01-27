@@ -8570,6 +8570,51 @@ function strStructureParseOptionToNumberMaybe( test )
 
 //
 
+function strStructureParseOptionDefaultStructure( test ) 
+{
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, defaultStructure : 'map' } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, defaultStructure : 'map' } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'empty string';
+  var src = '';
+  var expected = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, defaultStructure : 'array' } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, defaultStructure : 'array' } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'empty string';
+  var src = '';
+  var expected = '';
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, defaultStructure : 'string' } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = '';
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, defaultStructure : 'string' } );
+  test.identical( got, expected );
+}
+
+//
+
 function strStructureParse( test )
 {
   test.open( 'imply map' );
@@ -8823,6 +8868,13 @@ function strStructureParse( test )
 
 function strStructureParseExperiment( test )
 {
+  test.case = 'array, quoting || using preservingQuoting in array can improve results';
+  var src = '[ "1", "abc", "abc" ]';
+  var expected = [ '"1"', '"abc"', '"abc"' ];
+  var expected2 = [ 1, 'abc', 'abc' ];
+  var got = _.strStructureParse({ src : src, parsingArrays : 1 });
+  test.identical( got, expected );
+  test.notIdentical( got, expected2 );
 
   test.case = 'primitives, empty strings || more complex search for primitives';
   var src = '[ 1, abc, null, undefined, false, true, , "abc" ]';
@@ -10036,6 +10088,7 @@ var Self =
     strStructureParseOptionKeyValDelimeter,
     strStructureParseOptionQuoting,
     strStructureParseOptionToNumberMaybe,
+    strStructureParseOptionDefaultStructure,
     strStructureParse,
     strStructureParseExperiment,
 

@@ -1613,7 +1613,7 @@ function strToNumberMaybe( src )
 //
 
 /*
-qqq : routine strStructureParse requires good coverage and extension 
+qqq : routine strStructureParse requires good coverage and extension | Dmytro : test coverage improved, added test routine `strStructureParseExperiment` with variants of extension
 */
 
 function strStructureParse( o )
