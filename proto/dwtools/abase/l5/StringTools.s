@@ -1768,6 +1768,238 @@ strStructureParse.defaults =
   defaultStructure : 'map', /* map / array / string */
 }
 
+//
+
+function strStructureParse_( o )
+{
+
+  if( _.strIs( o ) )
+  o = { src : o }
+
+  _.routineOptions( strStructureParse, o );
+  _.assert( arguments.length === 1 );
+  _.assert( !!o.keyValDelimeter );
+  _.assert( _.strIs( o.entryDelimeter ) );
+  _.assert( _.strIs( o.src ) );
+  _.assert( _.longHas( [ 'map', 'array', 'string' ], o.defaultStructure ) );
+
+  if( o.arrayElementsDelimeter === null )
+  o.arrayElementsDelimeter = [ ' ', ',' ];
+
+  let src = o.src.trim();
+
+  if( _.strIs( _.strInsideOf( src, o.mapLeftDelimeter, o.mapRightDelimeter ) ) )
+  {
+    src = _.strInsideOf( src, o.mapLeftDelimeter, o.mapRightDelimeter );
+  }
+  else if( o.parsingArrays )
+  {
+    if( _.strIs( _.strInsideOf( src, o.longLeftDelimeter, o.longRightDelimeter ) ) )
+    {
+      let r = strToArrayMaybe( src );
+      if( _.arrayIs( r ) )
+      return r;
+    } 
+  }
+
+  src = _.strSplit
+  ({
+    src,
+    delimeter : o.keyValDelimeter,
+    stripping : 0,
+    quoting : o.quoting,
+    preservingEmpty : 1,
+    preservingDelimeters : 1,
+    preservingQuoting : 0
+  });
+
+  if( src.length === 1 && src[ 0 ] )
+  return src[ 0 ];
+
+  strSplitsParenthesesBalanceJoin( src );
+
+  /* */
+
+  let pairs = [];
+  for( let a = 0 ; a < src.length-2 ; a += 2 )
+  {
+    let left = src[ a ];
+    let right = src[ a+2 ].trim();
+
+    _.assert( _.strIs( left ) );
+    _.assert( _.strIs( right ) );
+
+    while( a < src.length-3 )
+    {
+      let cuts = _.strIsolateRightOrAll( right, o.entryDelimeter );
+      if( cuts[ 1 ] === undefined )
+      {
+        right = src[ a+2 ] = src[ a+2 ] + src[ a+3 ] + src[ a+4 ];
+        right = right.trim();
+        src.splice( a+3, 2 );
+        continue;
+      }
+      right = cuts[ 0 ];
+      src[ a+2 ] = cuts[ 2 ];
+      break;
+    }
+
+    pairs.push( left.trim(), right.trim() );
+  }
+
+  /* */
+
+  _.assert( pairs.length % 2 === 0 );
+  let result = Object.create( null );
+  for( let a = 0 ; a < pairs.length-1 ; a += 2 )
+  {
+    let left = pairs[ a ];
+    let right = pairs[ a+1 ];
+
+    _.assert( _.strIs( left ) );
+    _.assert( _.strIs( right ) );
+
+    if( o.depth > 0 )
+    {
+      let options = _.mapExtend( null, o );
+      options.depth = o.depth - 1;
+      options.src = right;
+
+      right = _.strStructureParse_( options );
+    }
+
+    if( o.toNumberMaybe )
+    right = _.strToNumberMaybe( right );
+
+    if( o.parsingArrays )
+    right = strToArrayMaybe( right );
+
+    if( o.onTerminal && _.strIs( right ) )
+    right = o.onTerminal( right );
+
+    result[ left ] = right;
+
+  }
+
+  if( _.mapKeys( result ).length === 0 )
+  {
+    if( o.defaultStructure === 'map' )
+    return result;
+    else if( o.defaultStructure === 'array' )
+    return [];
+    else if( o.defaultStructure === 'string' )
+    return '';
+  }
+
+  return result;
+
+  /**/
+
+  function strToArrayMaybe( str )
+  {
+    let result = str;
+    if( !_.strIs( result ) )
+    return result;
+    let inside = _.strInsideOf( result, o.longLeftDelimeter, o.longRightDelimeter );
+    if( inside !== false )
+    {
+      let splits = _.strSplit
+      ({
+        src : inside,
+        delimeter : o.arrayElementsDelimeter,
+        stripping : 1,
+        quoting : o.quoting,
+        preservingDelimeters : 0,
+        preservingEmpty : 0,
+        preservingQuoting : 0,
+      });
+      result = splits;
+      if( depth > 0 )
+      {
+        depth--;
+
+        result = strSplitsParenthesesBalanceJoin( result );
+        let options = _.mapExtend( null, o );
+        options.depth = depth;
+
+        for( let i = 0; i < result.length; i++ )
+        {
+          options.src = result[ i ]; 
+          result[ i ] = _.strStructureParse_( options );
+        }
+      }
+      if( o.toNumberMaybe )
+      result = result.map( ( e ) => _.strToNumberMaybe( e ) );
+    }
+    return result;
+  }
+
+  /* */
+
+  function strSplitsParenthesesBalanceJoin( splits )
+  {
+    let stack = [];
+    let postfixes = [ _.regexpFrom( o.longRightDelimeter ), _.regexpFrom( o.mapRightDelimeter ) ];
+    let map =
+    {
+      o.longLeftDelimeter : o.longRightDelimeter,
+      o.mapLeftDelimeter : o.mapRightDelimeter
+    };
+
+    for( let i = 0; i < splits.length; i++ )
+    {
+      if( splits[ i ] in map )
+      {
+        stack.push( i );
+      }
+      else if( _.regexpsTestAny( postfixes, splits[ i ] ) )
+      {
+        if( stack.length === 0 )
+        continue;
+
+        let start = -1;
+        let end = i;
+
+        for( let k = stack.length - 1 ; k >= 0 ; k-- )
+        if( map[ splits[ stack[ k ] ] ] === splits[ end ] )
+        {
+          start = stack[ k ];
+          stack.splice( k, stack.length );
+          break;
+        }
+        
+
+        if( start === -1 )
+        continue;
+
+        let length = end - start;
+
+        splits[ start ] = splits.splice( start, length + 1, null ).join( o.entryDelimeter );
+        i -= length;
+      }
+    }
+  } 
+
+}
+
+strStructureParse_.defaults =
+{
+  src : null,
+  keyValDelimeter : ':',
+  entryDelimeter : ' ',
+  arrayElementsDelimeter : null,
+  mapLeftDelimeter : '{',
+  mapRightDelimeter : '{',
+  longLeftDelimeter : '[',
+  longRightDelimeter : ']',
+  quoting : 1,
+  parsingArrays : 0,
+  depth : 0,
+  onTerminal : null,
+  toNumberMaybe : 1,
+  defaultStructure : 'map', /* map / array / string */
+}
+
 // function strStructureParse( o )
 // {
 //
