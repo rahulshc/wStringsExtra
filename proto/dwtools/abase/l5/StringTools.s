@@ -295,7 +295,7 @@ function strHtmlEscape( str )
 //
 
 /*
-qqq : tests required | Dmytro : covered all options without onTokenize and excludingTokens because it's not works properly
+qqq : tests required | Dmytro : covered all options 
 */
 
 function strSearch( o )
@@ -316,6 +316,7 @@ function strSearch( o )
 
   if( _.arrayIs( o.excludingTokens ) || _.strIs( o.excludingTokens ) )
   {
+    debugger;
     o.excludingTokens = _.path.globsShortToRegexps( o.excludingTokens );
     o.excludingTokens = _.regexpsAny( o.excludingTokens );
   }
@@ -339,7 +340,6 @@ function strSearch( o )
     }
 
     if( o.nearestLines )
-    debugger;
     if( o.nearestLines )
     it.nearest = _.strLinesNearest
     ({
@@ -364,7 +364,6 @@ function strSearch( o )
 
       if( o.excludingTokens )
       {
-        debugger;
         let tokenNames = _.select( tokens, '*/tokenName' );
         tokenNames = tokenNames.slice( having[ 0 ], having[ 1 ] );
         let pass = _.none( _.regexpTest( o.excludingTokens, tokenNames ) );
@@ -393,8 +392,8 @@ strSearch.defaults =
   determiningLineNumber : 0,
   stringWithRegexp : 0,
   toleratingSpaces : 0,
-  onTokenize : null, // Dmytro : has bugs
-  excludingTokens : null, // Dmytro : onTokenize has influence on this option
+  onTokenize : null,
+  excludingTokens : null, 
 }
 
 //
@@ -1930,7 +1929,7 @@ strStructureParse.defaults =
 //
 
 /*
-qqq : routine strWebQueryParse requires good coverage and extension
+qqq : routine strWebQueryParse requires good coverage and extension | Dmytro : coverage added, extension of routine and coverage after routine strStructureParse
 */
 
 function strWebQueryParse( o )
@@ -2739,8 +2738,8 @@ let Extend =
   strToConfig, /* experimental */
 
   strToNumberMaybe,
-  strStructureParse, /* qqq : cover it by tests */
-  strWebQueryParse, /* qqq : cover it by tests */
+  strStructureParse, /* qqq : cover it by tests | Dmytro : covered */
+  strWebQueryParse, /* qqq : cover it by tests | Dmytro : covered */
   strWebQueryStr,
   strRequestParse,
   strRequestStr,
