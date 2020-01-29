@@ -1792,7 +1792,11 @@ function strStructureParse( o )
 
   if( _.strIs( _.strInsideOf( src, o.mapLeftDelimeter, o.mapRightDelimeter ) ) )
   {
-    src = _.strInsideOf( src, o.mapLeftDelimeter, o.mapRightDelimeter );
+    let inside = _.strInsideOf( src, o.mapLeftDelimeter, o.mapRightDelimeter );
+    if( new RegExp( '^\\s*\\W*\\w+\\W*\\s*\\' + o.keyValDelimeter +'\\s*\\W*\\w+' ).test( inside ) )
+    src = inside;
+    else
+    return Object.create( null );
   }
   else if( o.parsingArrays )
   {
@@ -1861,17 +1865,19 @@ function strStructureParse( o )
     _.assert( _.strIs( left ) );
     _.assert( _.strIs( right ) );
 
+    if( o.toNumberMaybe )
+    right = _.strToNumberMaybe( right );
+
     if( o.depth > 0 )
     {
       let options = _.mapExtend( null, o );
       options.depth = o.depth - 1;
-      options.src = right;
-
-      right = _.strStructureParse( options );
+      if( _.strIs( right ) )
+      {
+        options.src = right;
+        right = _.strStructureParse( options );
+      }
     }
-
-    if( o.toNumberMaybe )
-    right = _.strToNumberMaybe( right );
 
     if( o.parsingArrays )
     right = strToArrayMaybe( right, o.depth );
@@ -1931,8 +1937,11 @@ function strStructureParse( o )
         options.depth = depth;
         for( let i = 0; i < result.length; i++ )
         {
-          options.src = result[ i ]; 
-          result[ i ] = _.strStructureParse( options );
+          if( _.strIs( result[ i ] ) )
+          {
+            options.src = result[ i ];
+            result[ i ] = _.strStructureParse( options );
+          }
         }
       }
     }
@@ -1993,7 +2002,7 @@ strStructureParse.defaults =
   entryDelimeter : ' ',
   arrayElementsDelimeter : null,
   mapLeftDelimeter : '{',
-  mapRightDelimeter : '{',
+  mapRightDelimeter : '}',
   longLeftDelimeter : '[',
   longRightDelimeter : ']',
   quoting : 1,
