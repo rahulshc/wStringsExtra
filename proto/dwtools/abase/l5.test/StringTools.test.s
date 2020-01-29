@@ -9573,6 +9573,185 @@ function strStructureParseOptionDepthForArrays( test )
 
 //
 
+function strStructureParseOptionDepthForMaps( test ) 
+{
+  test.open( 'maps, without outside curly brackets' );
+
+  test.case = 'map with nested map, depth - 0';
+  var src = 'a:1 b:{} c:{d:e} f:{g:{h:i}}';
+  var exp = { a : 1, b : '{}', c : '{d:e}', f : '{g:{h:i}}' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, depth - 1';
+  var src = 'a:1 b:{} c:{d:e} f:{g:{h:i}}';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : { g : '{h:i}' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, depth - 2';
+  var src = 'a:1 b:{} c:{d:e} f:{g:{h:i}}';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : { g : { h : 'i' } } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, depth - 3';
+  var src = 'a:1 b:{} c:{d:e} f:{g:{h:i}}';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : { g : { h : 'i' } } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 0';
+  var src = '   a:1    b  :   {} c  :  {d: e } f  :  {  g  :  { h : i : }}   ';
+  var exp = { a : 1, b : '{}', c : '{d: e }', f : '{', g : '{', h : 'i : }}' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 1';
+  var src = '   a:1    b  :   {} c  :  {d: e } f  :  {  g  :  { h : i : }}   ';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : '{', g : '{', h : { i : '}}' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 2';
+  var src = '   a:1    b  :   {} c  :  {d: e } f  :  {  g  :  { h : i : }}   ';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : '{', g : '{', h : { i : '}}' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 3';
+  var src = '   a:1    b  :   {} c  :  {d: e } f  :  {  g  :  { h : i : }}   ';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : '{', g : '{', h : { i : '}}' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 0';
+  var src = '   a : 1    b  :   {  } c  :  { d : e } f  :  {  g  :  { h : i : } }   ';
+  var exp = { a : 1, b : '{  }', c : '{',  d : 'e }', f : '{', g : '{', h : 'i : } }' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 1';
+  var src = '   a : 1    b  :   {  } c  :  { d : e } f  :  {  g  :  { h : i : } }   ';
+  var exp = { a : 1, b : {}, c : '{', d : 'e }', f : '{', g : '{', h : { i : '} }' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 2';
+  var src = '   a : 1    b  :   {  } c  :  { d : e } f  :  {  g  :  { h : i : } }   ';
+  var exp = { a : 1, b : {}, c : '{', d : 'e }', f : '{', g : '{', h : { 'i' : '} }' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 3';
+  var src = '   a : 1    b  :   {  } c  :  { d : e } f  :  {  g  :  { h : i : } }   ';
+  var exp = { a : 1, b : {}, c : '{', d : 'e }', f : '{', g : '{', h : { 'i' : '} }' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.close( 'maps, without outside curly brackets' );
+
+  /* - */
+
+  test.open( 'maps, outside curly brackets' );
+
+  test.case = 'empty map';
+  var src = '{}';
+  var exp = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, depth - 0';
+  var src = '{a:1 b:{} c:{d:e} f:{g:{h:i}}}';
+  var exp = { a : 1, b : '{}', c : '{d:e}', f : '{g:{h:i}}' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, depth - 1';
+  var src = '{a:1 b:{} c:{d:e} f:{g:{h:i}}}';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : { g : '{h:i}' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, depth - 2';
+  var src = '{a:1 b:{} c:{d:e} f:{g:{h:i}}}';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : { g : { h : 'i' } } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, depth - 3';
+  var src = '{a:1 b:{} c:{d:e} f:{g:{h:i}}}';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : { g : { h : 'i' } } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'empty map';
+  var src = ' {   }';
+  var exp = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 0';
+  var src = ' {   a:1    b  :   {} c  :  {d: e } f  :  {  g  :  { h : i : }}   } ';
+  var exp = { a : 1, b : '{}', c : '{d: e }', f : '{', g : '{', h : 'i : }}' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 1';
+  var src = ' {   a:1    b  :   {} c  :  {d: e } f  :  {  g  :  { h : i : }}   } ';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : '{', g : '{', h : { i : '}}' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 2';
+  var src = ' {   a:1    b  :   {} c  :  {d: e } f  :  {  g  :  { h : i : }}   } ';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : '{', g : '{', h : { i : '}}' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 3';
+  var src = ' {   a:1    b  :   {} c  :  {d: e } f  :  {  g  :  { h : i : }}   } ';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : '{', g : '{', h : { i : '}}' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 0';
+  var src = ' {   a : 1    b  :   {  } c  :  { d : e } f  :  {  g  :  { h : i : } }   } ';
+  var exp = { a : 1, b : '{  }', c : '{',  d : 'e }', f : '{', g : '{', h : 'i : } }' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 1';
+  var src = ' {   a : 1    b  :   {  } c  :  { d : e } f  :  {  g  :  { h : i : } }   } ';
+  var exp = { a : 1, b : {}, c : '{', d : 'e }', f : '{', g : '{', h : { i : '} }' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 2';
+  var src = ' {   a : 1    b  :   {  } c  :  { d : e } f  :  {  g  :  { h : i : } }   } ';
+  var exp = { a : 1, b : {}, c : '{', d : 'e }', f : '{', g : '{', h : { 'i' : '} }' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 3';
+  var src = ' {   a : 1    b  :   {  } c  :  { d : e } f  :  {  g  :  { h : i : } }   } ';
+  var exp = { a : 1, b : {}, c : '{', d : 'e }', f : '{', g : '{', h : { 'i' : '} }' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.close( 'maps, outside curly brackets' );
+}
+
+//
+
 function strStructureParse( test )
 {
   test.open( 'imply map' );
@@ -11700,6 +11879,7 @@ var Self =
     strStructureParseOptionToNumberMaybe,
     strStructureParseOptionDefaultStructure,
     strStructureParseOptionDepthForArrays,
+    strStructureParseOptionDepthForMaps,
     strStructureParse,
     strStructureParseExperiment,
 
