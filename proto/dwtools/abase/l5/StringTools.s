@@ -1615,162 +1615,164 @@ function strToNumberMaybe( src )
 
 /*
 qqq : routine strStructureParse requires good coverage and extension | Dmytro : test coverage improved, added test routine `strStructureParseExperiment` with variants of extension
+
+Dmytro : below added new version of routine strStructureParse for new features
 */
 
-function strStructureParse( o )
-{
-
-  if( _.strIs( o ) )
-  o = { src : o }
-
-  _.routineOptions( strStructureParse, o );
-  _.assert( !!o.keyValDelimeter );
-  _.assert( _.strIs( o.entryDelimeter ) );
-  _.assert( _.strIs( o.src ) );
-  _.assert( arguments.length === 1 );
-  _.assert( _.longHas( [ 'map', 'array', 'string' ], o.defaultStructure ) );
-
-  if( o.arrayElementsDelimeter === null )
-  o.arrayElementsDelimeter = [ ' ', ',' ];
-
-  let src = o.src.trim();
-
-  if( o.parsingArrays )
-  if( _.strIs( _.strInsideOf( src, o.longLeftDelimeter, o.longRightDelimeter ) ) )
-  {
-    let r = strToArrayMaybe( src );
-    if( _.arrayIs( r ) )
-    return r;
-  }
-
-  src = _.strSplit
-  ({
-    src,
-    delimeter : o.keyValDelimeter,
-    stripping : 0,
-    quoting : o.quoting,
-    preservingEmpty : 1,
-    preservingDelimeters : 1,
-    preservingQuoting : o.quoting ? 0 : 1
-  });
-
-  if( src.length === 1 && src[ 0 ] )
-  return src[ 0 ];
-
-  /* */
-
-  let pairs = [];
-  for( let a = 0 ; a < src.length-2 ; a += 2 )
-  {
-    let left = src[ a ];
-    let right = src[ a+2 ].trim();
-
-    _.assert( _.strIs( left ) );
-    _.assert( _.strIs( right ) );
-
-    while( a < src.length-3 )
-    {
-      let cuts = _.strIsolateRightOrAll( right, o.entryDelimeter );
-      if( cuts[ 1 ] === undefined )
-      {
-        right = src[ a+2 ] = src[ a+2 ] + src[ a+3 ] + src[ a+4 ];
-        right = right.trim();
-        // src.splice( a+2, 2 ); // Dmytro : splices new src[ a+2 ] and next iteration deletes previous 2 elements
-        src.splice( a+3, 2 );
-        continue;
-      }
-      right = cuts[ 0 ];
-      src[ a+2 ] = cuts[ 2 ];
-      break;
-    }
-
-    pairs.push( left.trim(), right.trim() );
-  }
-
-  /* */
-
-  _.assert( pairs.length % 2 === 0 );
-  let result = Object.create( null );
-  for( let a = 0 ; a < pairs.length-1 ; a += 2 )
-  {
-    let left = pairs[ a ];
-    let right = pairs[ a+1 ];
-
-    _.assert( _.strIs( left ) );
-    _.assert( _.strIs( right ) );
-
-    if( o.toNumberMaybe )
-    right = _.strToNumberMaybe( right );
-
-    if( o.parsingArrays )
-    right = strToArrayMaybe( right );
-
-    result[ left ] = right;
-
-  }
-
-  // if( src.length === 1 && src[ 0 ] )
-  // return src[ 0 ];
-  //
-  // debugger;
-
-  if( _.mapKeys( result ).length === 0 )
-  {
-    if( o.defaultStructure === 'map' )
-    return result;
-    else if( o.defaultStructure === 'array' )
-    return [];
-    else if( o.defaultStructure === 'string' )
-    return '';
-  }
-
-  return result;
-
-  /**/
-
-  function strToArrayMaybe( str )
-  {
-    let result = str;
-    if( !_.strIs( result ) )
-    return result;
-    let inside = _.strInsideOf( result, o.longLeftDelimeter, o.longRightDelimeter );
-    if( inside !== false )
-    {
-      let splits = _.strSplit
-      ({
-        src : inside,
-        delimeter : o.arrayElementsDelimeter,
-        stripping : 1,
-        quoting : 1,
-        preservingDelimeters : 0,
-        preservingEmpty : 0,
-      });
-      result = splits;
-      if( o.toNumberMaybe )
-      result = result.map( ( e ) => _.strToNumberMaybe( e ) );
-    }
-    return result;
-  }
-
-}
-
-strStructureParse.defaults =
-{
-  src : null,
-  keyValDelimeter : ':',
-  entryDelimeter : ' ',
-  arrayElementsDelimeter : null,
-  longLeftDelimeter : '[',
-  longRightDelimeter : ']',
-  quoting : 1,
-  parsingArrays : 0,
-  toNumberMaybe : 1,
-  defaultStructure : 'map', /* map / array / string */
-}
+// function strStructureParse( o )
+// {
+// 
+//   if( _.strIs( o ) )
+//   o = { src : o }
+// 
+//   _.routineOptions( strStructureParse, o );
+//   _.assert( !!o.keyValDelimeter );
+//   _.assert( _.strIs( o.entryDelimeter ) );
+//   _.assert( _.strIs( o.src ) );
+//   _.assert( arguments.length === 1 );
+//   _.assert( _.longHas( [ 'map', 'array', 'string' ], o.defaultStructure ) );
+// 
+//   if( o.arrayElementsDelimeter === null )
+//   o.arrayElementsDelimeter = [ ' ', ',' ];
+// 
+//   let src = o.src.trim();
+// 
+//   if( o.parsingArrays )
+//   if( _.strIs( _.strInsideOf( src, o.longLeftDelimeter, o.longRightDelimeter ) ) )
+//   {
+//     let r = strToArrayMaybe( src );
+//     if( _.arrayIs( r ) )
+//     return r;
+//   }
+// 
+//   src = _.strSplit
+//   ({
+//     src,
+//     delimeter : o.keyValDelimeter,
+//     stripping : 0,
+//     quoting : o.quoting,
+//     preservingEmpty : 1,
+//     preservingDelimeters : 1,
+//     preservingQuoting : o.quoting ? 0 : 1
+//   });
+// 
+//   if( src.length === 1 && src[ 0 ] )
+//   return src[ 0 ];
+// 
+//   /* */
+// 
+//   let pairs = [];
+//   for( let a = 0 ; a < src.length-2 ; a += 2 )
+//   {
+//     let left = src[ a ];
+//     let right = src[ a+2 ].trim();
+// 
+//     _.assert( _.strIs( left ) );
+//     _.assert( _.strIs( right ) );
+// 
+//     while( a < src.length-3 )
+//     {
+//       let cuts = _.strIsolateRightOrAll( right, o.entryDelimeter );
+//       if( cuts[ 1 ] === undefined )
+//       {
+//         right = src[ a+2 ] = src[ a+2 ] + src[ a+3 ] + src[ a+4 ];
+//         right = right.trim();
+//         // src.splice( a+2, 2 ); // Dmytro : splices new src[ a+2 ] and next iteration deletes previous 2 elements
+//         src.splice( a+3, 2 );
+//         continue;
+//       }
+//       right = cuts[ 0 ];
+//       src[ a+2 ] = cuts[ 2 ];
+//       break;
+//     }
+// 
+//     pairs.push( left.trim(), right.trim() );
+//   }
+// 
+//   /* */
+// 
+//   _.assert( pairs.length % 2 === 0 );
+//   let result = Object.create( null );
+//   for( let a = 0 ; a < pairs.length-1 ; a += 2 )
+//   {
+//     let left = pairs[ a ];
+//     let right = pairs[ a+1 ];
+// 
+//     _.assert( _.strIs( left ) );
+//     _.assert( _.strIs( right ) );
+// 
+//     if( o.toNumberMaybe )
+//     right = _.strToNumberMaybe( right );
+// 
+//     if( o.parsingArrays )
+//     right = strToArrayMaybe( right );
+// 
+//     result[ left ] = right;
+// 
+//   }
+// 
+//   // if( src.length === 1 && src[ 0 ] )
+//   // return src[ 0 ];
+//   //
+//   // debugger;
+// 
+//   if( _.mapKeys( result ).length === 0 )
+//   {
+//     if( o.defaultStructure === 'map' )
+//     return result;
+//     else if( o.defaultStructure === 'array' )
+//     return [];
+//     else if( o.defaultStructure === 'string' )
+//     return '';
+//   }
+// 
+//   return result;
+// 
+//   /**/
+// 
+//   function strToArrayMaybe( str )
+//   {
+//     let result = str;
+//     if( !_.strIs( result ) )
+//     return result;
+//     let inside = _.strInsideOf( result, o.longLeftDelimeter, o.longRightDelimeter );
+//     if( inside !== false )
+//     {
+//       let splits = _.strSplit
+//       ({
+//         src : inside,
+//         delimeter : o.arrayElementsDelimeter,
+//         stripping : 1,
+//         quoting : 1,
+//         preservingDelimeters : 0,
+//         preservingEmpty : 0,
+//       });
+//       result = splits;
+//       if( o.toNumberMaybe )
+//       result = result.map( ( e ) => _.strToNumberMaybe( e ) );
+//     }
+//     return result;
+//   }
+// 
+// }
+// 
+// strStructureParse.defaults =
+// {
+//   src : null,
+//   keyValDelimeter : ':',
+//   entryDelimeter : ' ',
+//   arrayElementsDelimeter : null,
+//   longLeftDelimeter : '[',
+//   longRightDelimeter : ']',
+//   quoting : 1,
+//   parsingArrays : 0,
+//   toNumberMaybe : 1,
+//   defaultStructure : 'map', /* map / array / string */
+// }
 
 //
 
-function strStructureParse_( o )
+function strStructureParse( o )
 {
 
   if( _.strIs( o ) )
@@ -1796,7 +1798,7 @@ function strStructureParse_( o )
   {
     if( _.strIs( _.strInsideOf( src, o.longLeftDelimeter, o.longRightDelimeter ) ) )
     {
-      let r = strToArrayMaybe( src );
+      let r = strToArrayMaybe( src, o.depth );
       if( _.arrayIs( r ) )
       return r;
     } 
@@ -1865,14 +1867,14 @@ function strStructureParse_( o )
       options.depth = o.depth - 1;
       options.src = right;
 
-      right = _.strStructureParse_( options );
+      right = _.strStructureParse( options );
     }
 
     if( o.toNumberMaybe )
     right = _.strToNumberMaybe( right );
 
     if( o.parsingArrays )
-    right = strToArrayMaybe( right );
+    right = strToArrayMaybe( right, o.depth );
 
     if( o.onTerminal && _.strIs( right ) )
     right = o.onTerminal( right );
@@ -1895,7 +1897,7 @@ function strStructureParse_( o )
 
   /**/
 
-  function strToArrayMaybe( str )
+  function strToArrayMaybe( str, depth )
   {
     let result = str;
     if( !_.strIs( result ) )
@@ -1914,22 +1916,25 @@ function strStructureParse_( o )
         preservingQuoting : 0,
       });
       result = splits;
+
+      if( o.toNumberMaybe )
+      result = result.map( ( e ) => _.strToNumberMaybe( e ) );
+      if( o.onTerminal )
+      result = result.map( ( e ) => o.onTerminal( e ) )
       if( depth > 0 )
       {
+        debugger;
         depth--;
 
-        result = strSplitsParenthesesBalanceJoin( result );
+        strSplitsParenthesesBalanceJoin( result );
         let options = _.mapExtend( null, o );
         options.depth = depth;
-
         for( let i = 0; i < result.length; i++ )
         {
           options.src = result[ i ]; 
-          result[ i ] = _.strStructureParse_( options );
+          result[ i ] = _.strStructureParse( options );
         }
       }
-      if( o.toNumberMaybe )
-      result = result.map( ( e ) => _.strToNumberMaybe( e ) );
     }
     return result;
   }
@@ -1942,8 +1947,8 @@ function strStructureParse_( o )
     let postfixes = [ _.regexpFrom( o.longRightDelimeter ), _.regexpFrom( o.mapRightDelimeter ) ];
     let map =
     {
-      o.longLeftDelimeter : o.longRightDelimeter,
-      o.mapLeftDelimeter : o.mapRightDelimeter
+      [ o.longLeftDelimeter ] : o.longRightDelimeter,
+      [ o.mapLeftDelimeter ] : o.mapRightDelimeter
     };
 
     for( let i = 0; i < splits.length; i++ )
@@ -1967,7 +1972,6 @@ function strStructureParse_( o )
           stack.splice( k, stack.length );
           break;
         }
-        
 
         if( start === -1 )
         continue;
@@ -1982,7 +1986,7 @@ function strStructureParse_( o )
 
 }
 
-strStructureParse_.defaults =
+strStructureParse.defaults =
 {
   src : null,
   keyValDelimeter : ':',
