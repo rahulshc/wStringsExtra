@@ -8221,7 +8221,7 @@ function strStructureParseDefaultOptions( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
-  var expected = { 'a' : 1, 'b' : 2, 'c' : 3, 'd' : 4, 'e' : 5 };
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
   var got = _.strStructureParse( { src : src } );
   test.identical( got, expected );
 
@@ -8374,7 +8374,7 @@ function strStructureParseOptionKeyValDelimeter( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a :: 1 b :: 2a, c :: 3 a d :: 4abc e : 5 abc';
-  var expected = { 'a' : 1, 'b' : 2, 'c' : 3, 'd' : 4 };
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc e : 5 abc' };
   var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
   test.identical( got, expected );
 
@@ -8495,7 +8495,7 @@ function strStructureParseOptionEntryDelimeter( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1, b : 2a, c : 3, a d : 4abc, e : 5, abc';
-  var expected = { 'a' : 1, 'b' : 2, 'c' : 3, 'a d' : 4, 'e' : 5 };
+  var expected = { 'a' : 1, 'b' : '2a', 'c' : 3, 'a d' : '4abc', 'e' : '5, abc' };
   var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
   test.identical( got, expected );
 
@@ -8618,7 +8618,7 @@ function strStructureParseOptionParsingArrays( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
-  var expected = { 'a' : 1, 'b' : 2, 'c' : 3, 'd' : 4, 'e' : 5 };
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
   var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
   test.identical( got, expected );
 
@@ -8740,7 +8740,7 @@ function strStructureParseOptionParsingArrays( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
-  var expected = [ 'a', ':', 1, 'b', ':', 2, 'c', ':', 3, 'a', 'd', ':', 4, 'e', ':', 5, 'abc' ];
+  var expected = [ 'a', ':', 1, 'b', ':', '2a', 'c', ':', 3, 'a', 'd', ':', '4abc', 'e', ':', 5, 'abc' ];
   var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
   test.identical( got, expected );
 
@@ -8862,7 +8862,7 @@ function strStructureParseOptionParsingArrays( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
-  var expected = { 'a' : 1, 'b' : 2, 'c' : 3, 'd' : 4, 'e' : 5 };
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
   var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
   test.identical( got, expected );
 
@@ -8987,7 +8987,7 @@ function strStructureParseOptionQuoting( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
-  var expected = { 'a' : 1, 'b' : 2, 'c' : 3, 'd' : 4, 'e' : 5 };
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
   var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
   test.identical( got, expected );
 
@@ -9109,7 +9109,7 @@ function strStructureParseOptionQuoting( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
-  var expected = { 'a' : 1, 'b' : 2, 'c' : 3, 'd' : 4, 'e' : 5 };
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
   var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
   test.identical( got, expected );
 
@@ -9944,19 +9944,19 @@ function strStructureParse( test )
 
   test.case = 'number like string as value';
   var src = 'a : 1a';
-  var expected = { 'a' : 1 };
+  var expected = { 'a' : '1a' };
   var got = _.strStructureParse({ src : src });
   test.identical( got, expected );
 
   test.case = 'number like string as value';
   var src = 'a : 1 a';
-  var expected = { 'a' : 1 };
+  var expected = { 'a' : '1 a' };
   var got = _.strStructureParse({ src : src });
   test.identical( got, expected );
 
   test.case = 'number like string as value';
   var src = 'a : 1 a b : 2 b';
-  var expected = { 'a' : 1, 'b' : 2 };
+  var expected = { 'a' : '1 a', 'b' : '2 b' };
   var got = _.strStructureParse({ src : src });
   test.identical( got, expected );
 
