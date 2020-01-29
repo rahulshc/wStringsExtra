@@ -1601,12 +1601,11 @@ function strToNumberMaybe( src )
   _.assert( _.strIs( src ) || _.numberIs( src ) );
   if( _.numberIs( src ) )
   return src;
-
-  let parsed = parseFloat( src );
-  // if( parsed.toString().length === src.length && !isNaN( parsed ) ) // Dmytro : this condition prevent returning number if src has string value like parseFloat( '1a' )
+  
+  if( /^\s*\d+\.{0,1}\d*\s*$/.test( src ) )
+  return parseFloat( src );
+  // if( !isNaN( parsed ) )
   // return parsed;
-  if( !isNaN( parsed ) )
-  return parsed;
 
   return src
 }
