@@ -9316,6 +9316,263 @@ function strStructureParseOptionDefaultStructure( test )
 
 //
 
+function strStructureParseOptionDepthForArrays( test ) 
+{
+  test.open( 'arrays, balanced brackets' );
+
+  test.case = 'empty array';
+  var src = '[]';
+  var exp = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 0';
+  var src = '[[[[]]],[[[[]]]],[]]';
+  var exp = [ '[[[]]]', '[[[[]]]]', '[]' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 1';
+  var src = '[[[[]]],[[[[]]]],[]]';
+  var exp = [ [ '[[]]' ], [ '[[[]]]' ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 2';
+  var src = '[[[[]]],[[[[]]]],[]]';
+  var exp = [ [ [ '[]' ] ], [ [ '[[]]' ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 3';
+  var src = '[[[[]]],[[[[]]]],[]]';
+  var exp = [ [ [ [] ] ], [ [ [ '[]' ] ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 4';
+  var src = '[[[[]]],[[[[]]]],[]]';
+  var exp = [ [ [ [] ] ], [ [ [ [] ] ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 5';
+  var src = '[[[[]]],[[[[]]]],[]]';
+  var exp = [ [ [ [] ] ], [ [ [ [] ] ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'empty array, extra unbalanced elements delimeters';
+  var src = ' [   ] ';
+  var exp = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 0';
+  var src = '  [  [  [  []] ],[  [[  []  ]  ]],[   ]  ]  ';
+  var exp = [ '[', '[', '[]]', ']', '[', '[[', '[]', ']', ']]', '[', ']' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 1';
+  var src = '  [  [  [  []] ],[  [[  []  ]  ]],[   ]  ]  ';
+  var exp = [ '[', [ '[]]' ], [ '[[', '[]' ], ']]', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 2';
+  var src = '  [  [  [  []] ],[  [[  []  ]  ]],[   ]  ]  ';
+  var exp = [ '[', [ [ ']' ] ], [ '[[', [] ], ']]', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 3';
+  var src = '  [  [  [  []] ],[  [[  []  ]  ]],[   ]  ]  ';
+  var exp = [ '[', [ [ ']' ] ], [ '[[', [] ], ']]', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 4';
+  var src = '  [  [  [  []] ],[  [[  []  ]  ]],[   ]  ]  ';
+  var exp = [ '[', [ [ ']' ] ], [ '[[', [] ], ']]', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 5';
+  var src = '  [  [  [  []] ],[  [[  []  ]  ]],[   ]  ]  ';
+  var exp = [ '[', [ [ ']' ] ], [ '[[', [] ], ']]', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'empty array';
+  var src = '  [   ] ';
+  var exp = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 0';
+  var src = '  [  [  [  [  ] ] ],[  [ [  [  ]  ]  ] ],[   ]  ]  ';
+  var exp = [ '[', '[', '[', ']', ']', ']', '[', '[', '[', '[', ']', ']', ']', ']', '[', ']' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 1';
+  var src = '  [  [  [  [  ] ] ],[  [ [  [  ]  ]  ] ],[   ]  ]  ';
+  var exp = [ [ '[', '[', ']', ']' ], [ '[', '[', '[', ']', ']', ']' ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 2';
+  var src = '  [  [  [  [  ] ] ],[  [ [  [  ]  ]  ] ],[   ]  ]  ';
+  var exp = [ [ [ '[', ']' ] ], [ [ '[', '[', ']', ']' ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 3';
+  var src = '  [  [  [  [  ] ] ],[  [ [  [  ]  ]  ] ],[   ]  ]  ';
+  var exp = [ [ [ [] ] ], [ [ [ '[', ']' ] ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 4';
+  var src = '  [  [  [  [  ] ] ],[  [ [  [  ]  ]  ] ],[   ]  ]  ';
+  var exp = [ [ [ [] ] ], [ [ [ [] ] ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 5';
+  var src = '  [  [  [  [  ] ] ],[  [ [  [  ]  ]  ] ],[   ]  ]  ';
+  var exp = [ [ [ [] ] ], [ [ [ [] ] ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
+  test.identical( got, exp );
+
+  test.close( 'arrays, balanced brackets' );
+
+  /* - */
+
+  test.open( 'arrays, unbalanced brackets' );
+
+  test.case = 'array with nested arrays, without spaces, depth - 0';
+  var src = '[[[[]]]]],[[[[[]]]],[[]]';
+  var exp = [ '[[[]]]]]', '[[[[[]]]]', '[[]' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 1';
+  var src = '[[[[]]]]],[[[[[]]]],[[]]';
+  var exp = [ [ '[[]]]]' ], [ '[[[[]]]' ], [ '[' ] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 2';
+  var src = '[[[[]]]]],[[[[[]]]],[[]]';
+  var exp = [ [ [ '[]]]' ] ], [ [ '[[[]]' ] ], [ '[' ] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 3';
+  var src = '[[[[]]]]],[[[[[]]]],[[]]';
+  var exp = [ [ [ [ ']]' ] ] ], [ [ [ '[[]' ] ] ], [ '[' ] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 4';
+  var src = '[[[[]]]]],[[[[[]]]],[[]]';
+  var exp = [ [ [ [ ']]' ] ] ], [ [ [ [ '[' ] ] ] ], [ '[' ] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 5';
+  var src = '[[[[]]]]],[[[[[]]]],[[]]';
+  var exp = [ [ [ [ ']]' ] ] ], [ [ [ [ '[' ] ] ] ], [ '[' ] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 0';
+  var src = '  [[[[]]]  ]]  ,[  [  [[ []]]  ],  [  []]';
+  var exp = [ '[[[]]]', ']]', '[', '[', '[[', '[]]]', ']', '[', '[]' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 1';
+  var src = '  [[[[]]]  ]]  ,[  [  [[ []]]  ],  [  []]';
+  var exp = [ [ '[[]]' ], ']]', '[', [ '[[', '[]]]' ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 2';
+  var src = '  [[[[]]]  ]]  ,[  [  [[ []]]  ],  [  []]';
+  var exp = [ [ [ '[]' ] ], ']]', '[', [ '[[', [ ']]' ] ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 3';
+  var src = '  [[[[]]]  ]]  ,[  [  [[ []]]  ],  [  []]';
+  var exp = [ [ [ [] ] ], ']]', '[', [ '[[', [ ']]' ] ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 4';
+  var src = '  [[[[]]]  ]]  ,[  [  [[ []]]  ],  [  []]';
+  var exp = [ [ [ [] ] ], ']]', '[', [ '[[', [ ']]' ] ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 5';
+  var src = '  [[[[]]]  ]]  ,[  [  [[ []]]  ],  [  []]';
+  var exp = [ [ [ [] ] ], ']]', '[', [ '[[', [ ']]' ] ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 0';
+  var src = '  [ [ [ [  ] ] ]  ] ]  ,[  [  [ [ [  ] ] ]  ],  [  [  ] ]';
+  var exp = [ '[', '[', '[', ']', ']', ']', ']', ']', '[', '[', '[', '[', '[', ']', ']', ']', ']', '[', '[', ']' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 1';
+  var src = '  [ [ [ [  ] ] ]  ] ]  ,[  [  [ [ [  ] ] ]  ],  [  [  ] ]';
+  var exp = [ [ '[', '[', ']', ']' ], ']', ']', '[', [ '[', '[', '[', ']', ']', ']' ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 2';
+  var src = '  [ [ [ [  ] ] ]  ] ]  ,[  [  [ [ [  ] ] ]  ],  [  [  ] ]';
+  var exp = [ [ [ '[', ']' ] ], ']', ']', '[', [ [ '[', '[', ']', ']' ] ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 3';
+  var src = '  [ [ [ [  ] ] ]  ] ]  ,[  [  [ [ [  ] ] ]  ],  [  [  ] ]';
+  var exp = [ [ [ [] ] ], ']', ']', '[', [ [ [ '[', ']' ] ] ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 4';
+  var src = '  [ [ [ [  ] ] ]  ] ]  ,[  [  [ [ [  ] ] ]  ],  [  [  ] ]';
+  var exp = [ [ [ [] ] ], ']', ']', '[', [ [ [ [] ] ] ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 5';
+  var src = '  [ [ [ [  ] ] ]  ] ]  ,[  [  [ [ [  ] ] ]  ],  [  [  ] ]';
+  var exp = [ [ [ [] ] ], ']', ']', '[', [ [ [ [] ] ] ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
+  test.identical( got, exp );
+
+  test.close( 'arrays, unbalanced brackets' );
+}
+
+//
+
 function strStructureParse( test )
 {
   test.open( 'imply map' );
@@ -11442,6 +11699,7 @@ var Self =
     strStructureParseOptionQuoting,
     strStructureParseOptionToNumberMaybe,
     strStructureParseOptionDefaultStructure,
+    strStructureParseOptionDepthForArrays,
     strStructureParse,
     strStructureParseExperiment,
 
