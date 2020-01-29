@@ -8704,13 +8704,13 @@ function strStructureParseOptionParsingArrays( test )
 
   test.case = 'src - Windows path, quoted left';
   var src = '"path:D":\\some\\path';
-  var expected = [ '"path:D":\\some\\path' ];
+  var expected = [ 'path:D:\\some\\path' ];
   var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
   test.identical( got, expected );
 
   test.case = 'src - Windows path, quoted right';
   var src = 'path:"D:\\some\\path"';
-  var expected = [ 'path:"D:\\some\\path"' ];
+  var expected = [ 'path:D:\\some\\path' ];
   var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
   test.identical( got, expected );
 
@@ -9123,25 +9123,25 @@ function strStructureParseOptionQuoting( test )
 
   test.case = 'square parentheses, array';
   var src = '[ "1", abc ]';
-  var expected = [ '"1"', 'abc' ];
+  var expected = [ 1, 'abc' ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
   test.identical( got, expected );
 
   test.case = 'square parentheses array with extra spaces';
   var src = ' [ 1  , "abc" ] ';
-  var expected = [ 1, '"abc"' ];
+  var expected = [ 1, 'abc' ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
   test.identical( got, expected );
 
   test.case = 'array with spaces delimeters';
   var src = ' [ 1  "ab" cd ] ';
-  var expected = [ 1, '"ab"', 'cd' ];
+  var expected = [ 1, 'ab', 'cd' ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
   test.identical( got, expected );
   
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '["number" : 1 str : abc]';
-  var expected = [ '"number"', ':', 1, 'str', ':', 'abc' ];
+  var expected = [ 'number', ':', 1, 'str', ':', 'abc' ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
   test.identical( got, expected );
 
