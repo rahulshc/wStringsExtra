@@ -1794,7 +1794,7 @@ function strStructureParse( o )
     let inside = _.strInsideOf( src, o.mapLeftDelimeter, o.mapRightDelimeter );
     if( new RegExp( '^\\s*\\W*\\w+\\W*\\s*\\' + o.keyValDelimeter +'\\s*\\W*\\w+' ).test( inside ) )
     src = inside;
-    else
+    else if( /\s*/.test( inside ) )
     return Object.create( null );
   }
   else if( o.parsingArrays )
@@ -1867,6 +1867,12 @@ function strStructureParse( o )
     if( o.toNumberMaybe )
     right = _.strToNumberMaybe( right );
 
+    if( o.parsingArrays )
+    right = strToArrayMaybe( right, o.depth );
+
+    if( o.onTerminal && _.strIs( right ) )
+    right = o.onTerminal( right );
+
     if( o.depth > 0 )
     {
       let options = _.mapExtend( null, o );
@@ -1877,12 +1883,6 @@ function strStructureParse( o )
         right = _.strStructureParse( options );
       }
     }
-
-    if( o.parsingArrays )
-    right = strToArrayMaybe( right, o.depth );
-
-    if( o.onTerminal && _.strIs( right ) )
-    right = o.onTerminal( right );
 
     result[ left ] = right;
 
@@ -1961,6 +1961,10 @@ function strStructureParse( o )
 
     for( let i = 0; i < splits.length; i++ )
     {
+      if( !_.strIs( splits[ i ] ) )
+      {
+        continue;
+      }
       if( splits[ i ] in map )
       {
         stack.push( i );
