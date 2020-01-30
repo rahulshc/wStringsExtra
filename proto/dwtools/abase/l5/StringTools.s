@@ -914,7 +914,19 @@ var JsTokensDefinition =
   'string/double'         : /"(?:\\\n|\\"|[^"\n])*?"/,
   'string/multiline'      : /`(?:\\\n|\\`|[^`])*?`/,
   'whitespace'            : /\s+/,
-  'keyword'               : /\b(?:do|if|in|for|let|new|try|var|case|else|enum|eval|null|this|true|void|with|await|break|catch|class|const|false|super|throw|while|yield|delete|export|import|public|return|static|switch|typeof|default|extends|finally|package|private|continue|debugger|function|arguments|interface|protected|implements|instanceof)\b/,
+  'keyword'               : /\b(?:arguments|async|await|boolean|break|byte|case|catch|char|class|const|debugger	default	delete	do
+double	else	enum*	eval
+export*	extends*	false	final
+finally	float	for	function
+goto	if	implements	import*
+in	instanceof	int	interface
+let*	long	native	new
+null	package	private	protected
+public	return	short	static
+super*	switch	synchronized	this
+throw	throws	transient	true
+try	typeof	var	void
+volatile	while	with	yield\b/,
   'regexp'                : /\/((?:\\\/|[^\/\n])+?)\/(\w*)/,
   'name'                  : /[a-z_\$][0-9a-z_\$]*/i,
   'number'                : /(?:0x(?:\d|[a-f])+|\d+(?:\.\d+)?(?:e[+-]?\d+)?)/i,
