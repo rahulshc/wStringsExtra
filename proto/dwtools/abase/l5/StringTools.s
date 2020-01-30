@@ -1870,8 +1870,6 @@ function strStructureParse( o )
     if( o.parsingArrays )
     right = strToArrayMaybe( right, o.depth );
 
-    if( o.onTerminal && _.strIs( right ) )
-    right = o.onTerminal( right );
 
     if( o.depth > 0 )
     {
@@ -1883,6 +1881,9 @@ function strStructureParse( o )
         right = _.strStructureParse( options );
       }
     }
+
+    if( o.onTerminal && _.strIs( right ) )
+    right = o.onTerminal( right );
 
     result[ left ] = right;
 
@@ -1924,8 +1925,6 @@ function strStructureParse( o )
 
       if( o.toNumberMaybe )
       result = result.map( ( e ) => _.strToNumberMaybe( e ) );
-      if( o.onTerminal )
-      result = result.map( ( e ) => o.onTerminal( e ) )
       if( depth > 0 )
       {
         debugger;
@@ -1943,6 +1942,8 @@ function strStructureParse( o )
           }
         }
       }
+      if( o.onTerminal )
+      result = result.map( ( e ) => o.onTerminal( e ) )
     }
     return result;
   }

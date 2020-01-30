@@ -10025,6 +10025,86 @@ function strStructureParseOptionDepthForMixed( test )
 
 //
 
+function strStructureParseOptionOnTerminal( test ) 
+{
+  var onTerminal = function( e )
+  {
+    if( !_.strIs( e ) )
+    return e;
+
+    if( e === 'null' )
+    return null;
+    if( e === 'undefined' )
+    return undefined;
+    if( e === 'NaN' )
+    return NaN;
+    if( e === 'Infinity' )
+    return Infinity;
+    if( e === '-Infinity' )
+    return -Infinity;
+    if( e === 'false' )
+    return false;
+    if( e === 'true' )
+    return true;
+
+    return e;
+  }
+
+  /* */
+
+  test.case = 'array with all primitives';
+  var src = '[ abc, 2, 2.1, NaN, Infinity, -Infinity, null, undefined, false, true ]';
+  var exp = [ 'abc', 2, 2.1, NaN, Infinity, -Infinity, null, undefined, false, true ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, onTerminal : onTerminal } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, all primitives, duplicates, depth - 1';
+  var src = '[ abc, [ 2, 2.1, NaN, Infinity ], [ [ -Infinity, null ], undefined ], false, true, abc, [ 2, 2.1, NaN, Infinity ], [ [ -Infinity, null ], undefined ], false, true ]';
+  var exp = [ 'abc', [ 2, 2.1, NaN, Infinity ], [ '[', -Infinity, null, ']', undefined ], false, true, 'abc', [ 2, 2.1, NaN, Infinity ], [ '[', -Infinity, null, ']', undefined ], false, true ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1, onTerminal : onTerminal } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, all primitives, duplicates, depth - 4';
+  var src = '[ abc, [ 2, 2.1, NaN, Infinity ], [ [ -Infinity, null ], undefined ], false, true, abc, [ 2, 2.1, NaN, Infinity ], [ [ -Infinity, null ], undefined ], false, true ]';
+  var exp = [ 'abc', [ 2, 2.1, NaN, Infinity ], [ [ -Infinity, null ], undefined ], false, true, 'abc', [ 2, 2.1, NaN, Infinity ], [ [ -Infinity, null ], undefined ], false, true ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4, onTerminal : onTerminal } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, all primitives, duplicates, depth - 1';
+  var src = '[ abc, [ { 2 : 2.1 }, NaN, Infinity ], [ [ -Infinity, { null : null } ], undefined ], false, true, abc, [ { 2 : 2.1 }, NaN, Infinity ], [ [ -Infinity, { null : null } ], undefined ], false, true ]';
+  var exp = [ 'abc', [ '{', 2, ':', 2.1, '}', NaN, Infinity ], [ '[', -Infinity, '{', null, ':', null, '}', ']', undefined ], false, true, 'abc', [ '{', 2, ':', 2.1, '}', NaN, Infinity ], [ '[', -Infinity, '{', null, ':', null, '}', ']', undefined ], false, true ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1, onTerminal : onTerminal } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, all primitives, duplicates, depth - 4';
+  var src = '[ abc, [ { 2 : 2.1 }, NaN, Infinity ], [ [ -Infinity, { null : null } ], undefined ], false, true, abc, [ { 2 : 2.1 }, NaN, Infinity ], [ [ -Infinity, { null : null } ], undefined ], false, true ]';
+  var exp = [ 'abc', [ { 2 : 2.1 }, NaN, Infinity ], [ [ -Infinity, { null : null } ], undefined ], false, true, 'abc', [ { 2 : 2.1 }, NaN, Infinity ], [ [ -Infinity, { null : null } ], undefined ], false, true ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4, onTerminal : onTerminal } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'map with primitives';
+  var src = '{ str : str 2 : 2 2.1 : 2.1 NaN : NaN Infinity : Infinity -Infinity : -Infinity null : null undefined : undefined }';
+  var exp = { 'str' : 'str', 2 : 2, 2.1 : 2.1, NaN : NaN, Infinity : Infinity, '-Infinity' : -Infinity, null : null, undefined : undefined };
+  var got = _.strStructureParse( { src : src, onTerminal : onTerminal } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested arrays, entryDelimeter - comma, all primitives, depth - 1';
+  var src = '{ str : [ str 2 2.1 ], NaN : [ { Infinity : Infinity, -Infinity : -Infinity, null : null, undefined : undefined } ] }';
+  var exp = { 'str' : [ 'str', 2, 2.1 ], NaN : { '[ { Infinity' : Infinity },'-Infinity' : -Infinity, null : null, undefined : 'undefined } ]' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',', depth : 1, onTerminal : onTerminal } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested arrays, entryDelimeter - comma, all primitives, depth - 4';
+  var src = '{ str : [ str 2 2.1 ], NaN : [ { Infinity : Infinity, -Infinity : -Infinity, null : null, undefined : undefined } ] }';
+  var exp = { 'str' : [ 'str', 2, 2.1 ], NaN : { '[ { Infinity' : Infinity },'-Infinity' : -Infinity, null : null, undefined : 'undefined } ]' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',', depth : 4, onTerminal : onTerminal } );
+  test.identical( got, exp );
+}
+
+//
+
 function strStructureParse( test )
 {
   test.open( 'imply map' );
@@ -12154,6 +12234,7 @@ var Self =
     strStructureParseOptionDepthForArrays,
     strStructureParseOptionDepthForMaps,
     strStructureParseOptionDepthForMixed,
+    strStructureParseOptionOnTerminal,
     strStructureParse,
     strStructureParseExperiment,
 
