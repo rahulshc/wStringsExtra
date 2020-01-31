@@ -2432,8 +2432,8 @@ defaults.src = null;
 function strRequestStr( o )
 {
 
-  o = _.routineOptions( strRequestStr, arguments );
   _.assert( arguments.length === 1 );
+  o = _.routineOptions( strRequestStr, arguments );
 
   if( o.original )
   {
@@ -2443,10 +2443,32 @@ function strRequestStr( o )
 
   let result = '';
 
-  _.assert( 0, 'not implemented' );
-  /* qqq : implement, document, cover please */
-
-  return result;
+  for( let i = 0 ; i < o.subjects.length ; i++ )
+  {
+    if( o.subjects[ i ] !== undefined )
+    {
+      result += o.subjects[ i ] + ' ';
+    }
+    if( o.maps[ i ] !== undefined )
+    {
+      let map = o.maps[ i ];
+      for( let k in map )
+      {
+        result += k + o.keyValDelimeter;
+        if( _.longIs( map[ k ] ) )
+        result += '[' + map[ k ] + '] ';
+        else
+        result += map[ k ] + ' ';
+      }
+    }
+    if( o.subjects[ i + 1 ] !== undefined )
+    result += o.commandsDelimeter + ' ';
+  }
+  
+  // _.assert( 0, 'not implemented' );
+  /* qqq : implement, document, cover please | Dmytro : implemented, covered */
+  
+  return result.trim();
 }
 
 var defaults = strRequestStr.defaults = Object.create( null );
