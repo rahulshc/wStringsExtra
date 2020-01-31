@@ -914,19 +914,7 @@ var JsTokensDefinition =
   'string/double'         : /"(?:\\\n|\\"|[^"\n])*?"/,
   'string/multiline'      : /`(?:\\\n|\\`|[^`])*?`/,
   'whitespace'            : /\s+/,
-  'keyword'               : /\b(?:arguments|async|await|boolean|break|byte|case|catch|char|class|const|debugger	default	delete	do
-double	else	enum*	eval
-export*	extends*	false	final
-finally	float	for	function
-goto	if	implements	import*
-in	instanceof	int	interface
-let*	long	native	new
-null	package	private	protected
-public	return	short	static
-super*	switch	synchronized	this
-throw	throws	transient	true
-try	typeof	var	void
-volatile	while	with	yield\b/,
+  'keyword'               : /\b(?:arguments|async|await|boolean|break|byte|case|catch|char|class|const|debugger|default|delete|do|double|else|enum|eval|export|extends|false|final|finally|float|for|function|goto|if|implements|import|in|instanceof|interface|let|long|native|new|null|package|private|protected|public|return|short|static|super|switch|this|throw|throws|transient|true|try|typeof|var|void|volatile|while|with|yield)\b/, // Dmytro : added new keywords and sorted in alphabetic order
   'regexp'                : /\/((?:\\\/|[^\/\n])+?)\/(\w*)/,
   'name'                  : /[a-z_\$][0-9a-z_\$]*/i,
   'number'                : /(?:0x(?:\d|[a-f])+|\d+(?:\.\d+)?(?:e[+-]?\d+)?)/i,
@@ -934,6 +922,13 @@ volatile	while	with	yield\b/,
   'curly'                 : /[{}]/,
   'square'                : /[\[\]]/,
   'punctuation'           : /;|,|\.\.\.|\.|\:|\?|=>|>=|<=|<|>|!==|===|!=|==|=|!|&|<<|>>|>>>|\+\+|--|\*\*|\+|-|\^|\||\/|\*|%|~|\!/,
+  'name/function'         : /[a-zA-Z_$][a-zA-Z0-9_$]*(?=\()/, // Dmytro : added
+  'number/binary'         : /0[bB][01]+n?/, // Dmytro : added
+  'number/octal'          : /0[oO][0-7]+n?/, // Dmytro : added
+  'number/hex'            : /0[xX][0-9a-fA-F]+n?/, // Dmytro : added
+  'unicodeEscapeSequence' : /u[0-9a-fA-F]{4}/, // Dmytro : added
+  'tab'                   : /\t+/, // Dmytro : added
+  'comment/jsdoc'         : /\/\*\*(?:\n|.)*?\*\//, // Dmytro : added
 }
 
 function strTokenizeJs( o )
@@ -967,7 +962,7 @@ var CppTokensDefinition =
   'string/double'         : /"(?:\\\n|\\"|[^"\n])*?"/,
   'string/multiline'      : /`(?:\\\n|\\`|[^`])*?`/,
   'whitespace'            : /\s+/,
-  'keyword'               : /\b(?:do|if|in|for|let|new|try|var|case|else|enum|eval|null|this|true|void|with|await|break|catch|class|const|false|super|throw|while|yield|delete|export|import|public|return|static|switch|typeof|default|extends|finally|package|private|continue|debugger|function|arguments|interface|protected|implements|instanceof)\b/,
+  'keyword'               : /\b(?:alignas|alignof|and|and_eq|asm|auto|bitand|bitor|bool|break|case|catch|char|char16_t|char32_t|class|compl|const|constexpr|const_cast|continue|decltype|default|delete|do|double|dynamic_cast|else|enum|explicit|export|extern|false|float|for|friend|goto|if|inline|int|long|mutable|namespace|new|noexcept|not|not_eq|nullptr|operator|or|or_eq|private|protected|public|register|reinterpret_cast|return|short|signed|sizeof|static|static_assert|static_cast|struct|switch|template|this|thread_local|throw|true|try|typedef|typeid|typename|union|unsigned|using(1)|virtual|void|volatile|wchar_t|while|xor|xor_eq)\b/, // Dmytro : added new keywords and sorted in alphabetic order
   'regexp'                : /\/(?:\\\/|[^\/])*?\/(\w+)/,
   'name'                  : /[a-z_\$][0-9a-z_\$]*/i,
   'number'                : /(?:0x(?:\d|[a-f])+|\d+(?:\.\d+)?(?:e[+-]?\d+)?)/i,
@@ -975,6 +970,8 @@ var CppTokensDefinition =
   'curly'                 : /[{}]/,
   'square'                : /[\[\]]/,
   'punctuation'           : /;|,|\.\.\.|\.|\:|\?|=>|>=|<=|<|>|!=|!=|==|=|!|&|<<|>>|\+\+|--|\*\*|\+|-|\^|\||\/|\*|%|~|\!/,
+  'char/literal'          : /(?:L|u|u8|U)?'\w'/, // Dmytro : added
+  'tab'                   : /\t+/, // Dmytro : added
 }
 
 function strTokenizeCpp( o )
