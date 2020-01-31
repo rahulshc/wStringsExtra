@@ -2429,6 +2429,64 @@ defaults.src = null;
 
 //
 
+/**
+ * Routine strRequestStr() rebuilds original command string from parsed structure {-o-}.
+ *
+ * @param { ObjectLike } o - Object, which represents parsed command:
+ * @param { String } o.subject - First command in sequence of commands.
+ * @param { Map } o.map - Map options for first command {-o.subject-}.
+ * @param { Long } o.subjects - An array of commands.
+ * @param { Map } o.maps - Map options for commands.
+ * @param { String } o.keyValDelimeter - Delimeter for key and vals in map options.
+ * @param { String } o.commandsDelimeter - Delimeter for sequence of commands, each
+ * pair of subject-map will be separated by it.
+ * @param { String } o.original - Original command string, if this option is defined,
+ * then routine returns {-o.original-}.
+ * Note. Routine try to make command by using options {-o.subjects-} and {-o.subject-}. 
+ * Firstly, routine checks {-o.subjects-} and appends options for each command. If 
+ * {-o.subjects-} not exists, then routine check {-o.subject-} and append options from
+ * {-o.map-}. Otherwise, empty string returns.
+ *
+ * @example
+ * _.strRequestStr( { original : '.build abc debug:0 ; .set v:10' } );
+ * //returns '.build abc debug:0 ; .set v:10'
+ *
+ * @example
+ * _.strRequestStr( { original : '.build abc debug:0 ; .set v:10', subjects : [ '.build some', '.set' ], maps : [ { debug : 1 }, { v : 1 } ] } );
+ * //returns '.build abc debug:0 ; .set v:10'
+ *
+ * @example
+ * _.strRequestStr( { subjects : [ '.build some', '.set' ], maps : [ { debug : 1 }, { v : 1 } ] } );
+ * //returns '.build some debug:1 ; .set v:1'
+ *
+ * @example
+ * _.strRequestStr( { subjects : [ '.build some', '.set' ], maps : [ { debug : 1 }, { v : 1 } ], subject : '.run /home/user', map : { v : 5 } } );
+ * //returns '.build some debug:1 ; .set v:1'
+ *
+ * @example
+ * _.strRequestStr( { subject : '.run /home/user', map : { v : 5 } } );
+ * //returns '.run /home/user v:5'
+ *
+ * @example
+ * _.strRequestStr( { subjects : [ '.run /home/user' ], map : { v : 5 } } );
+ * //returns '.run /home/user'
+ *
+ * @example
+ * _.strRequestStr( { map : { v : 5 }, maps : [ { v : 5 }, { routine : 'strIs' } ] } );
+ * //returns ''
+ *
+ * @returns { String } - Returns original command builded from parsed structure.
+ * @function  strRequestStr
+ * @throws { Error } If arguments.length is less or more then one.
+ * @throws { Error } If {-o.original-} exists and it is not a String.
+ * @throws { Error } If {-o.subject-} is not a String.
+ * @throws { Error } If {-o.map-} is not map like.
+ * @throws { Error } If elements of {-o.subjects-} is not a Strings.
+ * @throws { Error } If elements of {-o.maps-} is not map like.
+ * @memberof wTools
+ *
+ */
+
 function strRequestStr( o )
 {
 
@@ -2442,29 +2500,58 @@ function strRequestStr( o )
   }
 
   let result = '';
-
-  for( let i = 0 ; i < o.subjects.length ; i++ )
+  
+  if( o.subjects.length > 0 )
   {
-    if( o.subjects[ i ] !== undefined )
+
+    for( let i = 0 ; i < o.subjects.length ; i++ )
     {
-      result += o.subjects[ i ] + ' ';
-    }
-    if( o.maps[ i ] !== undefined )
-    {
-      let map = o.maps[ i ];
-      for( let k in map )
+      if( o.subjects[ i ] !== undefined )
       {
+        _.assert( _.strIs( o.subjects[ i ] ) );
+        if( o.subjects[ i ] !== '' )
+        result += o.subjects[ i ] + ' ';
+      }
+      if( o.maps[ i ] !== undefined )
+      {
+        _.assert( _.mapIs( o.maps[ i ] ) );
+        let map = o.maps[ i ];
+        for( let k in map )
+        {
+          result += k + o.keyValDelimeter;
+          if( _.longIs( map[ k ] ) )
+          result += '[' + map[ k ] + '] ';
+          else
+          result += map[ k ] + ' ';
+        }
+      }
+      if( o.subjects[ i + 1 ] !== undefined )
+      result += o.commandsDelimeter + ' ';
+    }
+
+  }
+  else if( o.subject )
+  {
+
+    if( o.subject )
+    {
+      _.assert( _.strIs( o.subject ) );
+      result += o.subject + ' ';
+    }
+    if( o.map )
+    {
+      for( let k in o.map )
+      {
+        _.assert( _.mapIs( o.map ) );
         result += k + o.keyValDelimeter;
-        if( _.longIs( map[ k ] ) )
-        result += '[' + map[ k ] + '] ';
+        if( _.longIs( o.map[ k ] ) )
+        result += '[' + o.map[ k ] + '] ';
         else
-        result += map[ k ] + ' ';
+        result += o.map[ k ] + ' ';
       }
     }
-    if( o.subjects[ i + 1 ] !== undefined )
-    result += o.commandsDelimeter + ' ';
+
   }
-  
   // _.assert( 0, 'not implemented' );
   /* qqq : implement, document, cover please | Dmytro : implemented, covered */
   

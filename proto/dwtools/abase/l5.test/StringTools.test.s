@@ -11384,6 +11384,14 @@ function strRequestStr( test )
   var expected = 'number:1 str:abc array:[1,abc]';
   test.identical( got, expected );
 
+  test.case = 'only options, two parts';
+  var str = 'number : 1 str : abc ; array : [1,abc]';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = 'number:1 str:abc ; array:[1,abc]';
+  test.identical( got, expected );
+
   test.case = 'only commands';
   var str = '.command1 ; .command2';
   var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
