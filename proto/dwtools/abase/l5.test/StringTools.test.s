@@ -11374,6 +11374,123 @@ function strRequestParse( test )
 
 //
 
+function strRequestStr( test )
+{
+  test.case = 'only options';
+  var str = 'number : 1 str : abc array : [1,abc]';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = 'number:1 str:abc array:[1,abc]';
+  test.identical( got, expected );
+
+  test.case = 'only commands';
+  var str = '.command1 ; .command2';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = '.command1 ; .command2';
+  test.identical( got, expected );
+
+  test.case = 'command and option';
+  var str = '.set v : 10';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = '.set v:10';
+  test.identical( got, expected );
+
+  test.case = 'two command and option';
+  var str = '.build abc debug:0 ; .set v : 10';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = '.build abc debug:0 ; .set v:10';
+  test.identical( got, expected );
+
+  test.case = 'two command and option, quoted with "';
+  var str = '".build abc debug:0 ; .set v : 10"'
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = '.build abc debug:0 ; .set v:10';
+  test.identical( got, expected );
+
+  test.case = 'quoted option value, quoting - 0';
+  var str = 'path:"some/path"';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 0, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = 'path:"some/path"';
+  test.identical( got, expected );
+
+  test.case = 'quoted windows path as value';
+  var str = 'path:"D:\\some\\path"';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = 'path:D:\\some\\path';
+  test.identical( got, expected );
+
+  test.case = 'unqouted windows path as value';
+  var str = 'path:D:\\some\\path';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = 'path:D:\\some\\path';
+  test.identical( got, expected );
+
+  test.case = 'unqouted windows path as value';
+  var str = 'path : D:\\some\\path';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = 'path:D:\\some\\path';
+  test.identical( got, expected );
+
+  test.case = 'unqouted windows path as subject';
+  var str = 'D:\\some\\path';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = 'D:\\some\\path';
+  test.identical( got, expected );
+
+  test.case = 'command and unqouted windows path';
+  var str = '.run D:\\some\\path';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = '.run D:\\some\\path';
+  test.identical( got, expected );
+
+  test.case = 'command and unqouted windows path with option';
+  var str = '.run D:\\some\\path v:10';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = '.run D:\\some\\path v:10';
+  test.identical( got, expected );
+
+  test.case = 'two complex commands, second with windows path as subject';
+  var str = '.imply v :10 ; .run D:\\some\\path n : 2';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = '.imply v:10 ; .run D:\\some\\path n:2';
+  test.identical( got, expected );
+
+  test.case = 'subject in quotes';
+  var str = '/some/app "v:7 beeping:0"';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = '/some/app "v:7 beeping:0"';
+  test.identical( got, expected ); 
+}
+
+//
+
 // function strCommandParseOld( test )
 // {
 //   let o =
@@ -12246,6 +12363,7 @@ var Self =
 
     strWebQueryStr,
     strRequestParse,
+    strRequestStr,
     strCommandParse,
     strCommandsParse,
 
