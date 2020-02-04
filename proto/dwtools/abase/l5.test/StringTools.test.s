@@ -263,6 +263,7 @@ function strSearchDefaultOptions( test )
   var expected = [];
   test.identical( got, expected );
 
+<<<<<<< HEAD
   test.case = 'src - string, ins - string, not entry';
   var got = _.strSearch( { src : 'hello', ins : 'x' } );
   var expected = [];
@@ -275,6 +276,10 @@ function strSearchDefaultOptions( test )
 
   test.case = 'src === ins';
   var got = _.strSearch( { src : 'abc', ins : 'abc' } );
+=======
+  test.case = 'simple replace';
+  var got = _.strFindAll( 'aabaa', 'b' );
+>>>>>>> 0104f4139b26590f264b721c426185ba9ebb090b
   var expected =
   [
     {
@@ -288,11 +293,20 @@ function strSearchDefaultOptions( test )
       'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ '', 'abc', '' ]
     }
+<<<<<<< HEAD
   ];
   test.identical( got, expected );
 
   test.case = 'ins - string, one entry';
   var got = _.strSearch( { src : 'aabaa', ins : 'b' } );
+=======
+  ]
+  log( got );
+  test.identical( got, expected );
+
+  test.case = 'simple replace';
+  var got = _.strFindAll( 'aabaa', 'aa' );
+>>>>>>> 0104f4139b26590f264b721c426185ba9ebb090b
   var expected =
   [
     {
@@ -1689,6 +1703,7 @@ function strSearchOptionNearestSplitting( test )
   var expected =
   [
     {
+<<<<<<< HEAD
       'match' : 'l',
       'groups' : [],
       'tokenId' : 0,
@@ -1698,6 +1713,15 @@ function strSearchOptionNearestSplitting( test )
       'charsRange' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'nearest' :  'f\nhello'
+=======
+      match : 'x',
+      groups : [],
+      tokenId : -1,
+      range : [ 0, 1 ],
+      counter : 0,
+      input : 'xaayybaaz',
+      // tokenName : undefined,
+>>>>>>> 0104f4139b26590f264b721c426185ba9ebb090b
     },
     {
       'match' : 'l',
@@ -1729,6 +1753,7 @@ function strSearchOptionNearestSplitting( test )
       'nearest' :  'ab'
     },
     {
+<<<<<<< HEAD
       'match' : 'aa',
       'groups' : [],
       'tokenId' : 0,
@@ -1738,6 +1763,15 @@ function strSearchOptionNearestSplitting( test )
       'charsRange' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'nearest' :  'ab\naa'
+=======
+      match : 'yy',
+      groups : [],
+      tokenId : -1,
+      range : [ 3, 5 ],
+      counter : 2,
+      input : 'xaayybaaz',
+      // tokenName : undefined,
+>>>>>>> 0104f4139b26590f264b721c426185ba9ebb090b
     },
     {
       'match' : 'ab',
@@ -1798,6 +1832,7 @@ function strSearchOptionNearestSplitting( test )
       'nearest' :  '\nabc'
     },
     {
+<<<<<<< HEAD
       'match' : 'a',
       'groups' : [],
       'tokenId' : 0,
@@ -1887,6 +1922,15 @@ function strSearchOptionNearestSplitting( test )
       'charsRange' : [ 2, 4  ],
       'charsRangeRight' : [ 9, 7 ],
       'nearest' :  'f\naa'
+=======
+      match : 'z',
+      groups : [],
+      tokenId : -1,
+      range : [ 8, 9 ],
+      counter : 5,
+      input : 'xaayybaaz',
+      // tokenName : undefined,
+>>>>>>> 0104f4139b26590f264b721c426185ba9ebb090b
     },
     {
       'match' : 'aa',
@@ -8874,6 +8918,7 @@ function strStructureParseOptionParsingArrays( test )
   var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
   test.identical( got, expected );
 
+<<<<<<< HEAD
   test.case = 'square parentheses, array';
   var src = '[ 1, abc ]';
   var expected = [ 1, 'abc' ];
@@ -8899,11 +8944,142 @@ function strStructureParseOptionParsingArrays( test )
   test.identical( got, expected );
 
   test.close( 'not default arrayElementsDelimeter' );
+=======
+  test.close( 'throwing' );
+>>>>>>> 0104f4139b26590f264b721c426185ba9ebb090b
 }
 
 //
 
+<<<<<<< HEAD
 function strStructureParseOptionQuoting( test ) 
+=======
+/*
+  qqq2 : extend test routine strFindAllValueWithLong
+*/
+
+function strFindAllValueWithLong( test )
+{
+
+  /* */
+
+  test.case = 'control';
+  var exp =
+  [
+    {
+      'match' : 'some',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 4 ],
+      'counter' : 0,
+      'input' : 'some string2 text',
+      'tokenName' : 'a'
+    },
+    {
+      'match' : 'string2',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 5, 12 ],
+      'counter' : 1,
+      'input' : 'some string2 text',
+      'tokenName' : 'b'
+    }
+  ]
+  var got = _.strFindAll( 'some string2 text', { a : 'some', b : 'string2' } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'trivial';
+  var exp =
+  [
+    {
+      'match' : 'some',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 4 ],
+      'counter' : 0,
+      'input' : 'some string2 text',
+      'tokenName' : 'a'
+    },
+    {
+      'match' : 'string2',
+      'groups' : [],
+      'tokenId' : 2,
+      'range' : [ 5, 12 ],
+      'counter' : 1,
+      'input' : 'some string2 text',
+      'tokenName' : 'b'
+    }
+  ]
+  var got = _.strFindAll( 'some string2 text', { a : 'some', b : [ 'string1', 'string2' ] } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'gpahpb, found none';
+  var exp = [];
+  var got = _.strFindAll( 'gpahpb', { 'a' : [ 'x' ] } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'gpahpb, found single';
+  var exp =
+  [
+    {
+      'match' : 'g',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 1 ],
+      'counter' : 0,
+      'input' : 'gpahpb',
+      'tokenName' : 'a'
+    }
+  ]
+  var got = _.strFindAll( 'gpahpb', { 'a' : [ 'g' ] } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'gpahpb, found several';
+  var exp =
+  [
+    {
+      'match' : 'p',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : 'gpahpb',
+      'tokenName' : 'a'
+    },
+    {
+      'match' : 'p',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 5 ],
+      'counter' : 1,
+      'input' : 'gpahpb',
+      'tokenName' : 'a'
+    }
+  ]
+  var got = _.strFindAll( 'gpahpb', { 'a' : [ 'p' ] } );
+  test.identical( got, exp );
+
+  /* */
+
+}
+
+strFindAllValueWithLong.description =
+`
+  - tokens definition with array in value produce proper list of tokens
+`
+
+//
+
+function strReplaceAll( test )
+>>>>>>> 0104f4139b26590f264b721c426185ba9ebb090b
 {
   test.open( 'quoting - 0' );
 
@@ -12334,11 +12510,16 @@ var Self =
     strSearchOptionOnTokenize,
 
     strFindAll,
+<<<<<<< HEAD
 
     strReplaceAllDefaultOptions,
     strReplaceAllOptionJoining,
     strReplaceAllOptionOnUnknown,
 
+=======
+    strFindAllValueWithLong,
+    strReplaceAll,
+>>>>>>> 0104f4139b26590f264b721c426185ba9ebb090b
     strTokenizeJs,
     strSorterParse,
 

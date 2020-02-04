@@ -13,6 +13,9 @@ submodule :
   wArraysParse :
     path : npm:///warraysparse
     enabled : 0 # submodule
+  wBlueprint :
+    path : npm:///wblueprint
+    enabled : 0 # submodule
   wstringsextra :
     path : hd://.
     enabled : 0 # submodule

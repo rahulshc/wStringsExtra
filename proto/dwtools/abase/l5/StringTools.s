@@ -18,6 +18,7 @@ if( typeof module !== 'undefined' )
 
   _.include( 'wArraySorted' );
   _.include( 'wArraySparse' );
+  _.include( 'wBlueprint' );
 
 }
 
@@ -402,6 +403,8 @@ function strFindAll( src, ins )
 {
   let o;
 
+  /* xxx : sync names with _.strLeft / _.strRight */
+
   if( arguments.length === 2 )
   {
     o = { src : arguments[ 0 ] , ins : arguments[ 1 ] };
@@ -423,21 +426,7 @@ function strFindAll( src, ins )
 
   /* */
 
-  ins = o.ins;
-  let tokenNames;
-  if( _.mapIs( ins ) )
-  {
-    tokenNames = [];
-    ins = [];
-    let i = 0;
-    for( var name in o.ins )
-    {
-      tokenNames[ i ] = name;
-      ins[ i ] = o.ins[ name ];
-      i += 1;
-    }
-  }
-
+  let tokensSyntax = _.tokensSyntaxFrom( o.ins );
   let descriptorsArray = [];
   let execeds = [];
   let closests = [];
@@ -447,10 +436,11 @@ function strFindAll( src, ins )
 
   /* */
 
-  ins.forEach( ( ins, tokenId ) =>
+  tokensSyntax.idToValue.forEach( ( ins, tokenId ) =>
   {
     // Dmytro : not optimal - double check
     _.assert( _.strIs( ins ) || _.regexpIs( ins ) );
+
     if( _.regexpIs( ins ) )
     _.assert( !ins.sticky );
 
@@ -479,7 +469,7 @@ function strFindAll( src, ins )
     closests.forEach( ( index, tokenId ) =>
     {
       if( index < currentIndex )
-      index = closests[ tokenId ] = find( o.src, ins[ tokenId ], tokenId );
+      index = closests[ tokenId ] = find( o.src, tokensSyntax.idToValue[ tokenId ], tokenId );
 
       _.assert( closests[ tokenId ] >= currentIndex );
 
@@ -515,13 +505,14 @@ function strFindAll( src, ins )
       else
       result = findWithString( o.src, ins, tokenId );
     }
-    else
+    else if( _.regexpIs( ins ) )
     {
       if( ins.source === '(?:)' ) // Dmytro : missed, it's regexp for empty string
       result = src.length;
       else
       result = findWithRegexp( o.src, ins, tokenId );
     }
+    else _.assert( 0 );
 
     _.assert( result >= 0 );
     return result;
@@ -585,7 +576,7 @@ function strFindAll( src, ins )
 
   function descriptorFor( src, index, tokenId )
   {
-    let originalIns = ins[ tokenId ];
+    let originalIns = tokensSyntax.idToValue[ tokenId ];
     let foundIns;
 
     if( tokenId === -1 )
@@ -637,12 +628,13 @@ function strFindAll( src, ins )
       it.counter = o.counter;
       it.input = src;
 
-      if( tokenNames )
-      it.tokenName = tokenNames[ tokenId ];
+      if( tokensSyntax.idToName && tokensSyntax.idToName[ tokenId ] )
+      it.tokenName = tokensSyntax.idToName[ tokenId ];
 
       descriptorsArray.push( it );
     }
 
+    _.assert( _.strIs( foundIns ) );
     if( foundIns.length > 0 )
     currentIndex = index + foundIns.length;
     else
@@ -660,6 +652,76 @@ strFindAll.defaults =
   fast : 0,
   counter : 0,
   tokenizingUnknown : 0,
+}
+
+//
+
+let TokensSyntax = _.blueprint.defineConstructor
+({
+  idToValue : null,
+  idToName : _.define.shallow( [] ),
+  nameToId : _.define.shallow( {} ),
+  alternatives : _.define.shallow( {} ),
+  typed : _.trait.typed(),
+});
+
+//
+
+function tokensSyntaxFrom( ins )
+{
+
+  if( ins instanceof _.TokensSyntax )
+  return ins
+
+  let result = TokensSyntax();
+
+  if( _.strIs( ins ) || _.regexpIs( ins ) )
+  ins = [ ins ];
+
+  /* */
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.arrayLike( ins ) || _.objectIs( ins ) );
+
+  /* */
+
+  /* qqq2 : ins could be also array _.strFindAll( 'some string2', { a : 'some', b : [ 'string1', 'string2' ] } )
+    cover extension please
+  */
+
+  result.idToValue = ins;
+  if( _.mapIs( ins ) )
+  {
+    result.idToValue = [];
+    result.idToName = [];
+    let i = 0;
+    for( var name in ins )
+    {
+      let element = ins[ name ];
+      if( _.longIs( element ) )
+      {
+        let alternative = result.alternatives[ name ] = result.alternatives[ name ] || [];
+        for( let e = 0 ; e < element.length ; e++ )
+        {
+          let name2 = name + '_' + element[ e ];
+          result.idToValue[ i ] = ins[ name ][ e ];
+          result.idToName[ i ] = name2;
+          result.nameToId[ name2 ] = i;
+          alternative.push( name2 );
+          i += 1;
+        }
+      }
+      else
+      {
+        result.idToValue[ i ] = ins[ name ];
+        result.idToName[ i ] = name;
+        result.nameToId[ name ] = i;
+        i += 1;
+      }
+    }
+  }
+
+  return result;
 }
 
 //
@@ -2301,6 +2363,9 @@ function strRequestParse( o )
       b ?*+ s+ ??*+ ':' *+ e
       b ( ?*+ )? <&( s+ )&> ( ??*+ ':' *+ )? e
 
+    b subject:?** s+ map:** e
+    // 'c:/dir1 debug:0' -> subject : 'c:/dir1', debug:0
+
     // test.identical( _.strCount( op.output, /program.end(.|\n|\r)*timeout1/mg ), 1 );
     test.identical( _.strCount( op.output, `'program.end'**'timeout1'` ), 1 );
 
@@ -2553,7 +2618,7 @@ function strRequestStr( o )
 
   }
   // _.assert( 0, 'not implemented' );
-  /* qqq : implement, document, cover please | Dmytro : implemented, covered */
+  /* qqq : implement, document, cover please | Dmytro : implemented, covered, documented */
   
   return result.trim();
 }
@@ -3081,6 +3146,9 @@ let Extend =
 
   strSearch,
   strFindAll,
+
+  TokensSyntax,
+  tokensSyntaxFrom,
 
   _strReplaceMapPrepare,
   strReplaceAll, /* qqq : document me | Dmytro : extended documentation */

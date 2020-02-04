@@ -3,14 +3,14 @@ root:
   - wStringsExtra.out
 consistency:
   wStringsExtra.out.will.yml: &ref_0
-    hash: f7135057efbe660691c8df9b2deb4ba5
-    size: 38882
+    hash: 2024974ee9df0d47558e072a339861de
+    size: 39074
   ../.ex.will.yml: &ref_1
     hash: 69c2779d5bf840174d39b1cee4610e70
     size: 1850
   ../.im.will.yml: &ref_2
-    hash: c9c1e7f147b26fbf6c07acee3de16d55
-    size: 5168
+    hash: c723ab5d336eb01c830ff48d35652688
+    size: 5240
 module:
   wStringsExtra.out:
     about:
@@ -182,6 +182,10 @@ module:
         enabled: 0
       wArraysParse:
         path: 'npm:///warraysparse'
+        autoExporting: 0
+        enabled: 0
+      wBlueprint:
+        path: 'npm:///wblueprint'
         autoExporting: 0
         enabled: 0
       wstringsextra:
@@ -970,6 +974,10 @@ module:
         path: 'npm:///warraysparse'
         autoExporting: 0
         enabled: 0
+      wBlueprint:
+        path: 'npm:///wblueprint'
+        autoExporting: 0
+        enabled: 0
       wstringsextra:
         path: 'hd://.'
         autoExporting: 0
@@ -1526,6 +1534,8 @@ module:
         hash: 69c2779d5bf840174d39b1cee4610e70
         size: 1850
       ../.im.will.yml:
-        hash: c9c1e7f147b26fbf6c07acee3de16d55
-        size: 5168
-      wStringsExtra.out.will.yml: *ref_0
+        hash: c723ab5d336eb01c830ff48d35652688
+        size: 5240
+      wStringsExtra.out.will.yml:
+        hash: 2024974ee9df0d47558e072a339861de
+        size: 39074
