@@ -652,20 +652,12 @@ strFindAll.defaults =
 
 //
 
-// function TokensSyntax( o )
-// {
-//   _.assert( this instanceof TokensSyntax );
-//   if( o )
-//   _.mapExtend( this, o );
-//   return this;
-// }
-// TokensSyntax.prototype = null;
-
 let TokensSyntax = _.blueprint.defineConstructor
 ({
   idToValue : null,
   idToName : _.define.shallow( [] ),
   nameToId : _.define.shallow( {} ),
+  alternatives : _.define.shallow( {} ),
   typed : _.trait.typed(),
 });
 
@@ -703,13 +695,17 @@ function tokensSyntaxFrom( ins )
     {
       let element = ins[ name ];
       if( _.longIs( element ) )
-      for( let e = 0 ; e < element.length ; e++ )
       {
-        let name2 = name + '_' + element[ e ];
-        result.idToValue[ i ] = ins[ name ][ e ];
-        result.idToName[ i ] = name2;
-        result.nameToId[ name2 ] = i;
-        i += 1;
+        let alternative = result.alternatives[ name ] = result.alternatives[ name ] || [];
+        for( let e = 0 ; e < element.length ; e++ )
+        {
+          let name2 = name + '_' + element[ e ];
+          result.idToValue[ i ] = ins[ name ][ e ];
+          result.idToName[ i ] = name2;
+          result.nameToId[ name2 ] = i;
+          alternative.push( name2 );
+          i += 1;
+        }
       }
       else
       {
