@@ -263,7 +263,6 @@ function strSearchDefaultOptions( test )
   var expected = [];
   test.identical( got, expected );
 
-<<<<<<< HEAD
   test.case = 'src - string, ins - string, not entry';
   var got = _.strSearch( { src : 'hello', ins : 'x' } );
   var expected = [];
@@ -276,10 +275,6 @@ function strSearchDefaultOptions( test )
 
   test.case = 'src === ins';
   var got = _.strSearch( { src : 'abc', ins : 'abc' } );
-=======
-  test.case = 'simple replace';
-  var got = _.strFindAll( 'aabaa', 'b' );
->>>>>>> 0104f4139b26590f264b721c426185ba9ebb090b
   var expected =
   [
     {
@@ -293,20 +288,11 @@ function strSearchDefaultOptions( test )
       'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ '', 'abc', '' ]
     }
-<<<<<<< HEAD
   ];
   test.identical( got, expected );
 
   test.case = 'ins - string, one entry';
   var got = _.strSearch( { src : 'aabaa', ins : 'b' } );
-=======
-  ]
-  log( got );
-  test.identical( got, expected );
-
-  test.case = 'simple replace';
-  var got = _.strFindAll( 'aabaa', 'aa' );
->>>>>>> 0104f4139b26590f264b721c426185ba9ebb090b
   var expected =
   [
     {
@@ -1703,7 +1689,6 @@ function strSearchOptionNearestSplitting( test )
   var expected =
   [
     {
-<<<<<<< HEAD
       'match' : 'l',
       'groups' : [],
       'tokenId' : 0,
@@ -1713,15 +1698,6 @@ function strSearchOptionNearestSplitting( test )
       'charsRange' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'nearest' :  'f\nhello'
-=======
-      match : 'x',
-      groups : [],
-      tokenId : -1,
-      range : [ 0, 1 ],
-      counter : 0,
-      input : 'xaayybaaz',
-      // tokenName : undefined,
->>>>>>> 0104f4139b26590f264b721c426185ba9ebb090b
     },
     {
       'match' : 'l',
@@ -1753,7 +1729,6 @@ function strSearchOptionNearestSplitting( test )
       'nearest' :  'ab'
     },
     {
-<<<<<<< HEAD
       'match' : 'aa',
       'groups' : [],
       'tokenId' : 0,
@@ -1763,15 +1738,6 @@ function strSearchOptionNearestSplitting( test )
       'charsRange' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'nearest' :  'ab\naa'
-=======
-      match : 'yy',
-      groups : [],
-      tokenId : -1,
-      range : [ 3, 5 ],
-      counter : 2,
-      input : 'xaayybaaz',
-      // tokenName : undefined,
->>>>>>> 0104f4139b26590f264b721c426185ba9ebb090b
     },
     {
       'match' : 'ab',
@@ -1832,7 +1798,6 @@ function strSearchOptionNearestSplitting( test )
       'nearest' :  '\nabc'
     },
     {
-<<<<<<< HEAD
       'match' : 'a',
       'groups' : [],
       'tokenId' : 0,
@@ -1922,15 +1887,6 @@ function strSearchOptionNearestSplitting( test )
       'charsRange' : [ 2, 4  ],
       'charsRangeRight' : [ 9, 7 ],
       'nearest' :  'f\naa'
-=======
-      match : 'z',
-      groups : [],
-      tokenId : -1,
-      range : [ 8, 9 ],
-      counter : 5,
-      input : 'xaayybaaz',
-      // tokenName : undefined,
->>>>>>> 0104f4139b26590f264b721c426185ba9ebb090b
     },
     {
       'match' : 'aa',
@@ -8918,7 +8874,6 @@ function strStructureParseOptionParsingArrays( test )
   var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
   test.identical( got, expected );
 
-<<<<<<< HEAD
   test.case = 'square parentheses, array';
   var src = '[ 1, abc ]';
   var expected = [ 1, 'abc' ];
@@ -8944,16 +8899,255 @@ function strStructureParseOptionParsingArrays( test )
   test.identical( got, expected );
 
   test.close( 'not default arrayElementsDelimeter' );
-=======
-  test.close( 'throwing' );
->>>>>>> 0104f4139b26590f264b721c426185ba9ebb090b
 }
 
 //
 
-<<<<<<< HEAD
 function strStructureParseOptionQuoting( test ) 
-=======
+{
+  test.open( 'quoting - 0' );
+
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = '"some string"';
+  var expected = '"some string"';
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number : 1 "str" : abc';
+  var expected = { number : 1, '"str"' : 'abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, flat array in value';
+  var src = 'number : "1" str : abc array : [1,abc]';
+  var expected = { number : '"1"', str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' "number" : 1  str:abc array :  [ 1  , abc ] ';
+  var expected = { '"number"' : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = { '"path' : 'D":\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path:"D:\\some\\path"';
+  var expected = { path : '"D:\\some\\path"' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path : D : \\some\\ path ';
+  var expected = { path : 'D : \\some\\ path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 v1 b2 b2 : v2 v2 c3 c3 : v3 v3';
+  var expected = { 'a1 a1' : 'v1 v1 b2', 'b2' : 'v2 v2 c3', 'c3' : 'v3 v3' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
+  var expected = { 'a' : 1, 'b' : 2, 'c' : 3, 'd' : 4, 'e' : 5 };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '[]';
+  var expected = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ "1", abc ]';
+  var expected = [ '"1"', 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  , "abc" ] ';
+  var expected = [ 1, '"abc"' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1  "ab" cd ] ';
+  var expected = [ 1, '"ab"', 'cd' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '["number" : 1 str : abc]';
+  var expected = [ '"number"', ':', 1, 'str', ':', 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.close( 'quoting - 0' );
+
+  /* - */
+
+  test.open( 'quoting - 1' );
+
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = '"some string"';
+  var expected = 'some string';
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number : 1 "str" : abc';
+  var expected = { number : 1, 'str' : 'abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, flat array in value';
+  var src = 'number : "1" str : abc array : [1,abc]';
+  var expected = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' "number" : 1  str:abc array :  [ 1  , abc ] ';
+  var expected = { 'number' : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = { 'path:D' : '\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path:"D:\\some\\path"';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path : D : \\some\\ path ';
+  var expected = { path : 'D : \\some\\ path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 v1 b2 b2 : v2 v2 c3 c3 : v3 v3';
+  var expected = { 'a1 a1' : 'v1 v1 b2', 'b2' : 'v2 v2 c3', 'c3' : 'v3 v3' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
+  var expected = { 'a' : 1, 'b' : 2, 'c' : 3, 'd' : 4, 'e' : 5 };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '[]';
+  var expected = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ "1", abc ]';
+  var expected = [ '"1"', 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  , "abc" ] ';
+  var expected = [ 1, '"abc"' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1  "ab" cd ] ';
+  var expected = [ 1, '"ab"', 'cd' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '["number" : 1 str : abc]';
+  var expected = [ '"number"', ':', 1, 'str', ':', 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.close( 'quoting - 1' );
+}
+
 /*
   qqq2 : extend test routine strFindAllValueWithLong
 */
@@ -9079,7 +9273,6 @@ strFindAllValueWithLong.description =
 //
 
 function strReplaceAll( test )
->>>>>>> 0104f4139b26590f264b721c426185ba9ebb090b
 {
   test.open( 'quoting - 0' );
 
@@ -12510,16 +12703,9 @@ var Self =
     strSearchOptionOnTokenize,
 
     strFindAll,
-<<<<<<< HEAD
-
     strReplaceAllDefaultOptions,
     strReplaceAllOptionJoining,
     strReplaceAllOptionOnUnknown,
-
-=======
-    strFindAllValueWithLong,
-    strReplaceAll,
->>>>>>> 0104f4139b26590f264b721c426185ba9ebb090b
     strTokenizeJs,
     strSorterParse,
 
