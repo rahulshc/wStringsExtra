@@ -260,7 +260,7 @@ function strFindAll( test )
   test.open( 'string' );
 
   test.case = 'simple replace';
-  var got = _.strFindAll( 'aabaa','b' );
+  var got = _.strFindAll( 'aabaa', 'b' );
   var expected =
   [
     {
@@ -273,10 +273,10 @@ function strFindAll( test )
     }
   ]
   log( got );
-  test.identical( got,expected );
+  test.identical( got, expected );
 
   test.case = 'simple replace';
-  var got = _.strFindAll( 'aabaa','aa' );
+  var got = _.strFindAll( 'aabaa', 'aa' );
   var expected =
   [
     {
@@ -1204,7 +1204,7 @@ function strFindAll( test )
       range : [ 0, 1 ],
       counter : 0,
       input : 'xaayybaaz',
-      tokenName : undefined,
+      // tokenName : undefined,
     },
     {
       match : 'aa',
@@ -1222,7 +1222,7 @@ function strFindAll( test )
       range : [ 3, 5 ],
       counter : 2,
       input : 'xaayybaaz',
-      tokenName : undefined,
+      // tokenName : undefined,
     },
     {
       match : 'ba',
@@ -1249,7 +1249,7 @@ function strFindAll( test )
       range : [ 8, 9 ],
       counter : 5,
       input : 'xaayybaaz',
-      tokenName : undefined,
+      // tokenName : undefined,
     },
   ]
   log( got );
@@ -1361,13 +1361,132 @@ function strFindAll( test )
     _.strFindAll( 'gpahpb',[ 'a', 'b' ], [ 'x' ] );
   });
 
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( 'gpahpb',{ 'a' : [ 'x' ] } );
-  });
-
   test.close( 'throwing' );
 }
+
+//
+
+/*
+  qqq2 : extend test routine strFindAllValueWithLong
+*/
+
+function strFindAllValueWithLong( test )
+{
+
+  /* */
+
+  test.case = 'control';
+  var exp =
+  [
+    {
+      'match' : 'some',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 4 ],
+      'counter' : 0,
+      'input' : 'some string2 text',
+      'tokenName' : 'a'
+    },
+    {
+      'match' : 'string2',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 5, 12 ],
+      'counter' : 1,
+      'input' : 'some string2 text',
+      'tokenName' : 'b'
+    }
+  ]
+  var got = _.strFindAll( 'some string2 text', { a : 'some', b : 'string2' } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'trivial';
+  var exp =
+  [
+    {
+      'match' : 'some',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 4 ],
+      'counter' : 0,
+      'input' : 'some string2 text',
+      'tokenName' : 'a'
+    },
+    {
+      'match' : 'string2',
+      'groups' : [],
+      'tokenId' : 2,
+      'range' : [ 5, 12 ],
+      'counter' : 1,
+      'input' : 'some string2 text',
+      'tokenName' : 'b'
+    }
+  ]
+  var got = _.strFindAll( 'some string2 text', { a : 'some', b : [ 'string1', 'string2' ] } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'gpahpb, found none';
+  var exp = [];
+  var got = _.strFindAll( 'gpahpb', { 'a' : [ 'x' ] } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'gpahpb, found single';
+  var exp =
+  [
+    {
+      'match' : 'g',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 1 ],
+      'counter' : 0,
+      'input' : 'gpahpb',
+      'tokenName' : 'a'
+    }
+  ]
+  var got = _.strFindAll( 'gpahpb', { 'a' : [ 'g' ] } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'gpahpb, found several';
+  var exp =
+  [
+    {
+      'match' : 'p',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : 'gpahpb',
+      'tokenName' : 'a'
+    },
+    {
+      'match' : 'p',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 5 ],
+      'counter' : 1,
+      'input' : 'gpahpb',
+      'tokenName' : 'a'
+    }
+  ]
+  var got = _.strFindAll( 'gpahpb', { 'a' : [ 'p' ] } );
+  test.identical( got, exp );
+
+  /* */
+
+}
+
+strFindAllValueWithLong.description =
+`
+  - tokens definition with array in value produce proper list of tokens
+`
 
 //
 
@@ -3587,6 +3706,7 @@ var Self =
     //
 
     strFindAll,
+    strFindAllValueWithLong,
     strReplaceAll,
     strTokenizeJs,
     strSorterParse,

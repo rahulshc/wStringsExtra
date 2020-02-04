@@ -1,6 +1,6 @@
 {
   "name" : "wstringsextra", 
-  "version" : "0.3.147", 
+  "version" : "0.3.148", 
   "description" : "Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.", 
   "author" : "Kostiantyn Wandalen <wanalen@willbe.so>", 
   "license" : "MIT", 
@@ -21,7 +21,8 @@
     "wTools" : "", 
     "wstringer" : "", 
     "warraysorted" : "", 
-    "warraysparse" : ""
+    "warraysparse" : "", 
+    "wblueprint" : ""
   }, 
   "devDependencies" : { "wTesting" : "" }, 
   "keywords" : [ "wTools", "wStringsExtra" ]
