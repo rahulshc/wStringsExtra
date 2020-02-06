@@ -5380,7 +5380,6 @@ function strFindAll( test )
       range : [ 0, 1 ],
       counter : 0,
       input : 'xaabaazb',
-      tokenName : undefined,
     },
     {
       match : 'aa',
@@ -5416,7 +5415,6 @@ function strFindAll( test )
       range : [ 6, 8 ],
       counter : 4,
       input : 'xaabaazb',
-      tokenName : undefined,
     },
   ];
   test.identical( got, expected );
@@ -8987,7 +8985,7 @@ function strStructureParseOptionQuoting( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
-  var expected = { 'a' : 1, 'b' : 2, 'c' : 3, 'd' : 4, 'e' : 5 };
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
   var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
   test.identical( got, expected );
 
@@ -9109,7 +9107,7 @@ function strStructureParseOptionQuoting( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
-  var expected = { 'a' : 1, 'b' : 2, 'c' : 3, 'd' : 4, 'e' : 5 };
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
   var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
   test.identical( got, expected );
 
@@ -9123,25 +9121,25 @@ function strStructureParseOptionQuoting( test )
 
   test.case = 'square parentheses, array';
   var src = '[ "1", abc ]';
-  var expected = [ '"1"', 'abc' ];
+  var expected = [ 1, 'abc' ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
   test.identical( got, expected );
 
   test.case = 'square parentheses array with extra spaces';
   var src = ' [ 1  , "abc" ] ';
-  var expected = [ 1, '"abc"' ];
+  var expected = [ 1, 'abc' ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
   test.identical( got, expected );
 
   test.case = 'array with spaces delimeters';
   var src = ' [ 1  "ab" cd ] ';
-  var expected = [ 1, '"ab"', 'cd' ];
+  var expected = [ 1, 'ab', 'cd' ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
   test.identical( got, expected );
 
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '["number" : 1 str : abc]';
-  var expected = [ '"number"', ':', 1, 'str', ':', 'abc' ];
+  var expected = [ 'number', ':', 1, 'str', ':', 'abc' ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
   test.identical( got, expected );
 
