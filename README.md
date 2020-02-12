@@ -6,7 +6,7 @@ Collection of sophisticated routines for operations on Strings. StringsToolsExtr
 ### Try out
 ```
 npm install
-node sample/Sample.s
+node sample/Sample.js
 ```
 
 
