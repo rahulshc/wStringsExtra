@@ -5560,6 +5560,159 @@ function strFindAll( test )
 
 //
 
+function tokensSyntaxFrom( test ) 
+{
+  test.case = 'ins - instance of _.TokensSyntax';
+  var src = _.TokensSyntax.apply( null, [] );
+  var got = _.tokensSyntaxFrom( src );
+  var exp = _.TokensSyntax.apply( null, [] );
+  test.identical( got, exp );
+  test.is( got === src );
+
+  test.case = 'ins - instance of _.TokensSyntax maked by tokensSyntaxFrom';
+  var src = _.tokensSyntaxFrom( 'src' );
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [ 'src' ],
+    idToName : [],
+    nameToId : {},
+    alternatives : {},
+  };
+  test.identical( got, exp );
+  test.is( got === src );
+
+  /* */
+
+  test.case = 'ins - empty string';
+  var src = '';
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [ '' ],
+    idToName : [],
+    nameToId : {},
+    alternatives : {},
+  };
+  test.identical( got, exp );
+
+  test.case = 'ins - string';
+  var src = 'src';
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [ 'src' ],
+    idToName : [],
+    nameToId : {},
+    alternatives : {},
+  };
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'ins - empty array';
+  var src = [];
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [],
+    idToName : [],
+    nameToId : {},
+    alternatives : {},
+  };
+  test.identical( got, exp );
+
+  test.case = 'ins - array with tokens';
+  var src = [ 'abc', /^[abc]/ ];
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [ 'abc', /^[abc]/ ],
+    idToName : [],
+    nameToId : {},
+    alternatives : {},
+  };
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'ins - empty map';
+  var src = {};
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [],
+    idToName : [],
+    nameToId : {},
+    alternatives : {},
+  };
+  test.identical( got, exp );
+
+  test.case = 'ins - map with string tokens';
+  var src = { a : 'abc', b : 'def', c : 'hig' };
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [ 'abc', 'def', 'hig' ],
+    idToName : [ 'a', 'b', 'c' ],
+    nameToId : { a : 0, b : 1, c : 2 },
+    alternatives : {},
+  };
+  test.identical( got, exp );
+
+  test.case = 'ins - map with string tokens and empty array';
+  var src = { d : [], b : 'def', a : 'abc', c : 'hig' };
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [ 'def', 'abc', 'hig' ],
+    idToName : [ 'b', 'a', 'c' ],
+    nameToId : { b : 0, a : 1, c : 2 },
+    alternatives : { d : [] },
+  };
+  test.identical( got, exp );
+
+  test.case = 'ins - map with string tokens and filled array';
+  var src = { d : [ 'a', 'b', 'c' ], b : 'def', a : 'abc', c : 'hig' };
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [ 'a', 'b', 'c', 'def', 'abc', 'hig' ],
+    idToName : [ 'd_a', 'd_b', 'd_c', 'b', 'a', 'c' ],
+    nameToId : { d_a : 0, d_b : 1, d_c : 2, b : 3, a : 4, c : 5 },
+    alternatives : { d : [ 'd_a', 'd_b', 'd_c' ] },
+  };
+  test.identical( got, exp );
+
+  test.case = 'ins - map with string tokens and filled array, key and element of array - empty string';
+  var src = { b : 'def', a : 'abc', c : 'hig', '' : [ 'a', '', 'c' ] };
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [ 'def', 'abc', 'hig', 'a', '', 'c' ],
+    idToName : [ 'b', 'a', 'c', '_a', '_', '_c',  ],
+    nameToId : { b : 0, a : 1, c : 2, _a : 3, _ : 4, _c : 5 },
+    alternatives : { '' : [ '_a', '_', '_c' ] },
+  };
+  test.identical( got, exp );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.tokensSyntaxFrom() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.tokensSyntaxFrom( 'a', 'b' ) );
+
+  test.case = 'wrong type of ins';
+  test.shouldThrowErrorSync( () => _.tokensSyntaxFrom( new U8x( [ 1, 2, 3 ] ) ) );
+}
+
+//
+
 function strReplaceAllDefaultOptions( test )
 {
   test.open( 'string' );
@@ -12701,6 +12854,9 @@ var Self =
     strSearchOptionOnTokenize,
 
     strFindAll,
+
+    tokensSyntaxFrom,
+
     strReplaceAllDefaultOptions,
     strReplaceAllOptionJoining,
     strReplaceAllOptionOnUnknown,

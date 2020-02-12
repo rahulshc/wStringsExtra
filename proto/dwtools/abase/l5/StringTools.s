@@ -704,7 +704,7 @@ function tokensSyntaxFrom( ins )
         for( let e = 0 ; e < element.length ; e++ )
         {
           let name2 = name + '_' + element[ e ];
-          result.idToValue[ i ] = ins[ name ][ e ];
+          result.idToValue[ i ] = ins[ name ][ e ]; // Dmytro : better to use local variable 'let element'. Also, maybe, needs check type of element - regexp or string.
           result.idToName[ i ] = name2;
           result.nameToId[ name2 ] = i;
           alternative.push( name2 );
@@ -713,7 +713,7 @@ function tokensSyntaxFrom( ins )
       }
       else
       {
-        result.idToValue[ i ] = ins[ name ];
+        result.idToValue[ i ] = ins[ name ]; // Dmytro : better to use local variable 'let element'
         result.idToName[ i ] = name;
         result.nameToId[ name ] = i;
         i += 1;
