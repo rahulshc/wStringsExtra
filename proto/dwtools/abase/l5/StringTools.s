@@ -685,8 +685,8 @@ function tokensSyntaxFrom( ins )
 
   /* */
 
-  /* qqq2 : ins could be also array _.strFindAll( 'some string2', { a : 'some', b : [ 'string1', 'string2' ] } )
-    cover extension please
+  /*
+  qqq2 : ins could be also array _.strFindAll( 'some string2', { a : 'some', b : [ 'string1', 'string2' ] } ) cover extension please | Dmytro : covered routines tokensSyntaxFrom and strFindAll
   */
 
   result.idToValue = ins;

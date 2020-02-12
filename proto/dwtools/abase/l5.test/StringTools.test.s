@@ -5285,7 +5285,7 @@ function strFindAll( test )
   test.open( 'ins - map, fast - 0' );
 
   test.case = 'map';
-  var map = { manyA : /a+/, ba : /ba/ };
+  var map = { manyA : /a+/, ba : [ 'ba', /ba/ ] };
   var got = _.strFindAll( 'aabaa', map );
   var expected =
   [
@@ -5305,7 +5305,7 @@ function strFindAll( test )
       range : [ 2, 4 ],
       counter : 1,
       input : 'aabaa',
-      tokenName : 'ba'
+      tokenName : 'ba_ba'
     },
     {
       groups : [],
@@ -5322,7 +5322,7 @@ function strFindAll( test )
   /* */
 
   test.case = 'ins - map, tokenizingUnknwon - 1, but not unknown';
-  var map = { manyA : /a+/, ba : /ba/ };
+  var map = { manyA : /a+/, ba : [ 'ba', /ba/ ] };
   var got = _.strFindAll
   ({
     src : 'aabaa',
@@ -5347,7 +5347,7 @@ function strFindAll( test )
       range : [ 2, 4 ],
       counter : 1,
       input : 'aabaa',
-      tokenName : 'ba'
+      tokenName : 'ba_ba'
     },
     {
       groups : [],
@@ -5363,8 +5363,8 @@ function strFindAll( test )
 
   /* */
 
-  test.case = 'map with tokenizingUnknwon : 1 and unknown';
-  var map = { manyA : /a+/, ba : /ba/ };
+  test.case = 'map with tokenizingUnknwon - 1 and unknown';
+  var map = { manyA : /a+/, ba : [ 'ba', /ba/ ] };
   var got = _.strFindAll
   ({
     src : 'xaabaazb',
@@ -5397,7 +5397,7 @@ function strFindAll( test )
       range : [ 3, 5 ],
       counter : 2,
       input : 'xaabaazb',
-      tokenName : 'ba'
+      tokenName : 'ba_ba'
     },
     {
       match : 'a',
@@ -5457,7 +5457,7 @@ function strFindAll( test )
   test.open( 'ins - map, fast - 1' );
 
   test.case = 'map';
-  var map = { manyA : /a+/, ba : /ba/ };
+  var map = { manyA : /a+/, ba : [ 'ba', /ba/ ] };
   var got = _.strFindAll( { src : 'aabaa', ins : map, fast : 1 } );
   var expected =
   [
@@ -5470,7 +5470,7 @@ function strFindAll( test )
   /* */
 
   test.case = 'ins - map, tokenizingUnknwon - 1, but not unknown';
-  var map = { manyA : /a+/, ba : /ba/ };
+  var map = { manyA : /a+/, ba : [ 'ba', /ba/ ] };
   var got = _.strFindAll
   ({
     src : 'aabaa',
@@ -5489,7 +5489,7 @@ function strFindAll( test )
   /* */
 
   test.case = 'map with tokenizingUnknwon : 1 and unknown';
-  var map = { manyA : /a+/, ba : /ba/ };
+  var map = { manyA : /a+/, ba : [ 'ba', /ba/ ] };
   var got = _.strFindAll
   ({
     src : 'xaabaazb',
