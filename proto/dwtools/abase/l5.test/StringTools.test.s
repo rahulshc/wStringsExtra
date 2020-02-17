@@ -9,6 +9,7 @@ if( typeof module !== 'undefined' )
 
   _.include( 'wTesting' );
   require( '../l5/StringTools.s' );
+  _.include( 'wSelector' );
 
 }
 
@@ -243,23 +244,4607 @@ function strHtmlEscape( test )
 
 //
 
+function strSearchDefaultOptions( test )
+{
+  test.open( 'ins - string' );
+
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strSearch( { src : '', ins : '' } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - string';
+  var got = _.strSearch( { src : '', ins : 'x' } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty string';
+  var got = _.strSearch( { src : 'abc', ins : '' } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - string, not entry';
+  var got = _.strSearch( { src : 'hello', ins : 'x' } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty array';
+  var got = _.strSearch( { src : 'hello', ins : [] } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src === ins';
+  var got = _.strSearch( { src : 'abc', ins : 'abc' } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 3 ],
+      'counter' : 0,
+      'input' : 'abc',
+      'charsRange' : [ 0, 3 ],
+      'charsRangeRight' : [ 3, 0 ],
+      'nearest' : [ '', 'abc', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, one entry';
+  var got = _.strSearch( { src : 'aabaa', ins : 'b' } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 3 ],
+      'counter' : 0,
+      'input' : 'aabaa',
+      'charsRange' : [ 2, 3 ],
+      'charsRangeRight' : [ 3, 2 ],
+      'nearest' : [ 'aa', 'b', 'aa' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, two entries';
+  var got = _.strSearch( { src : 'aabaa', ins : 'aa' } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'aabaa',
+      'charsRange' : [ 0, 2  ],
+      'charsRangeRight' : [ 5, 3 ],
+      'nearest' : [ '', 'aa', 'baa' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'aabaa',
+      'charsRange' : [ 3, 5  ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' : [ 'aab', 'aa', '' ]
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'hello', ins : [ 'l', '', 'x' ] } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 3 ],
+      'counter' : 0,
+      'input' : 'hello',
+      'charsRange' : [ 2, 3  ],
+      'charsRangeRight' : [ 3, 2 ],
+      'nearest' : [ 'he', 'l', 'lo' ]
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 4 ],
+      'counter' : 1,
+      'input' : 'hello',
+      'charsRange' : [ 3, 4  ],
+      'charsRangeRight' : [ 2, 1 ],
+      'nearest' : [ 'hel', 'l', 'o' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, entries';
+  var got = _.strSearch( { src : 'abaabab', ins : [ 'aa', 'ab', 'a' ] } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'abaabab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'nearest' : [ '', 'ab', 'aabab' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 1,
+      'input' : 'abaabab',
+      'charsRange' : [ 2, 4 ],
+      'charsRangeRight' : [ 5, 3 ],
+      'nearest' : [ 'ab', 'aa', 'bab' ]
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 5, 7 ],
+      'counter' : 2,
+      'input' : 'abaabab',
+      'charsRange' : [ 5, 7 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' : [ 'abaab', 'ab', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : 'abcabc', ins : [ 'abc', 'a' ] } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 3 ],
+      'counter' : 0,
+      'input' : 'abcabc',
+      'charsRange' : [ 0, 3 ],
+      'charsRangeRight' : [ 6, 3 ],
+      'nearest' : [ '', 'abc', 'abc' ]
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 6 ],
+      'counter' : 1,
+      'input' : 'abcabc',
+      'charsRange' : [ 3, 6 ],
+      'charsRangeRight' : [ 3, 0 ],
+      'nearest' : [ 'abc', 'abc', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : 'abcabc', ins : [ 'a', 'abc' ] } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 1 ],
+      'counter' : 0,
+      'input' : 'abcabc',
+      'charsRange' : [ 0, 1 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' : [ '', 'a', 'bcabc' ]
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 4 ],
+      'counter' : 1,
+      'input' : 'abcabc',
+      'charsRange' : [ 3, 4 ],
+      'charsRangeRight' : [ 3, 2 ],
+      'nearest' : [ 'abc', 'a', 'bc' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - string' );
+
+  /* - */
+
+  test.open( 'ins - regexp' );
+
+  test.case = 'src - empty string, ins - regexp for empty strings';
+  var got = _.strSearch( { src : '', ins : /(?:)/g } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - regexp';
+  var got = _.strSearch( { src : '', ins : /x/ } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp for empty string';
+  var got = _.strSearch( { src : 'abc', ins : /(?:)/g } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp, not entry';
+  var got = _.strSearch( { src : 'hello', ins : /x/ } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src === ins';
+  var got = _.strSearch( { src : 'abc', ins : /abc/ } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 3 ],
+      'counter' : 0,
+      'input' : 'abc',
+      'charsRange' : [ 0, 3 ],
+      'charsRangeRight' : [ 3, 0 ],
+      'nearest' : [ '', 'abc', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, one entry';
+  var got = _.strSearch( { src : 'aabaa', ins : /b+/ } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 3 ],
+      'counter' : 0,
+      'input' : 'aabaa',
+      'charsRange' : [ 2, 3 ],
+      'charsRangeRight' : [ 3, 2 ],
+      'nearest' : [ 'aa', 'b', 'aa' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, two entries';
+  var got = _.strSearch( { src : 'aabaa', ins : /a+/ } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'aabaa',
+      'charsRange' : [ 0, 2  ],
+      'charsRangeRight' : [ 5, 3 ],
+      'nearest' : [ '', 'aa', 'baa' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'aabaa',
+      'charsRange' : [ 3, 5  ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' : [ 'aab', 'aa', '' ]
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'hello', ins : [ /l/gm, /(?:)/g, /x/ ] } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 3 ],
+      'counter' : 0,
+      'input' : 'hello',
+      'charsRange' : [ 2, 3  ],
+      'charsRangeRight' : [ 3, 2 ],
+      'nearest' : [ 'he', 'l', 'lo' ]
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 4 ],
+      'counter' : 1,
+      'input' : 'hello',
+      'charsRange' : [ 3, 4  ],
+      'charsRangeRight' : [ 2, 1 ],
+      'nearest' : [ 'hel', 'l', 'o' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, entries';
+  var got = _.strSearch( { src : 'abaabab', ins : [ /aa+/, /ab/g, 'a' ] } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'abaabab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'nearest' : [ '', 'ab', 'aabab' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 1,
+      'input' : 'abaabab',
+      'charsRange' : [ 2, 4 ],
+      'charsRangeRight' : [ 5, 3 ],
+      'nearest' : [ 'ab', 'aa', 'bab' ]
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 5, 7 ],
+      'counter' : 2,
+      'input' : 'abaabab',
+      'charsRange' : [ 5, 7 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' : [ 'abaab', 'ab', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : 'abcabc', ins : [ /abc/g, /a/ ] } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 3 ],
+      'counter' : 0,
+      'input' : 'abcabc',
+      'charsRange' : [ 0, 3 ],
+      'charsRangeRight' : [ 6, 3 ],
+      'nearest' : [ '', 'abc', 'abc' ]
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 6 ],
+      'counter' : 1,
+      'input' : 'abcabc',
+      'charsRange' : [ 3, 6 ],
+      'charsRangeRight' : [ 3, 0 ],
+      'nearest' : [ 'abc', 'abc', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : 'abcabc', ins : [ /a+/, /abc/g ] } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 1 ],
+      'counter' : 0,
+      'input' : 'abcabc',
+      'charsRange' : [ 0, 1 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' : [ '', 'a', 'bcabc' ]
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 4 ],
+      'counter' : 1,
+      'input' : 'abcabc',
+      'charsRange' : [ 3, 4 ],
+      'charsRangeRight' : [ 3, 2 ],
+      'nearest' : [ 'abc', 'a', 'bc' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - regexp' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strSearch() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strSearch( { src : 'abc', ins : 'a' }, 'b' ) );
+
+  test.case = 'unknown option in options map';
+  test.shouldThrowErrorSync( () => _.strSearch( { src : 'abc', ins : 'a', range : [ 1, 2 ] } ) );
+
+  test.case = 'wrong type onTokenize';
+  test.shouldThrowErrorSync( () => _.strSearch( { src : 'abc', ins : 'a', onTokenize : [] } ) );
+}
+
+//
+
+function strSearchOptionNearestLines( test )
+{
+  test.open( 'ins - string, nearestLines - 2' );
+
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strSearch( { src : '', ins : '',  nearestLines : 2 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - string';
+  var got = _.strSearch( { src : '', ins : 'x',  nearestLines : 2 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty string';
+  var got = _.strSearch( { src : 'abc', ins : '',  nearestLines : 2 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - string, not entry';
+  var got = _.strSearch( { src : 'hello', ins : 'x',  nearestLines : 2 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty array';
+  var got = _.strSearch( { src : 'hello', ins : [],  nearestLines : 2 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : 'abc',  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
+      'nearest' : [ 'f\n', 'abc', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'b',  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' : [ 'aa\n', 'b', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'aa',  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
+      'nearest' : [ 'f\n', 'aa', '' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
+      'nearest' : [ 'b\n', 'aa', '' ]
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ 'l', '', 'x' ],  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'nearest' : [ 'f\nhe', 'l', 'lo' ]
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' : [ 'f\nhel', 'l', 'o' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ 'aa', 'ab', 'a' ],  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
+      'nearest' : [ '', 'ab', '' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'nearest' : [ 'ab\n', 'aa', '' ]
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' : [ 'b\n', 'ab', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  nearestLines : 2 } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' : [ '\n', 'abc', '' ]
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'nearest' : [ 'abc\n', 'abc', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'nearest' : [ '\n', 'a', 'bc' ]
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
+      'nearest' : [ 'abc\n', 'a', 'bc' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - string, nearestLines - 2' );
+
+  /* - */
+
+  test.open( 'ins - regexp, nearestLines - 2' );
+
+  test.case = 'src - empty string, ins - regexp for empty strings';
+  var got = _.strSearch( { src : '', ins : /(?:)/g,  nearestLines : 2 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - regexp';
+  var got = _.strSearch( { src : '', ins : /x/,  nearestLines : 2 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp for empty string';
+  var got = _.strSearch( { src : 'abc', ins : /(?:)/g,  nearestLines : 2 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp, not entry';
+  var got = _.strSearch( { src : 'hello', ins : /x/,  nearestLines : 2 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : /abc/g,  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
+      'nearest' : [ 'f\n', 'abc', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /b+/g,  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' : [ 'aa\n', 'b', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /a+/,  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
+      'nearest' : [ 'f\n', 'aa', '' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
+      'nearest' : [ 'b\n', 'aa', '' ]
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ /[las]/, /a/, /x/ ],  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'nearest' : [ 'f\nhe', 'l', 'lo' ]
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' : [ 'f\nhel', 'l', 'o' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ /aa/g, /ab/, /a+/ ],  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
+      'nearest' : [ '', 'ab', '' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'nearest' : [ 'ab\n', 'aa', '' ]
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' : [ 'b\n', 'ab', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  nearestLines : 2 } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' : [ '\n', 'abc', '' ]
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'nearest' : [ 'abc\n', 'abc', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  nearestLines : 2 } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'nearest' : [ '\n', 'a', 'bc' ]
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
+      'nearest' : [ 'abc\n', 'a', 'bc' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - regexp, nearestLines - 2' );
+
+  /* - */
+
+  test.open( 'ins - string, nearestLines - 4' );
+
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strSearch( { src : '', ins : '',  nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - string';
+  var got = _.strSearch( { src : '', ins : 'x',  nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty string';
+  var got = _.strSearch( { src : 'abc', ins : '',  nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - string, not entry';
+  var got = _.strSearch( { src : 'hello', ins : 'x',  nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty array';
+  var got = _.strSearch( { src : 'hello', ins : [],  nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : 'abc',  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
+      'nearest' : [ 'f\nf\n', 'abc', '\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'b',  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' : [ 'f\naa\n', 'b', '\naa' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'aa',  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
+      'nearest' : [ 'f\n', 'aa', '\nb' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
+      'nearest' : [ 'aa\nb\n', 'aa', '\nf' ]
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ 'l', '', 'x' ],  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'nearest' : [ 'f\nf\nhe', 'l', 'lo\nf' ]
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' : [ 'f\nf\nhel', 'l', 'o\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ 'aa', 'ab', 'a' ],  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
+      'nearest' : [ '', 'ab', '\naa' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'nearest' : [ 'ab\n', 'aa', '\nb' ]
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' : [ 'aa\nb\n', 'ab', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  nearestLines : 4 } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' : [ '\n', 'abc', '\nabc' ]
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'nearest' : [ '\nabc\n', 'abc', '\n' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'nearest' : [ '\n', 'a', 'bc\nabc' ]
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
+      'nearest' : [ '\nabc\n', 'a', 'bc\n' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - string, nearestLines - 4' );
+
+  /* - */
+
+  test.open( 'ins - regexp, nearestLines - 4' );
+
+  test.case = 'src - empty string, ins - regexp for empty strings';
+  var got = _.strSearch( { src : '', ins : /(?:)/g,  nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - regexp';
+  var got = _.strSearch( { src : '', ins : /x/,  nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp for empty string';
+  var got = _.strSearch( { src : 'abc', ins : /(?:)/g,  nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp, not entry';
+  var got = _.strSearch( { src : 'hello', ins : /x/,  nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : /abc/g,  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
+      'nearest' : [ 'f\nf\n', 'abc', '\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /b+/g,  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' : [ 'f\naa\n', 'b', '\naa' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /a+/,  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
+      'nearest' : [ 'f\n', 'aa', '\nb' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
+      'nearest' : [ 'aa\nb\n', 'aa', '\nf' ]
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ /[las]/, /a/, /x/ ],  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'nearest' : [ 'f\nf\nhe', 'l', 'lo\nf' ]
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' : [ 'f\nf\nhel', 'l', 'o\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ /aa/g, /ab/, /a+/ ],  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
+      'nearest' : [ '', 'ab', '\naa' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'nearest' : [ 'ab\n', 'aa', '\nb' ]
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' : [ 'aa\nb\n', 'ab', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  nearestLines : 4 } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' : [ '\n', 'abc', '\nabc' ]
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'nearest' : [ '\nabc\n', 'abc', '\n' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'nearest' : [ '\n', 'a', 'bc\nabc' ]
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
+      'nearest' : [ '\nabc\n', 'a', 'bc\n' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - regexp, nearestLines - 4' );
+}
+
+//
+
+function strSearchOptionNearestSplitting( test )
+{
+  test.open( 'ins - string, nearestLines - 2' );
+
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strSearch( { src : '', ins : '',  nearestLines : 2, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - string';
+  var got = _.strSearch( { src : '', ins : 'x',  nearestLines : 2, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty string';
+  var got = _.strSearch( { src : 'abc', ins : '',  nearestLines : 2, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - string, not entry';
+  var got = _.strSearch( { src : 'hello', ins : 'x',  nearestLines : 2, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty array';
+  var got = _.strSearch( { src : 'hello', ins : [],  nearestLines : 2, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : 'abc',  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
+      'nearest' :  'f\nabc'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'b',  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  'aa\nb'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'aa',  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
+      'nearest' :  'f\naa'
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
+      'nearest' :  'b\naa'
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ 'l', '', 'x' ],  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'nearest' :  'f\nhello'
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  'f\nhello'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ 'aa', 'ab', 'a' ],  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
+      'nearest' :  'ab'
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'nearest' :  'ab\naa'
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' :  'b\nab'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' :  '\nabc'
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'nearest' :  'abc\nabc'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'nearest' :  '\nabc'
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
+      'nearest' :  'abc\nabc'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - string, nearestLines - 2' );
+
+  /* - */
+
+  test.open( 'ins - regexp, nearestLines - 2' );
+
+  test.case = 'src - empty string, ins - regexp for empty strings';
+  var got = _.strSearch( { src : '', ins : /(?:)/g,  nearestLines : 2, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - regexp';
+  var got = _.strSearch( { src : '', ins : /x/,  nearestLines : 2, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp for empty string';
+  var got = _.strSearch( { src : 'abc', ins : /(?:)/g,  nearestLines : 2, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp, not entry';
+  var got = _.strSearch( { src : 'hello', ins : /x/,  nearestLines : 2, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : /abc/g,  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
+      'nearest' :  'f\nabc'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /b+/g,  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  'aa\nb'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /a+/,  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
+      'nearest' :  'f\naa'
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
+      'nearest' :  'b\naa'
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ /[las]/, /a/, /x/ ],  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'nearest' :  'f\nhello'
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  'f\nhello'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ /aa/g, /ab/, /a+/ ],  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
+      'nearest' :  'ab'
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'nearest' :  'ab\naa'
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' :  'b\nab'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' :  '\nabc'
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'nearest' :  'abc\nabc'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  nearestLines : 2, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'nearest' :  '\nabc'
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
+      'nearest' :  'abc\nabc'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - regexp, nearestLines - 2' );
+
+  /* - */
+
+  test.open( 'ins - string, nearestLines - 4' );
+
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strSearch( { src : '', ins : '',  nearestLines : 4, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - string';
+  var got = _.strSearch( { src : '', ins : 'x',  nearestLines : 4, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty string';
+  var got = _.strSearch( { src : 'abc', ins : '',  nearestLines : 4, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - string, not entry';
+  var got = _.strSearch( { src : 'hello', ins : 'x',  nearestLines : 4, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty array';
+  var got = _.strSearch( { src : 'hello', ins : [],  nearestLines : 4, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : 'abc',  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
+      'nearest' :  'f\nf\nabc\nf'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'b',  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  'f\naa\nb\naa'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'aa',  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
+      'nearest' :  'f\naa\nb'
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
+      'nearest' :  'aa\nb\naa\nf'
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ 'l', '', 'x' ],  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'nearest' :  'f\nf\nhello\nf'
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  'f\nf\nhello\nf'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ 'aa', 'ab', 'a' ],  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
+      'nearest' :  'ab\naa'
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'nearest' :  'ab\naa\nb'
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' :  'aa\nb\nab'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' :  '\nabc\nabc'
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'nearest' :  '\nabc\nabc\n'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'nearest' :  '\nabc\nabc'
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
+      'nearest' :  '\nabc\nabc\n'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - string, nearestLines - 4' );
+
+  /* - */
+
+  test.open( 'ins - regexp, nearestLines - 4' );
+
+  test.case = 'src - empty string, ins - regexp for empty strings';
+  var got = _.strSearch( { src : '', ins : /(?:)/g,  nearestLines : 4, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - regexp';
+  var got = _.strSearch( { src : '', ins : /x/,  nearestLines : 4, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp for empty string';
+  var got = _.strSearch( { src : 'abc', ins : /(?:)/g,  nearestLines : 4, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp, not entry';
+  var got = _.strSearch( { src : 'hello', ins : /x/,  nearestLines : 4, nearestSplitting : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : /abc/g,  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
+      'nearest' :  'f\nf\nabc\nf'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /b+/g,  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  'f\naa\nb\naa'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /a+/,  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
+      'nearest' :  'f\naa\nb'
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
+      'nearest' :  'aa\nb\naa\nf'
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ /[las]/, /a/, /x/ ],  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'nearest' :  'f\nf\nhello\nf'
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  'f\nf\nhello\nf'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ /aa/g, /ab/, /a+/ ],  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
+      'nearest' :  'ab\naa'
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'nearest' :  'ab\naa\nb'
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' :  'aa\nb\nab'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' :  '\nabc\nabc'
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'nearest' :  '\nabc\nabc\n'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  nearestLines : 4, nearestSplitting : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'nearest' : '\nabc\nabc'
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
+      'nearest' : '\nabc\nabc\n'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - regexp, nearestLines - 4' );
+}
+
+//
+
+function strSearchOptiondeterminingLineNumber( test )
+{
+  test.open( 'ins - string' );
+
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strSearch( { src : '', ins : '',  determiningLineNumber : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - string';
+  var got = _.strSearch( { src : '', ins : 'x',  determiningLineNumber : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty string';
+  var got = _.strSearch( { src : 'abc', ins : '',  determiningLineNumber : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - string, not entry';
+  var got = _.strSearch( { src : 'hello', ins : 'x',  determiningLineNumber : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty array';
+  var got = _.strSearch( { src : 'hello', ins : [],  determiningLineNumber : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : 'abc',  determiningLineNumber : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 2, 3, 4 ],
+      'nearest' : [ 'f\n', 'abc', '\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'b',  determiningLineNumber : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 2, 3, 4 ],
+      'nearest' : [ 'aa\n', 'b', '\naa' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'aa',  determiningLineNumber : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
+      'linesRange' : [ 2, 3 ],
+      'linesOffsets' : [ 1, 2, 3 ],
+      'nearest' : [ 'f\n', 'aa', '\nb' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
+      'linesRange' : [ 4, 5 ],
+      'linesOffsets' : [ 3, 4, 5 ],
+      'nearest' : [ 'b\n', 'aa', '\nf' ]
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ 'l', '', 'x' ],  determiningLineNumber : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 2, 3, 4 ],
+      'nearest' : [ 'f\nhe', 'l', 'lo\nf' ]
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 2, 3, 4 ],
+      'nearest' : [ 'f\nhel', 'l', 'o\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ 'aa', 'ab', 'a' ],  determiningLineNumber : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
+      'linesRange' : [ 1, 2 ],
+      'linesOffsets' : [ 1, 1, 2 ],
+      'nearest' : [ '', 'ab', '\naa' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'linesRange' : [ 2, 3 ],
+      'linesOffsets' : [ 1, 2, 3 ],
+      'nearest' : [ 'ab\n', 'aa', '\nb' ]
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'linesRange' : [ 4, 5 ],
+      'linesOffsets' : [ 3, 4, 5 ],
+      'nearest' : [ 'b\n', 'ab', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  determiningLineNumber : 1 } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 2, 3, 4 ],
+      'linesRange' : [ 2, 3 ],
+      'linesOffsets' : [ 1, 2, 3 ],
+      'nearest' : [ '\n', 'abc', '\nabc' ]
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 2, 3, 4 ],
+      'nearest' : [ 'abc\n', 'abc', '\n' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  determiningLineNumber : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'linesRange' : [ 2, 3 ],
+      'linesOffsets' : [ 1, 2, 3 ],
+      'nearest' : [ '\n', 'a', 'bc\nabc' ]
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 2, 3, 4 ],
+      'nearest' : [ 'abc\n', 'a', 'bc\n' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - string' );
+
+  /* - */
+
+  test.open( 'ins - regexp' );
+
+  test.case = 'src - empty string, ins - regexp for empty strings';
+  var got = _.strSearch( { src : '', ins : /(?:)/g,  determiningLineNumber : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - regexp';
+  var got = _.strSearch( { src : '', ins : /x/,  determiningLineNumber : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp for empty string';
+  var got = _.strSearch( { src : 'abc', ins : /(?:)/g,  determiningLineNumber : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp, not entry';
+  var got = _.strSearch( { src : 'hello', ins : /x/,  determiningLineNumber : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : /abc/g,  determiningLineNumber : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 2, 3, 4 ],
+      'nearest' : [ 'f\n', 'abc', '\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /b+/g,  determiningLineNumber : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 2, 3, 4 ],
+      'nearest' : [ 'aa\n', 'b', '\naa' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /a+/,  determiningLineNumber : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
+      'linesRange' : [ 2, 3 ],
+      'linesOffsets' : [ 1, 2, 3 ],
+      'nearest' : [ 'f\n', 'aa', '\nb' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
+      'linesRange' : [ 4, 5 ],
+      'linesOffsets' : [ 3, 4, 5 ],
+      'nearest' : [ 'b\n', 'aa', '\nf' ]
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ /[las]/, /a/, /x/ ],  determiningLineNumber : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 2, 3, 4 ],
+      'nearest' : [ 'f\nhe', 'l', 'lo\nf' ]
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 2, 3, 4 ],
+      'nearest' : [ 'f\nhel', 'l', 'o\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ /aa/g, /ab/, /a+/ ],  determiningLineNumber : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
+      'linesRange' : [ 1, 2 ],
+      'linesOffsets' : [ 1, 1, 2 ],
+      'nearest' : [ '', 'ab', '\naa' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'linesRange' : [ 2, 3 ],
+      'linesOffsets' : [ 1, 2, 3 ],
+      'nearest' : [ 'ab\n', 'aa', '\nb' ]
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'linesRange' : [ 4, 5 ],
+      'linesOffsets' : [ 3, 4, 5 ],
+      'nearest' : [ 'b\n', 'ab', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  determiningLineNumber : 1 } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'linesRange' : [ 2, 3 ],
+      'linesOffsets' : [ 1, 2, 3 ],
+      'nearest' : [ '\n', 'abc', '\nabc' ]
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 2, 3, 4 ],
+      'nearest' : [ 'abc\n', 'abc', '\n' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  determiningLineNumber : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'linesRange' : [ 2, 3 ],
+      'linesOffsets' : [ 1, 2, 3 ],
+      'nearest' : [ '\n', 'a', 'bc\nabc' ]
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 2, 3, 4 ],
+      'nearest' : [ 'abc\n', 'a', 'bc\n' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - regexp' );
+
+  /* - */
+
+  test.open( 'ins - string, nearestLines - 4' );
+
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strSearch( { src : '', ins : '',  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - string';
+  var got = _.strSearch( { src : '', ins : 'x',  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty string';
+  var got = _.strSearch( { src : 'abc', ins : '',  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - string, not entry';
+  var got = _.strSearch( { src : 'hello', ins : 'x',  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty array';
+  var got = _.strSearch( { src : 'hello', ins : [],  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : 'abc',  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 1, 3, 4 ],
+      'nearest' : [ 'f\nf\n', 'abc', '\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'b',  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 1, 3, 4 ],
+      'nearest' : [ 'f\naa\n', 'b', '\naa' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : 'aa',  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
+      'linesRange' : [ 2, 3 ],
+      'linesOffsets' : [ 1, 2, 3 ],
+      'nearest' : [ 'f\n', 'aa', '\nb' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
+      'linesRange' : [ 4, 5 ],
+      'linesOffsets' : [ 2, 4, 5 ],
+      'nearest' : [ 'aa\nb\n', 'aa', '\nf' ]
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ 'l', '', 'x' ],  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 1, 3, 4 ],
+      'nearest' : [ 'f\nf\nhe', 'l', 'lo\nf' ]
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 1, 3, 4 ],
+      'nearest' : [ 'f\nf\nhel', 'l', 'o\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ 'aa', 'ab', 'a' ],  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
+      'linesRange' : [ 1, 2 ],
+      'linesOffsets' : [ 1, 1, 2 ],
+      'nearest' : [ '', 'ab', '\naa' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'linesRange' : [ 2, 3 ],
+      'linesOffsets' : [ 1, 2, 3 ],
+      'nearest' : [ 'ab\n', 'aa', '\nb' ]
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'linesRange' : [ 4, 5 ],
+      'linesOffsets' : [ 2, 4, 5 ],
+      'nearest' : [ 'aa\nb\n', 'ab', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 2, 3, 4 ],
+      'linesRange' : [ 2, 3 ],
+      'linesOffsets' : [ 1, 2, 3 ],
+      'nearest' : [ '\n', 'abc', '\nabc' ]
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 1, 3, 4 ],
+      'nearest' : [ '\nabc\n', 'abc', '\n' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'linesRange' : [ 2, 3 ],
+      'linesOffsets' : [ 1, 2, 3 ],
+      'nearest' : [ '\n', 'a', 'bc\nabc' ]
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 1, 3, 4 ],
+      'nearest' : [ '\nabc\n', 'a', 'bc\n' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - string, nearestLines - 4' );
+
+  /* - */
+
+  test.open( 'ins - regexp, nearestLines - 4' );
+
+  test.case = 'src - empty string, ins - regexp for empty strings';
+  var got = _.strSearch( { src : '', ins : /(?:)/g,  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - regexp';
+  var got = _.strSearch( { src : '', ins : /x/,  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp for empty string';
+  var got = _.strSearch( { src : 'abc', ins : /(?:)/g,  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp, not entry';
+  var got = _.strSearch( { src : 'hello', ins : /x/,  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nf\nabc\nf\nf', ins : /abc/g,  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nabc\nf\nf',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 7, 4 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 1, 3, 4 ],
+      'nearest' : [ 'f\nf\n', 'abc', '\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, one entry';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /b+/g,  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 1, 3, 4 ],
+      'nearest' : [ 'f\naa\n', 'b', '\naa' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, two entries';
+  var got = _.strSearch( { src : 'f\naa\nb\naa\nf', ins : /a+/,  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
+      'linesRange' : [ 2, 3 ],
+      'linesOffsets' : [ 1, 2, 3 ],
+      'nearest' : [ 'f\n', 'aa', '\nb' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\naa\nb\naa\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
+      'linesRange' : [ 4, 5 ],
+      'linesOffsets' : [ 2, 4, 5 ],
+      'nearest' : [ 'aa\nb\n', 'aa', '\nf' ]
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\nhello\nf\nf', ins : [ /[las]/, /a/, /x/ ],  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 1, 3, 4 ],
+      'nearest' : [ 'f\nf\nhe', 'l', 'lo\nf' ]
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\nhello\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 1, 3, 4 ],
+      'nearest' : [ 'f\nf\nhel', 'l', 'o\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, entries';
+  var got = _.strSearch( { src : 'ab\naa\nb\nab', ins : [ /aa/g, /ab/, /a+/ ],  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
+      'linesRange' : [ 1, 2 ],
+      'linesOffsets' : [ 1, 1, 2 ],
+      'nearest' : [ '', 'ab', '\naa' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'linesRange' : [ 2, 3 ],
+      'linesOffsets' : [ 1, 2, 3 ],
+      'nearest' : [ 'ab\n', 'aa', '\nb' ]
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : 'ab\naa\nb\nab',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'linesRange' : [ 4, 5 ],
+      'linesOffsets' : [ 2, 4, 5 ],
+      'nearest' : [ 'aa\nb\n', 'ab', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'abc', 'a' ],  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'linesRange' : [ 2, 3 ],
+      'linesOffsets' : [ 1, 2, 3 ],
+      'nearest' : [ '\n', 'abc', '\nabc' ]
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 1, 3, 4 ],
+      'nearest' : [ '\nabc\n', 'abc', '\n' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\nabc\nabc\n', ins : [ 'a', 'abc' ],  determiningLineNumber : 1, nearestLines : 4 } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'linesRange' : [ 2, 3 ],
+      'linesOffsets' : [ 1, 2, 3 ],
+      'nearest' : [ '\n', 'a', 'bc\nabc' ]
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\nabc\nabc\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
+      'linesRange' : [ 3, 4 ],
+      'linesOffsets' : [ 1, 3, 4 ],
+      'nearest' : [ '\nabc\n', 'a', 'bc\n' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - regexp, nearestLines - 4' );
+}
+
+//
+
+function strSearchOptionStringWithRegexp( test )
+{
+  test.open( 'ins - simple string' );
+
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strSearch( { src : '', ins : '',  stringWithRegexp : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - string';
+  var got = _.strSearch( { src : '', ins : 'x',  stringWithRegexp : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty string';
+  var got = _.strSearch( { src : 'abc', ins : '',  stringWithRegexp : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - string, not entry';
+  var got = _.strSearch( { src : 'hello', ins : 'x',  stringWithRegexp : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty array';
+  var got = _.strSearch( { src : 'hello', ins : [],  stringWithRegexp : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src === ins';
+  var got = _.strSearch( { src : 'abc', ins : 'abc',  stringWithRegexp : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 3 ],
+      'counter' : 0,
+      'input' : 'abc',
+      'charsRange' : [ 0, 3 ],
+      'charsRangeRight' : [ 3, 0 ],
+      'nearest' : [ '', 'abc', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, one entry';
+  var got = _.strSearch( { src : 'aabaa', ins : 'b',  stringWithRegexp : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 3 ],
+      'counter' : 0,
+      'input' : 'aabaa',
+      'charsRange' : [ 2, 3 ],
+      'charsRangeRight' : [ 3, 2 ],
+      'nearest' : [ 'aa', 'b', 'aa' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, two entries';
+  var got = _.strSearch( { src : 'aabaa', ins : 'aa',  stringWithRegexp : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'aabaa',
+      'charsRange' : [ 0, 2  ],
+      'charsRangeRight' : [ 5, 3 ],
+      'nearest' : [ '', 'aa', 'baa' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'aabaa',
+      'charsRange' : [ 3, 5  ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' : [ 'aab', 'aa', '' ]
+    }
+  ]
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'hello', ins : [ 'l', '', 'x' ],  stringWithRegexp : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 3 ],
+      'counter' : 0,
+      'input' : 'hello',
+      'charsRange' : [ 2, 3  ],
+      'charsRangeRight' : [ 3, 2 ],
+      'nearest' : [ 'he', 'l', 'lo' ]
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 4 ],
+      'counter' : 1,
+      'input' : 'hello',
+      'charsRange' : [ 3, 4  ],
+      'charsRangeRight' : [ 2, 1 ],
+      'nearest' : [ 'hel', 'l', 'o' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, entries';
+  var got = _.strSearch( { src : 'abaabab', ins : [ 'aa', 'ab', 'a' ],  stringWithRegexp : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'abaabab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'nearest' : [ '', 'ab', 'aabab' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 1,
+      'input' : 'abaabab',
+      'charsRange' : [ 2, 4 ],
+      'charsRangeRight' : [ 5, 3 ],
+      'nearest' : [ 'ab', 'aa', 'bab' ]
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 5, 7 ],
+      'counter' : 2,
+      'input' : 'abaabab',
+      'charsRange' : [ 5, 7 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' : [ 'abaab', 'ab', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : 'abcabc', ins : [ 'abc', 'a' ],  stringWithRegexp : 1 } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 3 ],
+      'counter' : 0,
+      'input' : 'abcabc',
+      'charsRange' : [ 0, 3 ],
+      'charsRangeRight' : [ 6, 3 ],
+      'nearest' : [ '', 'abc', 'abc' ]
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 6 ],
+      'counter' : 1,
+      'input' : 'abcabc',
+      'charsRange' : [ 3, 6 ],
+      'charsRangeRight' : [ 3, 0 ],
+      'nearest' : [ 'abc', 'abc', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : 'abcabc', ins : [ 'a', 'abc' ],  stringWithRegexp : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 1 ],
+      'counter' : 0,
+      'input' : 'abcabc',
+      'charsRange' : [ 0, 1 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' : [ '', 'a', 'bcabc' ]
+    },
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 4 ],
+      'counter' : 1,
+      'input' : 'abcabc',
+      'charsRange' : [ 3, 4 ],
+      'charsRangeRight' : [ 3, 2 ],
+      'nearest' : [ 'abc', 'a', 'bc' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - simple string' );
+
+  /* - */
+
+  test.open( 'ins - string with double slashes' );
+
+  test.case = 'src - string, ins - has one symbol and double slash, not entry, stringWithRegexp - 0';
+  var got = _.strSearch( { src : 'hello', ins : 'o//',  stringWithRegexp : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - has one symbol and double slash, not entry, stringWithRegexp - 1';
+  var got = _.strSearch( { src : 'hello', ins : 'o//',  stringWithRegexp : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'ins - symbols separated by double slash, stringWithRegexp - 0';
+  var got = _.strSearch( { src : 'abc', ins : 'a//b//c',  stringWithRegexp : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'ins - symbols separated by double slash, stringWithRegexp - 1';
+  var got = _.strSearch( { src : 'abc', ins : 'a//b//c',  stringWithRegexp : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 3 ],
+      'counter' : 0,
+      'input' : 'abc',
+      'charsRange' : [ 0, 3 ],
+      'charsRangeRight' : [ 3, 0 ],
+      'nearest' : [ '', 'abc', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - symbols separated by double slash, two entries, stringWithRegexp - 0';
+  var got = _.strSearch( { src : 'aabaa', ins : 'a//a',  stringWithRegexp : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'ins - symbols separated by double slash, two entries, stringWithRegexp - 1';
+  var got = _.strSearch( { src : 'aabaa', ins : 'a//a//',  stringWithRegexp : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'aabaa',
+      'charsRange' : [ 0, 2  ],
+      'charsRangeRight' : [ 5, 3 ],
+      'nearest' : [ '', 'aa', 'baa' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'aabaa',
+      'charsRange' : [ 3, 5  ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' : [ 'aab', 'aa', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, separated by double slash, entries, stringWithRegexp : 0';
+  var got = _.strSearch( { src : 'abaabab', ins : [ '//a//a', 'a//b//' ],  stringWithRegexp : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, separated by double slash, entries, stringWithRegexp : 1';
+  var got = _.strSearch( { src : 'abaabab', ins : [ 'a//a//', 'a//b//', 'a' ],  stringWithRegexp : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'abaabab',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'nearest' : [ '', 'ab', 'aabab' ]
+    },
+    {
+      'match' : 'aa',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 1,
+      'input' : 'abaabab',
+      'charsRange' : [ 2, 4 ],
+      'charsRangeRight' : [ 5, 3 ],
+      'nearest' : [ 'ab', 'aa', 'bab' ]
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 5, 7 ],
+      'counter' : 2,
+      'input' : 'abaabab',
+      'charsRange' : [ 5, 7 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' : [ 'abaab', 'ab', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, separated by double slash, ins[ 0 ] explore full src, no other entries should be, stringWithRegexp - 0';
+  var got = _.strSearch( { src : 'abcabc', ins : [ 'a//b//c', 'a//b//' ],  stringWithRegexp : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, separated by double slash, ins[ 0 ] explore full src, no other entries should be, stringWithRegexp - 1';
+  var got = _.strSearch( { src : 'abcabc', ins : [ 'a//b//c', 'a//b//' ],  stringWithRegexp : 1 } );
+  var expected =
+  [
+   {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 3 ],
+      'counter' : 0,
+      'input' : 'abcabc',
+      'charsRange' : [ 0, 3 ],
+      'charsRangeRight' : [ 6, 3 ],
+      'nearest' : [ '', 'abc', 'abc' ]
+    },
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 6 ],
+      'counter' : 1,
+      'input' : 'abcabc',
+      'charsRange' : [ 3, 6 ],
+      'charsRangeRight' : [ 3, 0 ],
+      'nearest' : [ 'abc', 'abc', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, separated by double slash, ins[ 0 ] explore full src, no other entries should be, stringWithRegexp - 0';
+  var got = _.strSearch( { src : 'abcabc', ins : [ 'a//b//', 'ab//c' ],  stringWithRegexp : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, separated by double slash, ins[ 0 ] explore full src, no other entries should be, stringWithRegexp - 1';
+  var got = _.strSearch( { src : 'abcabc', ins : [ 'a//b//', 'ab//c' ],  stringWithRegexp : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : 'abcabc',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 6, 4 ],
+      'nearest' : [ '', 'ab', 'cabc' ]
+    },
+    {
+      'match' : 'ab',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : 'abcabc',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 3, 1 ],
+      'nearest' : [ 'abc', 'ab', 'c' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - string with double slashes' );
+}
+
+//
+
+function strSearchOptionToleratingSpaces( test )
+{
+  test.open( 'ins - string with spaces' );
+
+  test.case = 'src - string with two spaces, ins - has one symbol and one space, entry, toleratingSpaces - 0';
+  var got = _.strSearch( { src : 'hello  ', ins : 'o ',  toleratingSpaces : 0 } );
+  var expected =
+  [
+    {
+      'match' : 'o ',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 6 ],
+      'counter' : 0,
+      'input' : 'hello  ',
+      'charsRange' : [ 4, 6 ],
+      'charsRangeRight' : [ 3, 1 ],
+      'nearest' : [ 'hell', 'o ', ' ' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - has one symbol and double slash, not entry, toleratingSpaces - 1';
+  var got = _.strSearch( { src : 'hello  ', ins : 'o ',  toleratingSpaces : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'o  ',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'hello  ',
+      'charsRange' : [ 4, 7 ],
+      'charsRangeRight' : [ 3, 0 ],
+      'nearest' : [ 'hell', 'o  ', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - symbols separated by one space, toleratingSpaces - 0';
+  var got = _.strSearch( { src : 'a b c', ins : ' a b c ',  toleratingSpaces : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'ins - symbols separated by one space, toleratingSpaces - 1';
+  var got = _.strSearch( { src : 'a b c', ins : ' a b c ',  toleratingSpaces : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'a b c',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 5 ],
+      'counter' : 0,
+      'input' : 'a b c',
+      'charsRange' : [ 0, 5 ],
+      'charsRangeRight' : [ 5, 0 ],
+      'nearest' : [ '', 'a b c', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - symbols separated by double space, two entries, toleratingSpaces - 0';
+  var got = _.strSearch( { src : 'a   aba   a', ins : 'a  a',  toleratingSpaces : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'ins - symbols separated by double space, two entries, toleratingSpaces - 1';
+  var got = _.strSearch( { src : 'a   aba   a', ins : 'a  a',  toleratingSpaces : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'a   a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 5 ],
+      'counter' : 0,
+      'input' : 'a   aba   a',
+      'charsRange' : [ 0, 5  ],
+      'charsRangeRight' : [ 11, 6 ],
+      'nearest' : [ '', 'a   a', 'ba   a' ]
+    },
+    {
+      'match' : 'a   a',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 11 ],
+      'counter' : 1,
+      'input' : 'a   aba   a',
+      'charsRange' : [ 6, 11 ],
+      'charsRangeRight' : [ 5, 0 ],
+      'nearest' : [ 'a   ab', 'a   a', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, separated by spaces, entries, toleratingSpaces : 0';
+  var got = _.strSearch( { src : 'a  b  a  a  b  a  b', ins : [ ' a a ', 'a b', '   a' ],  toleratingSpaces : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, separated by double slash, entries, toleratingSpaces : 1';
+  var got = _.strSearch( { src : 'a  b  a  a  b  a  b', ins : [ ' a a ', 'a b', '   a' ],  toleratingSpaces : 1 } );
+  var expected =
+  [
+    {
+      'match' : 'a  b',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 4 ],
+      'counter' : 0,
+      'input' : 'a  b  a  a  b  a  b',
+      'charsRange' : [ 0, 4 ],
+      'charsRangeRight' : [ 19, 15 ],
+      'nearest' : [ '', 'a  b', '  a  a  b  a  b' ]
+    },
+    {
+      'match' : '  a  a  ',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 4, 12 ],
+      'counter' : 1,
+      'input' : 'a  b  a  a  b  a  b',
+      'charsRange' : [ 4, 12 ],
+      'charsRangeRight' : [ 15, 7 ],
+      'nearest' : [ 'a  b', '  a  a  ', 'b  a  b' ]
+    },
+    {
+      'match' : '  a',
+      'groups' : [],
+      'tokenId' : 2,
+      'range' : [ 13, 16 ],
+      'counter' : 2,
+      'input' : 'a  b  a  a  b  a  b',
+      'charsRange' : [ 13, 16 ],
+      'charsRangeRight' : [ 6, 3 ],
+      'nearest' : [ 'a  b  a  a  b', '  a', '  b' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, separated by space, ins[ 0 ] explore full src, no other entries should be, toleratingSpaces - 0';
+  var got = _.strSearch( { src : 'a   b c a   b c', ins : [ ' a b c ', 'a b ' ],  toleratingSpaces : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, separated by space, ins[ 0 ] explore full src, no other entries should be, toleratingSpaces - 1';
+  var got = _.strSearch( { src : 'a   b c a   b c', ins : [ ' a b c ', 'a b ' ],  toleratingSpaces : 1 } );
+  var expected =
+  [
+   {
+      'match' : 'a   b c ',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 8 ],
+      'counter' : 0,
+      'input' : 'a   b c a   b c',
+      'charsRange' : [ 0, 8 ],
+      'charsRangeRight' : [ 15, 7 ],
+      'nearest' : [ '', 'a   b c ', 'a   b c' ]
+    },
+    {
+      'match' : 'a   b c',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 8, 15 ],
+      'counter' : 1,
+      'input' : 'a   b c a   b c',
+      'charsRange' : [ 8, 15 ],
+      'charsRangeRight' : [ 7, 0 ],
+      'nearest' : [ 'a   b c ', 'a   b c', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, separated by double slash, ins[ 0 ] explore full src, no other entries should be, toleratingSpaces - 0';
+  var got = _.strSearch( { src : 'a   b c a   b c', ins : [ 'a b ', ' a b c ' ],  toleratingSpaces : 0 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, separated by double slash, ins[ 0 ] explore full src, no other entries should be, toleratingSpaces - 1';
+  var got = _.strSearch( { src : 'a   b c a   b c', ins : [ 'a b ', ' a b c ' ],  toleratingSpaces : 1 } );
+  var expected =
+  [
+   {
+      'match' : 'a   b ',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 0, 6 ],
+      'counter' : 0,
+      'input' : 'a   b c a   b c',
+      'charsRange' : [ 0, 6 ],
+      'charsRangeRight' : [ 15, 9 ],
+      'nearest' : [ '', 'a   b ', 'c a   b c' ]
+    },
+    {
+      'match' : 'a   b ',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 8, 14 ],
+      'counter' : 1,
+      'input' : 'a   b c a   b c',
+      'charsRange' : [ 8, 14 ],
+      'charsRangeRight' : [ 7, 1 ],
+      'nearest' : [ 'a   b c ', 'a   b ', 'c' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - string with spaces' );
+}
+
+//
+
+function strSearchOptionOnTokenize( test ) 
+{
+  test.open( 'without excludingTokens' );
+
+  test.open( 'ins - string' );
+
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strSearch( { src : '', ins : '', onTokenize : _.strTokenizeJs } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - string';
+  var got = _.strSearch( { src : '', ins : 'x', onTokenize : _.strTokenizeJs } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty string';
+  var got = _.strSearch( { src : '//abc', ins : '', onTokenize : _.strTokenizeJs } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - string, not entry';
+  var got = _.strSearch( { src : '// hello', ins : 'x', onTokenize : _.strTokenizeJs } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty array';
+  var got = _.strSearch( { src : '/*hello*/', ins : [], onTokenize : _.strTokenizeJs } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nif\nabc\nin\nf', ins : 'abc', onTokenize : _.strTokenizeJs } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 0,
+      'input' : 'f\nif\nabc\nin\nf',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' :  [ 'if\n', 'abc', '\nin' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, one entry';
+  var got = _.strSearch( { src : 'f\nif\nb\nin\nf', ins : 'b', onTokenize : _.strTokenizeJs } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\nif\nb\nin\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  [ 'if\n', 'b', '\nin' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, two entries';
+  var got = _.strSearch( { src : 'f\nif\nb\nif\nf', ins : 'if', onTokenize : _.strTokenizeJs } );
+  var expected =
+  [
+    {
+      'match' : 'if',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\nif\nb\nif\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
+      'nearest' :  [ 'f\n', 'if', '\nb' ]
+    },
+    {
+      'match' : 'if',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\nif\nb\nif\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
+      'nearest' :  [ 'b\n', 'if', '\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\n[all]\nf\nf', ins : [ 'l', '', 'x' ], onTokenize : _.strTokenizeJs } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\n[all]\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'nearest' :  [ 'f\n[a', 'l', 'l]\nf' ]
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\n[all]\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  [ 'f\n[al', 'l', ']\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, entries';
+  var got = _.strSearch( { src : '{}\n()\nb\n{}', ins : [ '()', '{}', 'a' ], onTokenize : _.strTokenizeJs } );
+  var expected =
+  [
+    {
+      'match' : '{}',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : '{}\n()\nb\n{}',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
+      'nearest' :  [ '', '{}', '\n()' ]
+    },
+    {
+      'match' : '()',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : '{}\n()\nb\n{}',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'nearest' :  [ '{}\n', '()', '\nb' ]
+    },
+    {
+      'match' : '{}',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : '{}\n()\nb\n{}',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' :  [ 'b\n', '{}', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ '(a)', 'a' ], onTokenize : _.strTokenizeJs } );
+  var expected =
+  [
+   {
+      'match' : '(a)',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\n(a)\n(a)\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' :  [ '\n', '(a)', '\n(a)' ]
+    },
+    {
+      'match' : '(a)',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\n(a)\n(a)\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'nearest' :  [ '(a)\n', '(a)', '\n' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ '(', '(a)' ], onTokenize : _.strTokenizeJs } );
+  var expected =
+  [
+    {
+      'match' : '(',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : '\n(a)\n(a)\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'nearest' :  [ '\n', '(', 'a)\n(a)' ]
+    },
+    {
+      'match' : '(',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\n(a)\n(a)\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
+      'nearest' :  [ '(a)\n', '(', 'a)\n' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - string' );
+
+  /* - */
+
+  test.open( 'ins - regexp' );
+
+  test.case = 'src - empty string, ins - regexp for empty strings';
+  var got = _.strSearch( { src : '', ins : /(?:)/g, onTokenize : _.strTokenizeJs } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - regexp';
+  var got = _.strSearch( { src : '', ins : /x/, onTokenize : _.strTokenizeJs } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp for empty string';
+  var got = _.strSearch( { src : 'abc', ins : /(?:)/g, onTokenize : _.strTokenizeJs } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp, not entry';
+  var got = _.strSearch( { src : 'hello', ins : /x/, onTokenize : _.strTokenizeJs } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline';
+  var got = _.strSearch( { src : 'f\nif\nabc\nin\nf', ins : /abc/g, onTokenize : _.strTokenizeJs } );
+  var expected =
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 0,
+      'input' : 'f\nif\nabc\nin\nf',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' :  [ 'if\n', 'abc', '\nin' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, one entry';
+  var got = _.strSearch( { src : 'f\nif\nb\nin\nf', ins : /b+/g, onTokenize : _.strTokenizeJs } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\nif\nb\nin\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  [ 'if\n', 'b', '\nin' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, two entries';
+  var got = _.strSearch( { src : 'f\nif\nb\nif\nf', ins : /if+/, onTokenize : _.strTokenizeJs } );
+  var expected =
+  [
+    {
+      'match' : 'if',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 2, 4 ],
+      'counter' : 0,
+      'input' : 'f\nif\nb\nif\nf',
+      'charsRange' : [ 2, 4  ],
+      'charsRangeRight' : [ 9, 7 ],
+      'nearest' :  [ 'f\n', 'if', '\nb' ]
+    },
+    {
+      'match' : 'if',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 9 ],
+      'counter' : 1,
+      'input' : 'f\nif\nb\nif\nf',
+      'charsRange' : [ 7, 9  ],
+      'charsRangeRight' : [ 4, 2 ],
+      'nearest' :  [ 'b\n', 'if', '\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\n[all]\nf\nf', ins : [ /[los]/, /o/, /x/ ], onTokenize : _.strTokenizeJs } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\n[all]\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'nearest' :  [ 'f\n[a', 'l', 'l]\nf' ]
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\n[all]\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  [ 'f\n[al', 'l', ']\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, entries';
+  var got = _.strSearch( { src : '{}\n()\nb\n{}', ins : [ /\(\)/g, /\{\}/, /if+/ ], onTokenize : _.strTokenizeJs } );
+  var expected =
+  [
+    {
+      'match' : '{}',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 0, 2 ],
+      'counter' : 0,
+      'input' : '{}\n()\nb\n{}',
+      'charsRange' : [ 0, 2 ],
+      'charsRangeRight' : [ 10, 8 ],
+      'nearest' :  [ '', '{}', '\n()' ]
+    },
+    {
+      'match' : '()',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 3, 5 ],
+      'counter' : 1,
+      'input' : '{}\n()\nb\n{}',
+      'charsRange' : [ 3, 5 ],
+      'charsRangeRight' : [ 7, 5 ],
+      'nearest' :  [ '{}\n', '()', '\nb' ]
+    },
+    {
+      'match' : '{}',
+      'groups' : [],
+      'tokenId' : 1,
+      'range' : [ 8, 10 ],
+      'counter' : 2,
+      'input' : '{}\n()\nb\n{}',
+      'charsRange' : [ 8, 10 ],
+      'charsRangeRight' : [ 2, 0 ],
+      'nearest' :  [ 'b\n', '{}', '' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ /\(a\)/, /\(/ ], onTokenize : _.strTokenizeJs } );
+  var expected =
+  [
+   {
+      'match' : '(a)',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\n(a)\n(a)\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' :  [ '\n', '(a)', '\n(a)' ]
+    },
+    {
+      'match' : '(a)',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\n(a)\n(a)\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'nearest' :  [ '(a)\n', '(a)', '\n' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ /\(/, /\(a\)/ ], onTokenize : _.strTokenizeJs } );
+  var expected =
+  [
+    {
+      'match' : '(',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 2 ],
+      'counter' : 0,
+      'input' : '\n(a)\n(a)\n',
+      'charsRange' : [ 1, 2 ],
+      'charsRangeRight' : [ 8, 7 ],
+      'nearest' :  [ '\n', '(', 'a)\n(a)' ]
+    },
+    {
+      'match' : '(',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 1,
+      'input' : '\n(a)\n(a)\n',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 4, 3 ],
+      'nearest' :  [ '(a)\n', '(', 'a)\n' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - regexp' );
+
+  test.close( 'without excludingTokens' );
+
+  /* - */
+
+  test.open( 'excludingTokens' );
+
+  test.open( 'ins - string' );
+
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strSearch( { src : '', ins : '', onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - string';
+  var got = _.strSearch( { src : '', ins : 'x', onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty string';
+  var got = _.strSearch( { src : '//abc', ins : '', onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - string, not entry';
+  var got = _.strSearch( { src : '// hello', ins : 'x', onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty array';
+  var got = _.strSearch( { src : '/*hello*/', ins : [], onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline, with excludingTokens with glob';
+  var got = _.strSearch( { src : 'f\nif\nabc\nin\nf', ins : 'abc', onTokenize : _.strTokenizeJs, excludingTokens : 'na*' } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, one entry, not excludingTokens';
+  var got = _.strSearch( { src : 'f\nif\nb\nin\nf', ins : 'b', onTokenize : _.strTokenizeJs, excludingTokens : 'keyword' } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\nif\nb\nin\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  [ 'if\n', 'b', '\nin' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, two entries of excludingTokens';
+  var got = _.strSearch( { src : 'f\nif\nb\nif\nf', ins : 'if', onTokenize : _.strTokenizeJs, excludingTokens : [ 'name', 'keywo??' ] } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\n[all]\nf\nf', ins : [ 'l', '', 'x' ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'parenthes' ] } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\n[all]\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'nearest' :  [ 'f\n[a', 'l', 'l]\nf' ]
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\n[all]\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  [ 'f\n[al', 'l', ']\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, entries, excludingTokens';
+  var got = _.strSearch( { src : '{}\n()\nb\n{}', ins : [ '()', '{}', 'a' ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'cu???', 'parenthes' ] } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ '(a)', 'a' ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'square' ] } );
+  var expected =
+  [
+   {
+      'match' : '(a)',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\n(a)\n(a)\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' :  [ '\n', '(a)', '\n(a)' ]
+    },
+    {
+      'match' : '(a)',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\n(a)\n(a)\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'nearest' :  [ '(a)\n', '(a)', '\n' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be, excludingTokens';
+  var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ '(', '(a)' ], onTokenize : _.strTokenizeJs, excludingTokens : 'parenthes' } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.close( 'ins - string' );
+
+  /* - */
+
+  test.open( 'ins - regexp' );
+
+  test.case = 'src - empty string, ins - regexp for empty strings';
+  var got = _.strSearch( { src : '', ins : /(?:)/g, onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - regexp';
+  var got = _.strSearch( { src : '', ins : /x/, onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp for empty string';
+  var got = _.strSearch( { src : 'abc', ins : /(?:)/g, onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp, not entry';
+  var got = _.strSearch( { src : 'hello', ins : /x/, onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - multiline, excludingTokens';
+  var got = _.strSearch( { src : 'f\nif\nabc\nin\nf', ins : /abc/g, onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, one entry';
+  var got = _.strSearch( { src : 'f\nif\nb\nin\nf', ins : /b+/g, onTokenize : _.strTokenizeJs, excludingTokens : 'keyword' } );
+  var expected =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\nif\nb\nin\nf',
+      'charsRange' : [ 5, 6 ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  [ 'if\n', 'b', '\nin' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp, two entries, excludingTokens';
+  var got = _.strSearch( { src : 'f\nif\nb\nif\nf', ins : /if+/, onTokenize : _.strTokenizeJs, excludingTokens : [ 'name', 'keyword' ] } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, has empty string, two entries of single ins';
+  var got = _.strSearch( { src : 'f\nf\n[all]\nf\nf', ins : [ /[los]/, /o/, /x/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'parenthes' ] } );
+  var expected =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\n[all]\nf\nf',
+      'charsRange' : [ 6, 7  ],
+      'charsRangeRight' : [ 7, 6 ],
+      'nearest' :  [ 'f\n[a', 'l', 'l]\nf' ]
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\n[all]\nf\nf',
+      'charsRange' : [ 7, 8  ],
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  [ 'f\n[al', 'l', ']\nf' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, entries, excludingTokens';
+  var got = _.strSearch( { src : '{}\n()\nb\n{}', ins : [ /\(\)/g, /\{\}/, /if+/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'parenthes' ] } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ /\(a\)/, /\(/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'square' ] } );
+  var expected =
+  [
+   {
+      'match' : '(a)',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\n(a)\n(a)\n',
+      'charsRange' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' :  [ '\n', '(a)', '\n(a)' ]
+    },
+    {
+      'match' : '(a)',
+      'groups' : [],
+      'tokenId' : 0,
+      'range' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\n(a)\n(a)\n',
+      'charsRange' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'nearest' :  [ '(a)\n', '(a)', '\n' ]
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be, excludingTokens';
+  var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ /\(/, /\(a\)/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'parenthes' ] } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.close( 'ins - regexp' );
+
+  test.close( 'excludingTokens' );
+}
+
+//
+
 /*
-  qqq : duplicate test cases for fast : 1
+  qqq : duplicate test cases for fast : 1 | Dmytro : improved test routine and added test cases with fast : 1
 */
 
 function strFindAll( test )
 {
+  test.open( 'ins - string, fast - 0' );
 
-  function log( src )
-  {
-    logger.log( _.toStr( src, { levels : 3 } ) );
-  }
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strFindAll( '', '' );
+  var expected = [];
+  test.identical( got, expected );
 
-  /* - */
+  test.case = 'src - empty string, ins - string';
+  var got = _.strFindAll( '', 'x' );
+  var expected = [];
+  test.identical( got, expected );
 
-  test.open( 'string' );
+  test.case = 'src - string, ins - empty string';
+  var got = _.strFindAll( 'abc', '' );
+  var expected = [];
+  test.identical( got, expected );
 
-  test.case = 'simple replace';
+  test.case = 'src - string, ins - string, not entry';
+  var got = _.strFindAll( 'hello', 'x' );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty array';
+  var got = _.strFindAll( 'hello', [] );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src === ins';
+  var got = _.strFindAll( 'abc', 'abc' );
+  var expected =
+  [
+    {
+      groups : [],
+      match : 'abc',
+      tokenId : 0,
+      range : [ 0, 3 ],
+      counter : 0,
+      input : 'abc'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, one entry';
   var got = _.strFindAll( 'aabaa', 'b' );
   var expected =
   [
@@ -271,11 +4856,10 @@ function strFindAll( test )
       counter : 0,
       input : 'aabaa'
     }
-  ]
-  log( got );
+  ];
   test.identical( got, expected );
 
-  test.case = 'simple replace';
+  test.case = 'ins - string, two entries';
   var got = _.strFindAll( 'aabaa', 'aa' );
   var expected =
   [
@@ -295,70 +4879,11 @@ function strFindAll( test )
       counter : 1,
       input : 'aabaa'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
-  test.case = 'first two args empty strings';
-  var got = _.strFindAll( '', '' );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'secong argument is empty string';
-  var got = _.strFindAll( 'a', '' );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'all three args empty strings';
-  var got = _.strFindAll( '', '' );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'third arg is empty string ';
-  var got = _.strFindAll( 'a', 'a' );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 0, 1 ],
-      counter : 0,
-      input : 'a'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'one argument call';
-  var got = _.strFindAll({ src : 'gpxa', ins : [ 'x' , 'a' ] });
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'x',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpxa'
-    },
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 1,
-      range : [ 3, 4 ],
-      counter : 1,
-      input : 'gpxa'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'two arguments call';
-  var got = _.strFindAll( 'hello', [ 'l' ] );
+  test.case = 'ins - array of strings, has empty string, two entries of single ins';
+  var got = _.strFindAll( 'hello', [ 'l', '', 'x' ] );
   var expected =
   [
     {
@@ -377,102 +4902,11 @@ function strFindAll( test )
       counter : 1,
       input : 'hello'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
-  test.case = 'no occurrences returns origin';
-  var got = _.strFindAll( 'hello', 'x' );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'empty array';
-  var got = _.strFindAll( 'hello', [] );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'empty by empty, empty src';
-  var got = _.strFindAll( '','' );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'not empty by empty, empty src';
-  var got = _.strFindAll( '','x' );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'empty by not empty, empty src';
-  var got = _.strFindAll( '','' );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'empty by empty, not empty src';
-  var got = _.strFindAll( 'x','' );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'not empty by empty, not empty src';
-  var got = _.strFindAll( 'x','x' );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'x',
-      tokenId : 0,
-      range : [ 0, 1 ],
-      counter : 0,
-      input : 'x'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'empty by not empty, not empty src';
-  var got = _.strFindAll( 'x','' );
-  var expected = [];
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'repeat';
-  var got = _.strFindAll( 'ababab','ab' );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'ab',
-      tokenId : 0,
-      range : [ 0, 2 ],
-      counter : 0,
-      input : 'ababab'
-    },
-    {
-      groups : [],
-      match : 'ab',
-      tokenId : 0,
-      range : [ 2, 4 ],
-      counter : 1,
-      input : 'ababab'
-    },
-    {
-      groups : [],
-      match : 'ab',
-      tokenId : 0,
-      range : [ 4, 6 ],
-      counter : 2,
-      input : 'ababab'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'repeat';
-  var got = _.strFindAll( 'abaabab',[ 'aa','ab' ] );
+  test.case = 'ins - array of strings, entries';
+  var got = _.strFindAll( 'abaabab', [ 'aa', 'ab', 'a' ] );
   var expected =
   [
     {
@@ -499,11 +4933,10 @@ function strFindAll( test )
       counter : 2,
       input : 'abaabab'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
-  test.case = 'no recursion should happen';
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
   var got = _.strFindAll( 'abcabc', [ 'abc', 'a' ] );
   var expected =
   [
@@ -523,11 +4956,10 @@ function strFindAll( test )
       counter : 1,
       input : 'abcabc'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
-  test.case = 'no recursion should happen';
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
   var got = _.strFindAll( 'abcabc', [ 'a', 'abc' ] );
   var expected =
   [
@@ -547,254 +4979,103 @@ function strFindAll( test )
       counter : 1,
       input : 'abcabc'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
-  test.close( 'string' );
+  test.close( 'ins - string, fast - 0' );
 
   /* - */
 
-  test.open( 'regexp with no flags' );
+  test.open( 'ins - string, fast - 1' );
 
-  var got = _.strFindAll( 'aabaa', /b/ );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'aabaa'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( '12345', /[1-3]/ );
-  var expected =
-  [
-    {
-      groups : [],
-      match : '1',
-      tokenId : 0,
-      range : [ 0, 1 ],
-      counter : 0,
-      input : '12345'
-    },
-    {
-      groups : [],
-      match : '2',
-      tokenId : 0,
-      range : [ 1, 2 ],
-      counter : 1,
-      input : '12345'
-    },
-    {
-      groups : [],
-      match : '3',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 2,
-      input : '12345'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpbaac', /a+/ );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'aa',
-      tokenId : 0,
-      range : [ 3, 5 ],
-      counter : 0,
-      input : 'gpbaac'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpbgpcgpd', /(gp)+[^bc]$/ );
-  var expected =
-  [
-    {
-      groups : [ 'gp' ],
-      match : 'gpd',
-      tokenId : 0,
-      range : [ 6, 9 ],
-      counter : 0,
-      input : 'gpbgpcgpd'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpa', [ 'a' ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpa'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpa', [ /a/ ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpa'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpa', [ /a/ ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpa'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpahpb', [ 'a', 'b' ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpahpb'
-    },
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 1,
-      range : [ 5, 6 ],
-      counter : 1,
-      input : 'gpahpb'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpahpb', [ /a/, /b/ ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpahpb'
-    },
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 1,
-      range : [ 5, 6 ],
-      counter : 1,
-      input : 'gpahpb'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpahpb', [ /a/, 'b' ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpahpb'
-    },
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 1,
-      range : [ 5, 6 ],
-      counter : 1,
-      input : 'gpahpb'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpahpb', [ 'a', /b/ ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpahpb'
-    },
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 1,
-      range : [ 5, 6 ],
-      counter : 1,
-      input : 'gpahpb'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'trivial ins:string sub:routine';
-  var got = _.strFindAll( 'this is hello from hell', 'hell' );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'hell',
-      tokenId : 0,
-      range : [ 8, 12 ],
-      counter : 0,
-      input : 'this is hello from hell'
-    },
-    {
-      groups : [],
-      match : 'hell',
-      tokenId : 0,
-      range : [ 19, 23 ],
-      counter : 1,
-      input : 'this is hello from hell'
-    }
-  ]
-  log( got );
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strFindAll( { src : '', ins : '', fast : 1 } );
+  var expected = [];
   test.identical( got, expected );
 
-  test.case = 'trivial ins:regexp sub:routine';
+  test.case = 'src - empty string, ins - string';
+  var got = _.strFindAll( { src : '', ins : 'x', fast : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty string';
+  var got = _.strFindAll( { src : 'abc', ins : '', fast : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - string, not entry';
+  var got = _.strFindAll( { src : 'hello', ins : 'x', fast : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty array';
+  var got = _.strFindAll( { src : 'hello', ins : [], fast : 1 } );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src === ins';
+  var got = _.strFindAll( { src : 'abc', ins : 'abc', fast : 1 } );
+  var expected = [ [ 0, 3, 0 ] ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, one entry';
+  var got = _.strFindAll( { src : 'aabaa', ins : 'b', fast : 1 } );
+  var expected = [ [ 2, 3, 0 ] ];
+  test.identical( got, expected );
+
+  test.case = 'ins - string, two entries';
+  var got = _.strFindAll( { src : 'aabaa', ins : 'aa', fast : 1 } );
+  var expected =
+  [
+    [ 0, 2, 0 ],
+    [ 3, 5, 0 ]
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, has empty string, two entries of single ins';
+  var got = _.strFindAll( { src : 'hello', ins : [ 'l', '', 'x' ], fast : 1 } );
+  var expected =
+  [
+    [ 2, 3, 0 ],
+    [ 3, 4, 0 ]
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings, entries';
+  var got = _.strFindAll( { src : 'abaabab', ins : [ 'aa', 'ab', 'a' ], fast : 1 } );
+  var expected =
+  [
+    [ 0, 2, 1 ],
+    [ 2, 4, 0 ],
+    [ 5, 7, 1 ]
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strFindAll( { src : 'abcabc', ins : [ 'abc', 'a' ], fast : 1 } );
+  var expected =
+  [
+    [ 0, 3, 0 ],
+    [ 3, 6, 0 ]
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strFindAll( { src : 'abcabc', ins : [ 'a', 'abc' ], fast : 1 } );
+  var expected =
+  [
+    [ 0, 1, 0 ],
+    [ 3, 4, 0 ]
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - string, fast - 1' );
+
+  /* - */
+
+  test.open( 'ins - regexp, fast - 0' );
+
+  test.case = 'ins - simple regexp, two entries';
   var got = _.strFindAll( 'this is hello from hell', /hell/ );
   var expected =
   [
@@ -814,31 +5095,10 @@ function strFindAll( test )
       counter : 1,
       input : 'this is hello from hell'
     }
-  ]
-  log( got );
+  ];
   test.identical( got, expected );
 
-  test.close( 'regexp with no flags' );
-
-  /* - */
-
-  test.open( 'regexp with gm' );
-
-  var got = _.strFindAll( 'aabaa', /b/gm );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'aabaa'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
+  test.case = 'ins - regexp for numbers, flag "gm", three entries';
   var got = _.strFindAll( '12345', /[1-3]/gm );
   var expected =
   [
@@ -866,11 +5126,11 @@ function strFindAll( test )
       counter : 2,
       input : '12345'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
-  var got = _.strFindAll( 'gpbaac', /a+/gm );
+  test.case = 'ins - regexp for a few "a", entry';
+  var got = _.strFindAll( 'gpbaac', /a+/ );
   var expected =
   [
     {
@@ -881,10 +5141,10 @@ function strFindAll( test )
       counter : 0,
       input : 'gpbaac'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
+  test.case = 'ins - complex regexp, flag "gm"';
   var got = _.strFindAll( 'gpbgpcgpd', /(gp)+[^bc]$/gm );
   var expected =
   [
@@ -896,209 +5156,137 @@ function strFindAll( test )
       counter : 0,
       input : 'gpbgpcgpd'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpa', [ 'a' ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpa'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpa', [ /a/ ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpa'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpa', [ /a/gm ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpa'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpahpb', [ 'a', 'b' ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpahpb'
-    },
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 1,
-      range : [ 5, 6 ],
-      counter : 1,
-      input : 'gpahpb'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpahpb', [ /a/gm, /b/gm ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpahpb'
-    },
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 1,
-      range : [ 5, 6 ],
-      counter : 1,
-      input : 'gpahpb'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpahpb', [ /a/gm, 'b' ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpahpb'
-    },
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 1,
-      range : [ 5, 6 ],
-      counter : 1,
-      input : 'gpahpb'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  var got = _.strFindAll( 'gpahpb', [ 'a', /b/gm ] );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'a',
-      tokenId : 0,
-      range : [ 2, 3 ],
-      counter : 0,
-      input : 'gpahpb'
-    },
-    {
-      groups : [],
-      match : 'b',
-      tokenId : 1,
-      range : [ 5, 6 ],
-      counter : 1,
-      input : 'gpahpb'
-    }
-  ]
-  log( got );
-  test.identical( got,expected );
-
-  test.case = 'trivial ins:string sub:routine';
-  var got = _.strFindAll( 'this is hello from hell', 'hell' );
-  var expected =
-  [
-    {
-      groups : [],
-      match : 'hell',
-      tokenId : 0,
-      range : [ 8, 12 ],
-      counter : 0,
-      input : 'this is hello from hell'
-    },
-    {
-      groups : [],
-      match : 'hell',
-      tokenId : 0,
-      range : [ 19, 23 ],
-      counter : 1,
-      input : 'this is hello from hell'
-    }
-  ]
-  log( got );
+  ];
   test.identical( got, expected );
 
-  test.case = 'trivial ins:regexp sub:routine';
-  var got = _.strFindAll( 'this is hello from hell', /hell/gm );
+  test.case = 'ins - array of regexps, one entry';
+  var got = _.strFindAll( 'gpa', [ /^d/, /p$/, /a/ ] );
   var expected =
   [
     {
       groups : [],
-      match : 'hell',
-      tokenId : 0,
-      range : [ 8, 12 ],
+      match : 'a',
+      tokenId : 2,
+      range : [ 2, 3 ],
       counter : 0,
-      input : 'this is hello from hell'
+      input : 'gpa'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, flag "gm", two entries';
+  var got = _.strFindAll( 'gpahpb', [ /a/, /b/gm ] );
+  var expected =
+  [
+    {
+      groups : [],
+      match : 'a',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpahpb'
     },
     {
       groups : [],
-      match : 'hell',
-      tokenId : 0,
-      range : [ 19, 23 ],
+      match : 'b',
+      tokenId : 1,
+      range : [ 5, 6 ],
       counter : 1,
-      input : 'this is hello from hell'
+      input : 'gpahpb'
     }
-  ]
-  log( got );
+  ];
   test.identical( got, expected );
 
-  test.close( 'regexp with gm' );
+  test.case = 'ins - array of regexps and strings, flag "gm", entries';
+  var got = _.strFindAll( 'gpahpb', [ /a/gm, 'f', /k$/, 'b' ] );
+  var expected =
+  [
+    {
+      groups : [],
+      match : 'a',
+      tokenId : 0,
+      range : [ 2, 3 ],
+      counter : 0,
+      input : 'gpahpb'
+    },
+    {
+      groups : [],
+      match : 'b',
+      tokenId : 3,
+      range : [ 5, 6 ],
+      counter : 1,
+      input : 'gpahpb'
+    }
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - regexp, fast - 0' );
 
   /* - */
 
-  test.open( 'complex' );
+  test.open( 'ins - regexp, fast - 1' );
+
+  test.case = 'ins - simple regexp, two entries';
+  var got = _.strFindAll( { src : 'this is hello from hell', ins : /hell/, fast : 1 } );
+  var expected =
+  [
+    [ 8, 12, 0 ],
+    [ 19, 23, 0 ]
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp for numbers, flag "gm", three entries';
+  var got = _.strFindAll( { src : '12345', ins : /[1-3]/gm, fast : 1 } );
+  var expected =
+  [
+    [ 0, 1, 0 ],
+    [ 1, 2, 0 ],
+    [ 2, 3, 0 ]
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp for a few "a", entry';
+  var got = _.strFindAll( { src : 'gpbaac', ins : /a+/, fast : 1 } );
+  var expected = [ [ 3, 5, 0 ] ];
+  test.identical( got, expected );
+
+  test.case = 'ins - complex regexp, flag "gm"';
+  var got = _.strFindAll( { src : 'gpbgpcgpd', ins : /(gp)+[^bc]$/gm, fast : 1 } );
+  var expected = [ [ 6, 9, 0 ] ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, one entry';
+  var got = _.strFindAll( { src : 'gpa', ins : [ /^d/, /p$/, /a/ ], fast : 1 } );
+  var expected = [ [ 2, 3, 2 ] ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps, flag "gm", two entries';
+  var got = _.strFindAll( { src : 'gpahpb', ins : [ /a/, /b/gm ], fast : 1 } );
+  var expected =
+  [
+    [ 2, 3, 0 ],
+    [ 5, 6, 1 ]
+  ];
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexps and strings, flag "gm", entries';
+  var got = _.strFindAll( { src : 'gpahpb', ins : [ /a/gm, 'f', /k$/, 'b' ], fast : 1 } );
+  var expected =
+  [
+    [ 2, 3, 0 ],
+    [ 5, 6, 3 ]
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - regexp, fast - 1' );
+
+  /* - */
+
+  test.open( 'ins - map, fast - 0' );
 
   test.case = 'map';
-  var map =
-  {
-    manya : /a+/,
-    ba : /ba/,
-  }
+  var map = { manyA : /a+/, ba : 'ba' };
   var got = _.strFindAll( 'aabaa', map );
-  log( got );
   var expected =
   [
     {
@@ -1108,7 +5296,7 @@ function strFindAll( test )
       range : [ 0, 2 ],
       counter : 0,
       input : 'aabaa',
-      tokenName : 'manya'
+      tokenName : 'manyA'
     },
     {
       groups : [],
@@ -1126,27 +5314,21 @@ function strFindAll( test )
       range : [ 4, 5 ],
       counter : 2,
       input : 'aabaa',
-      tokenName : 'manya'
+      tokenName : 'manyA'
     }
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
-  /**/
+  /* */
 
-  test.case = 'map with tokenizingUnknwon : 1, but not unknown';
-  var map =
-  {
-    manya : /a+/,
-    ba : /ba/,
-  }
+  test.case = 'ins - map, tokenizingUnknwon - 1, but not unknown';
+  var map = { manyA : /a+/, ba : 'ba' };
   var got = _.strFindAll
   ({
     src : 'aabaa',
     ins : map,
     tokenizingUnknown : 1,
   });
-  log( got );
   var expected =
   [
     {
@@ -1156,7 +5338,7 @@ function strFindAll( test )
       range : [ 0, 2 ],
       counter : 0,
       input : 'aabaa',
-      tokenName : 'manya'
+      tokenName : 'manyA'
     },
     {
       groups : [],
@@ -1174,27 +5356,21 @@ function strFindAll( test )
       range : [ 4, 5 ],
       counter : 2,
       input : 'aabaa',
-      tokenName : 'manya'
+      tokenName : 'manyA'
     }
   ]
-  log( got );
-  test.identical( got,expected );
+  test.identical( got, expected );
 
   /* */
 
-  test.case = 'map with tokenizingUnknwon : 1 and unknown';
-  var map =
-  {
-    manya : /a+/,
-    ba : /ba/,
-  }
+  test.case = 'map with tokenizingUnknwon - 1 and unknown';
+  var map = { manyA : /a+/, ba : 'ba' };
   var got = _.strFindAll
   ({
-    src : 'xaayybaaz',
+    src : 'xaabaazb',
     ins : map,
     tokenizingUnknown : 1,
   });
-  log( got );
   var expected =
   [
     {
@@ -1203,8 +5379,7 @@ function strFindAll( test )
       tokenId : -1,
       range : [ 0, 1 ],
       counter : 0,
-      input : 'xaayybaaz',
-      // tokenName : undefined,
+      input : 'xaabaazb',
     },
     {
       match : 'aa',
@@ -1212,53 +5387,41 @@ function strFindAll( test )
       tokenId : 0,
       range : [ 1, 3 ],
       counter : 1,
-      input : 'xaayybaaz',
-      tokenName : 'manya',
-    },
-    {
-      match : 'yy',
-      groups : [],
-      tokenId : -1,
-      range : [ 3, 5 ],
-      counter : 2,
-      input : 'xaayybaaz',
-      // tokenName : undefined,
+      input : 'xaabaazb',
+      tokenName : 'manyA',
     },
     {
       match : 'ba',
       groups : [],
       tokenId : 1,
-      range : [ 5, 7 ],
-      counter : 3,
-      input : 'xaayybaaz',
+      range : [ 3, 5 ],
+      counter : 2,
+      input : 'xaabaazb',
       tokenName : 'ba'
     },
     {
       match : 'a',
       groups : [],
       tokenId : 0,
-      range : [ 7, 8 ],
-      counter : 4,
-      input : 'xaayybaaz',
-      tokenName : 'manya'
+      range : [ 5, 6 ],
+      counter : 3,
+      input : 'xaabaazb',
+      tokenName : 'manyA'
     },
     {
-      match : 'z',
+      match : 'zb',
       groups : [],
       tokenId : -1,
-      range : [ 8, 9 ],
-      counter : 5,
-      input : 'xaayybaaz',
-      // tokenName : undefined,
+      range : [ 6, 8 ],
+      counter : 4,
+      input : 'xaabaazb',
     },
-  ]
-  log( got );
-  test.identical( got,expected );
+  ];
+  test.identical( got, expected );
 
-  /**/
+  /* */
 
-  test.case = 'options map';
-
+  test.case = 'ins - array of regexps, counter - 1';
   var o =
   {
     src : '**',
@@ -1284,11 +5447,88 @@ function strFindAll( test )
       counter : 1,
       input : '**',
     }
-  ]
-  log( got );
+  ];
   test.identical( got, expected );
 
-  test.close( 'complex' );
+  test.close( 'ins - map, fast - 0' );
+
+  /* - */
+
+  test.open( 'ins - map, fast - 1' );
+
+  test.case = 'map';
+  var map = { manyA : /a+/, ba : 'ba' };
+  var got = _.strFindAll( { src : 'aabaa', ins : map, fast : 1 } );
+  var expected =
+  [
+    [ 0, 2, 0 ],
+    [ 2, 4, 1 ],
+    [ 4, 5, 0 ]
+  ];
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'ins - map, tokenizingUnknwon - 1, but not unknown';
+  var map = { manyA : /a+/, ba : 'ba' };
+  var got = _.strFindAll
+  ({
+    src : 'aabaa',
+    ins : map,
+    fast : 1,
+    tokenizingUnknown : 1,
+  });
+  var expected =
+  [
+    [ 0, 2, 0 ],
+    [ 2, 4, 1 ],
+    [ 4, 5, 0 ]
+  ]
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'map with tokenizingUnknwon : 1 and unknown';
+  var map = { manyA : /a+/, ba : 'ba' };
+  var got = _.strFindAll
+  ({
+    src : 'xaabaazb',
+    ins : map,
+    fast : 1,
+    tokenizingUnknown : 1,
+  });
+  var expected =
+  [
+    [ 0, 1, -1 ],
+    [ 1, 3, 0 ],
+    [ 3, 5, 1 ],
+    [ 5, 6, 0 ],
+    [ 6, 8, -1 ]
+  ];
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'ins - array of regexps, counter - 1';
+  var o =
+  {
+    src : '**',
+    ins :
+    [
+      /\./g,
+      /([!?*@+]+)\((.*?(?:\|(.*?))*)\)/g,
+      /(\*\*\/|\*\*)/g,
+      /(\*)/g,
+      /(\?)/g
+    ],
+    fast : 1,
+    counter : 1,
+  }
+  var got = _.strFindAll( o );
+  var expected = [ [ 0, 2, 2 ] ];
+  test.identical( got, expected );
+
+  test.close( 'ins - map, fast - 1' );
 
   /* - */
 
@@ -1297,112 +5537,46 @@ function strFindAll( test )
 
   test.open( 'throwing' );
 
-  test.case = 'invalid arguments count';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( '1', '2', '3', '4' );
-  });
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strFindAll() );
 
-  test.case = 'invalid arguments count';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( '1', '2', '3' );
-  });
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strFindAll( '1', '2', '3' ) );
 
-  test.case = 'no arguments';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( );
-  });
+  test.case = 'single argument is not a map';
+  test.shouldThrowErrorSync( () => _.strFindAll( '1' ) );
 
-  test.case = 'first argument is wrong';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( 1, '2','3' );
-  });
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.strFindAll( 1, '2' ) );
 
-  test.case = 'second argument is wrong';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( '1', 2, '3' );
-  });
+  test.case = 'wrong type of ins';
+  test.shouldThrowErrorSync( () => _.strFindAll( '1', 2 ) );
 
-  test.case = 'third argument is wrong';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( '1','2', 3 );
-  });
-
-  test.case = 'second arg is not a Object';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( '1', 2 );
-  });
-
-  test.case = 'argument is not a Object';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( '1' );
-  });
-
-  test.case = 'wrong type of dictionary value';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( { dst : 'gpx', dictionary : { 'a' : [ 1, 2 ] } } )
-  });
-
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( 'gpahpb',[ 'a' ], [ 'c', 'd' ] );
-  });
-
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strFindAll( 'gpahpb',[ 'a', 'b' ], [ 'x' ] );
-  });
+  test.case = 'unknown option in map options';
+  test.shouldThrowErrorSync( () => _.strFindAll( { dst : 'gpx', dictionary : [ 'a', 'b' ] } ) );
 
   test.close( 'throwing' );
 }
 
-//
-
 /*
-  qqq2 : extend test routine strFindAllValueWithLong
+  qqq2 : extend test routine strFindAllValueWithLong | Dmytro : extended by new test cases, option fast uses
 */
 
 function strFindAllValueWithLong( test )
 {
+  test.open( 'ins - map, fast - 0' );
 
-  /* */
-
-  test.case = 'control';
-  var exp =
-  [
-    {
-      'match' : 'some',
-      'groups' : [],
-      'tokenId' : 0,
-      'range' : [ 0, 4 ],
-      'counter' : 0,
-      'input' : 'some string2 text',
-      'tokenName' : 'a'
-    },
-    {
-      'match' : 'string2',
-      'groups' : [],
-      'tokenId' : 1,
-      'range' : [ 5, 12 ],
-      'counter' : 1,
-      'input' : 'some string2 text',
-      'tokenName' : 'b'
-    }
-  ]
-  var got = _.strFindAll( 'some string2 text', { a : 'some', b : 'string2' } );
+  test.case = 'gpahpb, found none';
+  var map = { 'a' : [ 'x' ] };
+  var got = _.strFindAll( 'gpahpb', map );
+  var exp = [];
   test.identical( got, exp );
 
   /* */
 
   test.case = 'trivial';
+  var map = { a : 'some', b : [ 'string1', 'string2' ] };
+  var got = _.strFindAll( 'some string2 text', map );
   var exp =
   [
     {
@@ -1421,22 +5595,16 @@ function strFindAllValueWithLong( test )
       'range' : [ 5, 12 ],
       'counter' : 1,
       'input' : 'some string2 text',
-      'tokenName' : 'b'
+      'tokenName' : 'b_string2'
     }
-  ]
-  var got = _.strFindAll( 'some string2 text', { a : 'some', b : [ 'string1', 'string2' ] } );
-  test.identical( got, exp );
-
-  /* */
-
-  test.case = 'gpahpb, found none';
-  var exp = [];
-  var got = _.strFindAll( 'gpahpb', { 'a' : [ 'x' ] } );
+  ];
   test.identical( got, exp );
 
   /* */
 
   test.case = 'gpahpb, found single';
+  var map = { 'a' : [ 'g' ] };
+  var got = _.strFindAll( 'gpahpb', map );
   var exp =
   [
     {
@@ -1446,15 +5614,16 @@ function strFindAllValueWithLong( test )
       'range' : [ 0, 1 ],
       'counter' : 0,
       'input' : 'gpahpb',
-      'tokenName' : 'a'
+      'tokenName' : 'a_g'
     }
   ]
-  var got = _.strFindAll( 'gpahpb', { 'a' : [ 'g' ] } );
   test.identical( got, exp );
 
   /* */
 
   test.case = 'gpahpb, found several';
+  var map = { 'a' : [ 'p' ] };
+  var got = _.strFindAll( 'gpahpb', map );
   var exp =
   [
     {
@@ -1464,7 +5633,7 @@ function strFindAllValueWithLong( test )
       'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : 'gpahpb',
-      'tokenName' : 'a'
+      'tokenName' : 'a_p'
     },
     {
       'match' : 'p',
@@ -1473,14 +5642,241 @@ function strFindAllValueWithLong( test )
       'range' : [ 4, 5 ],
       'counter' : 1,
       'input' : 'gpahpb',
-      'tokenName' : 'a'
+      'tokenName' : 'a_p'
     }
   ]
-  var got = _.strFindAll( 'gpahpb', { 'a' : [ 'p' ] } );
+  test.identical( got, exp );
+
+  test.case = 'map';
+  var map = { manyA : /a+/, ba : [ 'ba', /ba/ ] };
+  var got = _.strFindAll( 'aabaa', map );
+  var expected =
+  [
+    {
+      groups : [],
+      match : 'aa',
+      tokenId : 0,
+      range : [ 0, 2 ],
+      counter : 0,
+      input : 'aabaa',
+      tokenName : 'manyA'
+    },
+    {
+      groups : [],
+      match : 'ba',
+      tokenId : 1,
+      range : [ 2, 4 ],
+      counter : 1,
+      input : 'aabaa',
+      tokenName : 'ba_ba'
+    },
+    {
+      groups : [],
+      match : 'a',
+      tokenId : 0,
+      range : [ 4, 5 ],
+      counter : 2,
+      input : 'aabaa',
+      tokenName : 'manyA'
+    }
+  ];
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'ins - map, tokenizingUnknwon - 1, but not unknown';
+  var map = { manyA : /a+/, ba : [ 'ba', /ba/ ] };
+  var got = _.strFindAll
+  ({
+    src : 'aabaa',
+    ins : map,
+    tokenizingUnknown : 1,
+  });
+  var expected =
+  [
+    {
+      groups : [],
+      match : 'aa',
+      tokenId : 0,
+      range : [ 0, 2 ],
+      counter : 0,
+      input : 'aabaa',
+      tokenName : 'manyA'
+    },
+    {
+      groups : [],
+      match : 'ba',
+      tokenId : 1,
+      range : [ 2, 4 ],
+      counter : 1,
+      input : 'aabaa',
+      tokenName : 'ba_ba'
+    },
+    {
+      groups : [],
+      match : 'a',
+      tokenId : 0,
+      range : [ 4, 5 ],
+      counter : 2,
+      input : 'aabaa',
+      tokenName : 'manyA'
+    }
+  ]
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'map with tokenizingUnknwon - 1 and unknown';
+  var map = { manyA : /a+/, ba : [ 'ba', /ba/ ] };
+  var got = _.strFindAll
+  ({
+    src : 'xaabaazb',
+    ins : map,
+    tokenizingUnknown : 1,
+  });
+  var expected =
+  [
+    {
+      match : 'x',
+      groups : [],
+      tokenId : -1,
+      range : [ 0, 1 ],
+      counter : 0,
+      input : 'xaabaazb',
+    },
+    {
+      match : 'aa',
+      groups : [],
+      tokenId : 0,
+      range : [ 1, 3 ],
+      counter : 1,
+      input : 'xaabaazb',
+      tokenName : 'manyA',
+    },
+    {
+      match : 'ba',
+      groups : [],
+      tokenId : 1,
+      range : [ 3, 5 ],
+      counter : 2,
+      input : 'xaabaazb',
+      tokenName : 'ba_ba'
+    },
+    {
+      match : 'a',
+      groups : [],
+      tokenId : 0,
+      range : [ 5, 6 ],
+      counter : 3,
+      input : 'xaabaazb',
+      tokenName : 'manyA'
+    },
+    {
+      match : 'zb',
+      groups : [],
+      tokenId : -1,
+      range : [ 6, 8 ],
+      counter : 4,
+      input : 'xaabaazb',
+    },
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - map, fast - 0' );
+
+  /* - */
+
+  test.open( 'ins - map, fast - 1' );
+
+  test.case = 'gpahpb, found none';
+  var got = _.strFindAll( { src : 'gpahpb', ins : { 'a' : [ 'x' ] }, fast : 1 } );
+  var exp = [];
   test.identical( got, exp );
 
   /* */
 
+  test.case = 'trivial';
+  var map = { a : 'some', b : [ 'string1', 'string2' ] };
+  var got = _.strFindAll( { src : 'some string2 text', ins : map, fast : 1 } );
+  var exp =
+  [
+    [ 0, 4, 0 ],
+    [ 5, 12, 2 ],
+  ];
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'gpahpb, found single';
+  var map = { 'a' : [ 'g' ] };
+  var got = _.strFindAll( { src : 'gpahpb', ins : map, fast : 1 } );
+  var exp = [ [ 0, 1, 0 ] ];
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'gpahpb, found several';
+  var map = { 'a' : [ 'p' ] };
+  var got = _.strFindAll( { src : 'gpahpb', ins : map, fast : 1 } );
+  var exp =
+  [
+    [ 1, 2, 0 ],
+    [ 4, 5, 0 ],
+  ];
+  test.identical( got, exp );
+
+  test.case = 'map';
+  var map = { manyA : /a+/, ba : [ 'ba', /ba/ ] };
+  var got = _.strFindAll( { src : 'aabaa', ins : map, fast : 1 } );
+  var expected =
+  [
+    [ 0, 2, 0 ],
+    [ 2, 4, 1 ],
+    [ 4, 5, 0 ]
+  ];
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'ins - map, tokenizingUnknwon - 1, but not unknown';
+  var map = { manyA : /a+/, ba : [ 'ba', /ba/ ] };
+  var got = _.strFindAll
+  ({
+    src : 'aabaa',
+    ins : map,
+    fast : 1,
+    tokenizingUnknown : 1,
+  });
+  var expected =
+  [
+    [ 0, 2, 0 ],
+    [ 2, 4, 1 ],
+    [ 4, 5, 0 ]
+  ]
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'map with tokenizingUnknwon : 1 and unknown';
+  var map = { manyA : /a+/, ba : [ 'ba', /ba/ ] };
+  var got = _.strFindAll
+  ({
+    src : 'xaabaazb',
+    ins : map,
+    fast : 1,
+    tokenizingUnknown : 1,
+  });
+  var expected =
+  [
+    [ 0, 1, -1 ],
+    [ 1, 3, 0 ],
+    [ 3, 5, 1 ],
+    [ 5, 6, 0 ],
+    [ 6, 8, -1 ]
+  ];
+  test.identical( got, expected );
+
+  test.close( 'ins - map, fast - 1' );
 }
 
 strFindAllValueWithLong.description =
@@ -1490,114 +5886,249 @@ strFindAllValueWithLong.description =
 
 //
 
-function strReplaceAll( test )
+function tokensSyntaxFrom( test ) 
 {
+  test.case = 'ins - instance of _.TokensSyntax';
+  var src = _.TokensSyntax.apply( null, [] );
+  var got = _.tokensSyntaxFrom( src );
+  var exp = _.TokensSyntax.apply( null, [] );
+  test.identical( got, exp );
+  test.is( got === src );
+
+  test.case = 'ins - instance of _.TokensSyntax maked by tokensSyntaxFrom';
+  var src = _.tokensSyntaxFrom( 'src' );
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [ 'src' ],
+    idToName : [],
+    nameToId : {},
+    alternatives : {},
+  };
+  test.identical( got, exp );
+  test.is( got === src );
 
   /* */
 
+  test.case = 'ins - empty string';
+  var src = '';
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [ '' ],
+    idToName : [],
+    nameToId : {},
+    alternatives : {},
+  };
+  test.identical( got, exp );
+
+  test.case = 'ins - string';
+  var src = 'src';
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [ 'src' ],
+    idToName : [],
+    nameToId : {},
+    alternatives : {},
+  };
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'ins - empty array';
+  var src = [];
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [],
+    idToName : [],
+    nameToId : {},
+    alternatives : {},
+  };
+  test.identical( got, exp );
+
+  test.case = 'ins - array with tokens';
+  var src = [ 'abc', /^[abc]/ ];
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [ 'abc', /^[abc]/ ],
+    idToName : [],
+    nameToId : {},
+    alternatives : {},
+  };
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'ins - empty map';
+  var src = {};
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [],
+    idToName : [],
+    nameToId : {},
+    alternatives : {},
+  };
+  test.identical( got, exp );
+
+  test.case = 'ins - map with string tokens';
+  var src = { a : 'abc', b : 'def', c : 'hig' };
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [ 'abc', 'def', 'hig' ],
+    idToName : [ 'a', 'b', 'c' ],
+    nameToId : { a : 0, b : 1, c : 2 },
+    alternatives : {},
+  };
+  test.identical( got, exp );
+
+  test.case = 'ins - map with string tokens and empty array';
+  var src = { d : [], b : 'def', a : 'abc', c : 'hig' };
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [ 'def', 'abc', 'hig' ],
+    idToName : [ 'b', 'a', 'c' ],
+    nameToId : { b : 0, a : 1, c : 2 },
+    alternatives : { d : [] },
+  };
+  test.identical( got, exp );
+
+  test.case = 'ins - map with string tokens and filled array';
+  var src = { d : [ 'a', 'b', 'c' ], b : 'def', a : 'abc', c : 'hig' };
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [ 'a', 'b', 'c', 'def', 'abc', 'hig' ],
+    idToName : [ 'd_a', 'd_b', 'd_c', 'b', 'a', 'c' ],
+    nameToId : { d_a : 0, d_b : 1, d_c : 2, b : 3, a : 4, c : 5 },
+    alternatives : { d : [ 'd_a', 'd_b', 'd_c' ] },
+  };
+  test.identical( got, exp );
+
+  test.case = 'ins - map with string tokens and filled array, key and element of array - empty string';
+  var src = { b : 'def', a : 'abc', c : 'hig', '' : [ 'a', '', 'c' ] };
+  var got = _.tokensSyntaxFrom( src );
+  var exp =
+  {
+    idToValue : [ 'def', 'abc', 'hig', 'a', '', 'c' ],
+    idToName : [ 'b', 'a', 'c', '_a', '_', '_c',  ],
+    nameToId : { b : 0, a : 1, c : 2, _a : 3, _ : 4, _c : 5 },
+    alternatives : { '' : [ '_a', '_', '_c' ] },
+  };
+  test.identical( got, exp );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.tokensSyntaxFrom() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.tokensSyntaxFrom( 'a', 'b' ) );
+
+  test.case = 'wrong type of ins';
+  test.shouldThrowErrorSync( () => _.tokensSyntaxFrom( new U8x( [ 1, 2, 3 ] ) ) );
+}
+
+//
+
+function strReplaceAllDefaultOptions( test )
+{
   test.open( 'string' );
 
-  test.case = 'simple replace';
-  var got = _.strReplaceAll( 'aabaa','b','c' );
-  var expected = 'aacaa';
-  test.identical( got,expected );
-
-  test.case = 'simple replace';
-  var got = _.strReplaceAll( 'aabaa','aa','zz' );
-  var expected = 'zzbzz';
-  test.identical( got,expected );
-
-  test.case = 'first two args empty strings';
-  var got = _.strReplaceAll( '', '', 'c' );
-  var expected = '';
-  test.identical( got,expected );
-
-  test.case = 'secong argument is empty string';
-  var got = _.strReplaceAll( 'a', '', 'c' );
-  var expected = 'a';
-  test.identical( got,expected );
-
-  test.case = 'all three args empty strings';
+  test.case = 'src - empty, ins - empty, but - empty';
   var got = _.strReplaceAll( '', '', '' );
   var expected = '';
-  test.identical( got,expected );
+  test.identical( got, expected );
 
-  test.case = 'third arg is empty string ';
-  var got = _.strReplaceAll( 'a', 'a', '' );
+  test.case = 'src - empty, ins - string, but - empty';
+  var got = _.strReplaceAll( '', 'x', '' );
   var expected = '';
-  test.identical( got,expected );
+  test.identical( got, expected );
 
-  test.case = 'one argument call';
-  var got = _.strReplaceAll( { src : 'gpx', dictionary : { 'x' : 'a' } } );
-  var expected = 'gpa';
-  test.identical( got,expected );
+  test.case = 'src - empty, ins - empty, but - string';
+  var got = _.strReplaceAll( '', '', 'x' );
+  var expected = '';
+  test.identical( got, expected );
 
-  test.case = 'two arguments call';
-  var got = _.strReplaceAll( 'hello', { 'l' : 'y' } );
-  var expected = 'heyyo';
-  test.identical( got,expected );
+  test.case = 'src - string, ins - empty, but - empty';
+  var got = _.strReplaceAll( 'x', '', '' );
+  var expected = 'x';
+  test.identical( got, expected );
 
-  test.case = 'no occurrences returns origin';
+  test.case = 'src, ins and but - strings, no occurrences, returns origin';
   var got = _.strReplaceAll( 'hello', 'x', 'y' );
   var expected = 'hello';
-  test.identical( got,expected );
+  test.identical( got, expected );
 
-  test.case = 'empty dictionary';
-  var got = _.strReplaceAll( 'hello', { } );
+  test.case = 'src === ins, but - empty';
+  var got = _.strReplaceAll( 'x', 'x', '' );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - string';
+  var got = _.strReplaceAll( 'x', '', 'x' );
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - repeats in src, but - string';
+  var got = _.strReplaceAll( 'ababab', 'ab', 'ac' );
+  var expected = 'acacac';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - char, but - char';
+  var got = _.strReplaceAll( 'aabaa', 'b', 'c' );
+  var expected = 'aacaa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of strings, but - array of strings';
+  var got = _.strReplaceAll( 'gpahpb', [ 'a', 'b' ], [ 'c', 'd' ] );
+  var expected = 'gpchpd';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty map';
+  var got = _.strReplaceAll( 'hello', {} );
   var expected = 'hello';
-  test.identical( got,expected );
+  test.identical( got, expected );
 
-  /* special cases */
+  test.case = 'src - string, dictionary - empty array';
+  var got = _.strReplaceAll( 'hello', [] );
+  var expected = 'hello';
+  test.identical( got, expected );
 
-  test.case = 'empty by empty, empty src';
-  var got = _.strReplaceAll( '','','' );
-  var expected = '';
-  test.identical( got,expected );
-
-  test.case = 'not empty by empty, empty src';
-  var got = _.strReplaceAll( '','x','' );
-  var expected = '';
-  test.identical( got,expected );
-
-  test.case = 'empty by not empty, empty src';
-  var got = _.strReplaceAll( '','','x' );
-  var expected = '';
-  test.identical( got,expected );
-
-  test.case = 'empty by empty, not empty src';
-  var got = _.strReplaceAll( 'x','','' );
-  var expected = 'x';
-  test.identical( got,expected );
-
-  test.case = 'not empty by empty, not empty src';
-  var got = _.strReplaceAll( 'x','x','' );
-  var expected = '';
-  test.identical( got,expected );
-
-  test.case = 'empty by not empty, not empty src';
-  var got = _.strReplaceAll( 'x','','x' );
-  var expected = 'x';
-  test.identical( got,expected );
-
-  test.case = 'repeat';
-  var got = _.strReplaceAll( 'ababab','ab','ab' );
-  var expected = 'ababab';
-  test.identical( got,expected );
-
-  test.case = 'no recursion should happen';
-  var got = _.strReplaceAll( 'abcabc',{ abc : 'a', a : 'b' } );
+  test.case = 'src - string, dictionary - map, no recursion should happen';
+  var got = _.strReplaceAll( 'abcabc', { abc : 'a', a : 'b' } );
   var expected = 'aa';
-  test.identical( got,expected );
+  test.identical( got, expected );
 
-  test.case = 'no recursion should happen';
-  var got = _.strReplaceAll( 'abcabc',[ [ 'abc', 'a' ], [ 'a', 'b' ] ] );
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll( 'abcabc', [ [ 'abc', 'a' ], [ 'a', 'b' ] ] );
   var expected = 'aa';
-  test.identical( got,expected );
+  test.identical( got, expected );
 
-  test.case = 'no recursion should happen';
-  var got = _.strReplaceAll( 'abcabc',[ [ 'a', 'b' ], [ 'abc', 'a' ] ] );
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll( 'abcabc', [ [ 'a', 'b' ], [ 'abc', 'a' ] ] );
   var expected = 'bbcbbc';
-  test.identical( got,expected );
+  test.identical( got, expected );
+
+  test.case = 'one argument call, map and dictionary';
+  var got = _.strReplaceAll( { src : 'gpx', dictionary : { 'x' : 'a' } } );
+  var expected = 'gpa';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - string, but - routine';
+  var got = _.strReplaceAll( 'this is hello from hell', 'hell', ( e, it ) => 'paradise' );
+  var expected = 'this is paradiseo from paradise';
+  test.identical( got, expected );
 
   test.close( 'string' );
 
@@ -1605,86 +6136,82 @@ function strReplaceAll( test )
 
   test.open( 'regexp' );
 
-  var got = _.strReplaceAll( 'aabaa',/b/gm,'c' );
+  test.case = 'src - empty, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll( '', /(?:)/gm, '' );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - string, but - empty';
+  var got = _.strReplaceAll( '', /x/, '' );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll( '', /(?:)/g, 'x' );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll( 'x', /(?:)/g, '' );
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - regexp - empty string, no occurrences, returns origin';
+  var got = _.strReplaceAll( 'hello', /x/, 'y' );
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - any symbols, but - empty';
+  var got = _.strReplaceAll( 'x', /.*/, '' );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll( 'x', /(?:)/gm, 'x' );
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - char, returns original';
+  var got = _.strReplaceAll( 'aabaa', /(?:)/g, 'c' );
+  var expected = 'aabaa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - simple string, but - char, one entry';
+  var got = _.strReplaceAll( 'aabaa', /b/gm, 'c' );
   var expected = 'aacaa';
-  test.identical( got,expected );
+  test.identical( got, expected );
 
-  var got = _.strReplaceAll( '12345',/[1-3]/gm,'0' );
+  test.case = 'src - string, ins - regexp - range of chars, but - char, three entries';
+  var got = _.strReplaceAll( '12345', /[1-3]/gm, '0' );
   var expected = '00045';
-  test.identical( got,expected );
+  test.identical( got, expected );
 
-  var got = _.strReplaceAll( 'gpbaac',/a+/gm,'b' );
+  test.case = 'src - string, ins - regexp - one and more, but - char, entry';
+  var got = _.strReplaceAll( 'gpbaac', /a+/gm, 'b' );
   var expected = 'gpbbc';
-  test.identical( got,expected );
+  test.identical( got, expected );
 
-  var got = _.strReplaceAll( 'gpbgpcgpd',/(gp)+[^bc]$/gm,'x' );
+  test.case = 'src - string, ins - regexp - group and end, but - char, entry';
+  var got = _.strReplaceAll( 'gpbgpcgpd', /(gp)+[^bc]$/gm, 'x' );
   var expected = 'gpbgpcx';
-  test.identical( got,expected );
+  test.identical( got, expected );
 
-  var got = _.strReplaceAll( 'gpa',[ 'a' ], [ 'b' ] );
-  var expected = 'gpb';
-  test.identical( got,expected );
-
-  var got = _.strReplaceAll( 'gpa',[ /a/ ], [ 'b' ] );
-  var expected = 'gpb';
-  test.identical( got,expected );
-
-  var got = _.strReplaceAll( 'gpa',[ /a/gm ], [ 'b' ] );
-  var expected = 'gpb';
-  test.identical( got,expected );
-
-  var got = _.strReplaceAll( 'gpahpb',[ 'a', 'b' ], [ 'c', 'd' ] );
+  test.case = 'src - string, ins - array of regexps, but - array of strings, three entries';
+  var got = _.strReplaceAll( 'gpahpb', [ /a/gm, /b/gm ], [ 'c', 'd' ] );
   var expected = 'gpchpd';
-  test.identical( got,expected );
+  test.identical( got, expected );
 
-  var got = _.strReplaceAll( 'gpahpb',[ /a/gm, /b/gm ], [ 'c', 'd' ] );
+  test.case = 'src - string, ins - array of regexps and strings, but - array of strings, three entries';
+  var got = _.strReplaceAll( 'gpahpb', [ /a/gm, 'b' ], [ 'c', 'd' ] );
   var expected = 'gpchpd';
-  test.identical( got,expected );
+  test.identical( got, expected );
 
-  var got = _.strReplaceAll( 'gpahpb',[ /a/gm, 'b' ], [ 'c', 'd' ] );
-  var expected = 'gpchpd';
-  test.identical( got,expected );
+  /* */
 
-  function replaceHell( match, it )
-  {
-    test.identical( arguments.length, 2 );
-    test.identical( match, 'hell' );
-
-    if( it.counter === 0 )
-    {
-      var expectedIt = Object.create( null );
-      expectedIt.match = 'hell';
-      expectedIt.range = [ 8,12 ];
-      expectedIt.counter = 0;
-      expectedIt.input = 'this is hello from hell';
-      expectedIt.groups = [];
-      expectedIt.tokenId = 0;
-      test.identical( it, expectedIt );
-    }
-    else
-    {
-      var expectedIt = Object.create( null );
-      expectedIt.match = 'hell';
-      expectedIt.range = [ 19,23 ];
-      expectedIt.counter = 1;
-      expectedIt.input = 'this is hello from hell';
-      expectedIt.groups = [];
-      expectedIt.tokenId = 0;
-      test.identical( it, expectedIt );
-    }
-
-    return 'paradise';
-  }
-
-  test.case = 'trivial ins:string sub:routine';
-  var got = _.strReplaceAll( 'this is hello from hell', 'hell', replaceHell );
+  test.case = 'src - string, ins - regexp, but - routine';
+  var got = _.strReplaceAll( 'this is hello from hell', /hell/g, ( e, it ) => 'paradise' );
   var expected = 'this is paradiseo from paradise';
-  test.identical( got,expected );
-
-  test.case = 'trivial ins:regexp sub:routine';
-  var got = _.strReplaceAll( 'this is hello from hell', /hell/g, replaceHell );
-  var expected = 'this is paradiseo from paradise';
-  test.identical( got,expected );
+  test.identical( got, expected );
 
   test.close( 'regexp' );
 
@@ -1695,70 +6222,1576 @@ function strReplaceAll( test )
 
   test.open( 'throwing' );
 
-  test.case = 'invalid arguments count';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strReplaceAll( '1', '2', '3', '4' );
-  });
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strReplaceAll( ) );
 
-  test.case = 'no arguments';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strReplaceAll( );
-  });
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strReplaceAll( '1', '2', '3', '4' ) );
 
-  test.case = 'first argument is wrong';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strReplaceAll( 1, '2','3');
-  });
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.strReplaceAll( 1, '2', '3') );
 
-  test.case = 'second argument is wrong';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strReplaceAll( '1', 2, '3');
-  });
+  test.case = 'wrong type of ins';
+  test.shouldThrowErrorSync( () => _.strReplaceAll( '1', 2, '3') );
 
-  test.case = 'third argument is wrong';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strReplaceAll( '1','2', 3);
-  });
+  test.case = 'wrong type of but';
+  test.shouldThrowErrorSync( () => _.strReplaceAll( '1', '2', 3 ) );
 
-  test.case = 'second arg is not a Object';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strReplaceAll( '1', 2);
-  });
+  test.case = 'two arguments call, wrong type of dictionary';
+  test.shouldThrowErrorSync( () => _.strReplaceAll( '1', 2 ) );
 
-  test.case = 'argument is not a Object';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strReplaceAll( '1' );
-  });
+  test.case = 'single argument call, wrong type of options map';
+  test.shouldThrowErrorSync( () => _.strReplaceAll( '1' ) );
 
   test.case = 'wrong type of dictionary value';
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strReplaceAll( { dst : 'gpx', dictionary : { 'a' : [ 1, 2 ] } } )
-  });
-
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strReplaceAll( 'gpahpb',[ 'a' ], [ 'c', 'd' ] );
-  });
-
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strReplaceAll( 'gpahpb',[ 'a', 'b' ], [ 'x' ] );
-  });
-
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.strReplaceAll( 'gpahpb',{ 'a' : [ 'x' ] } );
-  });
+  test.shouldThrowErrorSync( () => _.strReplaceAll( { dst : 'gpx', dictionary : { 'a' : [ 1, 2 ] } } ) );
+  test.shouldThrowErrorSync( () => _.strReplaceAll( 'gpahpb', [ 'a' ], [ 'c', 'd' ] ) );
+  test.shouldThrowErrorSync( () => _.strReplaceAll( 'gpahpb', [ 'a', 'b' ], [ 'x' ] ) );
+  test.shouldThrowErrorSync( () => _.strReplaceAll( 'gpahpb', { 'a' : [ 'x' ] } ) );
 
   test.close( 'throwing' );
+}
+
+//
+
+function strReplaceAllOptionJoining( test )
+{
+  test.open( 'string' );
+
+  test.case = 'src - empty, ins - empty, but - empty';
+  var got = _.strReplaceAll( { src : '', dictionary : [ [ '', '' ] ], joining : 0 } );
+  var expected = [ '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - string, but - empty';
+  var got = _.strReplaceAll( { src : '', dictionary : [ [ 'x', '' ] ], joining : 0 } );
+  var expected = [ '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - empty, but - string';
+  var got = _.strReplaceAll( { src : '', dictionary : [ [ '', 'x' ] ], joining : 0 } );
+  var expected = [ '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - empty';
+  var got = _.strReplaceAll( { src : 'x', dictionary : [ [ '', '' ] ], joining : 0 } );
+  var expected = [ 'x' ];
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - strings, no occurrences, returns origin';
+  var got = _.strReplaceAll( { src : 'hello', dictionary : [ [ 'x', 'y' ] ], joining : 0 } );
+  var expected = [ 'hello' ];
+  test.identical( got, expected );
+
+  test.case = 'src === ins, but - empty';
+  var got = _.strReplaceAll( { src : 'x', dictionary : [ [ 'x', '' ] ], joining : 0 } );
+  var expected = [ '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - string';
+  var got = _.strReplaceAll( { src : 'x', dictionary : [ [ '', 'x' ] ], joining : 0 } );
+  var expected = [ 'x' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - repeats in src, but - string';
+  var got = _.strReplaceAll( { src : 'ababab', dictionary : [ [ 'ab', 'ac' ] ], joining : 0 } );
+  var expected = [ 'ac', 'ac', 'ac', '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - char, but - char';
+  var got = _.strReplaceAll( { src : 'aabaa', dictionary : [ [ 'b', 'c' ] ], joining : 0 } );
+  var expected = [ 'aa', 'c', 'aa' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of strings, but - array of strings';
+  var got = _.strReplaceAll( { src : 'gpahpb', dictionary : [ [ 'a', 'b' ], [ 'c', 'd' ] ], joining : 0 } );
+  var expected = [ 'gp', 'b', 'hpb' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty map';
+  var got = _.strReplaceAll( { src : 'hello', dictionary : {}, joining : 0 } );
+  var expected = [ 'hello' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty array';
+  var got = _.strReplaceAll( { src : 'hello', dictionary : [], joining : 0 } );
+  var expected = [ 'hello' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - map, no recursion should happen';
+  var got = _.strReplaceAll( { src : 'abcabc', dictionary : { abc : 'a', a : 'b' }, joining : 0 } );
+  var expected = [ 'a', 'a', '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll( { src : 'abcabc', dictionary : [ [ 'abc', 'a' ], [ 'a', 'b' ] ], joining : 0 } );
+  var expected = [ 'a', 'a', '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll( { src : 'abcabc', dictionary : [ [ 'a', 'b' ], [ 'abc', 'a' ] ], joining : 0 } );
+  var expected = [ 'b', 'bc', 'b', 'bc' ];
+  test.identical( got, expected );
+
+  test.case = 'one argument call, map and dictionary';
+  var got = _.strReplaceAll( { src : 'gpx', dictionary : { 'x' : 'a' }, joining : 0 } );
+  var expected = [ 'gp', 'a', '' ];
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - string, but - routine';
+  var got = _.strReplaceAll( { src : 'this is hello from hell', dictionary : [ [ 'hell', ( e, it ) => 'paradise' ] ], joining : 0 } );
+  var expected = [ 'this is ', 'paradise', 'o from ', 'paradise', '' ];
+  test.identical( got, expected );
+
+  test.close( 'string' );
+
+  /* - */
+
+  test.open( 'regexp' );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll( { src : '', dictionary : [ [ /(?:)/gm, '' ] ], joining : 0 } );
+  var expected = [ '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - string, but - empty';
+  var got = _.strReplaceAll( { src : '', dictionary : [ [ /x/, '' ] ], joining : 0 } );
+  var expected = [ '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll( { src : '', dictionary : [ [ /(?:)/g, 'x' ] ], joining : 0 } );
+  var expected = [ '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll( { src : 'x', dictionary : [ [ /(?:)/g, '' ] ], joining : 0 } );
+  var expected = [ 'x' ];
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - regexp - empty string, no occurrences, returns origin';
+  var got = _.strReplaceAll( { src : 'hello', dictionary : [ [ /x/, 'y' ] ], joining : 0 } );
+  var expected = [ 'hello' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - any symbols, but - empty';
+  var got = _.strReplaceAll( { src : 'x', dictionary : [ [ /.*/, '' ] ], joining : 0 } );
+  var expected = [ '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll( { src : 'x', dictionary : [ [ /(?:)/gm, 'x' ] ], joining : 0 } );
+  var expected = [ 'x' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - char, returns original';
+  var got = _.strReplaceAll( { src : 'aabaa', dictionary : [ [ /(?:)/g, 'c' ] ], joining : 0 } );
+  var expected = [ 'aabaa' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - simple string, but - char, one entry';
+  var got = _.strReplaceAll( { src : 'aabaa', dictionary : [ [ /b/gm, 'c' ] ], joining : 0 } );
+  var expected = [ 'aa', 'c', 'aa' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - range of chars, but - char, three entries';
+  var got = _.strReplaceAll( { src : '12345', dictionary : [ [ /[1-3]/gm, '0' ] ], joining : 0 } );
+  var expected = [ '0', '0', '0', '45' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - one and more, but - char, entry';
+  var got = _.strReplaceAll( { src : 'gpbaac', dictionary : [ [ /a+/gm, 'b' ] ], joining : 0 } );
+  var expected = [ 'gpb', 'b', 'c' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - group and end, but - char, entry';
+  var got = _.strReplaceAll( { src : 'gpbgpcgpd', dictionary : [ [ /(gp)+[^bc]$/gm, 'x' ] ], joining : 0 } );
+  var expected = [ 'gpbgpc', 'x', '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps, but - array of strings, three entries';
+  var got = _.strReplaceAll( { src : 'gpahpb', dictionary : [ [ [ /a/gm, /b/gm ], [ 'c', 'd' ] ] ], joining : 0 } );
+  var expected = [ 'gp', 'c', 'hp', 'd', '' ];
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps and strings, but - array of strings, three entries';
+  var got = _.strReplaceAll( { src : 'gpahpb', dictionary : [ [ [ /a/gm, 'b' ], [ 'c', 'd' ] ] ], joining : 0 } );
+  var expected = [ 'gp', 'c', 'hp', 'd', '' ];
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - regexp, but - routine';
+  var got = _.strReplaceAll( { src : 'this is hello from hell', dictionary : [ [ /hell/g, ( e, it ) => 'paradise' ] ], joining : 0 } );
+  var expected = [ 'this is ', 'paradise', 'o from ', 'paradise', '' ];
+  test.identical( got, expected );
+
+  test.close( 'regexp' );
+}
+
+//
+
+function strReplaceAllOptionOnUnknown( test )
+{
+  test.open( 'onUnknown returns empty string' );
+
+  test.open( 'string' );
+
+  test.case = 'src - empty, ins - empty, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ '', '' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ 'x', '' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - empty, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ '', 'x' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ '', '' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - strings, no occurrences, returns origin';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [ [ 'x', 'y' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src === ins, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ 'x', '' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ '', 'x' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - repeats in src, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'ababab',
+    dictionary : [ [ 'ab', 'ac' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'acacac';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - char, but - char';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ 'b', 'c' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'caa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of strings, but - array of strings';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ 'a', 'b' ], [ 'c', 'd' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'bhpb';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty map';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : {},
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty array';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - map, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : { abc : 'a', a : 'b' },
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'aa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : [ [ 'abc', 'a' ], [ 'a', 'b' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'aa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : [ [ 'a', 'b' ], [ 'abc', 'a' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'bbbc';
+  test.identical( got, expected );
+
+  test.case = 'one argument call, map and dictionary';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpx',
+    dictionary : { 'x' : 'a' },
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'a';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - string, but - routine';
+  var got = _.strReplaceAll
+  ({
+    src : 'this is hello from hell',
+    dictionary : [ [ 'hell', ( e, it ) => 'paradise' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'paradiseparadise';
+  test.identical( got, expected );
+
+  test.close( 'string' );
+
+  /* - */
+
+  test.open( 'regexp' );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /(?:)/gm, '' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /x/, '' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /(?:)/g, 'x' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /(?:)/g, '' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - regexp - empty string, no occurrences, returns origin';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [ [ /x/, 'y' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - any symbols, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /.*/, '' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /(?:)/gm, 'x' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - char, returns original';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ /(?:)/g, 'c' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'aabaa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - simple string, but - char, one entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ /b/gm, 'c' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'caa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - range of chars, but - char, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : '12345',
+    dictionary : [ [ /[1-3]/gm, '0' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = '00045';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - one and more, but - char, entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpbaac',
+    dictionary : [ [ /a+/gm, 'b' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'bc';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - group and end, but - char, entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpbgpcgpd',
+    dictionary : [ [ /(gp)+[^bc]$/gm, 'x' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps, but - array of strings, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ [ /a/gm, /b/gm ], [ 'c', 'd' ] ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'cd';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps and strings, but - array of strings, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ [ /a/gm, 'b' ], [ 'c', 'd' ] ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'cd';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - regexp, but - routine';
+  var got = _.strReplaceAll
+  ({
+    src : 'this is hello from hell',
+    dictionary : [ [ /hell/g, ( e, it ) => 'paradise' ] ],
+    onUnknown : ( e, cont, map ) => ''
+  });
+  var expected = 'paradiseparadise';
+  test.identical( got, expected );
+
+  test.close( 'regexp' );
+
+  test.close( 'onUnknown returns empty string' );
+
+  /* - */
+
+  test.open( 'onUnknown returns element' );
+
+  test.open( 'string' );
+
+  test.case = 'src - empty, ins - empty, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ '', '' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ 'x', '' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - empty, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ '', 'x' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ '', '' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - strings, no occurrences, returns origin';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [ [ 'x', 'y' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src === ins, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ 'x', '' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ '', 'x' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - repeats in src, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'ababab',
+    dictionary : [ [ 'ab', 'ac' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'acacac';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - char, but - char';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ 'b', 'c' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'aacaa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of strings, but - array of strings';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ 'a', 'b' ], [ 'c', 'd' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'gpbhpb';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty map';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : {},
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty array';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - map, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : { abc : 'a', a : 'b' },
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'aa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : [ [ 'abc', 'a' ], [ 'a', 'b' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'aa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : [ [ 'a', 'b' ], [ 'abc', 'a' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'bbcbbc';
+  test.identical( got, expected );
+
+  test.case = 'one argument call, map and dictionary';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpx',
+    dictionary : { 'x' : 'a' },
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'gpa';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - string, but - routine';
+  var got = _.strReplaceAll
+  ({
+    src : 'this is hello from hell',
+    dictionary : [ [ 'hell', ( e, it ) => 'paradise' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'this is paradiseo from paradise';
+  test.identical( got, expected );
+
+  test.close( 'string' );
+
+  /* - */
+
+  test.open( 'regexp' );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /(?:)/gm, '' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /x/, '' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /(?:)/g, 'x' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /(?:)/g, '' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - regexp - empty string, no occurrences, returns origin';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [ [ /x/, 'y' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - any symbols, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /.*/, '' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /(?:)/gm, 'x' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - char, returns original';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ /(?:)/g, 'c' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'aabaa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - simple string, but - char, one entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ /b/gm, 'c' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'aacaa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - range of chars, but - char, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : '12345',
+    dictionary : [ [ /[1-3]/gm, '0' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = '00045';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - one and more, but - char, entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpbaac',
+    dictionary : [ [ /a+/gm, 'b' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'gpbbc';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - group and end, but - char, entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpbgpcgpd',
+    dictionary : [ [ /(gp)+[^bc]$/gm, 'x' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'gpbgpcx';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps, but - array of strings, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ [ /a/gm, /b/gm ], [ 'c', 'd' ] ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'gpchpd';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps and strings, but - array of strings, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ [ /a/gm, 'b' ], [ 'c', 'd' ] ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'gpchpd';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - regexp, but - routine';
+  var got = _.strReplaceAll
+  ({
+    src : 'this is hello from hell',
+    dictionary : [ [ /hell/g, ( e, it ) => 'paradise' ] ],
+    onUnknown : ( e, cont, map ) => e
+  });
+  var expected = 'this is paradiseo from paradise';
+  test.identical( got, expected );
+
+  test.close( 'regexp' );
+
+  test.close( 'onUnknown returns element' );
+
+  /* - */
+
+  test.open( 'onUnknown returns element and tokenId' );
+
+  test.open( 'string' );
+
+  test.case = 'src - empty, ins - empty, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ '', '' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ 'x', '' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - empty, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ '', 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ '', '' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - strings, no occurrences, returns origin';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [ [ 'x', 'y' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src === ins, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ 'x', '' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ '', 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - repeats in src, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'ababab',
+    dictionary : [ [ 'ab', 'ac' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'acacac';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - char, but - char';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ 'b', 'c' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'aa0caa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of strings, but - array of strings';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ 'a', 'b' ], [ 'c', 'd' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'gp0bhpb';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty map';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : {},
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty array';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - map, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : { abc : 'a', a : 'b' },
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'aa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : [ [ 'abc', 'a' ], [ 'a', 'b' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'aa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : [ [ 'a', 'b' ], [ 'abc', 'a' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'bbc0bbc';
+  test.identical( got, expected );
+
+  test.case = 'one argument call, map and dictionary';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpx',
+    dictionary : { 'x' : 'a' },
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'gp0a';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - string, but - routine';
+  var got = _.strReplaceAll
+  ({
+    src : 'this is hello from hell',
+    dictionary : [ [ 'hell', ( e, it ) => 'paradise' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'this is 0paradiseo from 0paradise';
+  test.identical( got, expected );
+
+  test.close( 'string' );
+
+  /* - */
+
+  test.open( 'regexp' );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /(?:)/gm, '' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /x/, '' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /(?:)/g, 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /(?:)/g, '' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - regexp - empty string, no occurrences, returns origin';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [ [ /x/, 'y' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - any symbols, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /.*/, '' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /(?:)/gm, 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - char, returns original';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ /(?:)/g, 'c' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'aabaa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - simple string, but - char, one entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ /b/gm, 'c' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'aa0caa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - range of chars, but - char, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : '12345',
+    dictionary : [ [ /[1-3]/gm, '0' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = '00045';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - one and more, but - char, entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpbaac',
+    dictionary : [ [ /a+/gm, 'b' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'gpb0bc';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - group and end, but - char, entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpbgpcgpd',
+    dictionary : [ [ /(gp)+[^bc]$/gm, 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'gpbgpc0x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps, but - array of strings, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ [ /a/gm, /b/gm ], [ 'c', 'd' ] ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'gp0chp1d';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps and strings, but - array of strings, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ [ /a/gm, 'b' ], [ 'c', 'd' ] ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'gp0chp1d';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - regexp, but - routine';
+  var got = _.strReplaceAll
+  ({
+    src : 'this is hello from hell',
+    dictionary : [ [ /hell/g, ( e, it ) => 'paradise' ] ],
+    onUnknown : ( e, cont, map ) => e + cont.tokenId
+  });
+  var expected = 'this is 0paradiseo from 0paradise';
+  test.identical( got, expected );
+
+  test.close( 'regexp' );
+
+  test.close( 'onUnknown returns element and tokenId' );
+
+  /* - */
+
+  test.open( 'onUnknown returns element and map ins[ 0 ]' );
+
+  test.open( 'string' );
+
+  test.case = 'src - empty, ins - empty, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ '', '' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ 'x', '' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - empty, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ '', 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ '', '' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - strings, no occurrences, returns origin';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [ [ 'x', 'y' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src === ins, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ 'x', '' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - empty, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ '', 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - repeats in src, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'ababab',
+    dictionary : [ [ 'ab', 'ac' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'acacac';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - char, but - char';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ 'b', 'c' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'aabcaa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of strings, but - array of strings';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ 'a', 'b' ], [ 'c', 'd' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'gpabhpb';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty map';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : {},
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - empty array';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - map, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : { abc : 'a', a : 'b' },
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'aa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : [ [ 'abc', 'a' ], [ 'a', 'b' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'aa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, dictionary - array, no recursion should happen';
+  var got = _.strReplaceAll
+  ({
+    src : 'abcabc',
+    dictionary : [ [ 'a', 'b' ], [ 'abc', 'a' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'bbcabbc';
+  test.identical( got, expected );
+
+  test.case = 'one argument call, map and dictionary';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpx',
+    dictionary : { 'x' : 'a' },
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'gpxa';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - string, but - routine';
+  var got = _.strReplaceAll
+  ({
+    src : 'this is hello from hell',
+    dictionary : [ [ 'hell', ( e, it ) => 'paradise' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'this is hellparadiseo from hellparadise';
+  test.identical( got, expected );
+
+  test.close( 'string' );
+
+  /* - */
+
+  test.open( 'regexp' );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /(?:)/gm, '' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /x/, '' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : '',
+    dictionary : [ [ /(?:)/g, 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /(?:)/g, '' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src, ins and but - regexp - empty string, no occurrences, returns origin';
+  var got = _.strReplaceAll
+  ({
+    src : 'hello',
+    dictionary : [ [ /x/, 'y' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'hello';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - any symbols, but - empty';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /.*/, '' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - string';
+  var got = _.strReplaceAll
+  ({
+    src : 'x',
+    dictionary : [ [ /(?:)/gm, 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'x';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - empty string, but - char, returns original';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ /(?:)/g, 'c' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'aabaa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - simple string, but - char, one entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'aabaa',
+    dictionary : [ [ /b/gm, 'c' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'aa/b/gmcaa';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - range of chars, but - char, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : '12345',
+    dictionary : [ [ /[1-3]/gm, '0' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = '00045';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - one and more, but - char, entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpbaac',
+    dictionary : [ [ /a+/gm, 'b' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'gpb/a+/gmbc';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - regexp - group and end, but - char, entry';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpbgpcgpd',
+    dictionary : [ [ /(gp)+[^bc]$/gm, 'x' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'gpbgpc/(gp)+[^bc]$/gmx';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps, but - array of strings, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ [ /a/gm, /b/gm ], [ 'c', 'd' ] ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'gp/a/gmchp/a/gmd';
+  test.identical( got, expected );
+
+  test.case = 'src - string, ins - array of regexps and strings, but - array of strings, three entries';
+  var got = _.strReplaceAll
+  ({
+    src : 'gpahpb',
+    dictionary : [ [ [ /a/gm, 'b' ], [ 'c', 'd' ] ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'gp/a/gmchp/a/gmd';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - string, ins - regexp, but - routine';
+  var got = _.strReplaceAll
+  ({
+    src : 'this is hello from hell',
+    dictionary : [ [ /hell/g, ( e, it ) => 'paradise' ] ],
+    onUnknown : ( e, cont, map ) => e + map.ins[ 0 ]
+  });
+  var expected = 'this is /hell/gparadiseo from /hell/gparadise';
+  test.identical( got, expected );
+
+  test.close( 'regexp' );
+
+  test.close( 'onUnknown returns element and map ins[ 0 ]' );
 }
 
 //
@@ -2238,26 +8271,26 @@ function strMetricFormat( test )
   return;
 
   test.case = 'without arguments';
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat() );
+  test.shouldThrowErrorSync( () => _.strMetricFormat() );
 
   test.case = 'extra arguments';
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( '1', { fixed : 0 }, '3' ) );
+  test.shouldThrowErrorSync( () => _.strMetricFormat( '1', { fixed : 0 }, '3' ) );
 
   test.case = 'wrong first argument';
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( null, { fixed : 1 } ) );
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( undefined, { fixed : 1 } ) );
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( { 1 : 1}, { fixed : 1 } ) );
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( [ 1 ], { fixed : 1 } ) );
+  test.shouldThrowErrorSync( () => _.strMetricFormat( null, { fixed : 1 } ) );
+  test.shouldThrowErrorSync( () => _.strMetricFormat( undefined, { fixed : 1 } ) );
+  test.shouldThrowErrorSync( () => _.strMetricFormat( { 1 : 1}, { fixed : 1 } ) );
+  test.shouldThrowErrorSync( () => _.strMetricFormat( [ 1 ], { fixed : 1 } ) );
 
   test.case = 'wrong second argument';
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( 1, 1 ) );
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( 1, '0' ) );
+  test.shouldThrowErrorSync( () => _.strMetricFormat( 1, 1 ) );
+  test.shouldThrowErrorSync( () => _.strMetricFormat( 1, '0' ) );
 
   test.case = 'fixed out of range';
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( '1300', { fixed : 21 } ) );
+  test.shouldThrowErrorSync( () => _.strMetricFormat( '1300', { fixed : 21 } ) );
 
   test.case = 'fixed is not a number';
-  test.shouldThrowErrorOfAnyKind( () => _.strMetricFormat( '1300', { fixed : [ 1 ] } ) );
+  test.shouldThrowErrorSync( () => _.strMetricFormat( '1300', { fixed : [ 1 ] } ) );
 }
 
 //
@@ -2575,92 +8608,2310 @@ function strTimeFormat( test )
 
 //
 
-function strStructureParse( test )
+function strStructureParseDefaultOptions( test ) 
 {
+  test.case = 'passed argument is string, does not affects by options';
+  var src = '[number : 1 str : abc]';
+  var expected = { '[number' : 1, 'str' : 'abc]' };
+  var got = _.strStructureParse( src );
+  test.identical( got, expected );
 
   /* */
 
-  test.open( 'imply map' );
-
-  test.case = 'trivial, default';
-  var src = 'number : 1 str : abc'
-  var expected = { number : 1, str : 'abc' };
-  var got = _.strStructureParse( src );
-  test.identical( got, expected )
-
-  test.case = 'empty string, default';
-  var src = ''
+  test.case = 'empty string';
+  var src = '';
   var expected = {};
-  var got = _.strStructureParse( src );
-  test.identical( got, expected )
-
-  test.case = 'empty string, options';
-  var src = ''
-  var expected = {};
-  var got = _.strStructureParse({ src : src, parsingArrays : 1 });
-  test.identical( got, expected )
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
 
   test.case = 'spaces';
   var src = '   ';
   var expected = {};
-  var got = _.strStructureParse({ src : src, parsingArrays : 1 });
-  test.identical( got, expected )
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
 
-  test.case = 'empty string, defaultStructure:string';
-  var src = ''
+  test.case = 'string without keyValDelimeter';
+  var src = 'some string';
+  var expected = 'some string';
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number : 1 str : abc';
+  var expected = { number : 1, str : 'abc' };
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, flat array in value';
+  var src = 'number : 1 str : abc array : [1,abc]';
+  var expected = { number : 1, str : 'abc', array : '[1,abc]' };
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' number : 1  str:abc array :  [ 1  , abc ] ';
+  var expected = { number : 1, str : 'abc', array : '[ 1  , abc ]' };
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = { 'path:D' : '\\some\\path' };
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path:"D:\\some\\path"';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path : D : \\some\\ path ';
+  var expected = { path : 'D : \\some\\ path' };
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 v1 b2 b2 : v2 v2 c3 c3 : v3 v3';
+  var expected = { 'a1 a1' : 'v1 v1 b2', 'b2' : 'v2 v2 c3', 'c3' : 'v3 v3' };
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '[]';
+  var expected = '[]';
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ 1, abc ]';
+  var expected = '[ 1, abc ]';
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  , abc ] ';
+  var expected = '[ 1  , abc ]';
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1  ab cd ] ';
+  var expected = '[ 1  ab cd ]';
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+  
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '[number : 1 str : abc]';
+  var expected = { '[number' : 1, 'str' : 'abc]' };
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strStructureParse() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : 'a' }, 'extra' ) );
+
+  test.case = 'wrong type of options map';
+  test.shouldThrowErrorSync( () => _.strStructureParse( [ [ 'src', 'a' ] ] ) );
+
+  test.case = 'unknown option in options map';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : 'a', delimeter : ' ' } ) );
+
+  test.case = 'keyValDelimeter is empty string';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : 'a', keyValDelimeter : '' } ) );
+
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : [] } ) );
+
+  test.case = 'wrong type of keyValDelimeter';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : 'a', keyValDelimeter : 1 } ) );
+
+  test.case = 'wrong type of entryDelimeter';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : 'a', entryDelimeter : 1 } ) );
+
+  test.case = 'defaultStructure is not "array", "map", "string"';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : 'a', defaultStructure : 'hashmap' } ) );
+}
+
+//
+
+function strStructureParseOptionKeyValDelimeter( test ) 
+{
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = 'some string';
+  var expected = 'some string';
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number :: 1 str :: abc';
+  var expected = { number : 1, str : 'abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, flat array in value';
+  var src = 'number :: 1 str :: abc array :: [1,abc]';
+  var expected = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' number :: 1  str::abc array ::  [ 1  , abc ] ';
+  var expected = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path::D::\\some\\path';
+  var expected = { path : 'D::\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path::D"::\\some\\path';
+  var expected = { 'path::D' : '\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path::"D::\\some\\path"';
+  var expected = { path : 'D::\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path::D::\\some\\path';
+  var expected = { path : 'D::\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path :: D :: \\some\\ path ';
+  var expected = { path : 'D :: \\some\\ path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 :: v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 :: v1 v1 b2 b2 :: v2 v2 c3 c3 :: v3 v3';
+  var expected = { 'a1 a1' : 'v1 v1 b2', 'b2' : 'v2 v2 c3', 'c3' : 'v3 v3' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a :: 1 b :: 2a, c :: 3 a d :: 4abc e : 5 abc';
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc e : 5 abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '[]';
+  var expected = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ 1, abc ]';
+  var expected = [ 1, 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  , abc ] ';
+  var expected = [ 1, 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1  ab cd ] ';
+  var expected = [ 1, 'ab', 'cd' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+  
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '[number :: 1 str :: abc]';
+  var expected = [ 'number', '::', 1, 'str', '::', 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
+  test.identical( got, expected );
+}
+
+//
+
+function strStructureParseOptionEntryDelimeter( test ) 
+{
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = 'some string';
+  var expected = 'some string';
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number : 1, str : abc';
+  var expected = { number : 1, str : 'abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, flat array in value';
+  var src = 'number : 1, str : abc, array : [1,abc]';
+  var expected = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' number : 1,  str:abc,array :  [ 1  , abc ] ';
+  var expected = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = { 'path:D' : '\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path:"D:\\some\\path"';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path : D : \\some\\ path ';
+  var expected = { path : 'D : \\some\\ path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 v1, b2 b2 : v2 v2, c3 c3 : v3 v3';
+  var expected = { 'a1 a1' : 'v1 v1', 'b2 b2' : 'v2 v2', 'c3 c3' : 'v3 v3' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1, b : 2a, c : 3, a d : 4abc, e : 5, abc';
+  var expected = { 'a' : 1, 'b' : '2a', 'c' : 3, 'a d' : '4abc', 'e' : '5, abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '[]';
+  var expected = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ 1, abc ]';
+  var expected = [ 1, 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  , abc ] ';
+  var expected = [ 1, 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1  ab cd ] ';
+  var expected = [ 1, 'ab', 'cd' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+  
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '[number : 1 str : abc]';
+  var expected = [ 'number', ':', 1, 'str', ':', 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
+  test.identical( got, expected );
+}
+
+//
+
+function strStructureParseOptionParsingArrays( test ) 
+{
+  test.open( 'default long left and right delimeters' );
+
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = 'some string';
+  var expected = 'some string';
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number : 1 str : abc';
+  var expected = { number : 1, str : 'abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, flat array in value';
+  var src = 'number : 1 str : abc array : [1,abc]';
+  var expected = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' number : 1  str:abc array :  [ 1  , abc ] ';
+  var expected = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = { 'path:D' : '\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path:"D:\\some\\path"';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path : D : \\some\\ path ';
+  var expected = { path : 'D : \\some\\ path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 v1 b2 b2 : v2 v2 c3 c3 : v3 v3';
+  var expected = { 'a1 a1' : 'v1 v1 b2', 'b2' : 'v2 v2 c3', 'c3' : 'v3 v3' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '[]';
+  var expected = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ 1, abc ]';
+  var expected = [ 1, 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  , abc ] ';
+  var expected = [ 1, 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1  ab cd ] ';
+  var expected = [ 1, 'ab', 'cd' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+  
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '[number : 1 str : abc]';
+  var expected = [ 'number', ':', 1, 'str', ':', 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+
+  test.close( 'default long left and right delimeters' );
+
+  /* - */
+
+  test.open( 'long left and right delimeters is empty string' );
+
+  test.case = 'empty string';
+  var src = '';
+  var expected = [];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = [];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = 'some string';
+  var expected = [ 'some', 'string' ];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number : 1 str : abc';
+  var expected = [ 'number', ':', 1, 'str', ':', 'abc' ];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, flat array in value';
+  var src = 'number : 1 str : abc array : [1,abc]';
+  var expected = [ 'number', ':', 1, 'str', ':', 'abc', 'array', ':', '[1', 'abc]' ];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' number : 1  str:abc array :  [ 1  , abc ] ';
+  var expected = [ 'number', ':', 1, 'str:abc', 'array', ':', '[', 1, 'abc', ']' ];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path:D:\\some\\path';
+  var expected = [ 'path:D:\\some\\path' ];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = [ 'path:D:\\some\\path' ];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path:"D:\\some\\path"';
+  var expected = [ 'path:D:\\some\\path' ];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path:D:\\some\\path';
+  var expected = [ 'path:D:\\some\\path' ];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path : D : \\some\\ path ';
+  var expected = [ 'path', ':', 'D', ':', '\\some\\', 'path' ];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = [ 'a1', 'a1', ':', 'v1', 'v1' ];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 v1 b2 b2 : v2 v2 c3 c3 : v3 v3';
+  var expected = [ 'a1', 'a1', ':', 'v1', 'v1', 'b2', 'b2', ':', 'v2', 'v2', 'c3', 'c3', ':', 'v3', 'v3' ];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
+  var expected = [ 'a', ':', 1, 'b', ':', '2a', 'c', ':', 3, 'a', 'd', ':', '4abc', 'e', ':', 5, 'abc' ];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '[]';
+  var expected = [ '[]' ];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ 1, abc ]';
+  var expected = [ '[', 1, 'abc', ']' ];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  , abc ] ';
+  var expected = [ '[', 1, 'abc', ']' ];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1  ab cd ] ';
+  var expected = [ '[', 1, 'ab', 'cd', ']' ];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+  
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '[number : 1 str : abc]';
+  var expected = [ '[number', ':', 1, 'str', ':', 'abc]' ];
+  var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
+  test.identical( got, expected );
+
+  test.close( 'long left and right delimeters is empty string' );
+
+  /* - */
+
+  test.open( 'not default arrayElementsDelimeter' );
+
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = 'some string';
+  var expected = 'some string';
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number : 1 str : abc';
+  var expected = { number : 1, str : 'abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, flat array in value';
+  var src = 'number : 1 str : abc array : [1,abc]';
+  var expected = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' number : 1  str:abc array :  [ 1  , abc ] ';
+  var expected = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = { 'path:D' : '\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path:"D:\\some\\path"';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path : D : \\some\\ path ';
+  var expected = { path : 'D : \\some\\ path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 v1 b2 b2 : v2 v2 c3 c3 : v3 v3';
+  var expected = { 'a1 a1' : 'v1 v1 b2', 'b2' : 'v2 v2 c3', 'c3' : 'v3 v3' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '[]';
+  var expected = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ 1, abc ]';
+  var expected = [ 1, 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  , abc ] ';
+  var expected = [ 1, 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1  ab cd ] ';
+  var expected = [ 1, 'ab', 'cd' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+  
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '[number : 1 str : abc]';
+  var expected = [ 'number', 1, 'str', 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
+  test.identical( got, expected );
+
+  test.close( 'not default arrayElementsDelimeter' );
+}
+
+//
+
+function strStructureParseOptionQuoting( test ) 
+{
+  test.open( 'quoting - 0' );
+
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = '"some string"';
+  var expected = '"some string"';
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number : 1 "str" : abc';
+  var expected = { number : 1, '"str"' : 'abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, flat array in value';
+  var src = 'number : "1" str : abc array : [1,abc]';
+  var expected = { number : '"1"', str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' "number" : 1  str:abc array :  [ 1  , abc ] ';
+  var expected = { '"number"' : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = { '"path' : 'D":\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path:"D:\\some\\path"';
+  var expected = { path : '"D:\\some\\path"' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path : D : \\some\\ path ';
+  var expected = { path : 'D : \\some\\ path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 v1 b2 b2 : v2 v2 c3 c3 : v3 v3';
+  var expected = { 'a1 a1' : 'v1 v1 b2', 'b2' : 'v2 v2 c3', 'c3' : 'v3 v3' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '[]';
+  var expected = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ "1", abc ]';
+  var expected = [ '"1"', 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  , "abc" ] ';
+  var expected = [ 1, '"abc"' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1  "ab" cd ] ';
+  var expected = [ 1, '"ab"', 'cd' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '["number" : 1 str : abc]';
+  var expected = [ '"number"', ':', 1, 'str', ':', 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.close( 'quoting - 0' );
+
+  /* - */
+
+  test.open( 'quoting - 1' );
+
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = '"some string"';
+  var expected = 'some string';
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number : 1 "str" : abc';
+  var expected = { number : 1, 'str' : 'abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, flat array in value';
+  var src = 'number : "1" str : abc array : [1,abc]';
+  var expected = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' "number" : 1  str:abc array :  [ 1  , abc ] ';
+  var expected = { 'number' : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = { 'path:D' : '\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path:"D:\\some\\path"';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path : D : \\some\\ path ';
+  var expected = { path : 'D : \\some\\ path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 v1 b2 b2 : v2 v2 c3 c3 : v3 v3';
+  var expected = { 'a1 a1' : 'v1 v1 b2', 'b2' : 'v2 v2 c3', 'c3' : 'v3 v3' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '[]';
+  var expected = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ "1", abc ]';
+  var expected = [ 1, 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  , "abc" ] ';
+  var expected = [ 1, 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1  "ab" cd ] ';
+  var expected = [ 1, 'ab', 'cd' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '["number" : 1 str : abc]';
+  var expected = [ 'number', ':', 1, 'str', ':', 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.close( 'quoting - 1' );
+}
+
+//
+
+function strReplaceAll( test )
+{
+  test.open( 'quoting - 0' );
+
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = '"some string"';
+  var expected = '"some string"';
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number : 1 "str" : abc';
+  var expected = { number : 1, '"str"' : 'abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, flat array in value';
+  var src = 'number : "1" str : abc array : [1,abc]';
+  var expected = { number : '"1"', str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' "number" : 1  str:abc array :  [ 1  , abc ] ';
+  var expected = { '"number"' : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = { '"path' : 'D":\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path:"D:\\some\\path"';
+  var expected = { path : '"D:\\some\\path"' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path : D : \\some\\ path ';
+  var expected = { path : 'D : \\some\\ path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 v1 b2 b2 : v2 v2 c3 c3 : v3 v3';
+  var expected = { 'a1 a1' : 'v1 v1 b2', 'b2' : 'v2 v2 c3', 'c3' : 'v3 v3' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '[]';
+  var expected = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ "1", abc ]';
+  var expected = [ '"1"', 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  , "abc" ] ';
+  var expected = [ 1, '"abc"' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1  "ab" cd ] ';
+  var expected = [ 1, '"ab"', 'cd' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+  
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '["number" : 1 str : abc]';
+  var expected = [ '"number"', ':', 1, 'str', ':', 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.close( 'quoting - 0' );
+
+  /* - */
+
+  test.open( 'quoting - 1' );
+
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = '"some string"';
+  var expected = 'some string';
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number : 1 "str" : abc';
+  var expected = { number : 1, 'str' : 'abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, flat array in value';
+  var src = 'number : "1" str : abc array : [1,abc]';
+  var expected = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' "number" : 1  str:abc array :  [ 1  , abc ] ';
+  var expected = { 'number' : 1, str : 'abc', array : [ 1, 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = { 'path:D' : '\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path:"D:\\some\\path"';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path : D : \\some\\ path ';
+  var expected = { path : 'D : \\some\\ path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 v1 b2 b2 : v2 v2 c3 c3 : v3 v3';
+  var expected = { 'a1 a1' : 'v1 v1 b2', 'b2' : 'v2 v2 c3', 'c3' : 'v3 v3' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '[]';
+  var expected = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ "1", abc ]';
+  var expected = [ 1, 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  , "abc" ] ';
+  var expected = [ 1, 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1  "ab" cd ] ';
+  var expected = [ 1, 'ab', 'cd' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+  
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '["number" : 1 str : abc]';
+  var expected = [ 'number', ':', 1, 'str', ':', 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.close( 'quoting - 1' );
+}
+
+//
+
+function strStructureParseOptionToNumberMaybe( test ) 
+{
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = 'some string';
+  var expected = 'some string';
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number : 1 str : abc';
+  var expected = { number : '1', str : 'abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, flat array in value';
+  var src = 'number : 1 str : abc array : [1,abc]';
+  var expected = { number : '1', str : 'abc', array : [ '1', 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' number : 1  str:abc array :  [ 1  , abc ] ';
+  var expected = { number : '1', str : 'abc', array : [ '1', 'abc' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = { 'path:D' : '\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path:"D:\\some\\path"';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path : D : \\some\\ path ';
+  var expected = { path : 'D : \\some\\ path' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 v1 b2 b2 : v2 v2 c3 c3 : v3 v3';
+  var expected = { 'a1 a1' : 'v1 v1 b2', 'b2' : 'v2 v2 c3', 'c3' : 'v3 v3' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1 b : 2a, c : 3 a d : 4abc e : 5 abc';
+  var expected = { 'a' : '1', 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '[]';
+  var expected = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ 1, abc ]';
+  var expected = [ '1', 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  , abc ] ';
+  var expected = [ '1', 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1  ab cd ] ';
+  var expected = [ '1', 'ab', 'cd' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+  
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '[number : 1 str : abc]';
+  var expected = [ 'number', ':', '1', 'str', ':', 'abc' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
+  test.identical( got, expected );
+}
+
+//
+
+function strStructureParseOptionDefaultStructure( test ) 
+{
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, defaultStructure : 'map' } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, defaultStructure : 'map' } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'empty string';
+  var src = '';
+  var expected = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, defaultStructure : 'array' } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, defaultStructure : 'array' } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'empty string';
+  var src = '';
+  var expected = '';
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, defaultStructure : 'string' } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = '';
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, defaultStructure : 'string' } );
+  test.identical( got, expected );
+}
+
+//
+
+function strStructureParseOptionDepthForArrays( test ) 
+{
+  test.open( 'arrays, balanced brackets' );
+
+  test.case = 'empty array';
+  var src = '[]';
+  var exp = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 0';
+  var src = '[[[[]]],[[[[]]]],[]]';
+  var exp = [ '[[[]]]', '[[[[]]]]', '[]' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 1';
+  var src = '[[[[]]],[[[[]]]],[]]';
+  var exp = [ [ '[[]]' ], [ '[[[]]]' ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 2';
+  var src = '[[[[]]],[[[[]]]],[]]';
+  var exp = [ [ [ '[]' ] ], [ [ '[[]]' ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 3';
+  var src = '[[[[]]],[[[[]]]],[]]';
+  var exp = [ [ [ [] ] ], [ [ [ '[]' ] ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 4';
+  var src = '[[[[]]],[[[[]]]],[]]';
+  var exp = [ [ [ [] ] ], [ [ [ [] ] ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 5';
+  var src = '[[[[]]],[[[[]]]],[]]';
+  var exp = [ [ [ [] ] ], [ [ [ [] ] ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'empty array, extra unbalanced elements delimeters';
+  var src = ' [   ] ';
+  var exp = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 0';
+  var src = '  [  [  [  []] ],[  [[  []  ]  ]],[   ]  ]  ';
+  var exp = [ '[', '[', '[]]', ']', '[', '[[', '[]', ']', ']]', '[', ']' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 1';
+  var src = '  [  [  [  []] ],[  [[  []  ]  ]],[   ]  ]  ';
+  var exp = [ '[', [ '[]]' ], [ '[[', '[]' ], ']]', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 2';
+  var src = '  [  [  [  []] ],[  [[  []  ]  ]],[   ]  ]  ';
+  var exp = [ '[', [ [ ']' ] ], [ '[[', [] ], ']]', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 3';
+  var src = '  [  [  [  []] ],[  [[  []  ]  ]],[   ]  ]  ';
+  var exp = [ '[', [ [ ']' ] ], [ '[[', [] ], ']]', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 4';
+  var src = '  [  [  [  []] ],[  [[  []  ]  ]],[   ]  ]  ';
+  var exp = [ '[', [ [ ']' ] ], [ '[[', [] ], ']]', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 5';
+  var src = '  [  [  [  []] ],[  [[  []  ]  ]],[   ]  ]  ';
+  var exp = [ '[', [ [ ']' ] ], [ '[[', [] ], ']]', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'empty array';
+  var src = '  [   ] ';
+  var exp = [];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 0';
+  var src = '  [  [  [  [  ] ] ],[  [ [  [  ]  ]  ] ],[   ]  ]  ';
+  var exp = [ '[', '[', '[', ']', ']', ']', '[', '[', '[', '[', ']', ']', ']', ']', '[', ']' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 1';
+  var src = '  [  [  [  [  ] ] ],[  [ [  [  ]  ]  ] ],[   ]  ]  ';
+  var exp = [ [ '[', '[', ']', ']' ], [ '[', '[', '[', ']', ']', ']' ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 2';
+  var src = '  [  [  [  [  ] ] ],[  [ [  [  ]  ]  ] ],[   ]  ]  ';
+  var exp = [ [ [ '[', ']' ] ], [ [ '[', '[', ']', ']' ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 3';
+  var src = '  [  [  [  [  ] ] ],[  [ [  [  ]  ]  ] ],[   ]  ]  ';
+  var exp = [ [ [ [] ] ], [ [ [ '[', ']' ] ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 4';
+  var src = '  [  [  [  [  ] ] ],[  [ [  [  ]  ]  ] ],[   ]  ]  ';
+  var exp = [ [ [ [] ] ], [ [ [ [] ] ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 5';
+  var src = '  [  [  [  [  ] ] ],[  [ [  [  ]  ]  ] ],[   ]  ]  ';
+  var exp = [ [ [ [] ] ], [ [ [ [] ] ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
+  test.identical( got, exp );
+
+  test.close( 'arrays, balanced brackets' );
+
+  /* - */
+
+  test.open( 'arrays, unbalanced brackets' );
+
+  test.case = 'array with nested arrays, without spaces, depth - 0';
+  var src = '[[[[]]]]],[[[[[]]]],[[]]';
+  var exp = [ '[[[]]]]]', '[[[[[]]]]', '[[]' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 1';
+  var src = '[[[[]]]]],[[[[[]]]],[[]]';
+  var exp = [ [ '[[]]]]' ], [ '[[[[]]]' ], [ '[' ] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 2';
+  var src = '[[[[]]]]],[[[[[]]]],[[]]';
+  var exp = [ [ [ '[]]]' ] ], [ [ '[[[]]' ] ], [ '[' ] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 3';
+  var src = '[[[[]]]]],[[[[[]]]],[[]]';
+  var exp = [ [ [ [ ']]' ] ] ], [ [ [ '[[]' ] ] ], [ '[' ] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 4';
+  var src = '[[[[]]]]],[[[[[]]]],[[]]';
+  var exp = [ [ [ [ ']]' ] ] ], [ [ [ [ '[' ] ] ] ], [ '[' ] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, without spaces, depth - 5';
+  var src = '[[[[]]]]],[[[[[]]]],[[]]';
+  var exp = [ [ [ [ ']]' ] ] ], [ [ [ [ '[' ] ] ] ], [ '[' ] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 0';
+  var src = '  [[[[]]]  ]]  ,[  [  [[ []]]  ],  [  []]';
+  var exp = [ '[[[]]]', ']]', '[', '[', '[[', '[]]]', ']', '[', '[]' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 1';
+  var src = '  [[[[]]]  ]]  ,[  [  [[ []]]  ],  [  []]';
+  var exp = [ [ '[[]]' ], ']]', '[', [ '[[', '[]]]' ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 2';
+  var src = '  [[[[]]]  ]]  ,[  [  [[ []]]  ],  [  []]';
+  var exp = [ [ [ '[]' ] ], ']]', '[', [ '[[', [ ']]' ] ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 3';
+  var src = '  [[[[]]]  ]]  ,[  [  [[ []]]  ],  [  []]';
+  var exp = [ [ [ [] ] ], ']]', '[', [ '[[', [ ']]' ] ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 4';
+  var src = '  [[[[]]]  ]]  ,[  [  [[ []]]  ],  [  []]';
+  var exp = [ [ [ [] ] ], ']]', '[', [ '[[', [ ']]' ] ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra unbalanced elements delimeters, depth - 5';
+  var src = '  [[[[]]]  ]]  ,[  [  [[ []]]  ],  [  []]';
+  var exp = [ [ [ [] ] ], ']]', '[', [ '[[', [ ']]' ] ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 0';
+  var src = '  [ [ [ [  ] ] ]  ] ]  ,[  [  [ [ [  ] ] ]  ],  [  [  ] ]';
+  var exp = [ '[', '[', '[', ']', ']', ']', ']', ']', '[', '[', '[', '[', '[', ']', ']', ']', ']', '[', '[', ']' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 1';
+  var src = '  [ [ [ [  ] ] ]  ] ]  ,[  [  [ [ [  ] ] ]  ],  [  [  ] ]';
+  var exp = [ [ '[', '[', ']', ']' ], ']', ']', '[', [ '[', '[', '[', ']', ']', ']' ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 2';
+  var src = '  [ [ [ [  ] ] ]  ] ]  ,[  [  [ [ [  ] ] ]  ],  [  [  ] ]';
+  var exp = [ [ [ '[', ']' ] ], ']', ']', '[', [ [ '[', '[', ']', ']' ] ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 3';
+  var src = '  [ [ [ [  ] ] ]  ] ]  ,[  [  [ [ [  ] ] ]  ],  [  [  ] ]';
+  var exp = [ [ [ [] ] ], ']', ']', '[', [ [ [ '[', ']' ] ] ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 4';
+  var src = '  [ [ [ [  ] ] ]  ] ]  ,[  [  [ [ [  ] ] ]  ],  [  [  ] ]';
+  var exp = [ [ [ [] ] ], ']', ']', '[', [ [ [ [] ] ] ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, extra balanced elements delimeters, depth - 5';
+  var src = '  [ [ [ [  ] ] ]  ] ]  ,[  [  [ [ [  ] ] ]  ],  [  [  ] ]';
+  var exp = [ [ [ [] ] ], ']', ']', '[', [ [ [ [] ] ] ], '[', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
+  test.identical( got, exp );
+
+  test.close( 'arrays, unbalanced brackets' );
+}
+
+//
+
+function strStructureParseOptionDepthForMaps( test ) 
+{
+  test.open( 'maps, without outside curly brackets' );
+
+  test.case = 'map with nested map, depth - 0';
+  var src = 'a:1 b:{} c:{d:e} f:{g:{h:i}}';
+  var exp = { a : 1, b : '{}', c : '{d:e}', f : '{g:{h:i}}' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, depth - 1';
+  var src = 'a:1 b:{} c:{d:e} f:{g:{h:i}}';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : { g : '{h:i}' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, depth - 2';
+  var src = 'a:1 b:{} c:{d:e} f:{g:{h:i}}';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : { g : { h : 'i' } } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, depth - 3';
+  var src = 'a:1 b:{} c:{d:e} f:{g:{h:i}}';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : { g : { h : 'i' } } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 0';
+  var src = '   a:1    b  :   {} c  :  {d: e } f  :  {  g  :  { h : i : }}   ';
+  var exp = { a : 1, b : '{}', c : '{d: e }', f : '{', g : '{', h : 'i : }}' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 1';
+  var src = '   a:1    b  :   {} c  :  {d: e } f  :  {  g  :  { h : i : }}   ';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : '{', g : '{', h : { i : '}}' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 2';
+  var src = '   a:1    b  :   {} c  :  {d: e } f  :  {  g  :  { h : i : }}   ';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : '{', g : '{', h : { i : '}}' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 3';
+  var src = '   a:1    b  :   {} c  :  {d: e } f  :  {  g  :  { h : i : }}   ';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : '{', g : '{', h : { i : '}}' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 0';
+  var src = '   a : 1    b  :   {  } c  :  { d : e } f  :  {  g  :  { h : i : } }   ';
+  var exp = { a : 1, b : '{  }', c : '{',  d : 'e }', f : '{', g : '{', h : 'i : } }' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 1';
+  var src = '   a : 1    b  :   {  } c  :  { d : e } f  :  {  g  :  { h : i : } }   ';
+  var exp = { a : 1, b : {}, c : '{', d : 'e }', f : '{', g : '{', h : { i : '} }' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 2';
+  var src = '   a : 1    b  :   {  } c  :  { d : e } f  :  {  g  :  { h : i : } }   ';
+  var exp = { a : 1, b : {}, c : '{', d : 'e }', f : '{', g : '{', h : { 'i' : '} }' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 3';
+  var src = '   a : 1    b  :   {  } c  :  { d : e } f  :  {  g  :  { h : i : } }   ';
+  var exp = { a : 1, b : {}, c : '{', d : 'e }', f : '{', g : '{', h : { 'i' : '} }' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.close( 'maps, without outside curly brackets' );
+
+  /* - */
+
+  test.open( 'maps, outside curly brackets' );
+
+  test.case = 'empty map';
+  var src = '{}';
+  var exp = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, depth - 0';
+  var src = '{a:1 b:{} c:{d:e} f:{g:{h:i}}}';
+  var exp = { a : 1, b : '{}', c : '{d:e}', f : '{g:{h:i}}' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, depth - 1';
+  var src = '{a:1 b:{} c:{d:e} f:{g:{h:i}}}';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : { g : '{h:i}' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, depth - 2';
+  var src = '{a:1 b:{} c:{d:e} f:{g:{h:i}}}';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : { g : { h : 'i' } } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, depth - 3';
+  var src = '{a:1 b:{} c:{d:e} f:{g:{h:i}}}';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : { g : { h : 'i' } } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'empty map';
+  var src = ' {   }';
+  var exp = {};
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 0';
+  var src = ' {   a:1    b  :   {} c  :  {d: e } f  :  {  g  :  { h : i : }}   } ';
+  var exp = { a : 1, b : '{}', c : '{d: e }', f : '{', g : '{', h : 'i : }}' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 1';
+  var src = ' {   a:1    b  :   {} c  :  {d: e } f  :  {  g  :  { h : i : }}   } ';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : '{', g : '{', h : { i : '}}' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 2';
+  var src = ' {   a:1    b  :   {} c  :  {d: e } f  :  {  g  :  { h : i : }}   } ';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : '{', g : '{', h : { i : '}}' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 3';
+  var src = ' {   a:1    b  :   {} c  :  {d: e } f  :  {  g  :  { h : i : }}   } ';
+  var exp = { a : 1, b : {}, c : { d : 'e' }, f : '{', g : '{', h : { i : '}}' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 0';
+  var src = ' {   a : 1    b  :   {  } c  :  { d : e } f  :  {  g  :  { h : i : } }   } ';
+  var exp = { a : 1, b : '{  }', c : '{',  d : 'e }', f : '{', g : '{', h : 'i : } }' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 1';
+  var src = ' {   a : 1    b  :   {  } c  :  { d : e } f  :  {  g  :  { h : i : } }   } ';
+  var exp = { a : 1, b : {}, c : '{', d : 'e }', f : '{', g : '{', h : { i : '} }' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 2';
+  var src = ' {   a : 1    b  :   {  } c  :  { d : e } f  :  {  g  :  { h : i : } }   } ';
+  var exp = { a : 1, b : {}, c : '{', d : 'e }', f : '{', g : '{', h : { 'i' : '} }' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested map, extra entryDelimeters, extra keyValDelimeters, depth - 3';
+  var src = ' {   a : 1    b  :   {  } c  :  { d : e } f  :  {  g  :  { h : i : } }   } ';
+  var exp = { a : 1, b : {}, c : '{', d : 'e }', f : '{', g : '{', h : { 'i' : '} }' } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.close( 'maps, outside curly brackets' );
+}
+
+//
+
+function strStructureParseOptionDepthForMixed( test ) 
+{
+  test.open( 'arrays' );
+
+  test.case = 'array with nested maps, without spaces, depth - 0';
+  var src = '[[{},[[{a:[{b:3}]}]],],[[[{b:{c:2}},[]]]],[]]';
+  var exp = [ '[{}', '[[{a:[{b:3}]}]]', ']', '[[[{b:{c:2}}', '[]]]]', '[]' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, without spaces, depth - 1';
+  var src = '[[{},[[{a:[{b:3}]}]],],[[[{b:{c:2}},[]]]],[]]';
+  var exp = [ '[{}', [ '[{a:[{b:3}]}]' ], ']', { '[[[{b' : '{c:2}}' }, [ ']]]' ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, without spaces, depth - 2';
+  var src = '[[{},[[{a:[{b:3}]}]],],[[[{b:{c:2}},[]]]],[]]';
+  var exp = [ '[{}', [ [ '{a:[{b:3}]}' ] ], ']', { '[[[{b' : { c : '2}' } }, [ ']]]' ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, without spaces, depth - 3';
+  var src = '[[{},[[{a:[{b:3}]}]],],[[[{b:{c:2}},[]]]],[]]';
+  var exp = [ '[{}', [ [ { a : [ '{b:3}' ] } ] ], ']', { '[[[{b' : { c : '2}' } }, [ ']]]' ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, without spaces, depth - 4';
+  var src = '[[{},[[{a:[{b:3}]}]],],[[[{b:{c:2}},[]]]],[]]';
+  var exp = [ '[{}', [ [ { a : [ { b : 3 } ] } ] ], ']', { '[[[{b' : { c : '2}' } }, [ ']]]' ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, without spaces, depth - 5';
+  var src = '[[{},[[{a:[{b:3}]}]],],[[[{b:{c:2}},[]]]],[]]';
+  var exp = [ '[{}', [ [ { a : [ { b : 3 } ] } ] ], ']', { '[[[{b' : { c : '2}' } }, [ ']]]' ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 0';
+  var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
+  var exp = [ '[', '{', '}', '[', '[', '{a:[{b:3}', ']}', ']', ']', ']', '[[[', '{b:', '{c', ':2}', '}', '[', ']]', ']', ']', '[]' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 1';
+  var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
+  var exp = [ [ '{', '}', '[', '[', '{a:[{b:3}', ']}', ']', ']' ], '[[[', { '{b' : '' }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 2';
+  var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
+  var exp = [ [ {}, [ '[', '{a:[{b:3}', ']}', ']' ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 3';
+  var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
+  var exp = [ [ {}, [ [ '{a:[{b:3}', ']}' ] ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 4';
+  var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
+  var exp = [ [ {}, [ [ {a : '[{b:3' }, ']}' ] ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 5';
+  var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
+  var exp = [ [ {}, [ [ {a : { '[{b' : 3 } }, ']}' ] ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'array with nested maps, extra unbalanced elements delimeters, depth - 0';
+  var src = ' [ [ {   }, [  [ { a : [ { b : 3 } ] } ] ] , ] , [ [ [ { b : { c  : 2 }  }, [   ] ]  ] ],[  ] ] ';
+  var exp = [ '[', '{', '}', '[', '[', '{', 'a', ':', '[', '{', 'b', ':', 3, '}', ']', '}', ']', ']', ']', '[', '[', '[', '{', 'b', ':', '{', 'c', ':', 2, '}', '}', '[', ']', ']', ']', ']', '[', ']' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, extra unbalanced elements delimeters, depth - 1';
+  var src = ' [ [ {   }, [  [ { a : [ { b : 3 } ] } ] ] , ] , [ [ [ { b : { c  : 2 }  }, [   ] ]  ] ],[  ] ] ';
+  var exp = [ [ '{', '}', '[', '[', '{', 'a', ':', '[', '{', 'b', ':', 3, '}', ']', '}', ']', ']' ], [ '[', '[', '{', 'b', ':', '{', 'c', ':', 2, '}', '}', '[', ']', ']', ']' ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, extra unbalanced elements delimeters, depth - 2';
+  var src = ' [ [ {   }, [  [ { a : [ { b : 3 } ] } ] ] , ] , [ [ [ { b : { c  : 2 }  }, [   ] ]  ] ],[  ] ] ';
+  var exp = [ [ {}, [ '[', '{', 'a', ':', '[', '{', 'b', ':', 3, '}', ']', '}', ']' ] ], [ [ '[', '{', 'b', ':', '{', 'c', ':', 2, '}', '}', '[', ']', ']' ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, extra unbalanced elements delimeters, depth - 3';
+  var src = ' [ [ {   }, [  [ { a : [ { b : 3 } ] } ] ] , ] , [ [ [ { b : { c  : 2 }  }, [   ] ]  ] ],[  ] ] ';
+  var exp = [ [ {}, [ [ '{', 'a', ':', '[', '{', 'b', ':', 3, '}', ']', '}' ] ] ], [ [ [ '{', 'b', ':', '{', 'c', ':', 2, '}', '}', '[', ']' ] ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, extra unbalanced elements delimeters, depth - 4';
+  var src = ' [ [ {   }, [  [ { a : [ { b : 3 } ] } ] ] , ] , [ [ [ { b : { c  : 2 }  }, [   ] ]  ] ],[  ] ] ';
+  var exp = [ [ {}, [ [ { a : '[ {', b : '3 } ]' } ] ] ], [ [ [ { b : '{', c  : '2 }' }, [] ] ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, extra unbalanced elements delimeters, depth - 5';
+  var src = ' [ [ {   }, [  [ { a : [ { b : 3 } ] } ] ] , ] , [ [ [ { b : { c  : 2 }  }, [   ] ]  ] ],[  ] ] ';
+  var exp = [ [ {}, [ [ { a : '[ {', b : '3 } ]' } ] ] ], [ [ [ { b : '{', c  : '2 }' }, [] ] ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'array with nested maps, extra unbalanced elements delimeters, depth - 0';
+  var src = ' [ [ {}, [ [ { a : [{b:3}] } ] ] ], [ [ [ { b : {c:2} }, [] ] ] ],[] ] ';
+  var exp = [ '[', '{}', '[', '[', '{', 'a', ':', '[{b:3}]', '}', ']', ']', ']', '[', '[', '[', '{', 'b', ':', '{c:2}', '}', '[]', ']', ']', ']', '[]' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, extra unbalanced elements delimeters, depth - 1';
+  var src = ' [ [ {}, [ [ { a : [{b:3}] } ] ] ], [ [ [ { b : {c:2} }, [] ] ] ],[] ] ';
+  var exp = [ [ '{}', '[', '[', '{', 'a', ':', '[{b:3}]', '}', ']', ']' ], [ '[', '[', '{', 'b', ':', '{c:2}', '}', '[]', ']', ']' ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, extra unbalanced elements delimeters, depth - 2';
+  var src = ' [ [ {}, [ [ { a : [{b:3}] } ] ] ], [ [ [ { b : {c:2} }, [] ] ] ],[] ] ';
+  var exp = [ [ {}, [ '[', '{', 'a', ':', '[{b:3}]', '}', ']', ] ], [ [ '[', '{', 'b', ':', '{c:2}', '}', '[]', ']' ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, extra unbalanced elements delimeters, depth - 3';
+  var src = ' [ [ {}, [ [ { a : [{b:3}] } ] ] ], [ [ [ { b : {c:2} }, [] ] ] ],[] ] ';
+  var exp = [ [ {}, [ [ '{', 'a', ':', '[{b:3}]', '}', ] ] ], [ [ [ '{', 'b', ':', '{c:2}', '}', '[]' ] ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, extra unbalanced elements delimeters, depth - 4';
+  var src = ' [ [ {}, [ [ { a : [{b:3}] } ] ] ], [ [ [ { b : {c:2} }, [] ] ] ],[] ] ';
+  var exp = [ [ {}, [ [ { a : [ '{b:3}' ], } ] ] ], [ [ [ { b : '{c:2}' }, [] ] ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, extra unbalanced elements delimeters, depth - 5';
+  var src = ' [ [ {}, [ [ { a : [{b:3}] } ] ] ], [ [ [ { b : {c:2} }, [] ] ] ],[] ] ';
+  var exp = [ [ {}, [ [ { a : [ { b : 3 } ] } ] ] ], [ [ [ { b : { c  : 2 } }, [] ] ] ], [] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
+  test.identical( got, exp );
+
+  test.close( 'arrays' );
+
+  /* - */
+
+  test.open( 'maps' );
+
+  test.case = 'maps with nested arrays, without spaces, depth - 0';
+  var src = '{a:[{b:{c:[{d:[e]}]}},[{f:{g:[h]}}]]}';
+  var exp = { a : [ '{b:{c:[{d:[e]}]}}', '[{f:{g:[h]}}]' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'maps with nested arrays, without spaces, depth - 1';
+  var src = '{a:[{b:{c:[{d:[e]}]}},[{f:{g:[h]}}]]}';
+  var exp = { a : [ { b : '{c:[{d:[e]}]}' }, [ '{f:{g:[h]}}' ] ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'maps with nested arrays, without spaces, depth - 2';
+  var src = '{a:[{b:{c:[{d:[e]}]}},[{f:{g:[h]}}]]}';
+  var exp = { a : [ { b : { c : [ '{d:[e]}' ] } }, [ { f : '{g:[h]}' } ] ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'maps with nested arrays, without spaces, depth - 3';
+  var src = '{a:[{b:{c:[{d:[e]}]}},[{f:{g:[h]}}]]}';
+  var exp = { a : [ { b : { c : [ { d : [ 'e' ] } ] } }, [ { f : { g : [ 'h' ] } } ] ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'maps with nested arrays, without spaces, depth - 4';
+  var src = '{a:[{b:{c:[{d:[e]}]}},[{f:{g:[h]}}]]}';
+  var exp = { a : [ { b : { c : [ { d : [ 'e' ] } ] } }, [ { f : { g : [ 'h' ] } } ] ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'maps with nested arrays, unbalanced elements delimeters, depth - 0';
+  var src = '{a:[ {b:{ c:[{d:[e]}]}},[{ f:{g:[ h]}}]]}';
+  var exp = { a : '[', '{b' : '{', c : '[{d:[e]}]}},[{', f : '{g:[ h]}}]]' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'maps with nested arrays, unbalanced elements delimeters, depth - 1';
+  var src = '{a:[ {b:{ c:[{d:[e]}]}},[{ f:{g:[ h]}}]]}';
+  var exp = { a : '[', '{b' : '{', c : { '[{d' : '[e]}]}},[{' }, f : { '{g' : [ 'h]}}]' ] } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'maps with nested arrays, unbalanced elements delimeters, depth - 2';
+  var src = '{a:[ {b:{ c:[{d:[e]}]}},[{ f:{g:[ h]}}]]}';
+  var exp = { a : '[', '{b' : '{', c : { '[{d' : '[e]}]}},[{' }, f : { '{g' : [ 'h]}}]' ] } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'maps with nested arrays, unbalanced elements delimeters, depth - 3';
+  var src = '{a:[ {b:{ c:[{d:[e]}]}},[{ f:{g:[ h]}}]]}';
+  var exp = { a : '[', '{b' : '{', c : { '[{d' : '[e]}]}},[{' }, f : { '{g' : [ 'h]}}]' ] } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'maps with nested arrays, unbalanced elements delimeters, depth - 4';
+  var src = '{a:[ {b:{ c:[{d:[e]}]}},[{ f:{g:[ h]}}]]}';
+  var exp = { a : '[', '{b' : '{', c : { '[{d' : '[e]}]}},[{' }, f : { '{g' : [ 'h]}}]' ] } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'maps with nested arrays, full split, unbalanced elements delimeters, depth - 0';
+  var src = '{ a : [ { b : { c : [ { d : [ e ] } ] } } , [ { f : { g : [ h ] } } ] ] }';
+  var exp = { a : '[ {', 'b' : '{', c : '[ {', 'd' : '[ e ] } ] } } , [ {', f : '{', g : [ 'h', ']', '}', '}', ']' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'maps with nested arrays, full split, unbalanced elements delimeters, depth - 1';
+  var src = '{ a : [ { b : { c : [ { d : [ e ] } ] } } , [ { f : { g : [ h ] } } ] ] }';
+  var exp = { a : '[ {', 'b' : '{', c : '[ {', 'd' : '[ e ] } ] } } , [ {', f : '{', g : [ 'h', ']', '}', '}', ']' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'maps with nested arrays, unbalanced elements delimeters, depth - 0';
+  var src = '{ a : [{b:{c:[{d:[e]}]}},[{f:{g:[h]}}]] }';
+  var exp = { a : [ '{b:{c:[{d:[e]}]}}', '[{f:{g:[h]}}]' ] };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 0 } );
+  test.identical( got, exp );
+
+  test.case = 'maps with nested arrays, balanced elements delimeters, depth - 1';
+  var src = '{ a : [ {b:{c:[{d:[e]}]}},[{f:{g:[h]}}] ] }';
+  var exp = { a : '[', '{b' : { '{c' : [ '{d:[e]}]}}', '[{f:{g:[h]}}]' ] } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
+  test.identical( got, exp );
+
+  test.case = 'maps with nested arrays, balanced elements delimeters, depth - 2';
+  var src = '{ a : [ {b:{c:[{d:[e]}]}},[{f:{g:[h]}}] ] }';
+  var exp = { a : '[', '{b' : { '{c' : [ { 'd' : '[e]}]}' }, [ '{f:{g:[h]}}' ] ] } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
+  test.identical( got, exp );
+
+  test.case = 'maps with nested arrays, balanced elements delimeters, depth - 3';
+  var src = '{ a : [ {b:{c:[{d:[e]}]}},[{f:{g:[h]}}] ] }';
+  var exp = { a : '[', '{b' : { '{c' : [ { 'd' : '[e]}]}' }, [ { 'f' : '{g:[h]}' } ] ] } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
+  test.identical( got, exp );
+
+  test.case = 'maps with nested arrays, balanced elements delimeters, depth - 4';
+  var src = '{ a : [ {b:{c:[{d:[e]}]}},[{f:{g:[h]}}] ] }';
+  var exp = { a : '[', '{b' : { '{c' : [ { 'd' : '[e]}]}' }, [ { f : { g : [ 'h' ] } } ] ] } };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
+  test.identical( got, exp );
+
+  test.close( 'maps' );
+}
+
+//
+
+function strStructureParseOptionOnTerminal( test ) 
+{
+  var onTerminal = function( e )
+  {
+    if( !_.strIs( e ) )
+    return e;
+
+    if( e === 'null' )
+    return null;
+    if( e === 'undefined' )
+    return undefined;
+    if( e === 'NaN' )
+    return NaN;
+    if( e === 'Infinity' )
+    return Infinity;
+    if( e === '-Infinity' )
+    return -Infinity;
+    if( e === 'false' )
+    return false;
+    if( e === 'true' )
+    return true;
+
+    return e;
+  }
+
+  /* */
+
+  test.case = 'array with all primitives';
+  var src = '[ abc, 2, 2.1, NaN, Infinity, -Infinity, null, undefined, false, true ]';
+  var exp = [ 'abc', 2, 2.1, NaN, Infinity, -Infinity, null, undefined, false, true ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, onTerminal : onTerminal } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, all primitives, duplicates, depth - 1';
+  var src = '[ abc, [ 2, 2.1, NaN, Infinity ], [ [ -Infinity, null ], undefined ], false, true, abc, [ 2, 2.1, NaN, Infinity ], [ [ -Infinity, null ], undefined ], false, true ]';
+  var exp = [ 'abc', [ 2, 2.1, NaN, Infinity ], [ '[', -Infinity, null, ']', undefined ], false, true, 'abc', [ 2, 2.1, NaN, Infinity ], [ '[', -Infinity, null, ']', undefined ], false, true ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1, onTerminal : onTerminal } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested arrays, all primitives, duplicates, depth - 4';
+  var src = '[ abc, [ 2, 2.1, NaN, Infinity ], [ [ -Infinity, null ], undefined ], false, true, abc, [ 2, 2.1, NaN, Infinity ], [ [ -Infinity, null ], undefined ], false, true ]';
+  var exp = [ 'abc', [ 2, 2.1, NaN, Infinity ], [ [ -Infinity, null ], undefined ], false, true, 'abc', [ 2, 2.1, NaN, Infinity ], [ [ -Infinity, null ], undefined ], false, true ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4, onTerminal : onTerminal } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, all primitives, duplicates, depth - 1';
+  var src = '[ abc, [ { 2 : 2.1 }, NaN, Infinity ], [ [ -Infinity, { null : null } ], undefined ], false, true, abc, [ { 2 : 2.1 }, NaN, Infinity ], [ [ -Infinity, { null : null } ], undefined ], false, true ]';
+  var exp = [ 'abc', [ '{', 2, ':', 2.1, '}', NaN, Infinity ], [ '[', -Infinity, '{', null, ':', null, '}', ']', undefined ], false, true, 'abc', [ '{', 2, ':', 2.1, '}', NaN, Infinity ], [ '[', -Infinity, '{', null, ':', null, '}', ']', undefined ], false, true ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1, onTerminal : onTerminal } );
+  test.identical( got, exp );
+
+  test.case = 'array with nested maps, all primitives, duplicates, depth - 4';
+  var src = '[ abc, [ { 2 : 2.1 }, NaN, Infinity ], [ [ -Infinity, { null : null } ], undefined ], false, true, abc, [ { 2 : 2.1 }, NaN, Infinity ], [ [ -Infinity, { null : null } ], undefined ], false, true ]';
+  var exp = [ 'abc', [ { 2 : 2.1 }, NaN, Infinity ], [ [ -Infinity, { null : null } ], undefined ], false, true, 'abc', [ { 2 : 2.1 }, NaN, Infinity ], [ [ -Infinity, { null : null } ], undefined ], false, true ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4, onTerminal : onTerminal } );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'map with primitives';
+  var src = '{ str : str 2 : 2 2.1 : 2.1 NaN : NaN Infinity : Infinity -Infinity : -Infinity null : null undefined : undefined }';
+  var exp = { 'str' : 'str', 2 : 2, 2.1 : 2.1, NaN : NaN, Infinity : Infinity, '-Infinity' : -Infinity, null : null, undefined : undefined };
+  var got = _.strStructureParse( { src : src, onTerminal : onTerminal } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested arrays, entryDelimeter - comma, all primitives, depth - 1';
+  var src = '{ str : [ str 2 2.1 ], NaN : [ { Infinity : Infinity, -Infinity : -Infinity, null : null, undefined : undefined } ] }';
+  var exp = { 'str' : [ 'str', 2, 2.1 ], NaN : { '[ { Infinity' : Infinity },'-Infinity' : -Infinity, null : null, undefined : 'undefined } ]' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',', depth : 1, onTerminal : onTerminal } );
+  test.identical( got, exp );
+
+  test.case = 'map with nested arrays, entryDelimeter - comma, all primitives, depth - 4';
+  var src = '{ str : [ str 2 2.1 ], NaN : [ { Infinity : Infinity, -Infinity : -Infinity, null : null, undefined : undefined } ] }';
+  var exp = { 'str' : [ 'str', 2, 2.1 ], NaN : { '[ { Infinity' : Infinity },'-Infinity' : -Infinity, null : null, undefined : 'undefined } ]' };
+  var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',', depth : 4, onTerminal : onTerminal } );
+  test.identical( got, exp );
+}
+
+//
+
+function strStructureParse( test )
+{
+  test.open( 'imply map' );
+
+  test.case = 'src - empty string, default';
+  var src = '';
+  var expected = {};
+  var got = _.strStructureParse( src );
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, options';
+  var src = '';
+  var expected = {};
+  var got = _.strStructureParse({ src : src, parsingArrays : 1 });
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, defaultStructure - string';
+  var src = '';
   var expected = '';
   var got = _.strStructureParse({ src : src, parsingArrays : 1, defaultStructure : 'string' });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
-  test.case = 'string';
-  var src = 'some string'
+  test.case = 'src - spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strStructureParse({ src : src, parsingArrays : 1 });
+  test.identical( got, expected );
+
+  test.case = 'string without delimeters';
+  var src = 'some string';
   var expected = 'some string';
   var got = _.strStructureParse({ src : src, parsingArrays : 1 });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
-  test.case = 'several';
-  var src = 'number : 1 str : abc array : [1,abc]'
+  test.case = 'src - string with pairs key-value';
+  var src = 'number : 1 str : abc';
+  var expected = { number : 1, str : 'abc' };
+  var got = _.strStructureParse( src );
+  test.identical( got, expected );
+
+  test.case = 'several pairs, flat array in value';
+  var src = 'number : 1 str : abc array : [1,abc]';
   var expected = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
   var got = _.strStructureParse({ src : src, parsingArrays : 1 });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
-  test.case = 'several, with extra spaces';
-  var src = ' number : 1  str:abc array :  [ 1  , abc ] '
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' number : 1  str:abc array :  [ 1  , abc ] ';
   var expected = { number : 1, str : 'abc', array : [ 1, 'abc' ] };
   var got = _.strStructureParse({ src : src, parsingArrays : 1 });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
-  test.case = 'array';
+  test.case = 'flat array, parsingArrays - 0';
   var src = ' [ 1  , abc ] ';
   var expected = '[ 1  , abc ]';
   var got = _.strStructureParse({ src : src, parsingArrays : 0 });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
-  test.case = 'quoted left';
-  var src = { src : '"path:D":\\some\\path', keyValDelimeter : ':', quoting : 1 }
+  test.case = 'src - Windows path, quoted left, quoting - 1';
+  var src = { src : '"path:D":\\some\\path', keyValDelimeter : ':', quoting : 1 };
   var expected = { 'path:D' : '\\some\\path' };
   var got = _.strStructureParse( src );
-  test.identical( got, expected )
+  test.identical( got, expected );
 
-  test.case = 'quoted right';
-  var src = { src : 'path:"D:\\some\\path"', keyValDelimeter : ':', quoting : 1 }
+  test.case = 'src - Windows path, quoted right, quoting - 1';
+  var src = { src : 'path:"D:\\some\\path"', keyValDelimeter : ':', quoting : 1 };
   var expected = { path : 'D:\\some\\path' };
   var got = _.strStructureParse( src );
-  test.identical( got, expected )
+  test.identical( got, expected );
 
-  test.case = 'not quoted';
-  var src = { src : 'path:D:\\some\\path', keyValDelimeter : ':', quoting : 1 }
+  test.case = 'src - Windows path, not quoted, quoting - 1';
+  var src = { src : 'path:D:\\some\\path', keyValDelimeter : ':', quoting : 1 };
   var expected = { path : 'D:\\some\\path' };
   var got = _.strStructureParse( src );
-  test.identical( got, expected )
+  test.identical( got, expected );
 
-  test.case = 'path:D:\\some\\path';
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
   var src = 'path:D:\\some\\path';
   var expected = { path : 'D:\\some\\path' };
   var got = _.strStructureParse( src );
   test.identical( got, expected );
 
-  test.case = ' path : D : \\some\\ path ';
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
   var src = ' path : D : \\some\\ path ';
   var expected = { path : 'D : \\some\\ path' };
   var got = _.strStructureParse( src );
@@ -2673,28 +10924,28 @@ function strStructureParse( test )
   test.open( 'imply array' )
 
   test.case = 'empty array';
-  var src = '[]'
+  var src = '[]';
   var expected = [];
   var got = _.strStructureParse({ src : src, parsingArrays : 1 });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'array';
-  var src = '[ 1  , abc ]'
+  var src = '[ 1, abc ]';
   var expected = [ 1, 'abc' ];
   var got = _.strStructureParse({ src : src, parsingArrays : 1 });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'array with extra spaces';
-  var src = ' [ 1  , abc ] '
+  var src = ' [ 1  , abc ] ';
   var expected = [ 1, 'abc' ];
   var got = _.strStructureParse({ src : src, parsingArrays : 1 });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'array with spaces';
   var src = ' [ 1  ab cd ] ';
   var expected = [ 1, 'ab', 'cd' ];
   var got = _.strStructureParse({ src : src, parsingArrays : 1 });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.close( 'imply array' )
 
@@ -2703,28 +10954,28 @@ function strStructureParse( test )
   test.open( 'keys with spaces' );
 
   test.case = 'single key with space';
-  var src = 'a1 a1 : v1'
+  var src = 'a1 a1 : v1';
   var expected = { 'a1 a1' : 'v1' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'two keys with space';
-  var src = 'a1 a1 : v1 b2 b2 : v2'
+  var src = 'a1 a1 : v1 b2 b2 : v2';
   var expected = { 'a1 a1' : 'v1 b2', 'b2' : 'v2' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'three keys with space';
-  var src = 'a1 a1 : v1 b2 b2 : v2 c3 c3 : v3'
+  var src = 'a1 a1 : v1 b2 b2 : v2 c3 c3 : v3';
   var expected = { 'a1 a1' : 'v1 b2', 'b2' : 'v2 c3', 'c3' : 'v3' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'three keys, middle key with space';
-  var src = 'a1 : v1 a2 a2 : v2 c3 : v3'
+  var src = 'a1 : v1 a2 a2 : v2 c3 : v3';
   var expected = { 'a1' : 'v1 a2', 'a2' : 'v2', 'c3' : 'v3' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.close( 'keys with spaces' );
 
@@ -2733,34 +10984,34 @@ function strStructureParse( test )
   test.open( 'vals with spaces' );
 
   test.case = 'single key, value with space';
-  var src = 'a1 : v1 v2'
+  var src = 'a1 : v1 v2';
   var expected = { 'a1' : 'v1 v2' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'single key, value with space';
-  var src = 'a1 : v1 v2 v3'
+  var src = 'a1 : v1 v2 v3';
   var expected = { 'a1' : 'v1 v2 v3' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'two keys, value with space';
-  var src = 'a1 : v1 v1 b2 : v2 v2'
+  var src = 'a1 : v1 v1 b2 : v2 v2';
   var expected = { 'a1' : 'v1 v1', 'b2' : 'v2 v2' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'two keys, value with space';
-  var src = 'a1 : v1 v1 v1 b2 : v2 v2 v2'
+  var src = 'a1 : v1 v1 v1 b2 : v2 v2 v2';
   var expected = { 'a1' : 'v1 v1 v1', 'b2' : 'v2 v2 v2' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'three keys, value with space';
-  var src = 'a1 : v1 v1 b2 : v2 v2 c3 : v3 v3'
+  var src = 'a1 : v1 v1 b2 : v2 v2 c3 : v3 v3';
   var expected = { 'a1' : 'v1 v1', 'b2' : 'v2 v2', 'c3' : 'v3 v3' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.close( 'vals with spaces' );
 
@@ -2769,31 +11020,783 @@ function strStructureParse( test )
   test.open( 'toNumberMaybe' );
 
   test.case = 'number like string as value';
-  var src = 'a : 1a'
-  var expected = { 'a' : 1 };
+  var src = 'a : 1a';
+  var expected = { 'a' : '1a' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'number like string as value';
-  var src = 'a : 1 a'
-  var expected = { 'a' : 1 };
+  var src = 'a : 1 a';
+  var expected = { 'a' : '1 a' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'number like string as value';
-  var src = 'a : 1 a b : 2 b'
-  var expected = { 'a' : 1, 'b' : 2 };
+  var src = 'a : 1 a b : 2 b';
+  var expected = { 'a' : '1 a', 'b' : '2 b' };
   var got = _.strStructureParse({ src : src });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.case = 'number like string as value';
-  var src = 'a : 1 a b : 2 b'
+  var src = 'a : 1 a b : 2 b';
   var expected = { 'a' : '1 a', 'b' : '2 b' };
   var got = _.strStructureParse({ src : src, toNumberMaybe : 0 });
-  test.identical( got, expected )
+  test.identical( got, expected );
 
   test.close( 'toNumberMaybe' );
 
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strStructureParse() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : 'a' }, 'extra' ) );
+
+  test.case = 'wrong type of options map';
+  test.shouldThrowErrorSync( () => _.strStructureParse( [ [ 'src', 'a' ] ] ) );
+
+  test.case = 'unknown option in options map';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : 'a', delimeter : ' ' } ) );
+
+  test.case = 'keyValDelimeter is empty string';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : 'a', keyValDelimeter : '' } ) );
+
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : [] } ) );
+
+  test.case = 'wrong type of keyValDelimeter';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : 'a', keyValDelimeter : 1 } ) );
+
+  test.case = 'wrong type of entryDelimeter';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : 'a', entryDelimeter : 1 } ) );
+
+  test.case = 'defaultStructure is not "array", "map", "string"';
+  test.shouldThrowErrorSync( () => _.strStructureParse( { src : 'a', defaultStructure : 'hashmap' } ) );
+}
+
+//
+
+function strStructureParseExperiment( test )
+{
+  test.case = 'array, quoting || using preservingQuoting in array can improve results';
+  var src = '[ "1", "abc", "abc" ]';
+  var expected = [ '"1"', '"abc"', '"abc"' ];
+  var expected2 = [ 1, 'abc', 'abc' ];
+  var got = _.strStructureParse({ src : src, parsingArrays : 1 });
+  test.identical( got, expected );
+  test.notIdentical( got, expected2 );
+
+  test.case = 'primitives, empty strings || more complex search for primitives';
+  var src = '[ 1, abc, null, undefined, false, true, , "abc" ]';
+  var expected = [ 1, 'abc', 'null', 'undefined', 'false', 'true', '"abc"' ];
+  var expected2 = [ 1, 'abc', null, undefined, false, true, '', '"abc"' ]; // Dmytro : not sure with empty string it may be undefined
+  var got = _.strStructureParse({ src : src, parsingArrays : 1 });
+  test.identical( got, expected );
+  test.notIdentical( got, expected2 );
+
+  test.case = 'NaN || not sure it is need';
+  var src = 'a : NaN';
+  var expected = { 'a' : 'NaN' };
+  var expected2 = { 'a' : NaN };
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+  test.notIdentical( got, expected2 );
+
+  test.case = 'BigInt || BigInt always skips';
+  var src = 'a : 1n, b : 2n, c : 3n';
+  var expected = { 'a' : 1, 'b' : 2, 'c' : 3 };
+  var expected2 = { 'a' : 1n, 'b' : 2n, 'c' : 3n };
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+  test.notIdentical( got, expected2 );
+
+  test.case = 'BigInt';
+  var src = '[ 1n, 2a, 3n, a2 ]';
+  var expected = [ 1, 2, 3, 'a2' ];
+  var expected2 = [ 1n, 2, 3n, 'a2' ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+  test.notIdentical( got, expected2 );
+
+  test.case = 'values is a complex structure || maybe, option for complex structure search needs';
+  var src = 'a : { a : 1, b : 2 }';
+  var expected = { 'a' : '{', 'a' : 1, 'b' : 2 };
+  var expected2 = { 'a' : { 'a' : 1, b : 2 } };
+  var got = _.strStructureParse( { src : src } );
+  test.identical( got, expected );
+  test.notIdentical( got, expected2 );
+
+  test.case = 'values is a complex structure || maybe level of recursion need';
+  var src = '[ [ a, a ], [ b, b ], [ [], [] ] ]';
+  var expected = [ '[', 'a', 'a', ']', '[', 'b', 'b', ']', '[', '[]', '[]', ']' ];
+  var expected2 = [ [ 'a', 'a' ], [ 'b', 'b' ], [ [], [] ] ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+  test.notIdentical( got, expected2 );
+
+  test.case = 'values is a complex structure || maybe level of recursion need';
+  var src = '[ { a : a } ]';
+  var expected = [ '{', 'a', ':', 'a', '}' ];
+  var expected2 = [ { 'a' : 'a' } ];
+  var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
+  test.identical( got, expected );
+  test.notIdentical( got, expected2 );
+}
+strStructureParseExperiment.experimental = 1;
+
+//
+
+function strWebQueryParseDefaultOptions( test ) 
+{
+  test.case = 'passed argument is string, does not affects by options';
+  var src = 'complex+protocol://www.site.com:13/path/name?query=here&and=here#anchor';
+  var expected = { 'complex+protocol' : '//www.site.com:13/path/name?query=here', 'and' : 'here#anchor' };
+  var got = _.strWebQueryParse( src );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = 'some string';
+  var expected = 'some string';
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number:1&str=abc';
+  var expected = { number : '1', str : 'abc' };
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, values in square parentheses';
+  var src = 'number : 1&str = abc&array : [1,abc]';
+  var expected = { number : '1', str : 'abc', array : '[1,abc]' };
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' number = 1 & str:abc& array :  [ 1  , abc ] ';
+  var expected = { number : '1', str : 'abc', array : '[ 1  , abc ]' };
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path=D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = { 'path:D' : '\\some\\path' };
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path="D:\\some\\path"';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path=D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path = D : \\some\\ path ';
+  var expected = { path : 'D : \\some\\ path' };
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 v1& b2 b2 = v2 v2& c3 c3 : v3 v3';
+  var expected = { 'a1 a1' : 'v1 v1', 'b2 b2' : 'v2 v2', 'c3 c3' : 'v3 v3' };
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1&b : 2a,&c = 3 a&d : 4abc&e = 5 abc';
+  var expected = { 'a' : '1', 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '[]';
+  var expected = '[]';
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ 1,& abc ]';
+  var expected = '[ 1,& abc ]';
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  ,& abc ] ';
+  var expected = '[ 1  ,& abc ]';
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1  ab& cd ] ';
+  var expected = '[ 1  ab& cd ]';
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+  
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '[number : 1& str = abc]';
+  var expected = { '[number' : '1', 'str' : 'abc]' };
+  var got = _.strWebQueryParse( { src : src } );
+  test.identical( got, expected );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strWebQueryParse() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strWebQueryParse( { src : 'a' }, 'extra' ) );
+
+  test.case = 'wrong type of options map';
+  test.shouldThrowErrorSync( () => _.strWebQueryParse( [ [ 'src', 'a' ] ] ) );
+
+  test.case = 'unknown option in options map';
+  test.shouldThrowErrorSync( () => _.strWebQueryParse( { src : 'a', delimeter : ' ' } ) );
+
+  test.case = 'keyValDelimeter is empty string';
+  test.shouldThrowErrorSync( () => _.strWebQueryParse( { src : 'a', keyValDelimeter : '' } ) );
+
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.strWebQueryParse( { src : [] } ) );
+
+  test.case = 'wrong type of keyValDelimeter';
+  test.shouldThrowErrorSync( () => _.strWebQueryParse( { src : 'a', keyValDelimeter : 1 } ) );
+
+  test.case = 'wrong type of entryDelimeter';
+  test.shouldThrowErrorSync( () => _.strWebQueryParse( { src : 'a', entryDelimeter : 1 } ) );
+
+  test.case = 'defaultStructure is not "array", "map", "string"';
+  test.shouldThrowErrorSync( () => _.strWebQueryParse( { src : 'a', defaultStructure : 'hashmap' } ) );
+}
+
+//
+
+function strWebQueryParseOptionEntryDelimeter( test ) 
+{
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = 'some#string';
+  var expected = 'some#string';
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number:1#str=abc';
+  var expected = { number : '1', str : 'abc' };
+  debugger;
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, values in square parentheses';
+  var src = 'number : 1#str = abc#array : [1,abc]';
+  var expected = { number : '1', str : 'abc', array : '[1,abc]' };
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' number = 1 # str:abc# array :  [ 1  , abc ] ';
+  var expected = { number : '1', str : 'abc', array : '[ 1  , abc ]' };
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = { 'path:D' : '\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path="D:\\some\\path"';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path:D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path : D : \\some\\ path ';
+  var expected = { path : 'D : \\some\\ path' };
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 v1# b2 b2 : v2 v2# c3 c3 : v3 v3';
+  var expected = { 'a1 a1' : 'v1 v1', 'b2 b2' : 'v2 v2', 'c3 c3' : 'v3 v3' };
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1#b : 2a,#c = 3 a#d : 4abc#e : 5 abc';
+  var expected = { 'a' : '1', 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '[]';
+  var expected = '[]';
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ 1,# abc ]';
+  var expected = '[ 1,# abc ]';
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  ,# abc ] ';
+  var expected = '[ 1  ,# abc ]';
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1 :ab# cd ] ';
+  var expected = { '[ 1' : 'ab# cd ]' };
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+  
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '[number : 1# str = abc]';
+  var expected = { '[number' : '1', 'str' : 'abc]' };
+  var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
+  test.identical( got, expected );
+}
+
+//
+
+function strWebQueryParseOptionKeyValDelimeter( test ) 
+{
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = 'some string';
+  var expected = 'some string';
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number?1&str=abc';
+  var expected = { number : '1', str : 'abc' };
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, values in square parentheses';
+  var src = 'number ? 1&str = abc&array : [1,abc]';
+  var expected = { number : '1', str : 'abc', array : '[1,abc]' };
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' number = 1 & str?abc& array :  [ 1  , abc ] ';
+  var expected = { number : '1', str : 'abc', array : '[ 1  , abc ]' };
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path?D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = { 'path:D' : '\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path="D:\\some\\path"';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path?D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path ? D : \\some\\ path ';
+  var expected = { path : 'D : \\some\\ path' };
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 v1& b2 b2 ? v2 v2& c3 c3 : v3 v3';
+  var expected = { 'a1 a1' : 'v1 v1', 'b2 b2' : 'v2 v2', 'c3 c3' : 'v3 v3' };
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1&b : 2a,&c = 3 a&d : 4abc&e ? 5 abc';
+  var expected = { 'a' : '1', 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '[]';
+  var expected = '[]';
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ 1,& abc ]';
+  var expected = '[ 1,& abc ]';
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  ,& abc ] ';
+  var expected = '[ 1  ,& abc ]';
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1 ?ab& cd ] ';
+  var expected = { '[ 1' : 'ab& cd ]' };
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+  
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '[number ? 1& str = abc]';
+  var expected = { '[number' : '1', 'str' : 'abc]' };
+  var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
+  test.identical( got, expected );
+}
+
+//
+
+function strWebQueryParseOptionQuoting( test ) 
+{
+  test.open( 'quoting - 0' );
+
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = '"some string"';
+  var expected = '"some string"';
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number:1&"str"=abc';
+  var expected = { number : '1', '"str"' : 'abc' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, values in square parentheses';
+  var src = 'number : 1&str = "abc"&array : [1,abc]';
+  var expected = { number : '1', str : '"abc"', array : '[1,abc]' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' number = 1 & str:"abc"& array :  [ 1  , abc ] ';
+  var expected = { number : '1', str : '"abc"', array : '[ 1  , abc ]' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path=D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = { '"path' : 'D":\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path="D:\\some\\path"';
+  var expected = { path : '"D:\\some\\path"' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path=D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path = "D : \\some\\ path" ';
+  var expected = { path : '"D : \\some\\ path"' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 "v1& b2" b2 = v2 v2& c3 c3 : v3 v3';
+  var expected = { 'a1 a1' : 'v1 "v1', 'b2" b2' : 'v2 v2', 'c3 c3' : 'v3 v3' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1&b : "2a,&c" = 3 a&d : 4abc&e = 5 abc';
+  var expected = { 'a' : '1', 'b' : '"2a,', 'c"' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '"[]"';
+  var expected = '"[]"';
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ "1,& abc" ]';
+  var expected = '[ "1,& abc" ]';
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  ,& "abc" ] ';
+  var expected = '[ 1  ,& "abc" ]';
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1  "ab& cd" ] ';
+  var expected = '[ 1  "ab& cd" ]';
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+  
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '[number : "1& str" = abc]';
+  var expected = { '[number' : '"1', 'str"' : 'abc]' };
+  var got = _.strWebQueryParse( { src : src, quoting : 0 } );
+  test.identical( got, expected );
+
+  test.close( 'quoting - 0' );
+
+  /* - */
+
+  test.open( 'quoting - 1' );
+
+  test.case = 'empty string';
+  var src = '';
+  var expected = {};
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'spaces';
+  var src = '   ';
+  var expected = {};
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string without keyValDelimeter';
+  var src = '"some string"';
+  var expected = 'some string';
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string with keyValDelimeter, pairs key-value';
+  var src = 'number:1&"str"=abc';
+  var expected = { number : '1', 'str' : 'abc' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - string with keyValDelimeter, values in square parentheses';
+  var src = 'number : 1&str = "abc"&array : [1,abc]';
+  var expected = { number : '1', str : 'abc', array : '[1,abc]' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'several, flat array in value, with extra spaces';
+  var src = ' number = 1 & str:"abc"& array :  [ 1  , abc ] ';
+  var expected = { number : '1', str : 'abc', array : '[ 1  , abc ]' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, not quoted';
+  var src = 'path=D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted left';
+  var src = '"path:D":\\some\\path';
+  var expected = { 'path:D' : '\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, quoted right';
+  var src = 'path="D:\\some\\path"';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts';
+  var src = 'path=D:\\some\\path';
+  var expected = { path : 'D:\\some\\path' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'src - Windows path, two keyValDelimeters, three parts, extra spaces';
+  var src = ' path = "D : \\some\\ path" ';
+  var expected = { path : 'D : \\some\\ path' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string wiht one key-value pair, key and value has space';
+  var src = 'a1 a1 : v1 v1';
+  var expected = { 'a1 a1' : 'v1 v1' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string with three key-value pair, keys and values has space';
+  var src = 'a1 a1 : v1 "v1& b2" b2 = v2 v2& c3 c3 : v3 v3';
+  var expected = { 'a1 a1' : 'v1 v1', 'b2 b2' : 'v2 v2', 'c3 c3' : 'v3 v3' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'string has number and combined number and strings value';
+  var src = 'a : 1&b : "2a,&c" = 3 a&d : 4abc&e = 5 abc';
+  var expected = { 'a' : '1', 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'square parentheses, empty array';
+  var src = '"[]"';
+  var expected = '[]';
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses, array';
+  var src = '[ "1,& abc" ]';
+  var expected = '[ 1,& abc ]';
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'square parentheses array with extra spaces';
+  var src = ' [ 1  ,& "abc" ] ';
+  var expected = '[ 1  ,& abc ]';
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.case = 'array with spaces delimeters';
+  var src = ' [ 1  "ab& cd" ] ';
+  var expected = '[ 1  ab& cd ]';
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+  
+  test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
+  var src = '[number : "1& str" = abc]';
+  var expected = { '[number' : '1', 'str' : 'abc]' };
+  var got = _.strWebQueryParse( { src : src, quoting : 1 } );
+  test.identical( got, expected );
+
+  test.close( 'quoting - 1' );
 }
 
 //
@@ -2806,18 +11809,132 @@ function strWebQueryParse( test )
   test.case = 'empty array';
   var src = ''
   var expected = {};
-  debugger;
   var got = _.strWebQueryParse( src );
   test.identical( got, expected )
 
   test.case = 'trivial';
   var src = 'abc:3&def:gh&this=is'
-  var expected = { 'abc' : 3, 'def' : 'gh', 'this' : 'is' };
+  var expected = { 'abc' : '3', 'def' : 'gh', 'this' : 'is' };
   var got = _.strWebQueryParse( src );
   test.identical( got, expected )
 
   /* */
 
+}
+
+//
+
+function strWebQueryStr( test )
+{
+  test.case = 'src - empty string';
+  var src = '';
+  var got = _.strWebQueryStr( src );
+  test.identical( got, '' );
+
+  test.case = 'src - string';
+  var src = 'abc';
+  var got = _.strWebQueryStr( src );
+  test.identical( got, 'abc' );
+
+  test.case = 'src - primitive';
+  var src = 1;
+  var got = _.strWebQueryStr( { src : src } );
+  test.identical( got, '' );
+
+  /* - */
+
+  test.open( 'default options' );
+
+  test.case = 'src - empty map';
+  var src = {};
+  var got = _.strWebQueryStr( { src : src } );
+  test.identical( got, '' );
+
+  test.case = 'src - map with empty string key';
+  var src = { '' : 'empty', 'path' : '/', 'level' : 2 };
+  var got = _.strWebQueryStr( { src : src } );
+  test.identical( got, ':empty&path:/&level:2' );
+
+  test.case = 'src - map with primitives in values';
+  var src = { number : 1, null : null, undefined : undefined, str : 'str', empty : '', '' : 'empty', false : false };
+  var got = _.strWebQueryStr( { src : src } );
+  test.identical( got, 'number:1&null:null&undefined:undefined&str:str&empty:&:empty&false:false' );
+
+  test.case = 'src - map with strings, keys and values has spaces';
+  var src = { 'one space' : 'in value', 'two spaces in' : 'key and value' };
+  var got = _.strWebQueryStr( { src : src } );
+  test.identical( got, 'one space:in value&two spaces in:key and value' );
+
+  test.close( 'default options' );
+
+  /* - */
+
+  test.open( 'keyValDelimeter - "#"' );
+
+  test.case = 'src - empty map';
+  var src = {};
+  var got = _.strWebQueryStr( { src : src, keyValDelimeter : '#' } );
+  test.identical( got, '' );
+
+  test.case = 'src - map with empty string key';
+  var src = { '' : 'empty', 'path' : '/', 'level' : 2 };
+  var got = _.strWebQueryStr( { src : src, keyValDelimeter : '#' } );
+  test.identical( got, '#empty&path#/&level#2' );
+
+  test.case = 'src - map with primitives in values';
+  var src = { number : 1, null : null, undefined : undefined, str : 'str', empty : '', '' : 'empty', false : false };
+  var got = _.strWebQueryStr( { src : src, keyValDelimeter : '#' } );
+  test.identical( got, 'number#1&null#null&undefined#undefined&str#str&empty#&#empty&false#false' );
+
+  test.case = 'src - map with strings, keys and values has spaces';
+  var src = { 'one space' : 'in value', 'two spaces in' : 'key and value' };
+  var got = _.strWebQueryStr( { src : src, keyValDelimeter : '#' } );
+  test.identical( got, 'one space#in value&two spaces in#key and value' );
+
+  test.close( 'keyValDelimeter - "#"' );
+
+  /* - */
+
+  test.open( 'entryDelimeter - "?"' );
+
+  test.case = 'src - empty map';
+  var src = {};
+  var got = _.strWebQueryStr( { src : src, entryDelimeter : '?' } );
+  test.identical( got, '' );
+
+  test.case = 'src - map with empty string key';
+  var src = { '' : 'empty', 'path' : '/', 'level' : 2 };
+  var got = _.strWebQueryStr( { src : src, entryDelimeter : '?' } );
+  test.identical( got, ':empty?path:/?level:2' );
+
+  test.case = 'src - map with primitives in values';
+  var src = { number : 1, null : null, undefined : undefined, str : 'str', empty : '', '' : 'empty', false : false };
+  var got = _.strWebQueryStr( { src : src, entryDelimeter : '?' } );
+  test.identical( got, 'number:1?null:null?undefined:undefined?str:str?empty:?:empty?false:false' );
+
+  test.case = 'src - map with strings, keys and values has spaces';
+  var src = { 'one space' : 'in value', 'two spaces in' : 'key and value' };
+  var got = _.strWebQueryStr( { src : src, entryDelimeter : '?' } );
+  test.identical( got, 'one space:in value?two spaces in:key and value' );
+
+  test.close( 'entryDelimeter - "?"' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strWebQueryStr() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strWebQueryStr( 'a', 'extra' ) );
+
+  test.case = 'wrong type of options map';
+  test.shouldThrowErrorSync( () => _.strWebQueryStr( [] ) );
+
+  test.case = 'unknown option in options map';
+  test.shouldThrowErrorSync( () => _.strWebQueryStr( { src : {}, delimeter : '' } ) );
 }
 
 //
@@ -2977,6 +12094,131 @@ function strRequestParse( test )
   test.identical( got.subjects, [ '/some/app "v:7 beeping:0"' ] )
   test.identical( got.maps, [ {} ] )
 
+}
+
+//
+
+function strRequestStr( test )
+{
+  test.case = 'only options';
+  var str = 'number : 1 str : abc array : [1,abc]';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = 'number:1 str:abc array:[1,abc]';
+  test.identical( got, expected );
+
+  test.case = 'only options, two parts';
+  var str = 'number : 1 str : abc ; array : [1,abc]';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = 'number:1 str:abc ; array:[1,abc]';
+  test.identical( got, expected );
+
+  test.case = 'only commands';
+  var str = '.command1 ; .command2';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = '.command1 ; .command2';
+  test.identical( got, expected );
+
+  test.case = 'command and option';
+  var str = '.set v : 10';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = '.set v:10';
+  test.identical( got, expected );
+
+  test.case = 'two command and option';
+  var str = '.build abc debug:0 ; .set v : 10';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = '.build abc debug:0 ; .set v:10';
+  test.identical( got, expected );
+
+  test.case = 'two command and option, quoted with "';
+  var str = '".build abc debug:0 ; .set v : 10"'
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = '.build abc debug:0 ; .set v:10';
+  test.identical( got, expected );
+
+  test.case = 'quoted option value, quoting - 0';
+  var str = 'path:"some/path"';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 0, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = 'path:"some/path"';
+  test.identical( got, expected );
+
+  test.case = 'quoted windows path as value';
+  var str = 'path:"D:\\some\\path"';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = 'path:D:\\some\\path';
+  test.identical( got, expected );
+
+  test.case = 'unqouted windows path as value';
+  var str = 'path:D:\\some\\path';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = 'path:D:\\some\\path';
+  test.identical( got, expected );
+
+  test.case = 'unqouted windows path as value';
+  var str = 'path : D:\\some\\path';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = 'path:D:\\some\\path';
+  test.identical( got, expected );
+
+  test.case = 'unqouted windows path as subject';
+  var str = 'D:\\some\\path';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = 'D:\\some\\path';
+  test.identical( got, expected );
+
+  test.case = 'command and unqouted windows path';
+  var str = '.run D:\\some\\path';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = '.run D:\\some\\path';
+  test.identical( got, expected );
+
+  test.case = 'command and unqouted windows path with option';
+  var str = '.run D:\\some\\path v:10';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = '.run D:\\some\\path v:10';
+  test.identical( got, expected );
+
+  test.case = 'two complex commands, second with windows path as subject';
+  var str = '.imply v :10 ; .run D:\\some\\path n : 2';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = '.imply v:10 ; .run D:\\some\\path n:2';
+  test.identical( got, expected );
+
+  test.case = 'subject in quotes';
+  var str = '/some/app "v:7 beeping:0"';
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 1, parsingArrays : 1 } );
+  delete src[ 'original' ];
+  var got = _.strRequestStr( src );
+  var expected = '/some/app "v:7 beeping:0"';
+  test.identical( got, expected ); 
 }
 
 //
@@ -3574,6 +12816,108 @@ function strCommandsParse( test )
 
 //
 
+function strJoinMap( test )
+{
+  test.open( 'default options' );
+
+  test.case = 'src - empty map';
+  var src = {};
+  var got = _.strJoinMap( { src : src } );
+  test.identical( got, '' );
+
+  test.case = 'src - map with empty string key';
+  var src = { '' : 'empty', 'path' : '/', 'level' : 2 };
+  var got = _.strJoinMap( { src : src } );
+  test.identical( got, ':empty path:/ level:2' );
+
+  test.case = 'src - map with primitives in values';
+  var src = { number : 1, null : null, undefined : undefined, str : 'str', empty : '', '' : 'empty', false : false };
+  var got = _.strJoinMap( { src : src } );
+  test.identical( got, 'number:1 null:null undefined:undefined str:str empty: :empty false:false' );
+
+  test.case = 'src - map with strings, keys and values has spaces';
+  var src = { 'one space' : 'in value', 'two spaces in' : 'key and value' };
+  var got = _.strJoinMap( { src : src } );
+  test.identical( got, 'one space:in value two spaces in:key and value' );
+
+  test.close( 'default options' );
+
+  /* - */
+
+  test.open( 'keyValDelimeter - "::"' );
+
+  test.case = 'src - empty map';
+  var src = {};
+  var got = _.strJoinMap( { src : src, keyValDelimeter : '::' } );
+  test.identical( got, '' );
+
+  test.case = 'src - map with empty string key';
+  var src = { '' : 'empty', 'path' : '/', 'level' : 2 };
+  var got = _.strJoinMap( { src : src, keyValDelimeter : '::' } );
+  test.identical( got, '::empty path::/ level::2' );
+
+  test.case = 'src - map with primitives in values';
+  var src = { number : 1, null : null, undefined : undefined, str : 'str', empty : '', '' : 'empty', false : false };
+  var got = _.strJoinMap( { src : src, keyValDelimeter : '::' } );
+  test.identical( got, 'number::1 null::null undefined::undefined str::str empty:: ::empty false::false' );
+
+  test.case = 'src - map with strings, keys and values has spaces';
+  var src = { 'one space' : 'in value', 'two spaces in' : 'key and value' };
+  var got = _.strJoinMap( { src : src, keyValDelimeter : '::' } );
+  test.identical( got, 'one space::in value two spaces in::key and value' );
+
+  test.close( 'keyValDelimeter - "::"' );
+
+  /* - */
+
+  test.open( 'entryDelimeter - "|"' );
+
+  test.case = 'src - empty map';
+  var src = {};
+  var got = _.strJoinMap( { src : src, entryDelimeter : '|' } );
+  test.identical( got, '' );
+
+  test.case = 'src - map with empty string key';
+  var src = { '' : 'empty', 'path' : '/', 'level' : 2 };
+  var got = _.strJoinMap( { src : src, entryDelimeter : '|' } );
+  test.identical( got, ':empty|path:/|level:2' );
+
+  test.case = 'src - map with primitives in values';
+  var src = { number : 1, null : null, undefined : undefined, str : 'str', empty : '', '' : 'empty', false : false };
+  var got = _.strJoinMap( { src : src, entryDelimeter : '|' } );
+  test.identical( got, 'number:1|null:null|undefined:undefined|str:str|empty:|:empty|false:false' );
+
+  test.case = 'src - map with strings, keys and values has spaces';
+  var src = { 'one space' : 'in value', 'two spaces in' : 'key and value' };
+  var got = _.strJoinMap( { src : src, entryDelimeter : '|' } );
+  test.identical( got, 'one space:in value|two spaces in:key and value' );
+
+  test.close( 'entryDelimeter - "|"' );
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strJoinMap() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strJoinMap( { src : { a : 'a' } }, ' ' ) );
+
+  test.case = 'wrong type of options map';
+  test.shouldThrowErrorSync( () => _.strJoinMap( 'wrong' ) );
+
+  test.case = 'unknown option in options map';
+  test.shouldThrowErrorSync( () => _.strJoinMap( { src : { a : 'a' }, delimeter : '' } ) );
+
+  test.case = 'wrong type of keyValDelimeter';
+  test.shouldThrowErrorSync( () => _.strJoinMap( { src : { a : 'a' }, keyValDelimeter : 1 } ) );
+
+  test.case = 'wrong type of entryDelimeter';
+  test.shouldThrowErrorSync( () => _.strJoinMap( { src : { a : 'a' }, entryDelimeter : 1 } ) );
+}
+
+//
+
 function strDifference( test )
 {
 
@@ -3705,9 +13049,22 @@ var Self =
 
     //
 
+    strSearchDefaultOptions,
+    strSearchOptionNearestLines,
+    strSearchOptionNearestSplitting,
+    strSearchOptiondeterminingLineNumber,
+    strSearchOptionStringWithRegexp,
+    strSearchOptionToleratingSpaces,
+    strSearchOptionOnTokenize,
+
     strFindAll,
     strFindAllValueWithLong,
-    strReplaceAll,
+
+    tokensSyntaxFrom,
+
+    strReplaceAllDefaultOptions,
+    strReplaceAllOptionJoining,
+    strReplaceAllOptionOnUnknown,
     strTokenizeJs,
     strSorterParse,
 
@@ -3718,11 +13075,33 @@ var Self =
     strToBytes,
     strTimeFormat,
 
+    strStructureParseDefaultOptions,
+    strStructureParseOptionParsingArrays,
+    strStructureParseOptionEntryDelimeter,
+    strStructureParseOptionKeyValDelimeter,
+    strStructureParseOptionQuoting,
+    strStructureParseOptionToNumberMaybe,
+    strStructureParseOptionDefaultStructure,
+    strStructureParseOptionDepthForArrays,
+    strStructureParseOptionDepthForMaps,
+    strStructureParseOptionDepthForMixed,
+    strStructureParseOptionOnTerminal,
     strStructureParse,
+    strStructureParseExperiment,
+
+    strWebQueryParseDefaultOptions,
+    strWebQueryParseOptionEntryDelimeter,
+    strWebQueryParseOptionKeyValDelimeter,
+    strWebQueryParseOptionQuoting,
     strWebQueryParse,
+
+    strWebQueryStr,
     strRequestParse,
+    strRequestStr,
     strCommandParse,
     strCommandsParse,
+
+    strJoinMap,
 
     //
 

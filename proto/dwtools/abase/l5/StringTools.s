@@ -296,7 +296,7 @@ function strHtmlEscape( str )
 //
 
 /*
-qqq : tests required
+qqq : tests required | Dmytro : covered all options 
 */
 
 function strSearch( o )
@@ -317,6 +317,7 @@ function strSearch( o )
 
   if( _.arrayIs( o.excludingTokens ) || _.strIs( o.excludingTokens ) )
   {
+    debugger;
     o.excludingTokens = _.path.globsShortToRegexps( o.excludingTokens );
     o.excludingTokens = _.regexpsAny( o.excludingTokens );
   }
@@ -340,7 +341,6 @@ function strSearch( o )
     }
 
     if( o.nearestLines )
-    debugger;
     if( o.nearestLines )
     it.nearest = _.strLinesNearest
     ({
@@ -365,7 +365,6 @@ function strSearch( o )
 
       if( o.excludingTokens )
       {
-        debugger;
         let tokenNames = _.select( tokens, '*/tokenName' );
         tokenNames = tokenNames.slice( having[ 0 ], having[ 1 ] );
         let pass = _.none( _.regexpTest( o.excludingTokens, tokenNames ) );
@@ -376,7 +375,8 @@ function strSearch( o )
     }
 
     if( !o.nearestSplitting )
-    it.nearest.join( '' );
+    it.nearest = it.nearest.join( '' );
+    // it.nearest.join( '' ); // Dmytro : has not influence on the result
 
     result.push( it );
   });
@@ -394,7 +394,7 @@ strSearch.defaults =
   stringWithRegexp : 0,
   toleratingSpaces : 0,
   onTokenize : null,
-  excludingTokens : null,
+  excludingTokens : null, 
 }
 
 //
@@ -438,6 +438,7 @@ function strFindAll( src, ins )
 
   tokensSyntax.idToValue.forEach( ( ins, tokenId ) =>
   {
+    // Dmytro : not optimal - double check
     _.assert( _.strIs( ins ) || _.regexpIs( ins ) );
 
     if( _.regexpIs( ins ) )
@@ -506,6 +507,9 @@ function strFindAll( src, ins )
     }
     else if( _.regexpIs( ins ) )
     {
+      if( ins.source === '(?:)' ) // Dmytro : missed, it's regexp for empty string
+      result = src.length;
+      else
       result = findWithRegexp( o.src, ins, tokenId );
     }
     else _.assert( 0 );
@@ -519,7 +523,7 @@ function strFindAll( src, ins )
   function findWithString( src, ins )
   {
 
-    if( !ins.length )
+    if( !ins.length ) // Dmytro : duplicate from previous subroutine
     return src.length;
 
     let index = src.indexOf( ins, currentIndex );
@@ -681,8 +685,8 @@ function tokensSyntaxFrom( ins )
 
   /* */
 
-  /* qqq2 : ins could be also array _.strFindAll( 'some string2', { a : 'some', b : [ 'string1', 'string2' ] } )
-    cover extension please
+  /*
+  qqq2 : ins could be also array _.strFindAll( 'some string2', { a : 'some', b : [ 'string1', 'string2' ] } ) cover extension please | Dmytro : covered routines tokensSyntaxFrom and strFindAll
   */
 
   result.idToValue = ins;
@@ -700,7 +704,7 @@ function tokensSyntaxFrom( ins )
         for( let e = 0 ; e < element.length ; e++ )
         {
           let name2 = name + '_' + element[ e ];
-          result.idToValue[ i ] = ins[ name ][ e ];
+          result.idToValue[ i ] = ins[ name ][ e ]; // Dmytro : better to use local variable 'let element'. Also, maybe, needs check type of element - regexp or string.
           result.idToName[ i ] = name2;
           result.nameToId[ name2 ] = i;
           alternative.push( name2 );
@@ -709,7 +713,7 @@ function tokensSyntaxFrom( ins )
       }
       else
       {
-        result.idToValue[ i ] = ins[ name ];
+        result.idToValue[ i ] = ins[ name ]; // Dmytro : better to use local variable 'let element'
         result.idToName[ i ] = name;
         result.nameToId[ name ] = i;
         i += 1;
@@ -805,46 +809,88 @@ _strReplaceMapPrepare.defaults =
 //
 
 /**
- * Replaces each occurrence of string( ins ) in source( src ) with string( sub ).
- * Returns result of replacements as new string or original string if no matches finded in source( src ).
- * Function can be called in three different ways:
- * - One argument: object that contains options: source( src ) and dictionary.
- * - Two arguments: source string( src ), map( dictionary ).
- * - Three arguments: source string( src ), pattern string( ins ), replacement( sub ).
- * @param {string} src - Source string to parse.
- * @param {string} ins - String to find in source( src ).
- * @param {string} sub - String that replaces finded occurrence( ins ).
- * @param {object} dictionary - Map that contains pattern/replacement pairs like ( { 'ins' : 'sub' } ).
- * @returns {string} Returns string with result of replacements.
+ * Routine strReplaceAll() searches each occurrence of element of {-ins-} container in source string {-src-}
+ * and replaces it to corresponding element in {-sub-} container.
+ * Returns result of replacements as new string or original string if no matches found in source( src ).
+ *
+ * Routine can be called in three different ways.
+ *
+ * Three arguments:
+ * @param { String } src - Source string to parse.
+ * @param { String|RegExp|Long } ins - String or regexp pattern to search in source string. Also, it can be a
+ * set of string and regexp patterns passed as Long. If {-ins-} is a Long, then {-but-} should be long with the 
+ * same length.
+ * @param { String|Long } but - String or a Long with strings to replace occurrences {-ins-}. If {-but-} is a 
+ * Long, then it should contains only strings and {-ins-} should be a long with the same length.
+ *
+ * Two arguments: 
+ * @param { String } src - Source string to parse.
+ * @param { Long|Map } dictionary - Long or map that contains pattern/replacement pairs. If {-dictionary-} is a
+ * Long, then it looks like [ [ ins1, sub1 ], [ ins2, sub2 ] ], otherwise, it is like { ins1 : sub1, ins2 : sub2 }.
+ *
+ * One argument:
+ * @param { ObjectLike } o - Object, which can contains options:
+ * @param { String } o.src - Source string to parse.
+ * @param { Long|Map } o.dictionary - Long or map that contains pattern/replacement pairs, transforms to {-o.ins-}
+ * and {-o.but-}. If {-dictionary-} is a Long, then it looks like [ [ ins1, sub1 ], [ ins2, sub2 ] ], otherwise, it
+ *  is like { ins1 : sub1, ins2 : sub2 }.
+ * @param { Long } o.ins - A Long with string or regexp patterns to search in source string {-o.src-}.
+ * @param { Long } o.sub - String that replaces found occurrence( ins ).
+ * Note. If {-o.ins-} and {-o.sub-} options is used, then {-o.dictionary-} should be not provided, otherwise,
+ * {-o.dictionary-} values replace elements of {-o.ins-} and {-o.sub-}
+ * @param { BoolLike } o.joining - A parameter which control output value. If {-o.joining-} is true, then routine 
+ * returns string, otherwise, the array with parsed parts of source string is returned. Default value is 1.
+ * @param { Routine } o.onUnknown - A callback, which transforms parts of source string that not found by a pattern.
+ * {-o.onUnknown-} accepts three parameters: {-unknown-} - part of string, {-it-} - data structure with information 
+ * about found pattern in format of routine strFindAll(), {-o-} - the map options.
+ * Option {-o.onUnknown-} does not transforms part of source string after last entry of a {-o.ins-} pattern.
  *
  * @example
- * //one argument
- * //returns xbc
- * _.strReplaceAll( { src : 'abc', dictionary : { 'a' : 'x' } } );
+ * _.strReplaceAll( 'abcdef', 'b', 'w' );
+ * //returns 'awcdef'
  *
  * @example
- * //two arguments
- * //returns a12
- * _.strReplaceAll( 'abc',{ 'a' : '1', 'b' : '2' } );
+ * _.strReplaceAll( 'abcdef', [ 'b', /d/g, 'f' ], [ 'w', 'x', 'y' ] );
+ * //returns 'awcxey'
  *
  * @example
- * //three arguments
- * //returns axc
- * _.strReplaceAll( 'abc','b','x' );
+ * _.strReplaceAll( 'abcdef', [ [ 'b', 'w' ], [ 'd', 'x' ], [ /f$/g, 'y' ] ] );
+ * //returns 'awcxey'
  *
+ * @example
+ * _.strReplaceAll( 'abcdef', { 'b' : 'w', 'd' : 'x', 'f' : 'y' } );
+ * //returns 'awcxey'
+ *
+ * @example
+ * _.strReplaceAll( { src : 'abcdef', dictionary : [ [ 'b', 'w' ], [ 'd', 'x' ], [ 'f', 'y' ] ] } );
+ * //returns 'awcxey'
+ *
+ * @example
+ * _.strReplaceAll( { src : 'abcdef', dictionary : { 'b' : 'w', 'd' : 'x', 'f' : 'y' }, joining : 0 } );
+ * //returns [ 'a', 'w', 'c', 'x', 'e', 'y' ]
+ *
+ * @example
+ * _.strReplaceAll( { src : 'abcdefg', ins : [ 'b', 'd', 'f' ], but : [ 'w', 'x', 'y' ], onUnknown : ( e, c, o ) => '|' } );
+ * //returns '|w|x|yg'
+ *
+ * @returns { String|Long } - By default, routine returns string with result of replacements. If map options is used and 
+ * option {-o.joining-} is false like, then routine returns array with parts of resulted string.
  * @function  strReplaceAll
- * @throws { Exception } Throws a exception if no arguments provided.
- * @throws { Exception } Throws a exception if( src ) is not a String.
- * @throws { Exception } Throws a exception if( ins ) is not a String.
- * @throws { Exception } Throws a exception if( sub ) is not a String.
- * @throws { Exception } Throws a exception if( dictionary ) is not a Object.
- * @throws { Exception } Throws a exception if( dictionary ) key value is not a String.
- * @memberof module:Tools/base/l5/StringTools.Tools( module::StringTools )
+ * @throws { Error } If arguments.length is less then one or more then three.
+ * @throws { Error } If {-src-} or {-o.src-} is not a String.
+ * @throws { Error } If {-ins-} is not a String, not a RegExp or not a Long with strings and regexps.
+ * @throws { Error } If {-sub-} is not a String or not a Long with strings.
+ * @throws { Error } If one of the {-ins-} or {-sub-} is a Long, and the other is not.
+ * @throws { Error } If {-ins-} and {-sub-} is Longs, and has different length.
+ * @throws { Error } If {-dictionary-} or {-o.dictionary-} is not an Object or Long.
+ * @throws { Error } If {-o.onUnknown-} is not a routine or not null.
+ * @throws { Error } If map options {-o-} has unnecessary fields.
+ * @memberof wTools
  *
  */
 
 /*
-qqq : extend coverage
+qqq : extend coverage | Dmytro : extended
 */
 
 function strReplaceAll( src, ins, sub )
@@ -865,12 +911,16 @@ function strReplaceAll( src, ins, sub )
   {
     o = arguments[ 0 ];
   }
+  else
+  {
+    _.assert( 0 );
+  }
 
   /* verify */
 
   _.routineOptions( strReplaceAll, o );
-  _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
   _.assert( _.strIs( o.src ) );
+  // _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 ); // Dmytro : added to checking of arguments
 
   _._strReplaceMapPrepare( o );
 
@@ -926,7 +976,7 @@ var JsTokensDefinition =
   'string/double'         : /"(?:\\\n|\\"|[^"\n])*?"/,
   'string/multiline'      : /`(?:\\\n|\\`|[^`])*?`/,
   'whitespace'            : /\s+/,
-  'keyword'               : /\b(?:do|if|in|for|let|new|try|var|case|else|enum|eval|null|this|true|void|with|await|break|catch|class|const|false|super|throw|while|yield|delete|export|import|public|return|static|switch|typeof|default|extends|finally|package|private|continue|debugger|function|arguments|interface|protected|implements|instanceof)\b/,
+  'keyword'               : /\b(?:arguments|async|await|boolean|break|byte|case|catch|char|class|const|debugger|default|delete|do|double|else|enum|eval|export|extends|false|final|finally|float|for|function|goto|if|implements|import|in|instanceof|interface|let|long|native|new|null|package|private|protected|public|return|short|static|super|switch|this|throw|throws|transient|true|try|typeof|var|void|volatile|while|with|yield)\b/, // Dmytro : added new keywords and sorted in alphabetic order
   'regexp'                : /\/((?:\\\/|[^\/\n])+?)\/(\w*)/,
   'name'                  : /[a-z_\$][0-9a-z_\$]*/i,
   'number'                : /(?:0x(?:\d|[a-f])+|\d+(?:\.\d+)?(?:e[+-]?\d+)?)/i,
@@ -934,6 +984,13 @@ var JsTokensDefinition =
   'curly'                 : /[{}]/,
   'square'                : /[\[\]]/,
   'punctuation'           : /;|,|\.\.\.|\.|\:|\?|=>|>=|<=|<|>|!==|===|!=|==|=|!|&|<<|>>|>>>|\+\+|--|\*\*|\+|-|\^|\||\/|\*|%|~|\!/,
+  'name/function'         : /[a-zA-Z_$][a-zA-Z0-9_$]*(?=\()/, // Dmytro : added
+  'number/binary'         : /0[bB][01]+n?/, // Dmytro : added
+  'number/octal'          : /0[oO][0-7]+n?/, // Dmytro : added
+  'number/hex'            : /0[xX][0-9a-fA-F]+n?/, // Dmytro : added
+  'unicodeEscapeSequence' : /u[0-9a-fA-F]{4}/, // Dmytro : added
+  'tab'                   : /\t+/, // Dmytro : added
+  'comment/jsdoc'         : /\/\*\*(?:\n|.)*?\*\//, // Dmytro : added
 }
 
 function strTokenizeJs( o )
@@ -967,7 +1024,7 @@ var CppTokensDefinition =
   'string/double'         : /"(?:\\\n|\\"|[^"\n])*?"/,
   'string/multiline'      : /`(?:\\\n|\\`|[^`])*?`/,
   'whitespace'            : /\s+/,
-  'keyword'               : /\b(?:do|if|in|for|let|new|try|var|case|else|enum|eval|null|this|true|void|with|await|break|catch|class|const|false|super|throw|while|yield|delete|export|import|public|return|static|switch|typeof|default|extends|finally|package|private|continue|debugger|function|arguments|interface|protected|implements|instanceof)\b/,
+  'keyword'               : /\b(?:alignas|alignof|and|and_eq|asm|auto|bitand|bitor|bool|break|case|catch|char|char16_t|char32_t|class|compl|const|constexpr|const_cast|continue|decltype|default|delete|do|double|dynamic_cast|else|enum|explicit|export|extern|false|float|for|friend|goto|if|inline|int|long|mutable|namespace|new|noexcept|not|not_eq|nullptr|operator|or|or_eq|private|protected|public|register|reinterpret_cast|return|short|signed|sizeof|static|static_assert|static_cast|struct|switch|template|this|thread_local|throw|true|try|typedef|typeid|typename|union|unsigned|using(1)|virtual|void|volatile|wchar_t|while|xor|xor_eq)\b/, // Dmytro : added new keywords and sorted in alphabetic order
   'regexp'                : /\/(?:\\\/|[^\/])*?\/(\w+)/,
   'name'                  : /[a-z_\$][0-9a-z_\$]*/i,
   'number'                : /(?:0x(?:\d|[a-f])+|\d+(?:\.\d+)?(?:e[+-]?\d+)?)/i,
@@ -975,6 +1032,8 @@ var CppTokensDefinition =
   'curly'                 : /[{}]/,
   'square'                : /[\[\]]/,
   'punctuation'           : /;|,|\.\.\.|\.|\:|\?|=>|>=|<=|<|>|!=|!=|==|=|!|&|<<|>>|\+\+|--|\*\*|\+|-|\^|\||\/|\*|%|~|\!/,
+  'char/literal'          : /(?:L|u|u8|U)?'\w'/, // Dmytro : added
+  'tab'                   : /\t+/, // Dmytro : added
 }
 
 function strTokenizeCpp( o )
@@ -1287,21 +1346,8 @@ let _metrics =
  *
  */
 
- /*
--  Dmytro : founded bug.
--  If divisor is used then check loop of number format transforms numbers:
--  0.000001 -> 0.0000009999 or 0.001 -> 0.000999 and so on. It is JavaScript feature.
--  So, this is cause of mistakes in result.
--  Test case with this kind of test is commented.
--
--  Also, assert
--
--  _.assert( _.numberIs( number ), '"number" should be Number' );
--
--  exists, but NaN has number type. Routine parseFloat() transforms regular strings
--  to NaN.
-+qqq : cover routine strMetricFormat
- */
+/* qqq : cover routine strMetricFormat | Dmytro : covered */
+
 function strMetricFormat( number,o )
 {
 
@@ -1626,13 +1672,173 @@ function strToNumberMaybe( src )
   _.assert( _.strIs( src ) || _.numberIs( src ) );
   if( _.numberIs( src ) )
   return src;
-
-  let prased = parseFloat( src );
-  if( !isNaN( prased ) )
-  return prased;
+  
+  if( /^\s*\d+\.{0,1}\d*\s*$/.test( src ) )
+  return parseFloat( src );
+  // if( !isNaN( parsed ) )
+  // return parsed;
 
   return src
 }
+
+//
+
+/*
+qqq : routine strStructureParse requires good coverage and extension | Dmytro : test coverage improved, added test routine `strStructureParseExperiment` with variants of extension
+
+Dmytro : below added new version of routine strStructureParse for new features
+*/
+
+// function strStructureParse( o )
+// {
+// 
+//   if( _.strIs( o ) )
+//   o = { src : o }
+// 
+//   _.routineOptions( strStructureParse, o );
+//   _.assert( !!o.keyValDelimeter );
+//   _.assert( _.strIs( o.entryDelimeter ) );
+//   _.assert( _.strIs( o.src ) );
+//   _.assert( arguments.length === 1 );
+//   _.assert( _.longHas( [ 'map', 'array', 'string' ], o.defaultStructure ) );
+// 
+//   if( o.arrayElementsDelimeter === null )
+//   o.arrayElementsDelimeter = [ ' ', ',' ];
+// 
+//   let src = o.src.trim();
+// 
+//   if( o.parsingArrays )
+//   if( _.strIs( _.strInsideOf( src, o.longLeftDelimeter, o.longRightDelimeter ) ) )
+//   {
+//     let r = strToArrayMaybe( src );
+//     if( _.arrayIs( r ) )
+//     return r;
+//   }
+// 
+//   src = _.strSplit
+//   ({
+//     src,
+//     delimeter : o.keyValDelimeter,
+//     stripping : 0,
+//     quoting : o.quoting,
+//     preservingEmpty : 1,
+//     preservingDelimeters : 1,
+//     preservingQuoting : o.quoting ? 0 : 1
+//   });
+// 
+//   if( src.length === 1 && src[ 0 ] )
+//   return src[ 0 ];
+// 
+//   /* */
+// 
+//   let pairs = [];
+//   for( let a = 0 ; a < src.length-2 ; a += 2 )
+//   {
+//     let left = src[ a ];
+//     let right = src[ a+2 ].trim();
+// 
+//     _.assert( _.strIs( left ) );
+//     _.assert( _.strIs( right ) );
+// 
+//     while( a < src.length-3 )
+//     {
+//       let cuts = _.strIsolateRightOrAll( right, o.entryDelimeter );
+//       if( cuts[ 1 ] === undefined )
+//       {
+//         right = src[ a+2 ] = src[ a+2 ] + src[ a+3 ] + src[ a+4 ];
+//         right = right.trim();
+//         // src.splice( a+2, 2 ); // Dmytro : splices new src[ a+2 ] and next iteration deletes previous 2 elements
+//         src.splice( a+3, 2 );
+//         continue;
+//       }
+//       right = cuts[ 0 ];
+//       src[ a+2 ] = cuts[ 2 ];
+//       break;
+//     }
+// 
+//     pairs.push( left.trim(), right.trim() );
+//   }
+// 
+//   /* */
+// 
+//   _.assert( pairs.length % 2 === 0 );
+//   let result = Object.create( null );
+//   for( let a = 0 ; a < pairs.length-1 ; a += 2 )
+//   {
+//     let left = pairs[ a ];
+//     let right = pairs[ a+1 ];
+// 
+//     _.assert( _.strIs( left ) );
+//     _.assert( _.strIs( right ) );
+// 
+//     if( o.toNumberMaybe )
+//     right = _.strToNumberMaybe( right );
+// 
+//     if( o.parsingArrays )
+//     right = strToArrayMaybe( right );
+// 
+//     result[ left ] = right;
+// 
+//   }
+// 
+//   // if( src.length === 1 && src[ 0 ] )
+//   // return src[ 0 ];
+//   //
+//   // debugger;
+// 
+//   if( _.mapKeys( result ).length === 0 )
+//   {
+//     if( o.defaultStructure === 'map' )
+//     return result;
+//     else if( o.defaultStructure === 'array' )
+//     return [];
+//     else if( o.defaultStructure === 'string' )
+//     return '';
+//   }
+// 
+//   return result;
+// 
+//   /**/
+// 
+//   function strToArrayMaybe( str )
+//   {
+//     let result = str;
+//     if( !_.strIs( result ) )
+//     return result;
+//     let inside = _.strInsideOf( result, o.longLeftDelimeter, o.longRightDelimeter );
+//     if( inside !== false )
+//     {
+//       let splits = _.strSplit
+//       ({
+//         src : inside,
+//         delimeter : o.arrayElementsDelimeter,
+//         stripping : 1,
+//         quoting : 1,
+//         preservingDelimeters : 0,
+//         preservingEmpty : 0,
+//       });
+//       result = splits;
+//       if( o.toNumberMaybe )
+//       result = result.map( ( e ) => _.strToNumberMaybe( e ) );
+//     }
+//     return result;
+//   }
+// 
+// }
+// 
+// strStructureParse.defaults =
+// {
+//   src : null,
+//   keyValDelimeter : ':',
+//   entryDelimeter : ' ',
+//   arrayElementsDelimeter : null,
+//   longLeftDelimeter : '[',
+//   longRightDelimeter : ']',
+//   quoting : 1,
+//   parsingArrays : 0,
+//   toNumberMaybe : 1,
+//   defaultStructure : 'map', /* map / array / string */
+// }
 
 //
 
@@ -1643,10 +1849,10 @@ function strStructureParse( o )
   o = { src : o }
 
   _.routineOptions( strStructureParse, o );
+  _.assert( arguments.length === 1 );
   _.assert( !!o.keyValDelimeter );
   _.assert( _.strIs( o.entryDelimeter ) );
   _.assert( _.strIs( o.src ) );
-  _.assert( arguments.length === 1 );
   _.assert( _.longHas( [ 'map', 'array', 'string' ], o.defaultStructure ) );
 
   if( o.arrayElementsDelimeter === null )
@@ -1654,12 +1860,22 @@ function strStructureParse( o )
 
   let src = o.src.trim();
 
-  if( o.parsingArrays )
-  if( _.strIs( _.strInsideOf( src, o.longLeftDelimeter, o.longRightDelimeter ) ) )
+  if( _.strIs( _.strInsideOf( src, o.mapLeftDelimeter, o.mapRightDelimeter ) ) )
   {
-    let r = strToArrayMaybe( src );
-    if( _.arrayIs( r ) )
-    return r;
+    let inside = _.strInsideOf( src, o.mapLeftDelimeter, o.mapRightDelimeter );
+    if( new RegExp( '^\\s*\\W*\\w+\\W*\\s*\\' + o.keyValDelimeter +'\\s*\\W*\\w+' ).test( inside ) )
+    src = inside;
+    else if( /\s*/.test( inside ) )
+    return Object.create( null );
+  }
+  else if( o.parsingArrays )
+  {
+    if( _.strIs( _.strInsideOf( src, o.longLeftDelimeter, o.longRightDelimeter ) ) )
+    {
+      let r = strToArrayMaybe( src, o.depth );
+      if( _.arrayIs( r ) )
+      return r;
+    } 
   }
 
   src = _.strSplit
@@ -1670,11 +1886,13 @@ function strStructureParse( o )
     quoting : o.quoting,
     preservingEmpty : 1,
     preservingDelimeters : 1,
-    preservingQuoting : o.quoting ? 0 : 1
+    preservingQuoting : 0
   });
 
   if( src.length === 1 && src[ 0 ] )
   return src[ 0 ];
+
+  strSplitsParenthesesBalanceJoin( src );
 
   /* */
 
@@ -1694,7 +1912,7 @@ function strStructureParse( o )
       {
         right = src[ a+2 ] = src[ a+2 ] + src[ a+3 ] + src[ a+4 ];
         right = right.trim();
-        src.splice( a+2, 2 );
+        src.splice( a+3, 2 );
         continue;
       }
       right = cuts[ 0 ];
@@ -1721,16 +1939,26 @@ function strStructureParse( o )
     right = _.strToNumberMaybe( right );
 
     if( o.parsingArrays )
-    right = strToArrayMaybe( right );
+    right = strToArrayMaybe( right, o.depth );
+
+
+    if( o.depth > 0 )
+    {
+      let options = _.mapExtend( null, o );
+      options.depth = o.depth - 1;
+      if( _.strIs( right ) )
+      {
+        options.src = right;
+        right = _.strStructureParse( options );
+      }
+    }
+
+    if( o.onTerminal && _.strIs( right ) )
+    right = o.onTerminal( right );
 
     result[ left ] = right;
 
   }
-
-  // if( src.length === 1 && src[ 0 ] )
-  // return src[ 0 ];
-  //
-  // debugger;
 
   if( _.mapKeys( result ).length === 0 )
   {
@@ -1746,7 +1974,7 @@ function strStructureParse( o )
 
   /**/
 
-  function strToArrayMaybe( str )
+  function strToArrayMaybe( str, depth )
   {
     let result = str;
     if( !_.strIs( result ) )
@@ -1759,16 +1987,86 @@ function strStructureParse( o )
         src : inside,
         delimeter : o.arrayElementsDelimeter,
         stripping : 1,
-        quoting : 1,
+        quoting : o.quoting,
         preservingDelimeters : 0,
         preservingEmpty : 0,
+        preservingQuoting : 0,
       });
       result = splits;
+
       if( o.toNumberMaybe )
       result = result.map( ( e ) => _.strToNumberMaybe( e ) );
+      if( depth > 0 )
+      {
+        debugger;
+        depth--;
+
+        strSplitsParenthesesBalanceJoin( result );
+        let options = _.mapExtend( null, o );
+        options.depth = depth;
+        for( let i = 0; i < result.length; i++ )
+        {
+          if( _.strIs( result[ i ] ) )
+          {
+            options.src = result[ i ];
+            result[ i ] = _.strStructureParse( options );
+          }
+        }
+      }
+      if( o.onTerminal )
+      result = result.map( ( e ) => o.onTerminal( e ) )
     }
     return result;
   }
+
+  /* */
+
+  function strSplitsParenthesesBalanceJoin( splits )
+  {
+    let stack = [];
+    let postfixes = [ _.regexpFrom( o.longRightDelimeter ), _.regexpFrom( o.mapRightDelimeter ) ];
+    let map =
+    {
+      [ o.longLeftDelimeter ] : o.longRightDelimeter,
+      [ o.mapLeftDelimeter ] : o.mapRightDelimeter
+    };
+
+    for( let i = 0; i < splits.length; i++ )
+    {
+      if( !_.strIs( splits[ i ] ) )
+      {
+        continue;
+      }
+      if( splits[ i ] in map )
+      {
+        stack.push( i );
+      }
+      else if( _.regexpsTestAny( postfixes, splits[ i ] ) )
+      {
+        if( stack.length === 0 )
+        continue;
+
+        let start = -1;
+        let end = i;
+
+        for( let k = stack.length - 1 ; k >= 0 ; k-- )
+        if( map[ splits[ stack[ k ] ] ] === splits[ end ] )
+        {
+          start = stack[ k ];
+          stack.splice( k, stack.length );
+          break;
+        }
+
+        if( start === -1 )
+        continue;
+
+        let length = end - start;
+
+        splits[ start ] = splits.splice( start, length + 1, null ).join( o.entryDelimeter );
+        i -= length;
+      }
+    }
+  } 
 
 }
 
@@ -1778,17 +2076,17 @@ strStructureParse.defaults =
   keyValDelimeter : ':',
   entryDelimeter : ' ',
   arrayElementsDelimeter : null,
+  mapLeftDelimeter : '{',
+  mapRightDelimeter : '}',
   longLeftDelimeter : '[',
   longRightDelimeter : ']',
   quoting : 1,
   parsingArrays : 0,
+  depth : 0,
+  onTerminal : null,
   toNumberMaybe : 1,
   defaultStructure : 'map', /* map / array / string */
 }
-
-/*
-qqq : routine strStructureParse requires good coverage and extension
-*/
 
 // function strStructureParse( o )
 // {
@@ -1951,7 +2249,7 @@ qqq : routine strStructureParse requires good coverage and extension
 //
 
 /*
-qqq : routine strWebQueryParse requires good coverage and extension
+qqq : routine strWebQueryParse requires good coverage and extension | Dmytro : coverage added, extension of routine and coverage after routine strStructureParse
 */
 
 function strWebQueryParse( o )
@@ -1975,17 +2273,22 @@ defaults.defaultStructure = 'map';
 defaults.parsingArrays = 0;
 defaults.keyValDelimeter = null; /* [ ':', '=' ] */
 defaults.entryDelimeter = '&';
+defaults.toNumberMaybe = 0; // Dmytro : missed, produces bug if value in key-value pairs starts with number literal or need improve condition in routine strToNumberMaybe
 
 //
 
 /*
-qqq : routine strWebQueryStr requires good coverage
+qqq : routine strWebQueryStr requires good coverage | Dmytro : covered
 */
 
 function strWebQueryStr( o )
 {
+  _.assert( arguments.length === 1, 'Expects single argument' ); // Dmytro : missed
+
   if( _.strIs( o ) )
   return o;
+
+  _.routineOptions( strWebQueryStr, o ); // Dmytro : missed
 
   let result = _.mapToStr( o );
 
@@ -1993,6 +2296,7 @@ function strWebQueryStr( o )
 }
 
 var defaults = strWebQueryStr.defaults = Object.create( null );
+defaults.src = null; // Dmytro : missed
 defaults.keyValDelimeter = ':';
 defaults.entryDelimeter = '&';
 
@@ -2190,11 +2494,69 @@ defaults.src = null;
 
 //
 
+/**
+ * Routine strRequestStr() rebuilds original command string from parsed structure {-o-}.
+ *
+ * @param { ObjectLike } o - Object, which represents parsed command:
+ * @param { String } o.subject - First command in sequence of commands.
+ * @param { Map } o.map - Map options for first command {-o.subject-}.
+ * @param { Long } o.subjects - An array of commands.
+ * @param { Map } o.maps - Map options for commands.
+ * @param { String } o.keyValDelimeter - Delimeter for key and vals in map options.
+ * @param { String } o.commandsDelimeter - Delimeter for sequence of commands, each
+ * pair of subject-map will be separated by it.
+ * @param { String } o.original - Original command string, if this option is defined,
+ * then routine returns {-o.original-}.
+ * Note. Routine try to make command by using options {-o.subjects-} and {-o.subject-}. 
+ * Firstly, routine checks {-o.subjects-} and appends options for each command. If 
+ * {-o.subjects-} not exists, then routine check {-o.subject-} and append options from
+ * {-o.map-}. Otherwise, empty string returns.
+ *
+ * @example
+ * _.strRequestStr( { original : '.build abc debug:0 ; .set v:10' } );
+ * //returns '.build abc debug:0 ; .set v:10'
+ *
+ * @example
+ * _.strRequestStr( { original : '.build abc debug:0 ; .set v:10', subjects : [ '.build some', '.set' ], maps : [ { debug : 1 }, { v : 1 } ] } );
+ * //returns '.build abc debug:0 ; .set v:10'
+ *
+ * @example
+ * _.strRequestStr( { subjects : [ '.build some', '.set' ], maps : [ { debug : 1 }, { v : 1 } ] } );
+ * //returns '.build some debug:1 ; .set v:1'
+ *
+ * @example
+ * _.strRequestStr( { subjects : [ '.build some', '.set' ], maps : [ { debug : 1 }, { v : 1 } ], subject : '.run /home/user', map : { v : 5 } } );
+ * //returns '.build some debug:1 ; .set v:1'
+ *
+ * @example
+ * _.strRequestStr( { subject : '.run /home/user', map : { v : 5 } } );
+ * //returns '.run /home/user v:5'
+ *
+ * @example
+ * _.strRequestStr( { subjects : [ '.run /home/user' ], map : { v : 5 } } );
+ * //returns '.run /home/user'
+ *
+ * @example
+ * _.strRequestStr( { map : { v : 5 }, maps : [ { v : 5 }, { routine : 'strIs' } ] } );
+ * //returns ''
+ *
+ * @returns { String } - Returns original command builded from parsed structure.
+ * @function  strRequestStr
+ * @throws { Error } If arguments.length is less or more then one.
+ * @throws { Error } If {-o.original-} exists and it is not a String.
+ * @throws { Error } If {-o.subject-} is not a String.
+ * @throws { Error } If {-o.map-} is not map like.
+ * @throws { Error } If elements of {-o.subjects-} is not a Strings.
+ * @throws { Error } If elements of {-o.maps-} is not map like.
+ * @memberof wTools
+ *
+ */
+
 function strRequestStr( o )
 {
 
-  o = _.routineOptions( strRequestStr, arguments );
   _.assert( arguments.length === 1 );
+  o = _.routineOptions( strRequestStr, arguments );
 
   if( o.original )
   {
@@ -2203,11 +2565,62 @@ function strRequestStr( o )
   }
 
   let result = '';
+  
+  if( o.subjects.length > 0 )
+  {
 
-  _.assert( 0, 'not implemented' );
-  /* qqq : implement, document, cover please */
+    for( let i = 0 ; i < o.subjects.length ; i++ )
+    {
+      if( o.subjects[ i ] !== undefined )
+      {
+        _.assert( _.strIs( o.subjects[ i ] ) );
+        if( o.subjects[ i ] !== '' )
+        result += o.subjects[ i ] + ' ';
+      }
+      if( o.maps[ i ] !== undefined )
+      {
+        _.assert( _.mapIs( o.maps[ i ] ) );
+        let map = o.maps[ i ];
+        for( let k in map )
+        {
+          result += k + o.keyValDelimeter;
+          if( _.longIs( map[ k ] ) )
+          result += '[' + map[ k ] + '] ';
+          else
+          result += map[ k ] + ' ';
+        }
+      }
+      if( o.subjects[ i + 1 ] !== undefined )
+      result += o.commandsDelimeter + ' ';
+    }
 
-  return result;
+  }
+  else if( o.subject )
+  {
+
+    if( o.subject )
+    {
+      _.assert( _.strIs( o.subject ) );
+      result += o.subject + ' ';
+    }
+    if( o.map )
+    {
+      for( let k in o.map )
+      {
+        _.assert( _.mapIs( o.map ) );
+        result += k + o.keyValDelimeter;
+        if( _.longIs( o.map[ k ] ) )
+        result += '[' + o.map[ k ] + '] ';
+        else
+        result += o.map[ k ] + ' ';
+      }
+    }
+
+  }
+  // _.assert( 0, 'not implemented' );
+  /* qqq : implement, document, cover please | Dmytro : implemented, covered, documented */
+  
+  return result.trim();
 }
 
 var defaults = strRequestStr.defaults = Object.create( null );
@@ -2738,7 +3151,7 @@ let Extend =
   tokensSyntaxFrom,
 
   _strReplaceMapPrepare,
-  strReplaceAll, /* qqq : document me */
+  strReplaceAll, /* qqq : document me | Dmytro : extended documentation */
   strTokenizeJs,
   strTokenizeCpp,
 
@@ -2760,15 +3173,15 @@ let Extend =
   strToConfig, /* experimental */
 
   strToNumberMaybe,
-  strStructureParse, /* qqq : cover it by tests */
-  strWebQueryParse, /* qqq : cover it by tests */
+  strStructureParse, /* qqq : cover it by tests | Dmytro : covered */
+  strWebQueryParse, /* qqq : cover it by tests | Dmytro : covered */
   strWebQueryStr,
   strRequestParse,
   strRequestStr,
   strCommandParse,
   strCommandsParse,
 
-  strJoinMap, /* qqq : cover it by tests */
+  strJoinMap, /* qqq : cover it by tests | Dmytro : covered */
 
   strTable,
   strsSort,
