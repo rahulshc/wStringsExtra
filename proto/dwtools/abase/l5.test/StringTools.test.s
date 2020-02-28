@@ -12098,6 +12098,32 @@ function strRequestParse( test )
 
 //
 
+function strRequestParseExperiment( test ) 
+{
+  test.case = 'positive number in option';
+  var got = _.strRequestParse( 'n:1 rapidity:9' );
+  test.identical( got.subject, '' )
+  test.identical( got.map, { 'n' : 1, 'rapidity' : 9 } )
+  test.identical( got.subjects, [ '' ] )
+  test.identical( got.maps, [ { 'n' : 1, 'rapidity' : 9 } ] );
+
+  test.case = 'negative number in option';
+  var got = _.strRequestParse( 'n:1 rapidity:-9' );
+  test.identical( got.subject, '' )
+  test.identical( got.map, { 'n' : 1, 'rapidity' : -9 } )
+  test.identical( got.subjects, [ '' ] )
+  test.identical( got.maps, [ { 'n' : 1, 'rapidity' : -9 } ] )
+}
+
+strRequestParseExperiment.experimental = 1;
+strRequestParseExperiment.description = 
+`
+  Routine did not parse negative numbers. The reason of it is missed part of regexp in 
+  routine strToNumberMaybe.
+`
+
+//
+
 function strRequestStr( test )
 {
   test.case = 'only options';
@@ -13097,6 +13123,7 @@ var Self =
 
     strWebQueryStr,
     strRequestParse,
+    strRequestParseExperiment,
     strRequestStr,
     strCommandParse,
     strCommandsParse,
