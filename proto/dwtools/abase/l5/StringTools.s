@@ -1673,7 +1673,7 @@ function strToNumberMaybe( src )
   if( _.numberIs( src ) )
   return src;
   
-  if( /^\s*\d+\.{0,1}\d*\s*$/.test( src ) )
+  if( /^\s*-{0,1}\d+\.{0,1}\d*\s*$/.test( src ) )
   return parseFloat( src );
   // if( !isNaN( parsed ) )
   // return parsed;
