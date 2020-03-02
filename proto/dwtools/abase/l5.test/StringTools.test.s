@@ -4095,7 +4095,7 @@ function strSearchOptionToleratingSpaces( test )
 
 //
 
-function strSearchOptionOnTokenize( test ) 
+function strSearchOptionOnTokenize( test )
 {
   test.open( 'without excludingTokens' );
 
@@ -5886,7 +5886,7 @@ strFindAllValueWithLong.description =
 
 //
 
-function tokensSyntaxFrom( test ) 
+function tokensSyntaxFrom( test )
 {
   test.case = 'ins - instance of _.TokensSyntax';
   var src = _.TokensSyntax.apply( null, [] );
@@ -8608,7 +8608,7 @@ function strTimeFormat( test )
 
 //
 
-function strStructureParseDefaultOptions( test ) 
+function strStructureParseDefaultOptions( test )
 {
   test.case = 'passed argument is string, does not affects by options';
   var src = '[number : 1 str : abc]';
@@ -8727,7 +8727,7 @@ function strStructureParseDefaultOptions( test )
   var expected = '[ 1  ab cd ]';
   var got = _.strStructureParse( { src : src } );
   test.identical( got, expected );
-  
+
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number : 1 str : abc]';
   var expected = { '[number' : 1, 'str' : 'abc]' };
@@ -8769,7 +8769,7 @@ function strStructureParseDefaultOptions( test )
 
 //
 
-function strStructureParseOptionKeyValDelimeter( test ) 
+function strStructureParseOptionKeyValDelimeter( test )
 {
   test.case = 'empty string';
   var src = '';
@@ -8880,7 +8880,7 @@ function strStructureParseOptionKeyValDelimeter( test )
   var expected = [ 1, 'ab', 'cd' ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, keyValDelimeter : '::' } );
   test.identical( got, expected );
-  
+
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number :: 1 str :: abc]';
   var expected = [ 'number', '::', 1, 'str', '::', 'abc' ];
@@ -8890,7 +8890,7 @@ function strStructureParseOptionKeyValDelimeter( test )
 
 //
 
-function strStructureParseOptionEntryDelimeter( test ) 
+function strStructureParseOptionEntryDelimeter( test )
 {
   test.case = 'empty string';
   var src = '';
@@ -9001,7 +9001,7 @@ function strStructureParseOptionEntryDelimeter( test )
   var expected = [ 1, 'ab', 'cd' ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, entryDelimeter : ',' } );
   test.identical( got, expected );
-  
+
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number : 1 str : abc]';
   var expected = [ 'number', ':', 1, 'str', ':', 'abc' ];
@@ -9011,7 +9011,7 @@ function strStructureParseOptionEntryDelimeter( test )
 
 //
 
-function strStructureParseOptionParsingArrays( test ) 
+function strStructureParseOptionParsingArrays( test )
 {
   test.open( 'default long left and right delimeters' );
 
@@ -9124,7 +9124,7 @@ function strStructureParseOptionParsingArrays( test )
   var expected = [ 1, 'ab', 'cd' ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1 } );
   test.identical( got, expected );
-  
+
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number : 1 str : abc]';
   var expected = [ 'number', ':', 1, 'str', ':', 'abc' ];
@@ -9246,7 +9246,7 @@ function strStructureParseOptionParsingArrays( test )
   var expected = [ '[', 1, 'ab', 'cd', ']' ];
   var got = _.strStructureParse( { src : src,parsingArrays : 1, longLeftDelimeter : '', longRightDelimeter : '' } );
   test.identical( got, expected );
-  
+
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number : 1 str : abc]';
   var expected = [ '[number', ':', 1, 'str', ':', 'abc]' ];
@@ -9368,7 +9368,7 @@ function strStructureParseOptionParsingArrays( test )
   var expected = [ 1, 'ab', 'cd' ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, arrayElementsDelimeter : [ ' ', ',', ':' ] } );
   test.identical( got, expected );
-  
+
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number : 1 str : abc]';
   var expected = [ 'number', 1, 'str', 'abc' ];
@@ -9380,7 +9380,7 @@ function strStructureParseOptionParsingArrays( test )
 
 //
 
-function strStructureParseOptionQuoting( test ) 
+function strStructureParseOptionQuoting( test )
 {
   test.open( 'quoting - 0' );
 
@@ -9740,7 +9740,7 @@ function strReplaceAll( test )
   var expected = [ 1, '"ab"', 'cd' ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 0 } );
   test.identical( got, expected );
-  
+
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '["number" : 1 str : abc]';
   var expected = [ '"number"', ':', 1, 'str', ':', 'abc' ];
@@ -9862,7 +9862,7 @@ function strReplaceAll( test )
   var expected = [ 1, 'ab', 'cd' ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, quoting : 1 } );
   test.identical( got, expected );
-  
+
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '["number" : 1 str : abc]';
   var expected = [ 'number', ':', 1, 'str', ':', 'abc' ];
@@ -9874,7 +9874,7 @@ function strReplaceAll( test )
 
 //
 
-function strStructureParseOptionToNumberMaybe( test ) 
+function strStructureParseOptionToNumberMaybe( test )
 {
   test.case = 'empty string';
   var src = '';
@@ -9985,7 +9985,7 @@ function strStructureParseOptionToNumberMaybe( test )
   var expected = [ '1', 'ab', 'cd' ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, toNumberMaybe : 0 } );
   test.identical( got, expected );
-  
+
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number : 1 str : abc]';
   var expected = [ 'number', ':', '1', 'str', ':', 'abc' ];
@@ -9995,7 +9995,7 @@ function strStructureParseOptionToNumberMaybe( test )
 
 //
 
-function strStructureParseOptionDefaultStructure( test ) 
+function strStructureParseOptionDefaultStructure( test )
 {
   test.case = 'empty string';
   var src = '';
@@ -10040,7 +10040,7 @@ function strStructureParseOptionDefaultStructure( test )
 
 //
 
-function strStructureParseOptionDepthForArrays( test ) 
+function strStructureParseOptionDepthForArrays( test )
 {
   test.open( 'arrays, balanced brackets' );
 
@@ -10297,7 +10297,7 @@ function strStructureParseOptionDepthForArrays( test )
 
 //
 
-function strStructureParseOptionDepthForMaps( test ) 
+function strStructureParseOptionDepthForMaps( test )
 {
   test.open( 'maps, without outside curly brackets' );
 
@@ -10476,7 +10476,7 @@ function strStructureParseOptionDepthForMaps( test )
 
 //
 
-function strStructureParseOptionDepthForMixed( test ) 
+function strStructureParseOptionDepthForMixed( test )
 {
   test.open( 'arrays' );
 
@@ -10749,7 +10749,7 @@ function strStructureParseOptionDepthForMixed( test )
 
 //
 
-function strStructureParseOptionOnTerminal( test ) 
+function strStructureParseOptionOnTerminal( test )
 {
   var onTerminal = function( e )
   {
@@ -11150,7 +11150,7 @@ strStructureParseExperiment.experimental = 1;
 
 //
 
-function strWebQueryParseDefaultOptions( test ) 
+function strWebQueryParseDefaultOptions( test )
 {
   test.case = 'passed argument is string, does not affects by options';
   var src = 'complex+protocol://www.site.com:13/path/name?query=here&and=here#anchor';
@@ -11269,7 +11269,7 @@ function strWebQueryParseDefaultOptions( test )
   var expected = '[ 1  ab& cd ]';
   var got = _.strWebQueryParse( { src : src } );
   test.identical( got, expected );
-  
+
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number : 1& str = abc]';
   var expected = { '[number' : '1', 'str' : 'abc]' };
@@ -11311,7 +11311,7 @@ function strWebQueryParseDefaultOptions( test )
 
 //
 
-function strWebQueryParseOptionEntryDelimeter( test ) 
+function strWebQueryParseOptionEntryDelimeter( test )
 {
   test.case = 'empty string';
   var src = '';
@@ -11423,7 +11423,7 @@ function strWebQueryParseOptionEntryDelimeter( test )
   var expected = { '[ 1' : 'ab# cd ]' };
   var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
   test.identical( got, expected );
-  
+
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number : 1# str = abc]';
   var expected = { '[number' : '1', 'str' : 'abc]' };
@@ -11433,7 +11433,7 @@ function strWebQueryParseOptionEntryDelimeter( test )
 
 //
 
-function strWebQueryParseOptionKeyValDelimeter( test ) 
+function strWebQueryParseOptionKeyValDelimeter( test )
 {
   test.case = 'empty string';
   var src = '';
@@ -11544,7 +11544,7 @@ function strWebQueryParseOptionKeyValDelimeter( test )
   var expected = { '[ 1' : 'ab& cd ]' };
   var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
   test.identical( got, expected );
-  
+
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number ? 1& str = abc]';
   var expected = { '[number' : '1', 'str' : 'abc]' };
@@ -11554,7 +11554,7 @@ function strWebQueryParseOptionKeyValDelimeter( test )
 
 //
 
-function strWebQueryParseOptionQuoting( test ) 
+function strWebQueryParseOptionQuoting( test )
 {
   test.open( 'quoting - 0' );
 
@@ -11667,7 +11667,7 @@ function strWebQueryParseOptionQuoting( test )
   var expected = '[ 1  "ab& cd" ]';
   var got = _.strWebQueryParse( { src : src, quoting : 0 } );
   test.identical( got, expected );
-  
+
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number : "1& str" = abc]';
   var expected = { '[number' : '"1', 'str"' : 'abc]' };
@@ -11789,7 +11789,7 @@ function strWebQueryParseOptionQuoting( test )
   var expected = '[ 1  ab& cd ]';
   var got = _.strWebQueryParse( { src : src, quoting : 1 } );
   test.identical( got, expected );
-  
+
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number : "1& str" = abc]';
   var expected = { '[number' : '1', 'str' : 'abc]' };
@@ -12218,7 +12218,7 @@ function strRequestStr( test )
   delete src[ 'original' ];
   var got = _.strRequestStr( src );
   var expected = '/some/app "v:7 beeping:0"';
-  test.identical( got, expected ); 
+  test.identical( got, expected );
 }
 
 //
