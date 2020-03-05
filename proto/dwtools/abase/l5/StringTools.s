@@ -2276,7 +2276,11 @@ defaults.defaultStructure = 'map';
 defaults.parsingArrays = 0;
 defaults.keyValDelimeter = null; /* [ ':', '=' ] */
 defaults.entryDelimeter = '&';
-defaults.toNumberMaybe = 0; // Dmytro : missed, produces bug if value in key-value pairs starts with number literal or need improve condition in routine strToNumberMaybe
+defaults.toNumberMaybe = 1;
+/* toNumberMaybe must be on by default */
+
+// Dmytro : missed, produces bug if value in key-value pairs starts with number literal or need improve condition in routine strToNumberMaybe
+// qqq
 
 //
 

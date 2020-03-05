@@ -11814,9 +11814,14 @@ function strWebQueryParse( test )
 
   test.case = 'trivial';
   var src = 'abc:3&def:gh&this=is'
-  var expected = { 'abc' : '3', 'def' : 'gh', 'this' : 'is' };
+  var expected = { 'abc' : 3, 'def' : 'gh', 'this' : 'is' };
   var got = _.strWebQueryParse( src );
   test.identical( got, expected )
+
+  var exp = { running : 0 };
+  var src = 'running:0';
+  var got = _.strWebQueryParse( src );
+  test.identical( got, exp );
 
   /* */
 
