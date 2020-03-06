@@ -8608,6 +8608,186 @@ function strTimeFormat( test )
 
 //
 
+function strToNumberMaybe( test )
+{
+  test.case = 'src - number integer';
+  var src = 1;
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, 1 );
+
+  test.case = 'src - number negative integer';
+  var src = -1;
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, -1 );
+
+  test.case = 'src - number float';
+  var src = 1.01;
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, 1.01 );
+
+  test.case = 'src - number negative float';
+  var src = -1.01;
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, -1.01 );
+
+  test.case = 'src - number float without 0 before dot';
+  var src = .01;
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, 0.01 );
+
+  test.case = 'src - number negative float without 0 before dot';
+  var src = -.01;
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, -.01 );
+
+  test.case = 'src - number NaN';
+  var src = NaN;
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, NaN );
+
+  test.case = 'src - number +0';
+  var src = +0;
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, +0 );
+
+  test.case = 'src - number -0';
+  var src = -0;
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, -0 );
+
+  test.case = 'src - number Infinity';
+  var src = Infinity;
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, Infinity );
+
+  test.case = 'src - number -Infinity';
+  var src = -Infinity;
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, -Infinity );
+
+  /* */
+
+  test.case = 'src - empty string';
+  var src = '';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, 0 );
+
+  test.case = 'src - string with space';
+  var src = ' ';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, 0 );
+
+  test.case = 'src - string with spaces';
+  var src = '   ';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, 0 );
+
+  test.case = 'src - string integer';
+  var src = '1';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, 1 );
+
+  test.case = 'src - string BigInt';
+  var src = '1n';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, '1n' );
+
+  test.case = 'src - string integer with other literals';
+  var src = '1 a';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, '1 a' );
+
+  test.case = 'src - string integer with other literals';
+  var src = '1aa';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, '1aa' );
+
+  test.case = 'src - string';
+  var src = 'a';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, 'a' );
+
+  test.case = 'src - string integer with space after';
+  var src = '1 ';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, 1 );
+
+  test.case = 'src - string integer with space before';
+  var src = ' 1';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, 1 );
+
+  test.case = 'src - string integer with spaces';
+  var src = '  1  ';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, 1 );
+
+  test.case = 'src - string negative integer';
+  var src = '-1';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, -1 );
+
+  test.case = 'src - string float';
+  var src = '1.01';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, 1.01 );
+
+  test.case = 'src - string negative float';
+  var src = '-1.01';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, -1.01 );
+
+  test.case = 'src - string float without 0 before dot';
+  var src = '.01';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, 0.01 );
+
+  test.case = 'src - string negative float without 0 before dot';
+  var src = '-.01';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, -.01 );
+
+  test.case = 'src - number NaN';
+  var src = 'NaN';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, 'NaN' );
+
+  test.case = 'src - string +0';
+  var src = '+0';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, +0 );
+
+  test.case = 'src - string -0';
+  var src = '-0';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, -0 );
+
+  test.case = 'src - string Infinity';
+  var src = 'Infinity';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, Infinity );
+
+  test.case = 'src - string -Infinity';
+  var src = '-Infinity';
+  var got = _.strToNumberMaybe( src );
+  test.identical( got, -Infinity );
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strToNumberMaybe() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strToNumberMaybe( '1', 'extra' ) );
+
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.strToNumberMaybe( null ) );
+  test.shouldThrowErrorSync( () => _.strToNumberMaybe( [ 1 ] ) );
+}
+
+//
+
 function strStructureParseDefaultOptions( test )
 {
   test.case = 'passed argument is string, does not affects by options';
@@ -13105,6 +13285,7 @@ var Self =
     strToBytes,
     strTimeFormat,
 
+    strToNumberMaybe,
     strStructureParseDefaultOptions,
     strStructureParseOptionParsingArrays,
     strStructureParseOptionEntryDelimeter,
