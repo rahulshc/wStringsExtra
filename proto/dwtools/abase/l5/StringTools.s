@@ -1677,8 +1677,9 @@ function strToNumberMaybe( src )
   // return parseFloat( src );
   // return src
   // xxx2
+  // let parsed = parseFloat( src );
 
-  let parsed = parseFloat( src );
+  let parsed = Number( src );
   if( !isNaN( parsed ) )
   return parsed;
   return src;
