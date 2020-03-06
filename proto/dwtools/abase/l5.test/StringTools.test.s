@@ -10526,31 +10526,31 @@ function strStructureParseOptionDepthForMixed( test )
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 1';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ '{', '}', '[', '[', '{a:[{b:3}', ']}', ']', ']' ], '[[[', { '{b' : '' }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ '{', '}', '[', '[', '{a:[{b:3}', ']}', ']', ']' ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
   test.identical( got, exp );
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 2';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ {}, [ '[', '{a:[{b:3}', ']}', ']' ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ {}, [ '[', '{a:[{b:3}', ']}', ']' ] ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
   test.identical( got, exp );
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 3';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ {}, [ [ '{a:[{b:3}', ']}' ] ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ {}, [ [ '{a:[{b:3}', ']}' ] ] ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
   test.identical( got, exp );
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 4';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ {}, [ [ {a : '[{b:3' }, ']}' ] ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ {}, [ [ {a : '[{b:3' }, ']}' ] ] ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
   test.identical( got, exp );
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 5';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ {}, [ [ {a : { '[{b' : 3 } }, ']}' ] ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ {}, [ [ {a : { '[{b' : 3 } }, ']}' ] ] ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
   test.identical( got, exp );
 
