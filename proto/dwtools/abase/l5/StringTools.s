@@ -1669,7 +1669,9 @@ function strToConfig( src,o )
 
 function strToNumberMaybe( src )
 {
+  _.assert( arguments.length === 1 ); /* Dmytro : prevents passing two or more arguments */
   _.assert( _.strIs( src ) || _.numberIs( src ) );
+
   if( _.numberIs( src ) )
   return src;
 
