@@ -11180,19 +11180,19 @@ function strWebQueryParseDefaultOptions( test )
 
   test.case = 'string with keyValDelimeter, pairs key-value';
   var src = 'number:1&str=abc';
-  var expected = { number : '1', str : 'abc' };
+  var expected = { number : 1, str : 'abc' };
   var got = _.strWebQueryParse( { src : src } );
   test.identical( got, expected );
 
   test.case = 'src - string with keyValDelimeter, values in square parentheses';
   var src = 'number : 1&str = abc&array : [1,abc]';
-  var expected = { number : '1', str : 'abc', array : '[1,abc]' };
+  var expected = { number : 1, str : 'abc', array : '[1,abc]' };
   var got = _.strWebQueryParse( { src : src } );
   test.identical( got, expected );
 
   test.case = 'several, flat array in value, with extra spaces';
   var src = ' number = 1 & str:abc& array :  [ 1  , abc ] ';
-  var expected = { number : '1', str : 'abc', array : '[ 1  , abc ]' };
+  var expected = { number : 1, str : 'abc', array : '[ 1  , abc ]' };
   var got = _.strWebQueryParse( { src : src } );
   test.identical( got, expected );
 
@@ -11240,7 +11240,7 @@ function strWebQueryParseDefaultOptions( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1&b : 2a,&c = 3 a&d : 4abc&e = 5 abc';
-  var expected = { 'a' : '1', 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
   var got = _.strWebQueryParse( { src : src } );
   test.identical( got, expected );
 
@@ -11272,7 +11272,7 @@ function strWebQueryParseDefaultOptions( test )
 
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number : 1& str = abc]';
-  var expected = { '[number' : '1', 'str' : 'abc]' };
+  var expected = { '[number' : 1, 'str' : 'abc]' };
   var got = _.strWebQueryParse( { src : src } );
   test.identical( got, expected );
 
@@ -11333,20 +11333,19 @@ function strWebQueryParseOptionEntryDelimeter( test )
 
   test.case = 'string with keyValDelimeter, pairs key-value';
   var src = 'number:1#str=abc';
-  var expected = { number : '1', str : 'abc' };
-  debugger;
+  var expected = { number : 1, str : 'abc' };
   var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
   test.identical( got, expected );
 
   test.case = 'src - string with keyValDelimeter, values in square parentheses';
   var src = 'number : 1#str = abc#array : [1,abc]';
-  var expected = { number : '1', str : 'abc', array : '[1,abc]' };
+  var expected = { number : 1, str : 'abc', array : '[1,abc]' };
   var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
   test.identical( got, expected );
 
   test.case = 'several, flat array in value, with extra spaces';
   var src = ' number = 1 # str:abc# array :  [ 1  , abc ] ';
-  var expected = { number : '1', str : 'abc', array : '[ 1  , abc ]' };
+  var expected = { number : 1, str : 'abc', array : '[ 1  , abc ]' };
   var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
   test.identical( got, expected );
 
@@ -11394,7 +11393,7 @@ function strWebQueryParseOptionEntryDelimeter( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1#b : 2a,#c = 3 a#d : 4abc#e : 5 abc';
-  var expected = { 'a' : '1', 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
   var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
   test.identical( got, expected );
 
@@ -11426,7 +11425,7 @@ function strWebQueryParseOptionEntryDelimeter( test )
 
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number : 1# str = abc]';
-  var expected = { '[number' : '1', 'str' : 'abc]' };
+  var expected = { '[number' : 1, 'str' : 'abc]' };
   var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
   test.identical( got, expected );
 }
@@ -11455,19 +11454,19 @@ function strWebQueryParseOptionKeyValDelimeter( test )
 
   test.case = 'string with keyValDelimeter, pairs key-value';
   var src = 'number?1&str=abc';
-  var expected = { number : '1', str : 'abc' };
+  var expected = { number : 1, str : 'abc' };
   var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
   test.identical( got, expected );
 
   test.case = 'src - string with keyValDelimeter, values in square parentheses';
   var src = 'number ? 1&str = abc&array : [1,abc]';
-  var expected = { number : '1', str : 'abc', array : '[1,abc]' };
+  var expected = { number : 1, str : 'abc', array : '[1,abc]' };
   var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
   test.identical( got, expected );
 
   test.case = 'several, flat array in value, with extra spaces';
   var src = ' number = 1 & str?abc& array :  [ 1  , abc ] ';
-  var expected = { number : '1', str : 'abc', array : '[ 1  , abc ]' };
+  var expected = { number : 1, str : 'abc', array : '[ 1  , abc ]' };
   var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
   test.identical( got, expected );
 
@@ -11515,7 +11514,7 @@ function strWebQueryParseOptionKeyValDelimeter( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1&b : 2a,&c = 3 a&d : 4abc&e ? 5 abc';
-  var expected = { 'a' : '1', 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
   var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
   test.identical( got, expected );
 
@@ -11547,7 +11546,7 @@ function strWebQueryParseOptionKeyValDelimeter( test )
 
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number ? 1& str = abc]';
-  var expected = { '[number' : '1', 'str' : 'abc]' };
+  var expected = { '[number' : 1, 'str' : 'abc]' };
   var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
   test.identical( got, expected );
 }
@@ -11578,19 +11577,19 @@ function strWebQueryParseOptionQuoting( test )
 
   test.case = 'string with keyValDelimeter, pairs key-value';
   var src = 'number:1&"str"=abc';
-  var expected = { number : '1', '"str"' : 'abc' };
+  var expected = { number : 1, '"str"' : 'abc' };
   var got = _.strWebQueryParse( { src : src, quoting : 0 } );
   test.identical( got, expected );
 
   test.case = 'src - string with keyValDelimeter, values in square parentheses';
   var src = 'number : 1&str = "abc"&array : [1,abc]';
-  var expected = { number : '1', str : '"abc"', array : '[1,abc]' };
+  var expected = { number : 1, str : '"abc"', array : '[1,abc]' };
   var got = _.strWebQueryParse( { src : src, quoting : 0 } );
   test.identical( got, expected );
 
   test.case = 'several, flat array in value, with extra spaces';
   var src = ' number = 1 & str:"abc"& array :  [ 1  , abc ] ';
-  var expected = { number : '1', str : '"abc"', array : '[ 1  , abc ]' };
+  var expected = { number : 1, str : '"abc"', array : '[ 1  , abc ]' };
   var got = _.strWebQueryParse( { src : src, quoting : 0 } );
   test.identical( got, expected );
 
@@ -11638,7 +11637,7 @@ function strWebQueryParseOptionQuoting( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1&b : "2a,&c" = 3 a&d : 4abc&e = 5 abc';
-  var expected = { 'a' : '1', 'b' : '"2a,', 'c"' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var expected = { 'a' : 1, 'b' : '"2a,', 'c"' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
   var got = _.strWebQueryParse( { src : src, quoting : 0 } );
   test.identical( got, expected );
 
@@ -11700,19 +11699,19 @@ function strWebQueryParseOptionQuoting( test )
 
   test.case = 'string with keyValDelimeter, pairs key-value';
   var src = 'number:1&"str"=abc';
-  var expected = { number : '1', 'str' : 'abc' };
+  var expected = { number : 1, 'str' : 'abc' };
   var got = _.strWebQueryParse( { src : src, quoting : 1 } );
   test.identical( got, expected );
 
   test.case = 'src - string with keyValDelimeter, values in square parentheses';
   var src = 'number : 1&str = "abc"&array : [1,abc]';
-  var expected = { number : '1', str : 'abc', array : '[1,abc]' };
+  var expected = { number : 1, str : 'abc', array : '[1,abc]' };
   var got = _.strWebQueryParse( { src : src, quoting : 1 } );
   test.identical( got, expected );
 
   test.case = 'several, flat array in value, with extra spaces';
   var src = ' number = 1 & str:"abc"& array :  [ 1  , abc ] ';
-  var expected = { number : '1', str : 'abc', array : '[ 1  , abc ]' };
+  var expected = { number : 1, str : 'abc', array : '[ 1  , abc ]' };
   var got = _.strWebQueryParse( { src : src, quoting : 1 } );
   test.identical( got, expected );
 
@@ -11760,7 +11759,7 @@ function strWebQueryParseOptionQuoting( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1&b : "2a,&c" = 3 a&d : 4abc&e = 5 abc';
-  var expected = { 'a' : '1', 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
   var got = _.strWebQueryParse( { src : src, quoting : 1 } );
   test.identical( got, expected );
 
@@ -11792,7 +11791,7 @@ function strWebQueryParseOptionQuoting( test )
 
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number : "1& str" = abc]';
-  var expected = { '[number' : '1', 'str' : 'abc]' };
+  var expected = { '[number' : 1, 'str' : 'abc]' };
   var got = _.strWebQueryParse( { src : src, quoting : 1 } );
   test.identical( got, expected );
 
