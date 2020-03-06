@@ -296,7 +296,7 @@ function strHtmlEscape( str )
 //
 
 /*
-qqq : tests required | Dmytro : covered all options 
+qqq : tests required | Dmytro : covered all options
 */
 
 function strSearch( o )
@@ -394,7 +394,7 @@ strSearch.defaults =
   stringWithRegexp : 0,
   toleratingSpaces : 0,
   onTokenize : null,
-  excludingTokens : null, 
+  excludingTokens : null,
 }
 
 //
@@ -818,12 +818,12 @@ _strReplaceMapPrepare.defaults =
  * Three arguments:
  * @param { String } src - Source string to parse.
  * @param { String|RegExp|Long } ins - String or regexp pattern to search in source string. Also, it can be a
- * set of string and regexp patterns passed as Long. If {-ins-} is a Long, then {-but-} should be long with the 
+ * set of string and regexp patterns passed as Long. If {-ins-} is a Long, then {-but-} should be long with the
  * same length.
- * @param { String|Long } but - String or a Long with strings to replace occurrences {-ins-}. If {-but-} is a 
+ * @param { String|Long } but - String or a Long with strings to replace occurrences {-ins-}. If {-but-} is a
  * Long, then it should contains only strings and {-ins-} should be a long with the same length.
  *
- * Two arguments: 
+ * Two arguments:
  * @param { String } src - Source string to parse.
  * @param { Long|Map } dictionary - Long or map that contains pattern/replacement pairs. If {-dictionary-} is a
  * Long, then it looks like [ [ ins1, sub1 ], [ ins2, sub2 ] ], otherwise, it is like { ins1 : sub1, ins2 : sub2 }.
@@ -838,10 +838,10 @@ _strReplaceMapPrepare.defaults =
  * @param { Long } o.sub - String that replaces found occurrence( ins ).
  * Note. If {-o.ins-} and {-o.sub-} options is used, then {-o.dictionary-} should be not provided, otherwise,
  * {-o.dictionary-} values replace elements of {-o.ins-} and {-o.sub-}
- * @param { BoolLike } o.joining - A parameter which control output value. If {-o.joining-} is true, then routine 
+ * @param { BoolLike } o.joining - A parameter which control output value. If {-o.joining-} is true, then routine
  * returns string, otherwise, the array with parsed parts of source string is returned. Default value is 1.
  * @param { Routine } o.onUnknown - A callback, which transforms parts of source string that not found by a pattern.
- * {-o.onUnknown-} accepts three parameters: {-unknown-} - part of string, {-it-} - data structure with information 
+ * {-o.onUnknown-} accepts three parameters: {-unknown-} - part of string, {-it-} - data structure with information
  * about found pattern in format of routine strFindAll(), {-o-} - the map options.
  * Option {-o.onUnknown-} does not transforms part of source string after last entry of a {-o.ins-} pattern.
  *
@@ -873,7 +873,7 @@ _strReplaceMapPrepare.defaults =
  * _.strReplaceAll( { src : 'abcdefg', ins : [ 'b', 'd', 'f' ], but : [ 'w', 'x', 'y' ], onUnknown : ( e, c, o ) => '|' } );
  * //returns '|w|x|yg'
  *
- * @returns { String|Long } - By default, routine returns string with result of replacements. If map options is used and 
+ * @returns { String|Long } - By default, routine returns string with result of replacements. If map options is used and
  * option {-o.joining-} is false like, then routine returns array with parts of resulted string.
  * @function  strReplaceAll
  * @throws { Error } If arguments.length is less then one or more then three.
@@ -1672,13 +1672,16 @@ function strToNumberMaybe( src )
   _.assert( _.strIs( src ) || _.numberIs( src ) );
   if( _.numberIs( src ) )
   return src;
-  
-  if( /^\s*-{0,1}\d+\.{0,1}\d*\s*$/.test( src ) )
-  return parseFloat( src );
-  // if( !isNaN( parsed ) )
-  // return parsed;
 
-  return src
+  // if( /^\s*\d+\.{0,1}\d*\s*$/.test( src ) )
+  // return parseFloat( src );
+  // return src
+  // xxx2
+
+  let parsed = parseFloat( src );
+  if( !isNaN( parsed ) )
+  return parsed;
+  return src;
 }
 
 //
@@ -1691,22 +1694,22 @@ Dmytro : below added new version of routine strStructureParse for new features
 
 // function strStructureParse( o )
 // {
-// 
+//
 //   if( _.strIs( o ) )
 //   o = { src : o }
-// 
+//
 //   _.routineOptions( strStructureParse, o );
 //   _.assert( !!o.keyValDelimeter );
 //   _.assert( _.strIs( o.entryDelimeter ) );
 //   _.assert( _.strIs( o.src ) );
 //   _.assert( arguments.length === 1 );
 //   _.assert( _.longHas( [ 'map', 'array', 'string' ], o.defaultStructure ) );
-// 
+//
 //   if( o.arrayElementsDelimeter === null )
 //   o.arrayElementsDelimeter = [ ' ', ',' ];
-// 
+//
 //   let src = o.src.trim();
-// 
+//
 //   if( o.parsingArrays )
 //   if( _.strIs( _.strInsideOf( src, o.longLeftDelimeter, o.longRightDelimeter ) ) )
 //   {
@@ -1714,7 +1717,7 @@ Dmytro : below added new version of routine strStructureParse for new features
 //     if( _.arrayIs( r ) )
 //     return r;
 //   }
-// 
+//
 //   src = _.strSplit
 //   ({
 //     src,
@@ -1725,21 +1728,21 @@ Dmytro : below added new version of routine strStructureParse for new features
 //     preservingDelimeters : 1,
 //     preservingQuoting : o.quoting ? 0 : 1
 //   });
-// 
+//
 //   if( src.length === 1 && src[ 0 ] )
 //   return src[ 0 ];
-// 
+//
 //   /* */
-// 
+//
 //   let pairs = [];
 //   for( let a = 0 ; a < src.length-2 ; a += 2 )
 //   {
 //     let left = src[ a ];
 //     let right = src[ a+2 ].trim();
-// 
+//
 //     _.assert( _.strIs( left ) );
 //     _.assert( _.strIs( right ) );
-// 
+//
 //     while( a < src.length-3 )
 //     {
 //       let cuts = _.strIsolateRightOrAll( right, o.entryDelimeter );
@@ -1755,37 +1758,37 @@ Dmytro : below added new version of routine strStructureParse for new features
 //       src[ a+2 ] = cuts[ 2 ];
 //       break;
 //     }
-// 
+//
 //     pairs.push( left.trim(), right.trim() );
 //   }
-// 
+//
 //   /* */
-// 
+//
 //   _.assert( pairs.length % 2 === 0 );
 //   let result = Object.create( null );
 //   for( let a = 0 ; a < pairs.length-1 ; a += 2 )
 //   {
 //     let left = pairs[ a ];
 //     let right = pairs[ a+1 ];
-// 
+//
 //     _.assert( _.strIs( left ) );
 //     _.assert( _.strIs( right ) );
-// 
+//
 //     if( o.toNumberMaybe )
 //     right = _.strToNumberMaybe( right );
-// 
+//
 //     if( o.parsingArrays )
 //     right = strToArrayMaybe( right );
-// 
+//
 //     result[ left ] = right;
-// 
+//
 //   }
-// 
+//
 //   // if( src.length === 1 && src[ 0 ] )
 //   // return src[ 0 ];
 //   //
 //   // debugger;
-// 
+//
 //   if( _.mapKeys( result ).length === 0 )
 //   {
 //     if( o.defaultStructure === 'map' )
@@ -1795,11 +1798,11 @@ Dmytro : below added new version of routine strStructureParse for new features
 //     else if( o.defaultStructure === 'string' )
 //     return '';
 //   }
-// 
+//
 //   return result;
-// 
+//
 //   /**/
-// 
+//
 //   function strToArrayMaybe( str )
 //   {
 //     let result = str;
@@ -1823,9 +1826,9 @@ Dmytro : below added new version of routine strStructureParse for new features
 //     }
 //     return result;
 //   }
-// 
+//
 // }
-// 
+//
 // strStructureParse.defaults =
 // {
 //   src : null,
@@ -1875,7 +1878,7 @@ function strStructureParse( o )
       let r = strToArrayMaybe( src, o.depth );
       if( _.arrayIs( r ) )
       return r;
-    } 
+    }
   }
 
   src = _.strSplit
@@ -2066,7 +2069,7 @@ function strStructureParse( o )
         i -= length;
       }
     }
-  } 
+  }
 
 }
 
@@ -2273,7 +2276,11 @@ defaults.defaultStructure = 'map';
 defaults.parsingArrays = 0;
 defaults.keyValDelimeter = null; /* [ ':', '=' ] */
 defaults.entryDelimeter = '&';
-defaults.toNumberMaybe = 0; // Dmytro : missed, produces bug if value in key-value pairs starts with number literal or need improve condition in routine strToNumberMaybe
+defaults.toNumberMaybe = 1;
+/* toNumberMaybe must be on by default */
+
+// Dmytro : missed, produces bug if value in key-value pairs starts with number literal or need improve condition in routine strToNumberMaybe
+// qqq
 
 //
 
@@ -2507,8 +2514,8 @@ defaults.src = null;
  * pair of subject-map will be separated by it.
  * @param { String } o.original - Original command string, if this option is defined,
  * then routine returns {-o.original-}.
- * Note. Routine try to make command by using options {-o.subjects-} and {-o.subject-}. 
- * Firstly, routine checks {-o.subjects-} and appends options for each command. If 
+ * Note. Routine try to make command by using options {-o.subjects-} and {-o.subject-}.
+ * Firstly, routine checks {-o.subjects-} and appends options for each command. If
  * {-o.subjects-} not exists, then routine check {-o.subject-} and append options from
  * {-o.map-}. Otherwise, empty string returns.
  *
@@ -2565,7 +2572,7 @@ function strRequestStr( o )
   }
 
   let result = '';
-  
+
   if( o.subjects.length > 0 )
   {
 
@@ -2619,7 +2626,7 @@ function strRequestStr( o )
   }
   // _.assert( 0, 'not implemented' );
   /* qqq : implement, document, cover please | Dmytro : implemented, covered, documented */
-  
+
   return result.trim();
 }
 
