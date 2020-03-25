@@ -1665,25 +1665,25 @@ function strToConfig( src,o )
   return result;
 }
 
+// //
 //
-
-function strToNumberMaybe( src )
-{
-  _.assert( _.strIs( src ) || _.numberIs( src ) );
-  if( _.numberIs( src ) )
-  return src;
-
-  // if( /^\s*\d+\.{0,1}\d*\s*$/.test( src ) )
-  // return parseFloat( src );
-  // return src
-  // xxx2
-  // let parsed = parseFloat( src );
-
-  let parsed = Number( src );
-  if( !isNaN( parsed ) )
-  return parsed;
-  return src;
-}
+// function numberFromStrMaybe( src )
+// {
+//   _.assert( _.strIs( src ) || _.numberIs( src ) );
+//   if( _.numberIs( src ) )
+//   return src;
+//
+//   // if( /^\s*\d+\.{0,1}\d*\s*$/.test( src ) )
+//   // return parseFloat( src );
+//   // return src
+//   // xxx2
+//   // let parsed = parseFloat( src );
+//
+//   let parsed = Number( src );
+//   if( !isNaN( parsed ) )
+//   return parsed;
+//   return src;
+// }
 
 //
 
@@ -1776,7 +1776,7 @@ Dmytro : below added new version of routine strStructureParse for new features
 //     _.assert( _.strIs( right ) );
 //
 //     if( o.toNumberMaybe )
-//     right = _.strToNumberMaybe( right );
+//     right = _.numberFromStrMaybe( right );
 //
 //     if( o.parsingArrays )
 //     right = strToArrayMaybe( right );
@@ -1823,7 +1823,7 @@ Dmytro : below added new version of routine strStructureParse for new features
 //       });
 //       result = splits;
 //       if( o.toNumberMaybe )
-//       result = result.map( ( e ) => _.strToNumberMaybe( e ) );
+//       result = result.map( ( e ) => _.numberFromStrMaybe( e ) );
 //     }
 //     return result;
 //   }
@@ -1940,7 +1940,7 @@ function strStructureParse( o )
     _.assert( _.strIs( right ) );
 
     if( o.toNumberMaybe )
-    right = _.strToNumberMaybe( right );
+    right = _.numberFromStrMaybe( right );
 
     if( o.parsingArrays )
     right = strToArrayMaybe( right, o.depth );
@@ -1999,7 +1999,7 @@ function strStructureParse( o )
       result = splits;
 
       if( o.toNumberMaybe )
-      result = result.map( ( e ) => _.strToNumberMaybe( e ) );
+      result = result.map( ( e ) => _.numberFromStrMaybe( e ) );
       if( depth > 0 )
       {
         debugger;
@@ -2186,7 +2186,7 @@ strStructureParse.defaults =
 //     result[ left ] = right;
 //
 //     if( o.toNumberMaybe )
-//     result[ left ] = _.strToNumberMaybe( result[ left ] );
+//     result[ left ] = _.numberFromStrMaybe( result[ left ] );
 //
 //     if( o.parsingArrays )
 //     result[ left ] = strToArrayMaybe( result[ left ] );
@@ -2229,7 +2229,7 @@ strStructureParse.defaults =
 //       });
 //       result = splits;
 //       if( o.toNumberMaybe )
-//       result = result.map( ( e ) => _.strToNumberMaybe( e ) );
+//       result = result.map( ( e ) => _.numberFromStrMaybe( e ) );
 //     }
 //     return result;
 //   }
@@ -2280,7 +2280,7 @@ defaults.entryDelimeter = '&';
 defaults.toNumberMaybe = 1;
 /* toNumberMaybe must be on by default */
 
-// Dmytro : missed, produces bug if value in key-value pairs starts with number literal or need improve condition in routine strToNumberMaybe
+// Dmytro : missed, produces bug if value in key-value pairs starts with number literal or need improve condition in routine numberFromStrMaybe
 // qqq
 
 //
@@ -2341,7 +2341,7 @@ function strRequestParse( o )
 
   if( o.unquoting && o.quoting )
   {
-    // let isolated = _.strIsolateInsideLeft( o.src, o.quoting );
+    // let isolated = _.strIsolateInside( o.src, o.quoting );
     // if( isolated[ 0 ] === '' && isolated[ 4 ] === '' )
     // o.src = isolated[ 2 ];
     o.src = _.strUnquote( o.src, o.quoting );
@@ -3180,7 +3180,7 @@ let Extend =
   strToDom, /* experimental */ // xxx : move it out
   strToConfig, /* experimental */
 
-  strToNumberMaybe,
+  // numberFromStrMaybe,
   strStructureParse, /* qqq : cover it by tests | Dmytro : covered */
   strWebQueryParse, /* qqq : cover it by tests | Dmytro : covered */
   strWebQueryStr,
