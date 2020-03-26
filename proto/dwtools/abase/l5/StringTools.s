@@ -1667,9 +1667,30 @@ function strToConfig( src,o )
 
 // //
 //
+
 // function numberFromStrMaybe( src )
 // {
 //   _.assert( _.strIs( src ) || _.numberIs( src ) );
+//   if( _.numberIs( src ) )
+//   return src;
+//
+//   // if( /^\s*\d+\.{0,1}\d*\s*$/.test( src ) )
+//   // return parseFloat( src );
+//   // return src
+//   // xxx2
+//   // let parsed = parseFloat( src );
+//
+//   let parsed = Number( src );
+//   if( !isNaN( parsed ) )
+//   return parsed;
+//   return src;
+// }
+
+// function strToNumberMaybe( src )
+// {
+//   _.assert( arguments.length === 1 ); /* Dmytro : prevents passing two or more arguments */
+//   _.assert( _.strIs( src ) || _.numberIs( src ) );
+//
 //   if( _.numberIs( src ) )
 //   return src;
 //
@@ -2314,10 +2335,10 @@ function strRequestParse( o )
 {
 
   if( _.strIs( o ) )
-  o = { src : o }
+  o = { src : o };
+
   _.assert( arguments.length === 0 || arguments.length === 1 );
   _.assert( _.strIs( o.src ) );
-  // _.assert( !!o.keyValDelimeter );
   o = _.routineOptions( strRequestParse, o );
 
   if( _.boolLike( o.quoting ) && o.quoting )

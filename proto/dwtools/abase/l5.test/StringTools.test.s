@@ -10526,31 +10526,31 @@ function strStructureParseOptionDepthForMixed( test )
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 1';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ '{', '}', '[', '[', '{a:[{b:3}', ']}', ']', ']' ], '[[[', { '{b' : '' }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ '{', '}', '[', '[', '{a:[{b:3}', ']}', ']', ']' ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
   test.identical( got, exp );
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 2';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ {}, [ '[', '{a:[{b:3}', ']}', ']' ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ {}, [ '[', '{a:[{b:3}', ']}', ']' ] ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
   test.identical( got, exp );
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 3';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ {}, [ [ '{a:[{b:3}', ']}' ] ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ {}, [ [ '{a:[{b:3}', ']}' ] ] ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
   test.identical( got, exp );
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 4';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ {}, [ [ {a : '[{b:3' }, ']}' ] ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ {}, [ [ {a : '[{b:3' }, ']}' ] ] ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
   test.identical( got, exp );
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 5';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ {}, [ [ {a : { '[{b' : 3 } }, ']}' ] ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ {}, [ [ {a : { '[{b' : 3 } }, ']}' ] ] ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
   test.identical( got, exp );
 
@@ -11180,19 +11180,19 @@ function strWebQueryParseDefaultOptions( test )
 
   test.case = 'string with keyValDelimeter, pairs key-value';
   var src = 'number:1&str=abc';
-  var expected = { number : '1', str : 'abc' };
+  var expected = { number : 1, str : 'abc' };
   var got = _.strWebQueryParse( { src : src } );
   test.identical( got, expected );
 
   test.case = 'src - string with keyValDelimeter, values in square parentheses';
   var src = 'number : 1&str = abc&array : [1,abc]';
-  var expected = { number : '1', str : 'abc', array : '[1,abc]' };
+  var expected = { number : 1, str : 'abc', array : '[1,abc]' };
   var got = _.strWebQueryParse( { src : src } );
   test.identical( got, expected );
 
   test.case = 'several, flat array in value, with extra spaces';
   var src = ' number = 1 & str:abc& array :  [ 1  , abc ] ';
-  var expected = { number : '1', str : 'abc', array : '[ 1  , abc ]' };
+  var expected = { number : 1, str : 'abc', array : '[ 1  , abc ]' };
   var got = _.strWebQueryParse( { src : src } );
   test.identical( got, expected );
 
@@ -11240,7 +11240,7 @@ function strWebQueryParseDefaultOptions( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1&b : 2a,&c = 3 a&d : 4abc&e = 5 abc';
-  var expected = { 'a' : '1', 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
   var got = _.strWebQueryParse( { src : src } );
   test.identical( got, expected );
 
@@ -11272,7 +11272,7 @@ function strWebQueryParseDefaultOptions( test )
 
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number : 1& str = abc]';
-  var expected = { '[number' : '1', 'str' : 'abc]' };
+  var expected = { '[number' : 1, 'str' : 'abc]' };
   var got = _.strWebQueryParse( { src : src } );
   test.identical( got, expected );
 
@@ -11333,20 +11333,19 @@ function strWebQueryParseOptionEntryDelimeter( test )
 
   test.case = 'string with keyValDelimeter, pairs key-value';
   var src = 'number:1#str=abc';
-  var expected = { number : '1', str : 'abc' };
-  debugger;
+  var expected = { number : 1, str : 'abc' };
   var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
   test.identical( got, expected );
 
   test.case = 'src - string with keyValDelimeter, values in square parentheses';
   var src = 'number : 1#str = abc#array : [1,abc]';
-  var expected = { number : '1', str : 'abc', array : '[1,abc]' };
+  var expected = { number : 1, str : 'abc', array : '[1,abc]' };
   var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
   test.identical( got, expected );
 
   test.case = 'several, flat array in value, with extra spaces';
   var src = ' number = 1 # str:abc# array :  [ 1  , abc ] ';
-  var expected = { number : '1', str : 'abc', array : '[ 1  , abc ]' };
+  var expected = { number : 1, str : 'abc', array : '[ 1  , abc ]' };
   var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
   test.identical( got, expected );
 
@@ -11394,7 +11393,7 @@ function strWebQueryParseOptionEntryDelimeter( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1#b : 2a,#c = 3 a#d : 4abc#e : 5 abc';
-  var expected = { 'a' : '1', 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
   var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
   test.identical( got, expected );
 
@@ -11426,7 +11425,7 @@ function strWebQueryParseOptionEntryDelimeter( test )
 
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number : 1# str = abc]';
-  var expected = { '[number' : '1', 'str' : 'abc]' };
+  var expected = { '[number' : 1, 'str' : 'abc]' };
   var got = _.strWebQueryParse( { src : src, entryDelimeter : '#' } );
   test.identical( got, expected );
 }
@@ -11455,19 +11454,19 @@ function strWebQueryParseOptionKeyValDelimeter( test )
 
   test.case = 'string with keyValDelimeter, pairs key-value';
   var src = 'number?1&str=abc';
-  var expected = { number : '1', str : 'abc' };
+  var expected = { number : 1, str : 'abc' };
   var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
   test.identical( got, expected );
 
   test.case = 'src - string with keyValDelimeter, values in square parentheses';
   var src = 'number ? 1&str = abc&array : [1,abc]';
-  var expected = { number : '1', str : 'abc', array : '[1,abc]' };
+  var expected = { number : 1, str : 'abc', array : '[1,abc]' };
   var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
   test.identical( got, expected );
 
   test.case = 'several, flat array in value, with extra spaces';
   var src = ' number = 1 & str?abc& array :  [ 1  , abc ] ';
-  var expected = { number : '1', str : 'abc', array : '[ 1  , abc ]' };
+  var expected = { number : 1, str : 'abc', array : '[ 1  , abc ]' };
   var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
   test.identical( got, expected );
 
@@ -11515,7 +11514,7 @@ function strWebQueryParseOptionKeyValDelimeter( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1&b : 2a,&c = 3 a&d : 4abc&e ? 5 abc';
-  var expected = { 'a' : '1', 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
   var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
   test.identical( got, expected );
 
@@ -11547,7 +11546,7 @@ function strWebQueryParseOptionKeyValDelimeter( test )
 
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number ? 1& str = abc]';
-  var expected = { '[number' : '1', 'str' : 'abc]' };
+  var expected = { '[number' : 1, 'str' : 'abc]' };
   var got = _.strWebQueryParse( { src : src, keyValDelimeter : [ ':', '=', '?' ] } );
   test.identical( got, expected );
 }
@@ -11578,19 +11577,19 @@ function strWebQueryParseOptionQuoting( test )
 
   test.case = 'string with keyValDelimeter, pairs key-value';
   var src = 'number:1&"str"=abc';
-  var expected = { number : '1', '"str"' : 'abc' };
+  var expected = { number : 1, '"str"' : 'abc' };
   var got = _.strWebQueryParse( { src : src, quoting : 0 } );
   test.identical( got, expected );
 
   test.case = 'src - string with keyValDelimeter, values in square parentheses';
   var src = 'number : 1&str = "abc"&array : [1,abc]';
-  var expected = { number : '1', str : '"abc"', array : '[1,abc]' };
+  var expected = { number : 1, str : '"abc"', array : '[1,abc]' };
   var got = _.strWebQueryParse( { src : src, quoting : 0 } );
   test.identical( got, expected );
 
   test.case = 'several, flat array in value, with extra spaces';
   var src = ' number = 1 & str:"abc"& array :  [ 1  , abc ] ';
-  var expected = { number : '1', str : '"abc"', array : '[ 1  , abc ]' };
+  var expected = { number : 1, str : '"abc"', array : '[ 1  , abc ]' };
   var got = _.strWebQueryParse( { src : src, quoting : 0 } );
   test.identical( got, expected );
 
@@ -11638,7 +11637,7 @@ function strWebQueryParseOptionQuoting( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1&b : "2a,&c" = 3 a&d : 4abc&e = 5 abc';
-  var expected = { 'a' : '1', 'b' : '"2a,', 'c"' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var expected = { 'a' : 1, 'b' : '"2a,', 'c"' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
   var got = _.strWebQueryParse( { src : src, quoting : 0 } );
   test.identical( got, expected );
 
@@ -11700,19 +11699,19 @@ function strWebQueryParseOptionQuoting( test )
 
   test.case = 'string with keyValDelimeter, pairs key-value';
   var src = 'number:1&"str"=abc';
-  var expected = { number : '1', 'str' : 'abc' };
+  var expected = { number : 1, 'str' : 'abc' };
   var got = _.strWebQueryParse( { src : src, quoting : 1 } );
   test.identical( got, expected );
 
   test.case = 'src - string with keyValDelimeter, values in square parentheses';
   var src = 'number : 1&str = "abc"&array : [1,abc]';
-  var expected = { number : '1', str : 'abc', array : '[1,abc]' };
+  var expected = { number : 1, str : 'abc', array : '[1,abc]' };
   var got = _.strWebQueryParse( { src : src, quoting : 1 } );
   test.identical( got, expected );
 
   test.case = 'several, flat array in value, with extra spaces';
   var src = ' number = 1 & str:"abc"& array :  [ 1  , abc ] ';
-  var expected = { number : '1', str : 'abc', array : '[ 1  , abc ]' };
+  var expected = { number : 1, str : 'abc', array : '[ 1  , abc ]' };
   var got = _.strWebQueryParse( { src : src, quoting : 1 } );
   test.identical( got, expected );
 
@@ -11760,7 +11759,7 @@ function strWebQueryParseOptionQuoting( test )
 
   test.case = 'string has number and combined number and strings value';
   var src = 'a : 1&b : "2a,&c" = 3 a&d : 4abc&e = 5 abc';
-  var expected = { 'a' : '1', 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
+  var expected = { 'a' : 1, 'b' : '2a,', 'c' : '3 a', 'd' : '4abc', 'e' : '5 abc' };
   var got = _.strWebQueryParse( { src : src, quoting : 1 } );
   test.identical( got, expected );
 
@@ -11792,7 +11791,7 @@ function strWebQueryParseOptionQuoting( test )
 
   test.case = 'string in square parentheses, with keyValDelimeter, pairs key-value';
   var src = '[number : "1& str" = abc]';
-  var expected = { '[number' : '1', 'str' : 'abc]' };
+  var expected = { '[number' : 1, 'str' : 'abc]' };
   var got = _.strWebQueryParse( { src : src, quoting : 1 } );
   test.identical( got, expected );
 
@@ -12100,6 +12099,337 @@ function strRequestParse( test )
   test.identical( got.maps, [ {} ] )
 
 }
+
+//
+
+function strRequestParseDefaultOptions( test )
+{
+  test.case = 'src - empty string';
+  var src = '';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, {} );
+  test.identical( got.maps, [] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [] );
+
+  test.case = 'src - string, simple command';
+  var src = 'node';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {} ] );
+  test.identical( got.subject, 'node' );
+  test.identical( got.subjects, [ 'node' ] );
+
+  test.case = 'src - string, command with args';
+  var src = 'node proto/dwtools/SomeTest.test.s';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {} ] );
+  test.identical( got.subject, 'node proto/dwtools/SomeTest.test.s' );
+  test.identical( got.subjects, [ 'node proto/dwtools/SomeTest.test.s' ] );
+
+  test.case = 'src - string, few command with delimeter';
+  var src = 'rm -rf node_modules ; npm i';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {}, {} ] );
+  test.identical( got.subject, 'rm -rf node_modules' );
+  test.identical( got.subjects, [ 'rm -rf node_modules', 'npm i' ] );
+
+  test.case = 'src - string, one options, value - number';
+  var src = 'v:1';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { v : 1 } );
+  test.identical( got.maps, [ { v : 1 } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, one options, value - negative number';
+  var src = 'v:-1';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { v : -1 } );
+  test.identical( got.maps, [ { v : -1 } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, one options, value - negative number with dot';
+  var src = 'v:-.01';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { v : -0.01 } );
+  test.identical( got.maps, [ { v : -0.01 } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, one options, value - string';
+  var src = 'r:someRoutine';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { r : 'someRoutine' } );
+  test.identical( got.maps, [ { r : 'someRoutine' } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, one options, value - empty array';
+  var src = 'r:[]';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { r : [] } );
+  test.identical( got.maps, [ { r : [] } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, one options, value - array with number and string';
+  var src = 'r:[1,str]';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { r : [ 1, 'str' ] } );
+  test.identical( got.maps, [ { r : [ 1, 'str' ] } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, three options, value - string';
+  var src = 'one:1 two:someRoutine three:[1,str]';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { one : 1, two : 'someRoutine', three : [ 1, 'str' ] } );
+  test.identical( got.maps, [ { one : 1, two : 'someRoutine', three : [ 1, 'str' ] } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, three separated options, value - string';
+  var src = 'one:1 ; two:someRoutine ; three:[1,str]';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { one : 1 } );
+  test.identical( got.maps, [ { one : 1 }, { two : 'someRoutine'}, { three : [ 1, 'str' ] } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '', '', '' ] );
+
+  test.case = 'src - string, command with options';
+  var src = 'tst .run /proto/dwtools/someRoutine.test.s v:5 r:some';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { v : 5, r : 'some' } );
+  test.identical( got.maps, [ { v : 5, r : 'some' } ] );
+  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s' ] );
+
+  test.case = 'src - string, two command with options';
+  var src = 'tst .run /proto/dwtools/someRoutine.test.s v:5 r:some ; node ./test.js v : [ 10, str ]';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { v : 5, r : 'some' } );
+  test.identical( got.maps, [ { v : 5, r : 'some' }, { v : [ 10, 'str' ] } ] );
+  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s', 'node ./test.js' ] );
+}
+
+//
+
+function strRequestParseDefaultOptionsQuotedValues( test )
+{
+  test.case = 'src - string, simple command';
+  var src = '"node"';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {} ] );
+  test.identical( got.subject, 'node' );
+  test.identical( got.subjects, [ 'node' ] );
+
+  test.case = 'src - string, command with args';
+  var src = '"node proto/dwtools/SomeTest.test.s"';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {} ] );
+  test.identical( got.subject, 'node proto/dwtools/SomeTest.test.s' );
+  test.identical( got.subjects, [ 'node proto/dwtools/SomeTest.test.s' ] );
+
+  test.case = 'src - string, few command with delimeter';
+  var src = 'rm -rf "node_modules" ; npm i';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {}, {} ] );
+  test.identical( got.subject, 'rm -rf "node_modules"' );
+  test.identical( got.subjects, [ 'rm -rf "node_modules"', 'npm i' ] );
+
+  test.case = 'src - string, one options, value - number';
+  var src = 'v:"1"';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { v : 1 } );
+  test.identical( got.maps, [ { v : 1 } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, one options, value - negative number';
+  var src = 'v:"-1"';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { v : -1 } );
+  test.identical( got.maps, [ { v : -1 } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, one options, value - negative number with dot';
+  var src = 'v:"-.01"';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { v : -0.01 } );
+  test.identical( got.maps, [ { v : -0.01 } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, one options, value - string';
+  var src = 'r:"someRoutine"';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { r : 'someRoutine' } );
+  test.identical( got.maps, [ { r : 'someRoutine' } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, one options, value - empty array';
+  var src = 'r:"[]"';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { r : [] } );
+  test.identical( got.maps, [ { r : [] } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, one options, value - array with number and string';
+  var src = 'r:"[1,str]"';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { r : [ 1, 'str' ] } );
+  test.identical( got.maps, [ { r : [ 1, 'str' ] } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, three options, value - string';
+  var src = 'one:"1" two:"someRoutine" three:"[1,str]"';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { one : 1, two : 'someRoutine', three : [ 1, 'str' ] } );
+  test.identical( got.maps, [ { one : 1, two : 'someRoutine', three : [ 1, 'str' ] } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, three separated options, value - string';
+  var src = 'one:"1" ; two:"someRoutine" ; three:"[1,str]"';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { one : 1 } );
+  test.identical( got.maps, [ { one : 1 }, { two : 'someRoutine'}, { three : [ 1, 'str' ] } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '', '', '' ] );
+
+  test.case = 'src - string, command with options';
+  var src = 'tst .run /proto/dwtools/someRoutine.test.s v:"5" r:"some"';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { v : 5, r : 'some' } );
+  test.identical( got.maps, [ { v : 5, r : 'some' } ] );
+  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s' ] );
+
+  test.case = 'src - string, two command with options';
+  var src = 'tst .run /proto/dwtools/someRoutine.test.s v:5 r:"some" ; node ./test.js v : "[ 10, str ]"';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { v : 5, r : 'some' } );
+  test.identical( got.maps, [ { v : 5, r : 'some' }, { v : [ 10, 'str' ] } ] );
+  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s', 'node ./test.js' ] );
+}
+
+//
+
+function strRequestParseDefaultOptionsWindowsPaths( test )
+{
+  test.open( 'unquoted windows path' );
+
+  test.case = 'src - string, command with args';
+  var src = 'node D:\\some\\path';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { D : '\\some\\path' } );
+  test.identical( got.maps, [ { D : '\\some\\path' } ] );
+  test.identical( got.subject, 'node' );
+  test.identical( got.subjects, [ 'node' ] );
+
+  test.case = 'src - string, few command with delimeter, relative windows path';
+  var src = 'rm -rf .\\node_modules ; npm i';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {}, {} ] );
+  test.identical( got.subject, 'rm -rf .\\node_modules' );
+  test.identical( got.subjects, [ 'rm -rf .\\node_modules', 'npm i' ] );
+
+  test.case = 'src - string, command with options';
+  var src = 'tst .run D:\\some\\path v:"5" r:"some"';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { D : '\\some\\path', v : 5, r : 'some' } );
+  test.identical( got.maps, [ { D : '\\some\\path', v : 5, r : 'some' } ] );
+  test.identical( got.subject, 'tst .run' );
+  test.identical( got.subjects, [ 'tst .run' ] );
+
+  test.case = 'src - string, two command with options';
+  var src = 'tst .run D:\\some\\path v:5 r:"some" ; node .\\test.js v : "[ 10, str ]"';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { D : '\\some\\path', v : 5, r : 'some' } );
+  test.identical( got.maps, [ { D : '\\some\\path', v : 5, r : 'some' }, { v : [ 10, 'str' ] } ] );
+  test.identical( got.subject, 'tst .run' );
+  test.identical( got.subjects, [ 'tst .run', 'node .\\test.js' ] );
+
+  test.close( 'unquoted windows path' );
+
+  /* */
+
+  test.open( 'quoted windows path' );
+
+  test.case = 'src - string, command with args';
+  var src = 'node "D:\\some\\path"';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {} ] );
+  test.identical( got.subject, 'node "D:\\some\\path"' );
+  test.identical( got.subjects, [ 'node "D:\\some\\path"' ] );
+
+  test.case = 'src - string, few command with delimeter, relative windows path';
+  var src = 'rm -rf ".\\node_modules" ; npm i';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {}, {} ] );
+  test.identical( got.subject, 'rm -rf ".\\node_modules"' );
+  test.identical( got.subjects, [ 'rm -rf ".\\node_modules"', 'npm i' ] );
+
+  test.case = 'src - string, command with options';
+  var src = 'tst .run "D:\\some\\path" v:"5" r:"some"';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { v : 5, r : 'some' } );
+  test.identical( got.maps, [ { v : 5, r : 'some' } ] );
+  test.identical( got.subject, 'tst .run "D:\\some\\path"' );
+  test.identical( got.subjects, [ 'tst .run "D:\\some\\path"' ] );
+
+  test.case = 'src - string, two command with options';
+  var src = 'tst .run "D:\\some\\path" v:5 r:"some" ; node ".\\test.js" v : "[ 10, str ]"';
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { v : 5, r : 'some' } );
+  test.identical( got.maps, [ { v : 5, r : 'some' }, { v : [ 10, 'str' ] } ] );
+  test.identical( got.subject, 'tst .run "D:\\some\\path"' );
+  test.identical( got.subjects, [ 'tst .run "D:\\some\\path"', 'node ".\\test.js"' ] );
+
+  test.close( 'quoted windows path' );
+}
+
+//
+
+function strRequestParseExperiment( test )
+{
+  test.case = 'positive number in option';
+  var got = _.strRequestParse( 'n:1 rapidity:9' );
+  test.identical( got.subject, '' )
+  test.identical( got.map, { 'n' : 1, 'rapidity' : 9 } )
+  test.identical( got.subjects, [ '' ] )
+  test.identical( got.maps, [ { 'n' : 1, 'rapidity' : 9 } ] );
+
+  test.case = 'negative number in option';
+  var got = _.strRequestParse( 'n:1 rapidity:-9' );
+  test.identical( got.subject, '' )
+  test.identical( got.map, { 'n' : 1, 'rapidity' : -9 } )
+  test.identical( got.subjects, [ '' ] )
+  test.identical( got.maps, [ { 'n' : 1, 'rapidity' : -9 } ] )
+}
+
+strRequestParseExperiment.experimental = 1;
+strRequestParseExperiment.description =
+`
+  Routine did not parse negative numbers. The reason of it is missed part of regexp in
+  routine numberFromStrMaybe.
+`
 
 //
 
@@ -13102,6 +13432,10 @@ var Self =
 
     strWebQueryStr,
     strRequestParse,
+    strRequestParseDefaultOptions,
+    strRequestParseDefaultOptionsQuotedValues,
+    strRequestParseDefaultOptionsWindowsPaths,
+    strRequestParseExperiment,
     strRequestStr,
     strCommandParse,
     strCommandsParse,
