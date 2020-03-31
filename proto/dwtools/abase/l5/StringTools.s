@@ -24,7 +24,7 @@ if( typeof module !== 'undefined' )
 
 /**
  * Collection of sophisticated routines for operations on Strings.
-  @namespace Tools( module::StringTools )
+  @namespace Tools.StringTools 
   @memberof module:Tools/base/l5/StringTools
   @augments wTools
 */
