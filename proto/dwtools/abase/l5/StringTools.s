@@ -24,7 +24,7 @@ if( typeof module !== 'undefined' )
 
 /**
  * Collection of sophisticated routines for operations on Strings.
-  @namespace Tools.StringTools 
+  @namespace Tools.StringTools
   @memberof module:Tools/base/l5/StringTools
   @augments wTools
 */
@@ -1981,7 +1981,14 @@ function strStructureParse( o )
     if( o.onTerminal && _.strIs( right ) )
     right = o.onTerminal( right );
 
-    result[ left ] = right;
+    if( o.severalValues )
+    {
+      result[ left ] = _.scalarAppendOnce( result[ left ], right );
+    }
+    else
+    {
+      result[ left ] = right;
+    }
 
   }
 
@@ -2107,6 +2114,7 @@ strStructureParse.defaults =
   longRightDelimeter : ']',
   quoting : 1,
   parsingArrays : 0,
+  severalValues : 0,
   depth : 0,
   onTerminal : null,
   toNumberMaybe : 1,
@@ -2463,6 +2471,7 @@ function strRequestParse( o )
         keyValDelimeter : o.keyValDelimeter,
         parsingArrays : o.parsingArrays,
         quoting : o.quoting,
+        severalValues : o.severalValues,
       });
 
     }
@@ -2520,6 +2529,7 @@ defaults.quoting = 1;
 defaults.unquoting = 1;
 defaults.parsingArrays = 1;
 defaults.src = null;
+defaults.severalValues = 0;
 
 //
 
