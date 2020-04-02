@@ -24,7 +24,7 @@ if( typeof module !== 'undefined' )
 
 /**
  * Collection of sophisticated routines for operations on Strings.
-  @namespace Tools.StringTools 
+  @namespace Tools.StringTools
   @memberof module:Tools/base/l5/StringTools
   @augments wTools
 */
@@ -2519,6 +2519,7 @@ defaults.commandsDelimeter = ';';
 defaults.quoting = 1;
 defaults.unquoting = 1;
 defaults.parsingArrays = 1;
+defaults.severalValues = 0;
 defaults.src = null;
 
 //
