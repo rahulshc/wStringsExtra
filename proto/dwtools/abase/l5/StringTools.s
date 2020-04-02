@@ -883,7 +883,7 @@ _strReplaceMapPrepare.defaults =
  * @throws { Error } If {-dictionary-} or {-o.dictionary-} is not an Object or Long.
  * @throws { Error } If {-o.onUnknown-} is not a routine or not null.
  * @throws { Error } If map options {-o-} has unnecessary fields.
- * @memberof module:Tools/base/Fundamental.wTools
+ * @memberof namespace:wTools
  *
  */
 
@@ -2575,7 +2575,7 @@ defaults.src = null;
  * @throws { Error } If {-o.map-} is not map like.
  * @throws { Error } If elements of {-o.subjects-} is not a Strings.
  * @throws { Error } If elements of {-o.maps-} is not map like.
- * @memberof module:Tools/base/Fundamental.wTools
+ * @memberof namespace:wTools
  *
  */
 
