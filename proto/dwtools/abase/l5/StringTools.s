@@ -26,7 +26,7 @@ if( typeof module !== 'undefined' )
 /**
  * Collection of sophisticated routines for operations on Strings.
   @namespace Tools.StringTools
-  @memberof module:Tools/base/l5/StringTools
+  @module Tools/base/l5/StringTools
   @augments wTools
 */
 
@@ -84,7 +84,8 @@ _.assert( _.routineIs( _.sorted.addOnce ) );
  * @function  strCamelize
  * @throws { Exception } Throws a exception if( srcStr ) is not a String.
  * @throws { Exception } Throws a exception if no argument provided.
- * @memberofs "module:Tools/base/l5/StringTools","module:Tools/base/Fundamental.wTools"
+ * @namespace Tools
+ * @module Tools/base/l5/StringTools
  *
  */
 
@@ -156,7 +157,8 @@ function strToTitle( srcStr )
  * @throws { Exception } Throws a exception if( srcStr ) is not a String.
  * @throws { Exception } Throws a exception if( o ) is not a Map.
  * @throws { Exception } Throws a exception if no arguments provided.
- * @memberofs "module:Tools/base/l5/StringTools","module:Tools/base/Fundamental.wTools"
+ * @namespace Tools
+ * @module Tools/base/l5/StringTools
  *
  */
 
@@ -204,7 +206,8 @@ strFilenameFor.defaults =
  * @throws { Exception } Throws a exception if( o ) is not a Map.
  * @throws { Exception } Throws a exception if no arguments provided.
  * @function strVarNameFor
- * @memberofs "module:Tools/base/l5/StringTools","module:Tools/base/Fundamental.wTools"
+ * @namespace Tools
+ * @module Tools/base/l5/StringTools
  *
  */
 
@@ -237,7 +240,7 @@ strVarNameFor.defaults =
 /**
  * @summary Html escape symbols map.
  * @enum {String} _strHtmlEscapeMap
- * @memberof module:Tools/base/l5/StringTools~
+ * @module Tools/base/l5/StringTools~
  */
 
 let _strHtmlEscapeMap =
@@ -280,7 +283,8 @@ let _strHtmlEscapeMap =
  *
  * @function  strHtmlEscape
  * @throws { Exception } Throws a exception if no argument provided.
- * @memberofs "module:Tools/base/l5/StringTools","module:Tools/base/Fundamental.wTools"
+ * @namespace Tools
+ * @module Tools/base/l5/StringTools
  *
  */
 
@@ -886,7 +890,7 @@ _strReplaceMapPrepare.defaults =
  * @throws { Error } If {-dictionary-} or {-o.dictionary-} is not an Object or Long.
  * @throws { Error } If {-o.onUnknown-} is not a routine or not null.
  * @throws { Error } If map options {-o-} has unnecessary fields.
- * @memberof namespace:wTools
+ * @namespace Tools
  *
  */
 
@@ -1073,7 +1077,8 @@ strTokenizeCpp.defaults =
  * @throws { Exception } If not enough argumets provided.
  * @throws { Exception } If ( srcStr ) is not a string.
  * @throws { Exception } If ( sparce ) is not a sparce array.
- * @memberofs "module:Tools/base/l5/StringTools","module:Tools/base/Fundamental.wTools"
+ * @namespace Tools
+ * @module Tools/base/l5/StringTools
  *
  */
 
@@ -1244,7 +1249,8 @@ jsonParse.defaults =
  * @function  strToBytes
  * @throws { Exception } Throws a exception if( src ) is not a String.
  * @throws { Exception } Throws a exception if no argument provided.
- * @memberofs "module:Tools/base/l5/StringTools","module:Tools/base/Fundamental.wTools"
+ * @namespace Tools
+ * @module Tools/base/l5/StringTools
  *
  */
 
@@ -1269,7 +1275,7 @@ function strToBytes( src )
  /**
  * @summary Contains metric prefixes.
  * @enum {} _metrics
- * @memberof module:Tools/base/l5/StringTools~
+ * @module Tools/base/l5/StringTools~
  */
 
 let _metrics =
@@ -1343,7 +1349,8 @@ let _metrics =
  * _.strMetricFormat( "10000", { divisor : 2, thousand : 10, dimensions : 3 } );
  *
  * @function strMetricFormat
- * @memberofs "module:Tools/base/l5/StringTools","module:Tools/base/Fundamental.wTools"
+ * @namespace Tools
+ * @module Tools/base/l5/StringTools
  *
  */
 
@@ -1459,7 +1466,8 @@ strMetricFormat.defaults =
  * _.strMetricFormatBytes( Math.pow( 2, 30 ) );
  *
  * @function  strMetricFormatBytes
- * @memberofs "module:Tools/base/l5/StringTools","module:Tools/base/Fundamental.wTools"
+ * @namespace Tools
+ * @module Tools/base/l5/StringTools
  *
  */
 
@@ -1504,7 +1512,8 @@ function strMetricFormatBytes( number,o )
  * _.strTimeFormat( Math.pow( 5, 7 ) );
  *
  * @function  strTimeFormat
- * @memberofs "module:Tools/base/l5/StringTools","module:Tools/base/Fundamental.wTools"
+ * @namespace Tools
+ * @module Tools/base/l5/StringTools
  *
  */
 
@@ -2589,7 +2598,7 @@ defaults.severalValues = 0;
  * @throws { Error } If {-o.map-} is not map like.
  * @throws { Error } If elements of {-o.subjects-} is not a Strings.
  * @throws { Error } If elements of {-o.maps-} is not map like.
- * @memberof namespace:wTools
+ * @namespace Tools
  *
  */
 
