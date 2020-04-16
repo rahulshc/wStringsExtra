@@ -240,7 +240,7 @@ strVarNameFor.defaults =
 /**
  * @summary Html escape symbols map.
  * @enum {String} _strHtmlEscapeMap
- * @module Tools/base/l5/StringTools~
+ * @module Tools/base/l5/StringTools
  */
 
 let _strHtmlEscapeMap =
@@ -1275,7 +1275,7 @@ function strToBytes( src )
  /**
  * @summary Contains metric prefixes.
  * @enum {} _metrics
- * @module Tools/base/l5/StringTools~
+ * @module Tools/base/l5/StringTools
  */
 
 let _metrics =
