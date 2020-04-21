@@ -12192,7 +12192,9 @@ function strRequestParseDefaultOptions( test )
   test.identical( got.subject, '' );
   test.identical( got.subjects, [ '' ] );
 
-  test.case = 'src - string, three options, same keys'; /* */
+  /* */
+
+  test.case = 'src - string, three options, same keys';
   var src = 'one:1 one:someRoutine one:[1,str]';
   var got = _.strRequestParse( { src : src, severalValues : 1 } );
   test.identical( got.map, { one : [ 1, 'someRoutine', 'str' ] } );
