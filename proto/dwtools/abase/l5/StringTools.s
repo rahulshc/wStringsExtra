@@ -323,7 +323,7 @@ function strSearch( o )
   if( _.arrayIs( o.excludingTokens ) || _.strIs( o.excludingTokens ) )
   {
     debugger;
-    o.excludingTokens = _.path.globsShortToRegexps( o.excludingTokens );
+    o.excludingTokens = _.path.globSplitsToRegexps( o.excludingTokens );
     o.excludingTokens = _.regexpsAny( o.excludingTokens );
   }
 
