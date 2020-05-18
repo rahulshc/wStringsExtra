@@ -300,10 +300,6 @@ function strHtmlEscape( str )
 
 //
 
-/*
-qqq : tests required | Dmytro : covered all options
-*/
-
 function strSearch( o )
 {
 
