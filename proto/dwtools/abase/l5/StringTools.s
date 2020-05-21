@@ -2902,7 +2902,7 @@ function strTable( o )
   _.routineOptions( strTable,o );
   _.assert( _.longIs( o.data ) );
 
-  if( typeof module !== 'undefined' && module !== null )
+  if( typeof module !== 'undefined' )
   {
     if( !_.cliTable  )
     try
@@ -3245,7 +3245,7 @@ _.mapExtend( Self, Extend );
 // export
 // --
 
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;
 
 })();
