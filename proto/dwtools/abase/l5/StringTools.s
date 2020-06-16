@@ -300,11 +300,24 @@ function strHtmlEscape( str )
 
 //
 
-function strSearch( o )
+function strSearch_pre( routine, args )
+{
+  let o = args[ 0 ];
+
+  if( args.length === 2 )
+  o = { src : args[ 0 ], ins : args[ 1 ] }
+
+  _.assert( arguments.length === 2 );
+  _.assert( args.length === 1 || args.length === 2 );
+  _.routineOptions( routine, o );
+
+  return o;
+}
+
+function strSearch_body( o )
 {
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routineOptions( strSearch,o );
 
   /* */
 
@@ -328,25 +341,30 @@ function strSearch( o )
   let result = [];
   let found = _.strFindAll( o.src, o.ins );
 
-  found.forEach( ( it ) =>
+  found.forEach( ( it ) => splitAdjust( it ) );
+
+  return result;
+
+  /* */
+
+  function splitAdjust( it )
   {
 
-    it.charsRange = it.range;
-    it.charsRangeRight = [ o.src.length - it.charsRange[ 0 ], o.src.length - it.charsRange[ 1 ] ];
+    it.charsRangeLeft = it.range;
+    it.charsRangeRight = [ o.src.length - it.charsRangeLeft[ 0 ], o.src.length - it.charsRangeLeft[ 1 ] ];
 
     let first;
     if( o.determiningLineNumber )
     {
-      first = o.src.substring( 0,it.charsRange[ 0 ] ).split( '\n' ).length;
-      it.linesRange = [ first, first+o.src.substring( it.charsRange[ 0 ], it.charsRange[ 1 ] ).split( '\n' ).length ];
+      first = o.src.substring( 0,it.charsRangeLeft[ 0 ] ).split( '\n' ).length;
+      it.linesRange = [ first, first+o.src.substring( it.charsRangeLeft[ 0 ], it.charsRangeLeft[ 1 ] ).split( '\n' ).length ];
     }
 
-    if( o.nearestLines )
     if( o.nearestLines )
     it.nearest = _.strLinesNearest
     ({
       src : o.src,
-      charsRange : it.charsRange,
+      charsRangeLeft : it.charsRangeLeft,
       numberOfLines : o.nearestLines,
     }).splits;
 
@@ -357,7 +375,7 @@ function strSearch( o )
     {
       let tokens = o.onTokenize( it.nearest.join( '' ) );
 
-      let ranges = _.select( tokens, '*/range/0' );
+      let ranges = _.select( tokens, '*/range/0' ); /* xxx : separate routine */
       let range = [ it.nearest[ 0 ].length, it.nearest[ 0 ].length + it.nearest[ 1 ].length ];
       let having = _.sorted.lookUpIntervalHaving( ranges, range );
 
@@ -377,15 +395,12 @@ function strSearch( o )
 
     if( !o.nearestSplitting )
     it.nearest = it.nearest.join( '' );
-    // it.nearest.join( '' ); // Dmytro : has not influence on the result
 
     result.push( it );
-  });
-
-  return result;
+  }
 }
 
-strSearch.defaults =
+strSearch_body.defaults =
 {
   src : null,
   ins : null,
@@ -397,6 +412,42 @@ strSearch.defaults =
   onTokenize : null,
   excludingTokens : null,
 }
+
+let strSearch = _.routineFromPreAndBody( strSearch_pre, strSearch_body );
+
+//
+
+function strSearchReport_body( o )
+{
+
+  _.assert( arguments.length === 1, 'Expects single argument' );
+
+  o.found = this.strSearch( _.mapOnly( o, this.strSearch.defaults ) );
+
+  _.each( o.found, ( it ) =>
+  {
+    it.report = _.strLinesNearestReport
+    ({
+      src : o.src,
+      charsRangeLeft : it.charsRangeLeft,
+      numberOfLines : o.numberOfLines,
+      gray : o.gray
+    }).report;
+  });
+
+  o.report = o.found.map( ( it ) => it.report ).join( '\n\n' );
+
+  return o;
+}
+
+strSearchReport_body.defaults =
+{
+  ... strSearch.defaults,
+  gray : 0,
+  numberOfLines : _.strLinesNearestReport.defaults.numberOfLines,
+}
+
+let strSearchReport = _.routineFromPreAndBody( strSearch_pre, strSearchReport_body );
 
 //
 
@@ -1213,8 +1264,9 @@ function jsonParse( o )
   o = { src : o }
   _.routineOptions( jsonParse, o );
   _.assert( arguments.length === 1 );
+  _.assert( !!_.Gdf );
 
-  let selected = _.Gdf.Select({ in : 'string', out : 'structure', ext : 'json' });
+  let selected = _.gdf.select({ in : 'string', out : 'structure', ext : 'json' });
   _.assert( selected.length === 1 );
   let jsonParser = selected[ 0 ];
 
@@ -2924,30 +2976,6 @@ function strTable( o )
 
   /* */
 
-  function makeWidth( propertyName, def, len )
-  {
-    let property = o[ propertyName ];
-    debugger;
-    let _property = _.longFill( [], def, len );
-    // let _property = _.longFillTimes( [], len, def );
-    if( property )
-    {
-      _.assert( _.mapIs( property ) || _.longIs( property ) , 'routine expects colWidths/rowWidths property as Object or Array-Like' );
-      for( let k in property )
-      {
-        k = _.numberFrom( k );
-        if( k < len )
-        {
-          _.assert( _.numberIs( property[ k ] ) );
-          _property[ k ] = property[ k ];
-        }
-      }
-    }
-    o[ propertyName ] = _property;
-  }
-
-  //
-
   let isArrayOfArrays = true;
   let maxLen = 0;
   for( let i = 0; i < o.data.length; i++ )
@@ -2975,7 +3003,7 @@ function strTable( o )
     _.assert( _.numberIs( o.rowsNumber ) && _.numberIs( o.colsNumber ) );
   }
 
-  //
+  /* */
 
   makeWidth( 'colWidths', o.colWidth, o.colsNumber );
   makeWidth( 'colAligns', o.colAlign, o.colsNumber );
@@ -3023,6 +3051,29 @@ function strTable( o )
   }
 
   return table.toString();
+
+  /* */
+
+  function makeWidth( propertyName, def, len )
+  {
+    let property = o[ propertyName ];
+    let _property = _.longFill( [], def, len );
+    if( property )
+    {
+      _.assert( _.mapIs( property ) || _.longIs( property ) , 'routine expects colWidths/rowWidths property as Object or Array-Like' );
+      for( let k in property )
+      {
+        k = _.numberFrom( k );
+        if( k < len )
+        {
+          _.assert( _.numberIs( property[ k ] ) );
+          _property[ k ] = property[ k ];
+        }
+      }
+    }
+    o[ propertyName ] = _property;
+  }
+
 }
 
 strTable.defaults =
@@ -3191,6 +3242,7 @@ let Extend =
   strHtmlEscape,
 
   strSearch,
+  strSearchReport, /* qqq2 : cover please */
   strFindAll,
 
   TokensSyntax,

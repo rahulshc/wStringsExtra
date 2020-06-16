@@ -284,7 +284,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 0, 3 ],
       'counter' : 0,
       'input' : 'abc',
-      'charsRange' : [ 0, 3 ],
+      'charsRangeLeft' : [ 0, 3 ],
       'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ '', 'abc', '' ]
     }
@@ -302,7 +302,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 2, 3 ],
       'counter' : 0,
       'input' : 'aabaa',
-      'charsRange' : [ 2, 3 ],
+      'charsRangeLeft' : [ 2, 3 ],
       'charsRangeRight' : [ 3, 2 ],
       'nearest' : [ 'aa', 'b', 'aa' ]
     }
@@ -320,7 +320,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'aabaa',
-      'charsRange' : [ 0, 2  ],
+      'charsRangeLeft' : [ 0, 2  ],
       'charsRangeRight' : [ 5, 3 ],
       'nearest' : [ '', 'aa', 'baa' ]
     },
@@ -331,7 +331,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : 'aabaa',
-      'charsRange' : [ 3, 5  ],
+      'charsRangeLeft' : [ 3, 5  ],
       'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'aab', 'aa', '' ]
     }
@@ -349,7 +349,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 2, 3 ],
       'counter' : 0,
       'input' : 'hello',
-      'charsRange' : [ 2, 3  ],
+      'charsRangeLeft' : [ 2, 3  ],
       'charsRangeRight' : [ 3, 2 ],
       'nearest' : [ 'he', 'l', 'lo' ]
     },
@@ -360,7 +360,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 3, 4 ],
       'counter' : 1,
       'input' : 'hello',
-      'charsRange' : [ 3, 4  ],
+      'charsRangeLeft' : [ 3, 4  ],
       'charsRangeRight' : [ 2, 1 ],
       'nearest' : [ 'hel', 'l', 'o' ]
     }
@@ -378,7 +378,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'abaabab',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 7, 5 ],
       'nearest' : [ '', 'ab', 'aabab' ]
     },
@@ -389,7 +389,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 2, 4 ],
       'counter' : 1,
       'input' : 'abaabab',
-      'charsRange' : [ 2, 4 ],
+      'charsRangeLeft' : [ 2, 4 ],
       'charsRangeRight' : [ 5, 3 ],
       'nearest' : [ 'ab', 'aa', 'bab' ]
     },
@@ -400,7 +400,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 5, 7 ],
       'counter' : 2,
       'input' : 'abaabab',
-      'charsRange' : [ 5, 7 ],
+      'charsRangeLeft' : [ 5, 7 ],
       'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'abaab', 'ab', '' ]
     }
@@ -418,7 +418,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 0, 3 ],
       'counter' : 0,
       'input' : 'abcabc',
-      'charsRange' : [ 0, 3 ],
+      'charsRangeLeft' : [ 0, 3 ],
       'charsRangeRight' : [ 6, 3 ],
       'nearest' : [ '', 'abc', 'abc' ]
     },
@@ -429,7 +429,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 3, 6 ],
       'counter' : 1,
       'input' : 'abcabc',
-      'charsRange' : [ 3, 6 ],
+      'charsRangeLeft' : [ 3, 6 ],
       'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ 'abc', 'abc', '' ]
     }
@@ -447,7 +447,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 0, 1 ],
       'counter' : 0,
       'input' : 'abcabc',
-      'charsRange' : [ 0, 1 ],
+      'charsRangeLeft' : [ 0, 1 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ '', 'a', 'bcabc' ]
     },
@@ -458,7 +458,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 3, 4 ],
       'counter' : 1,
       'input' : 'abcabc',
-      'charsRange' : [ 3, 4 ],
+      'charsRangeLeft' : [ 3, 4 ],
       'charsRangeRight' : [ 3, 2 ],
       'nearest' : [ 'abc', 'a', 'bc' ]
     }
@@ -502,7 +502,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 0, 3 ],
       'counter' : 0,
       'input' : 'abc',
-      'charsRange' : [ 0, 3 ],
+      'charsRangeLeft' : [ 0, 3 ],
       'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ '', 'abc', '' ]
     }
@@ -520,7 +520,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 2, 3 ],
       'counter' : 0,
       'input' : 'aabaa',
-      'charsRange' : [ 2, 3 ],
+      'charsRangeLeft' : [ 2, 3 ],
       'charsRangeRight' : [ 3, 2 ],
       'nearest' : [ 'aa', 'b', 'aa' ]
     }
@@ -538,7 +538,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'aabaa',
-      'charsRange' : [ 0, 2  ],
+      'charsRangeLeft' : [ 0, 2  ],
       'charsRangeRight' : [ 5, 3 ],
       'nearest' : [ '', 'aa', 'baa' ]
     },
@@ -549,7 +549,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : 'aabaa',
-      'charsRange' : [ 3, 5  ],
+      'charsRangeLeft' : [ 3, 5  ],
       'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'aab', 'aa', '' ]
     }
@@ -567,7 +567,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 2, 3 ],
       'counter' : 0,
       'input' : 'hello',
-      'charsRange' : [ 2, 3  ],
+      'charsRangeLeft' : [ 2, 3  ],
       'charsRangeRight' : [ 3, 2 ],
       'nearest' : [ 'he', 'l', 'lo' ]
     },
@@ -578,7 +578,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 3, 4 ],
       'counter' : 1,
       'input' : 'hello',
-      'charsRange' : [ 3, 4  ],
+      'charsRangeLeft' : [ 3, 4  ],
       'charsRangeRight' : [ 2, 1 ],
       'nearest' : [ 'hel', 'l', 'o' ]
     }
@@ -596,7 +596,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'abaabab',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 7, 5 ],
       'nearest' : [ '', 'ab', 'aabab' ]
     },
@@ -607,7 +607,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 2, 4 ],
       'counter' : 1,
       'input' : 'abaabab',
-      'charsRange' : [ 2, 4 ],
+      'charsRangeLeft' : [ 2, 4 ],
       'charsRangeRight' : [ 5, 3 ],
       'nearest' : [ 'ab', 'aa', 'bab' ]
     },
@@ -618,7 +618,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 5, 7 ],
       'counter' : 2,
       'input' : 'abaabab',
-      'charsRange' : [ 5, 7 ],
+      'charsRangeLeft' : [ 5, 7 ],
       'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'abaab', 'ab', '' ]
     }
@@ -636,7 +636,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 0, 3 ],
       'counter' : 0,
       'input' : 'abcabc',
-      'charsRange' : [ 0, 3 ],
+      'charsRangeLeft' : [ 0, 3 ],
       'charsRangeRight' : [ 6, 3 ],
       'nearest' : [ '', 'abc', 'abc' ]
     },
@@ -647,7 +647,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 3, 6 ],
       'counter' : 1,
       'input' : 'abcabc',
-      'charsRange' : [ 3, 6 ],
+      'charsRangeLeft' : [ 3, 6 ],
       'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ 'abc', 'abc', '' ]
     }
@@ -665,7 +665,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 0, 1 ],
       'counter' : 0,
       'input' : 'abcabc',
-      'charsRange' : [ 0, 1 ],
+      'charsRangeLeft' : [ 0, 1 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ '', 'a', 'bcabc' ]
     },
@@ -676,7 +676,7 @@ function strSearchDefaultOptions( test )
       'range' : [ 3, 4 ],
       'counter' : 1,
       'input' : 'abcabc',
-      'charsRange' : [ 3, 4 ],
+      'charsRangeLeft' : [ 3, 4 ],
       'charsRangeRight' : [ 3, 2 ],
       'nearest' : [ 'abc', 'a', 'bc' ]
     }
@@ -745,7 +745,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 4, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nabc\nf\nf',
-      'charsRange' : [ 4, 7 ],
+      'charsRangeLeft' : [ 4, 7 ],
       'charsRangeRight' : [ 7, 4 ],
       'nearest' : [ 'f\n', 'abc', '' ]
     }
@@ -763,7 +763,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 5, 6 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ 'aa\n', 'b', '' ]
     }
@@ -781,7 +781,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 2, 4 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 2, 4  ],
+      'charsRangeLeft' : [ 2, 4  ],
       'charsRangeRight' : [ 9, 7 ],
       'nearest' : [ 'f\n', 'aa', '' ]
     },
@@ -792,7 +792,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 7, 9 ],
       'counter' : 1,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 7, 9  ],
+      'charsRangeLeft' : [ 7, 9  ],
       'charsRangeRight' : [ 4, 2 ],
       'nearest' : [ 'b\n', 'aa', '' ]
     }
@@ -810,7 +810,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 6, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 6, 7  ],
+      'charsRangeLeft' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'nearest' : [ 'f\nhe', 'l', 'lo' ]
     },
@@ -821,7 +821,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 7, 8 ],
       'counter' : 1,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 7, 8  ],
+      'charsRangeLeft' : [ 7, 8  ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ 'f\nhel', 'l', 'o' ]
     }
@@ -839,7 +839,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 10, 8 ],
       'nearest' : [ '', 'ab', '' ]
     },
@@ -850,7 +850,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 3, 5 ],
+      'charsRangeLeft' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'nearest' : [ 'ab\n', 'aa', '' ]
     },
@@ -861,7 +861,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 8, 10 ],
       'counter' : 2,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 8, 10 ],
+      'charsRangeLeft' : [ 8, 10 ],
       'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'b\n', 'ab', '' ]
     }
@@ -879,7 +879,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 4 ],
+      'charsRangeLeft' : [ 1, 4 ],
       'charsRangeRight' : [ 8, 5 ],
       'nearest' : [ '\n', 'abc', '' ]
     },
@@ -890,7 +890,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 5, 8 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 8 ],
+      'charsRangeLeft' : [ 5, 8 ],
       'charsRangeRight' : [ 4, 1 ],
       'nearest' : [ 'abc\n', 'abc', '' ]
     }
@@ -908,7 +908,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 2 ],
+      'charsRangeLeft' : [ 1, 2 ],
       'charsRangeRight' : [ 8, 7 ],
       'nearest' : [ '\n', 'a', 'bc' ]
     },
@@ -919,7 +919,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 5, 6 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 4, 3 ],
       'nearest' : [ 'abc\n', 'a', 'bc' ]
     }
@@ -963,7 +963,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 4, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nabc\nf\nf',
-      'charsRange' : [ 4, 7 ],
+      'charsRangeLeft' : [ 4, 7 ],
       'charsRangeRight' : [ 7, 4 ],
       'nearest' : [ 'f\n', 'abc', '' ]
     }
@@ -981,7 +981,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 5, 6 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ 'aa\n', 'b', '' ]
     }
@@ -999,7 +999,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 2, 4 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 2, 4  ],
+      'charsRangeLeft' : [ 2, 4  ],
       'charsRangeRight' : [ 9, 7 ],
       'nearest' : [ 'f\n', 'aa', '' ]
     },
@@ -1010,7 +1010,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 7, 9 ],
       'counter' : 1,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 7, 9  ],
+      'charsRangeLeft' : [ 7, 9  ],
       'charsRangeRight' : [ 4, 2 ],
       'nearest' : [ 'b\n', 'aa', '' ]
     }
@@ -1028,7 +1028,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 6, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 6, 7  ],
+      'charsRangeLeft' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'nearest' : [ 'f\nhe', 'l', 'lo' ]
     },
@@ -1039,7 +1039,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 7, 8 ],
       'counter' : 1,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 7, 8  ],
+      'charsRangeLeft' : [ 7, 8  ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ 'f\nhel', 'l', 'o' ]
     }
@@ -1057,7 +1057,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 10, 8 ],
       'nearest' : [ '', 'ab', '' ]
     },
@@ -1068,7 +1068,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 3, 5 ],
+      'charsRangeLeft' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'nearest' : [ 'ab\n', 'aa', '' ]
     },
@@ -1079,7 +1079,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 8, 10 ],
       'counter' : 2,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 8, 10 ],
+      'charsRangeLeft' : [ 8, 10 ],
       'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'b\n', 'ab', '' ]
     }
@@ -1097,7 +1097,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 4 ],
+      'charsRangeLeft' : [ 1, 4 ],
       'charsRangeRight' : [ 8, 5 ],
       'nearest' : [ '\n', 'abc', '' ]
     },
@@ -1108,7 +1108,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 5, 8 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 8 ],
+      'charsRangeLeft' : [ 5, 8 ],
       'charsRangeRight' : [ 4, 1 ],
       'nearest' : [ 'abc\n', 'abc', '' ]
     }
@@ -1126,7 +1126,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 2 ],
+      'charsRangeLeft' : [ 1, 2 ],
       'charsRangeRight' : [ 8, 7 ],
       'nearest' : [ '\n', 'a', 'bc' ]
     },
@@ -1137,7 +1137,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 5, 6 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 4, 3 ],
       'nearest' : [ 'abc\n', 'a', 'bc' ]
     }
@@ -1186,7 +1186,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 4, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nabc\nf\nf',
-      'charsRange' : [ 4, 7 ],
+      'charsRangeLeft' : [ 4, 7 ],
       'charsRangeRight' : [ 7, 4 ],
       'nearest' : [ 'f\nf\n', 'abc', '\nf' ]
     }
@@ -1204,7 +1204,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 5, 6 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ 'f\naa\n', 'b', '\naa' ]
     }
@@ -1222,7 +1222,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 2, 4 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 2, 4  ],
+      'charsRangeLeft' : [ 2, 4  ],
       'charsRangeRight' : [ 9, 7 ],
       'nearest' : [ 'f\n', 'aa', '\nb' ]
     },
@@ -1233,7 +1233,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 7, 9 ],
       'counter' : 1,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 7, 9  ],
+      'charsRangeLeft' : [ 7, 9  ],
       'charsRangeRight' : [ 4, 2 ],
       'nearest' : [ 'aa\nb\n', 'aa', '\nf' ]
     }
@@ -1251,7 +1251,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 6, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 6, 7  ],
+      'charsRangeLeft' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'nearest' : [ 'f\nf\nhe', 'l', 'lo\nf' ]
     },
@@ -1262,7 +1262,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 7, 8 ],
       'counter' : 1,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 7, 8  ],
+      'charsRangeLeft' : [ 7, 8  ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ 'f\nf\nhel', 'l', 'o\nf' ]
     }
@@ -1280,7 +1280,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 10, 8 ],
       'nearest' : [ '', 'ab', '\naa' ]
     },
@@ -1291,7 +1291,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 3, 5 ],
+      'charsRangeLeft' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'nearest' : [ 'ab\n', 'aa', '\nb' ]
     },
@@ -1302,7 +1302,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 8, 10 ],
       'counter' : 2,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 8, 10 ],
+      'charsRangeLeft' : [ 8, 10 ],
       'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'aa\nb\n', 'ab', '' ]
     }
@@ -1320,7 +1320,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 4 ],
+      'charsRangeLeft' : [ 1, 4 ],
       'charsRangeRight' : [ 8, 5 ],
       'nearest' : [ '\n', 'abc', '\nabc' ]
     },
@@ -1331,7 +1331,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 5, 8 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 8 ],
+      'charsRangeLeft' : [ 5, 8 ],
       'charsRangeRight' : [ 4, 1 ],
       'nearest' : [ '\nabc\n', 'abc', '\n' ]
     }
@@ -1349,7 +1349,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 2 ],
+      'charsRangeLeft' : [ 1, 2 ],
       'charsRangeRight' : [ 8, 7 ],
       'nearest' : [ '\n', 'a', 'bc\nabc' ]
     },
@@ -1360,7 +1360,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 5, 6 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 4, 3 ],
       'nearest' : [ '\nabc\n', 'a', 'bc\n' ]
     }
@@ -1404,7 +1404,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 4, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nabc\nf\nf',
-      'charsRange' : [ 4, 7 ],
+      'charsRangeLeft' : [ 4, 7 ],
       'charsRangeRight' : [ 7, 4 ],
       'nearest' : [ 'f\nf\n', 'abc', '\nf' ]
     }
@@ -1422,7 +1422,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 5, 6 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ 'f\naa\n', 'b', '\naa' ]
     }
@@ -1440,7 +1440,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 2, 4 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 2, 4  ],
+      'charsRangeLeft' : [ 2, 4  ],
       'charsRangeRight' : [ 9, 7 ],
       'nearest' : [ 'f\n', 'aa', '\nb' ]
     },
@@ -1451,7 +1451,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 7, 9 ],
       'counter' : 1,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 7, 9  ],
+      'charsRangeLeft' : [ 7, 9  ],
       'charsRangeRight' : [ 4, 2 ],
       'nearest' : [ 'aa\nb\n', 'aa', '\nf' ]
     }
@@ -1469,7 +1469,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 6, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 6, 7  ],
+      'charsRangeLeft' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'nearest' : [ 'f\nf\nhe', 'l', 'lo\nf' ]
     },
@@ -1480,7 +1480,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 7, 8 ],
       'counter' : 1,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 7, 8  ],
+      'charsRangeLeft' : [ 7, 8  ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ 'f\nf\nhel', 'l', 'o\nf' ]
     }
@@ -1498,7 +1498,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 10, 8 ],
       'nearest' : [ '', 'ab', '\naa' ]
     },
@@ -1509,7 +1509,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 3, 5 ],
+      'charsRangeLeft' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'nearest' : [ 'ab\n', 'aa', '\nb' ]
     },
@@ -1520,7 +1520,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 8, 10 ],
       'counter' : 2,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 8, 10 ],
+      'charsRangeLeft' : [ 8, 10 ],
       'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'aa\nb\n', 'ab', '' ]
     }
@@ -1538,7 +1538,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 4 ],
+      'charsRangeLeft' : [ 1, 4 ],
       'charsRangeRight' : [ 8, 5 ],
       'nearest' : [ '\n', 'abc', '\nabc' ]
     },
@@ -1549,7 +1549,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 5, 8 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 8 ],
+      'charsRangeLeft' : [ 5, 8 ],
       'charsRangeRight' : [ 4, 1 ],
       'nearest' : [ '\nabc\n', 'abc', '\n' ]
     }
@@ -1567,7 +1567,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 2 ],
+      'charsRangeLeft' : [ 1, 2 ],
       'charsRangeRight' : [ 8, 7 ],
       'nearest' : [ '\n', 'a', 'bc\nabc' ]
     },
@@ -1578,7 +1578,7 @@ function strSearchOptionNearestLines( test )
       'range' : [ 5, 6 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 4, 3 ],
       'nearest' : [ '\nabc\n', 'a', 'bc\n' ]
     }
@@ -1630,7 +1630,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 4, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nabc\nf\nf',
-      'charsRange' : [ 4, 7 ],
+      'charsRangeLeft' : [ 4, 7 ],
       'charsRangeRight' : [ 7, 4 ],
       'nearest' :  'f\nabc'
     }
@@ -1648,7 +1648,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 5, 6 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' :  'aa\nb'
     }
@@ -1666,7 +1666,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 2, 4 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 2, 4  ],
+      'charsRangeLeft' : [ 2, 4  ],
       'charsRangeRight' : [ 9, 7 ],
       'nearest' :  'f\naa'
     },
@@ -1677,7 +1677,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 7, 9 ],
       'counter' : 1,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 7, 9  ],
+      'charsRangeLeft' : [ 7, 9  ],
       'charsRangeRight' : [ 4, 2 ],
       'nearest' :  'b\naa'
     }
@@ -1695,7 +1695,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 6, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 6, 7  ],
+      'charsRangeLeft' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'nearest' :  'f\nhello'
     },
@@ -1706,7 +1706,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 7, 8 ],
       'counter' : 1,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 7, 8  ],
+      'charsRangeLeft' : [ 7, 8  ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' :  'f\nhello'
     }
@@ -1724,7 +1724,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 10, 8 ],
       'nearest' :  'ab'
     },
@@ -1735,7 +1735,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 3, 5 ],
+      'charsRangeLeft' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'nearest' :  'ab\naa'
     },
@@ -1746,7 +1746,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 8, 10 ],
       'counter' : 2,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 8, 10 ],
+      'charsRangeLeft' : [ 8, 10 ],
       'charsRangeRight' : [ 2, 0 ],
       'nearest' :  'b\nab'
     }
@@ -1764,7 +1764,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 4 ],
+      'charsRangeLeft' : [ 1, 4 ],
       'charsRangeRight' : [ 8, 5 ],
       'nearest' :  '\nabc'
     },
@@ -1775,7 +1775,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 5, 8 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 8 ],
+      'charsRangeLeft' : [ 5, 8 ],
       'charsRangeRight' : [ 4, 1 ],
       'nearest' :  'abc\nabc'
     }
@@ -1793,7 +1793,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 2 ],
+      'charsRangeLeft' : [ 1, 2 ],
       'charsRangeRight' : [ 8, 7 ],
       'nearest' :  '\nabc'
     },
@@ -1804,7 +1804,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 5, 6 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 4, 3 ],
       'nearest' :  'abc\nabc'
     }
@@ -1848,7 +1848,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 4, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nabc\nf\nf',
-      'charsRange' : [ 4, 7 ],
+      'charsRangeLeft' : [ 4, 7 ],
       'charsRangeRight' : [ 7, 4 ],
       'nearest' :  'f\nabc'
     }
@@ -1866,7 +1866,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 5, 6 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' :  'aa\nb'
     }
@@ -1884,7 +1884,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 2, 4 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 2, 4  ],
+      'charsRangeLeft' : [ 2, 4  ],
       'charsRangeRight' : [ 9, 7 ],
       'nearest' :  'f\naa'
     },
@@ -1895,7 +1895,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 7, 9 ],
       'counter' : 1,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 7, 9  ],
+      'charsRangeLeft' : [ 7, 9  ],
       'charsRangeRight' : [ 4, 2 ],
       'nearest' :  'b\naa'
     }
@@ -1913,7 +1913,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 6, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 6, 7  ],
+      'charsRangeLeft' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'nearest' :  'f\nhello'
     },
@@ -1924,7 +1924,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 7, 8 ],
       'counter' : 1,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 7, 8  ],
+      'charsRangeLeft' : [ 7, 8  ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' :  'f\nhello'
     }
@@ -1942,7 +1942,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 10, 8 ],
       'nearest' :  'ab'
     },
@@ -1953,7 +1953,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 3, 5 ],
+      'charsRangeLeft' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'nearest' :  'ab\naa'
     },
@@ -1964,7 +1964,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 8, 10 ],
       'counter' : 2,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 8, 10 ],
+      'charsRangeLeft' : [ 8, 10 ],
       'charsRangeRight' : [ 2, 0 ],
       'nearest' :  'b\nab'
     }
@@ -1982,7 +1982,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 4 ],
+      'charsRangeLeft' : [ 1, 4 ],
       'charsRangeRight' : [ 8, 5 ],
       'nearest' :  '\nabc'
     },
@@ -1993,7 +1993,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 5, 8 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 8 ],
+      'charsRangeLeft' : [ 5, 8 ],
       'charsRangeRight' : [ 4, 1 ],
       'nearest' :  'abc\nabc'
     }
@@ -2011,7 +2011,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 2 ],
+      'charsRangeLeft' : [ 1, 2 ],
       'charsRangeRight' : [ 8, 7 ],
       'nearest' :  '\nabc'
     },
@@ -2022,7 +2022,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 5, 6 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 4, 3 ],
       'nearest' :  'abc\nabc'
     }
@@ -2071,7 +2071,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 4, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nabc\nf\nf',
-      'charsRange' : [ 4, 7 ],
+      'charsRangeLeft' : [ 4, 7 ],
       'charsRangeRight' : [ 7, 4 ],
       'nearest' :  'f\nf\nabc\nf'
     }
@@ -2089,7 +2089,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 5, 6 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' :  'f\naa\nb\naa'
     }
@@ -2107,7 +2107,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 2, 4 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 2, 4  ],
+      'charsRangeLeft' : [ 2, 4  ],
       'charsRangeRight' : [ 9, 7 ],
       'nearest' :  'f\naa\nb'
     },
@@ -2118,7 +2118,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 7, 9 ],
       'counter' : 1,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 7, 9  ],
+      'charsRangeLeft' : [ 7, 9  ],
       'charsRangeRight' : [ 4, 2 ],
       'nearest' :  'aa\nb\naa\nf'
     }
@@ -2136,7 +2136,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 6, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 6, 7  ],
+      'charsRangeLeft' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'nearest' :  'f\nf\nhello\nf'
     },
@@ -2147,7 +2147,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 7, 8 ],
       'counter' : 1,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 7, 8  ],
+      'charsRangeLeft' : [ 7, 8  ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' :  'f\nf\nhello\nf'
     }
@@ -2165,7 +2165,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 10, 8 ],
       'nearest' :  'ab\naa'
     },
@@ -2176,7 +2176,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 3, 5 ],
+      'charsRangeLeft' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'nearest' :  'ab\naa\nb'
     },
@@ -2187,7 +2187,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 8, 10 ],
       'counter' : 2,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 8, 10 ],
+      'charsRangeLeft' : [ 8, 10 ],
       'charsRangeRight' : [ 2, 0 ],
       'nearest' :  'aa\nb\nab'
     }
@@ -2205,7 +2205,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 4 ],
+      'charsRangeLeft' : [ 1, 4 ],
       'charsRangeRight' : [ 8, 5 ],
       'nearest' :  '\nabc\nabc'
     },
@@ -2216,7 +2216,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 5, 8 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 8 ],
+      'charsRangeLeft' : [ 5, 8 ],
       'charsRangeRight' : [ 4, 1 ],
       'nearest' :  '\nabc\nabc\n'
     }
@@ -2234,7 +2234,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 2 ],
+      'charsRangeLeft' : [ 1, 2 ],
       'charsRangeRight' : [ 8, 7 ],
       'nearest' :  '\nabc\nabc'
     },
@@ -2245,7 +2245,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 5, 6 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 4, 3 ],
       'nearest' :  '\nabc\nabc\n'
     }
@@ -2289,7 +2289,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 4, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nabc\nf\nf',
-      'charsRange' : [ 4, 7 ],
+      'charsRangeLeft' : [ 4, 7 ],
       'charsRangeRight' : [ 7, 4 ],
       'nearest' :  'f\nf\nabc\nf'
     }
@@ -2307,7 +2307,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 5, 6 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' :  'f\naa\nb\naa'
     }
@@ -2325,7 +2325,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 2, 4 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 2, 4  ],
+      'charsRangeLeft' : [ 2, 4  ],
       'charsRangeRight' : [ 9, 7 ],
       'nearest' :  'f\naa\nb'
     },
@@ -2336,7 +2336,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 7, 9 ],
       'counter' : 1,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 7, 9  ],
+      'charsRangeLeft' : [ 7, 9  ],
       'charsRangeRight' : [ 4, 2 ],
       'nearest' :  'aa\nb\naa\nf'
     }
@@ -2354,7 +2354,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 6, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 6, 7  ],
+      'charsRangeLeft' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'nearest' :  'f\nf\nhello\nf'
     },
@@ -2365,7 +2365,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 7, 8 ],
       'counter' : 1,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 7, 8  ],
+      'charsRangeLeft' : [ 7, 8  ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' :  'f\nf\nhello\nf'
     }
@@ -2383,7 +2383,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 10, 8 ],
       'nearest' :  'ab\naa'
     },
@@ -2394,7 +2394,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 3, 5 ],
+      'charsRangeLeft' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'nearest' :  'ab\naa\nb'
     },
@@ -2405,7 +2405,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 8, 10 ],
       'counter' : 2,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 8, 10 ],
+      'charsRangeLeft' : [ 8, 10 ],
       'charsRangeRight' : [ 2, 0 ],
       'nearest' :  'aa\nb\nab'
     }
@@ -2423,7 +2423,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 4 ],
+      'charsRangeLeft' : [ 1, 4 ],
       'charsRangeRight' : [ 8, 5 ],
       'nearest' :  '\nabc\nabc'
     },
@@ -2434,7 +2434,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 5, 8 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 8 ],
+      'charsRangeLeft' : [ 5, 8 ],
       'charsRangeRight' : [ 4, 1 ],
       'nearest' :  '\nabc\nabc\n'
     }
@@ -2452,7 +2452,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 2 ],
+      'charsRangeLeft' : [ 1, 2 ],
       'charsRangeRight' : [ 8, 7 ],
       'nearest' : '\nabc\nabc'
     },
@@ -2463,7 +2463,7 @@ function strSearchOptionNearestSplitting( test )
       'range' : [ 5, 6 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 4, 3 ],
       'nearest' : '\nabc\nabc\n'
     }
@@ -2515,7 +2515,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 4, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nabc\nf\nf',
-      'charsRange' : [ 4, 7 ],
+      'charsRangeLeft' : [ 4, 7 ],
       'charsRangeRight' : [ 7, 4 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
@@ -2535,7 +2535,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 5, 6 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
@@ -2555,7 +2555,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 2, 4 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 2, 4  ],
+      'charsRangeLeft' : [ 2, 4  ],
       'charsRangeRight' : [ 9, 7 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
@@ -2568,7 +2568,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 7, 9 ],
       'counter' : 1,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 7, 9  ],
+      'charsRangeLeft' : [ 7, 9  ],
       'charsRangeRight' : [ 4, 2 ],
       'linesRange' : [ 4, 5 ],
       'linesOffsets' : [ 3, 4, 5 ],
@@ -2588,7 +2588,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 6, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 6, 7  ],
+      'charsRangeLeft' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
@@ -2601,7 +2601,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 7, 8 ],
       'counter' : 1,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 7, 8  ],
+      'charsRangeLeft' : [ 7, 8  ],
       'charsRangeRight' : [ 6, 5 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
@@ -2621,7 +2621,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 10, 8 ],
       'linesRange' : [ 1, 2 ],
       'linesOffsets' : [ 1, 1, 2 ],
@@ -2634,7 +2634,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 3, 5 ],
+      'charsRangeLeft' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
@@ -2647,7 +2647,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 8, 10 ],
       'counter' : 2,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 8, 10 ],
+      'charsRangeLeft' : [ 8, 10 ],
       'charsRangeRight' : [ 2, 0 ],
       'linesRange' : [ 4, 5 ],
       'linesOffsets' : [ 3, 4, 5 ],
@@ -2667,7 +2667,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 4 ],
+      'charsRangeLeft' : [ 1, 4 ],
       'charsRangeRight' : [ 8, 5 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
@@ -2682,7 +2682,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 5, 8 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 8 ],
+      'charsRangeLeft' : [ 5, 8 ],
       'charsRangeRight' : [ 4, 1 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
@@ -2702,7 +2702,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 2 ],
+      'charsRangeLeft' : [ 1, 2 ],
       'charsRangeRight' : [ 8, 7 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
@@ -2715,7 +2715,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 5, 6 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 4, 3 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
@@ -2761,7 +2761,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 4, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nabc\nf\nf',
-      'charsRange' : [ 4, 7 ],
+      'charsRangeLeft' : [ 4, 7 ],
       'charsRangeRight' : [ 7, 4 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
@@ -2781,7 +2781,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 5, 6 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
@@ -2801,7 +2801,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 2, 4 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 2, 4  ],
+      'charsRangeLeft' : [ 2, 4  ],
       'charsRangeRight' : [ 9, 7 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
@@ -2814,7 +2814,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 7, 9 ],
       'counter' : 1,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 7, 9  ],
+      'charsRangeLeft' : [ 7, 9  ],
       'charsRangeRight' : [ 4, 2 ],
       'linesRange' : [ 4, 5 ],
       'linesOffsets' : [ 3, 4, 5 ],
@@ -2834,7 +2834,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 6, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 6, 7  ],
+      'charsRangeLeft' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
@@ -2847,7 +2847,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 7, 8 ],
       'counter' : 1,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 7, 8  ],
+      'charsRangeLeft' : [ 7, 8  ],
       'charsRangeRight' : [ 6, 5 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
@@ -2867,7 +2867,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 10, 8 ],
       'linesRange' : [ 1, 2 ],
       'linesOffsets' : [ 1, 1, 2 ],
@@ -2880,7 +2880,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 3, 5 ],
+      'charsRangeLeft' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
@@ -2893,7 +2893,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 8, 10 ],
       'counter' : 2,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 8, 10 ],
+      'charsRangeLeft' : [ 8, 10 ],
       'charsRangeRight' : [ 2, 0 ],
       'linesRange' : [ 4, 5 ],
       'linesOffsets' : [ 3, 4, 5 ],
@@ -2913,7 +2913,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 4 ],
+      'charsRangeLeft' : [ 1, 4 ],
       'charsRangeRight' : [ 8, 5 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
@@ -2926,7 +2926,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 5, 8 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 8 ],
+      'charsRangeLeft' : [ 5, 8 ],
       'charsRangeRight' : [ 4, 1 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
@@ -2946,7 +2946,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 2 ],
+      'charsRangeLeft' : [ 1, 2 ],
       'charsRangeRight' : [ 8, 7 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
@@ -2959,7 +2959,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 5, 6 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 4, 3 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
@@ -3010,7 +3010,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 4, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nabc\nf\nf',
-      'charsRange' : [ 4, 7 ],
+      'charsRangeLeft' : [ 4, 7 ],
       'charsRangeRight' : [ 7, 4 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
@@ -3030,7 +3030,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 5, 6 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
@@ -3050,7 +3050,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 2, 4 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 2, 4  ],
+      'charsRangeLeft' : [ 2, 4  ],
       'charsRangeRight' : [ 9, 7 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
@@ -3063,7 +3063,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 7, 9 ],
       'counter' : 1,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 7, 9  ],
+      'charsRangeLeft' : [ 7, 9  ],
       'charsRangeRight' : [ 4, 2 ],
       'linesRange' : [ 4, 5 ],
       'linesOffsets' : [ 2, 4, 5 ],
@@ -3083,7 +3083,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 6, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 6, 7  ],
+      'charsRangeLeft' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
@@ -3096,7 +3096,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 7, 8 ],
       'counter' : 1,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 7, 8  ],
+      'charsRangeLeft' : [ 7, 8  ],
       'charsRangeRight' : [ 6, 5 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
@@ -3116,7 +3116,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 10, 8 ],
       'linesRange' : [ 1, 2 ],
       'linesOffsets' : [ 1, 1, 2 ],
@@ -3129,7 +3129,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 3, 5 ],
+      'charsRangeLeft' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
@@ -3142,7 +3142,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 8, 10 ],
       'counter' : 2,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 8, 10 ],
+      'charsRangeLeft' : [ 8, 10 ],
       'charsRangeRight' : [ 2, 0 ],
       'linesRange' : [ 4, 5 ],
       'linesOffsets' : [ 2, 4, 5 ],
@@ -3162,7 +3162,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 4 ],
+      'charsRangeLeft' : [ 1, 4 ],
       'charsRangeRight' : [ 8, 5 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 2, 3, 4 ],
@@ -3177,7 +3177,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 5, 8 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 8 ],
+      'charsRangeLeft' : [ 5, 8 ],
       'charsRangeRight' : [ 4, 1 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
@@ -3197,7 +3197,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 2 ],
+      'charsRangeLeft' : [ 1, 2 ],
       'charsRangeRight' : [ 8, 7 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
@@ -3210,7 +3210,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 5, 6 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 4, 3 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
@@ -3256,7 +3256,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 4, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nabc\nf\nf',
-      'charsRange' : [ 4, 7 ],
+      'charsRangeLeft' : [ 4, 7 ],
       'charsRangeRight' : [ 7, 4 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
@@ -3276,7 +3276,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 5, 6 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
@@ -3296,7 +3296,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 2, 4 ],
       'counter' : 0,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 2, 4  ],
+      'charsRangeLeft' : [ 2, 4  ],
       'charsRangeRight' : [ 9, 7 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
@@ -3309,7 +3309,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 7, 9 ],
       'counter' : 1,
       'input' : 'f\naa\nb\naa\nf',
-      'charsRange' : [ 7, 9  ],
+      'charsRangeLeft' : [ 7, 9  ],
       'charsRangeRight' : [ 4, 2 ],
       'linesRange' : [ 4, 5 ],
       'linesOffsets' : [ 2, 4, 5 ],
@@ -3329,7 +3329,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 6, 7 ],
       'counter' : 0,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 6, 7  ],
+      'charsRangeLeft' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
@@ -3342,7 +3342,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 7, 8 ],
       'counter' : 1,
       'input' : 'f\nf\nhello\nf\nf',
-      'charsRange' : [ 7, 8  ],
+      'charsRangeLeft' : [ 7, 8  ],
       'charsRangeRight' : [ 6, 5 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
@@ -3362,7 +3362,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 10, 8 ],
       'linesRange' : [ 1, 2 ],
       'linesOffsets' : [ 1, 1, 2 ],
@@ -3375,7 +3375,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 3, 5 ],
+      'charsRangeLeft' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
@@ -3388,7 +3388,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 8, 10 ],
       'counter' : 2,
       'input' : 'ab\naa\nb\nab',
-      'charsRange' : [ 8, 10 ],
+      'charsRangeLeft' : [ 8, 10 ],
       'charsRangeRight' : [ 2, 0 ],
       'linesRange' : [ 4, 5 ],
       'linesOffsets' : [ 2, 4, 5 ],
@@ -3408,7 +3408,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 4 ],
+      'charsRangeLeft' : [ 1, 4 ],
       'charsRangeRight' : [ 8, 5 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
@@ -3421,7 +3421,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 5, 8 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 8 ],
+      'charsRangeLeft' : [ 5, 8 ],
       'charsRangeRight' : [ 4, 1 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
@@ -3441,7 +3441,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 1, 2 ],
+      'charsRangeLeft' : [ 1, 2 ],
       'charsRangeRight' : [ 8, 7 ],
       'linesRange' : [ 2, 3 ],
       'linesOffsets' : [ 1, 2, 3 ],
@@ -3454,7 +3454,7 @@ function strSearchOptiondeterminingLineNumber( test )
       'range' : [ 5, 6 ],
       'counter' : 1,
       'input' : '\nabc\nabc\n',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 4, 3 ],
       'linesRange' : [ 3, 4 ],
       'linesOffsets' : [ 1, 3, 4 ],
@@ -3508,7 +3508,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 0, 3 ],
       'counter' : 0,
       'input' : 'abc',
-      'charsRange' : [ 0, 3 ],
+      'charsRangeLeft' : [ 0, 3 ],
       'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ '', 'abc', '' ]
     }
@@ -3526,7 +3526,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 2, 3 ],
       'counter' : 0,
       'input' : 'aabaa',
-      'charsRange' : [ 2, 3 ],
+      'charsRangeLeft' : [ 2, 3 ],
       'charsRangeRight' : [ 3, 2 ],
       'nearest' : [ 'aa', 'b', 'aa' ]
     }
@@ -3544,7 +3544,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'aabaa',
-      'charsRange' : [ 0, 2  ],
+      'charsRangeLeft' : [ 0, 2  ],
       'charsRangeRight' : [ 5, 3 ],
       'nearest' : [ '', 'aa', 'baa' ]
     },
@@ -3555,7 +3555,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : 'aabaa',
-      'charsRange' : [ 3, 5  ],
+      'charsRangeLeft' : [ 3, 5  ],
       'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'aab', 'aa', '' ]
     }
@@ -3573,7 +3573,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 2, 3 ],
       'counter' : 0,
       'input' : 'hello',
-      'charsRange' : [ 2, 3  ],
+      'charsRangeLeft' : [ 2, 3  ],
       'charsRangeRight' : [ 3, 2 ],
       'nearest' : [ 'he', 'l', 'lo' ]
     },
@@ -3584,7 +3584,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 3, 4 ],
       'counter' : 1,
       'input' : 'hello',
-      'charsRange' : [ 3, 4  ],
+      'charsRangeLeft' : [ 3, 4  ],
       'charsRangeRight' : [ 2, 1 ],
       'nearest' : [ 'hel', 'l', 'o' ]
     }
@@ -3602,7 +3602,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'abaabab',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 7, 5 ],
       'nearest' : [ '', 'ab', 'aabab' ]
     },
@@ -3613,7 +3613,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 2, 4 ],
       'counter' : 1,
       'input' : 'abaabab',
-      'charsRange' : [ 2, 4 ],
+      'charsRangeLeft' : [ 2, 4 ],
       'charsRangeRight' : [ 5, 3 ],
       'nearest' : [ 'ab', 'aa', 'bab' ]
     },
@@ -3624,7 +3624,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 5, 7 ],
       'counter' : 2,
       'input' : 'abaabab',
-      'charsRange' : [ 5, 7 ],
+      'charsRangeLeft' : [ 5, 7 ],
       'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'abaab', 'ab', '' ]
     }
@@ -3642,7 +3642,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 0, 3 ],
       'counter' : 0,
       'input' : 'abcabc',
-      'charsRange' : [ 0, 3 ],
+      'charsRangeLeft' : [ 0, 3 ],
       'charsRangeRight' : [ 6, 3 ],
       'nearest' : [ '', 'abc', 'abc' ]
     },
@@ -3653,7 +3653,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 3, 6 ],
       'counter' : 1,
       'input' : 'abcabc',
-      'charsRange' : [ 3, 6 ],
+      'charsRangeLeft' : [ 3, 6 ],
       'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ 'abc', 'abc', '' ]
     }
@@ -3671,7 +3671,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 0, 1 ],
       'counter' : 0,
       'input' : 'abcabc',
-      'charsRange' : [ 0, 1 ],
+      'charsRangeLeft' : [ 0, 1 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' : [ '', 'a', 'bcabc' ]
     },
@@ -3682,7 +3682,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 3, 4 ],
       'counter' : 1,
       'input' : 'abcabc',
-      'charsRange' : [ 3, 4 ],
+      'charsRangeLeft' : [ 3, 4 ],
       'charsRangeRight' : [ 3, 2 ],
       'nearest' : [ 'abc', 'a', 'bc' ]
     }
@@ -3721,7 +3721,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 0, 3 ],
       'counter' : 0,
       'input' : 'abc',
-      'charsRange' : [ 0, 3 ],
+      'charsRangeLeft' : [ 0, 3 ],
       'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ '', 'abc', '' ]
     }
@@ -3744,7 +3744,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'aabaa',
-      'charsRange' : [ 0, 2  ],
+      'charsRangeLeft' : [ 0, 2  ],
       'charsRangeRight' : [ 5, 3 ],
       'nearest' : [ '', 'aa', 'baa' ]
     },
@@ -3755,7 +3755,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : 'aabaa',
-      'charsRange' : [ 3, 5  ],
+      'charsRangeLeft' : [ 3, 5  ],
       'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'aab', 'aa', '' ]
     }
@@ -3778,7 +3778,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'abaabab',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 7, 5 ],
       'nearest' : [ '', 'ab', 'aabab' ]
     },
@@ -3789,7 +3789,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 2, 4 ],
       'counter' : 1,
       'input' : 'abaabab',
-      'charsRange' : [ 2, 4 ],
+      'charsRangeLeft' : [ 2, 4 ],
       'charsRangeRight' : [ 5, 3 ],
       'nearest' : [ 'ab', 'aa', 'bab' ]
     },
@@ -3800,7 +3800,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 5, 7 ],
       'counter' : 2,
       'input' : 'abaabab',
-      'charsRange' : [ 5, 7 ],
+      'charsRangeLeft' : [ 5, 7 ],
       'charsRangeRight' : [ 2, 0 ],
       'nearest' : [ 'abaab', 'ab', '' ]
     }
@@ -3823,7 +3823,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 0, 3 ],
       'counter' : 0,
       'input' : 'abcabc',
-      'charsRange' : [ 0, 3 ],
+      'charsRangeLeft' : [ 0, 3 ],
       'charsRangeRight' : [ 6, 3 ],
       'nearest' : [ '', 'abc', 'abc' ]
     },
@@ -3834,7 +3834,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 3, 6 ],
       'counter' : 1,
       'input' : 'abcabc',
-      'charsRange' : [ 3, 6 ],
+      'charsRangeLeft' : [ 3, 6 ],
       'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ 'abc', 'abc', '' ]
     }
@@ -3857,7 +3857,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : 'abcabc',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 6, 4 ],
       'nearest' : [ '', 'ab', 'cabc' ]
     },
@@ -3868,7 +3868,7 @@ function strSearchOptionStringWithRegexp( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : 'abcabc',
-      'charsRange' : [ 3, 5 ],
+      'charsRangeLeft' : [ 3, 5 ],
       'charsRangeRight' : [ 3, 1 ],
       'nearest' : [ 'abc', 'ab', 'c' ]
     }
@@ -3895,7 +3895,7 @@ function strSearchOptionToleratingSpaces( test )
       'range' : [ 4, 6 ],
       'counter' : 0,
       'input' : 'hello  ',
-      'charsRange' : [ 4, 6 ],
+      'charsRangeLeft' : [ 4, 6 ],
       'charsRangeRight' : [ 3, 1 ],
       'nearest' : [ 'hell', 'o ', ' ' ]
     }
@@ -3913,7 +3913,7 @@ function strSearchOptionToleratingSpaces( test )
       'range' : [ 4, 7 ],
       'counter' : 0,
       'input' : 'hello  ',
-      'charsRange' : [ 4, 7 ],
+      'charsRangeLeft' : [ 4, 7 ],
       'charsRangeRight' : [ 3, 0 ],
       'nearest' : [ 'hell', 'o  ', '' ]
     }
@@ -3936,7 +3936,7 @@ function strSearchOptionToleratingSpaces( test )
       'range' : [ 0, 5 ],
       'counter' : 0,
       'input' : 'a b c',
-      'charsRange' : [ 0, 5 ],
+      'charsRangeLeft' : [ 0, 5 ],
       'charsRangeRight' : [ 5, 0 ],
       'nearest' : [ '', 'a b c', '' ]
     }
@@ -3959,7 +3959,7 @@ function strSearchOptionToleratingSpaces( test )
       'range' : [ 0, 5 ],
       'counter' : 0,
       'input' : 'a   aba   a',
-      'charsRange' : [ 0, 5  ],
+      'charsRangeLeft' : [ 0, 5  ],
       'charsRangeRight' : [ 11, 6 ],
       'nearest' : [ '', 'a   a', 'ba   a' ]
     },
@@ -3970,7 +3970,7 @@ function strSearchOptionToleratingSpaces( test )
       'range' : [ 6, 11 ],
       'counter' : 1,
       'input' : 'a   aba   a',
-      'charsRange' : [ 6, 11 ],
+      'charsRangeLeft' : [ 6, 11 ],
       'charsRangeRight' : [ 5, 0 ],
       'nearest' : [ 'a   ab', 'a   a', '' ]
     }
@@ -3993,7 +3993,7 @@ function strSearchOptionToleratingSpaces( test )
       'range' : [ 0, 4 ],
       'counter' : 0,
       'input' : 'a  b  a  a  b  a  b',
-      'charsRange' : [ 0, 4 ],
+      'charsRangeLeft' : [ 0, 4 ],
       'charsRangeRight' : [ 19, 15 ],
       'nearest' : [ '', 'a  b', '  a  a  b  a  b' ]
     },
@@ -4004,7 +4004,7 @@ function strSearchOptionToleratingSpaces( test )
       'range' : [ 4, 12 ],
       'counter' : 1,
       'input' : 'a  b  a  a  b  a  b',
-      'charsRange' : [ 4, 12 ],
+      'charsRangeLeft' : [ 4, 12 ],
       'charsRangeRight' : [ 15, 7 ],
       'nearest' : [ 'a  b', '  a  a  ', 'b  a  b' ]
     },
@@ -4015,7 +4015,7 @@ function strSearchOptionToleratingSpaces( test )
       'range' : [ 13, 16 ],
       'counter' : 2,
       'input' : 'a  b  a  a  b  a  b',
-      'charsRange' : [ 13, 16 ],
+      'charsRangeLeft' : [ 13, 16 ],
       'charsRangeRight' : [ 6, 3 ],
       'nearest' : [ 'a  b  a  a  b', '  a', '  b' ]
     }
@@ -4038,7 +4038,7 @@ function strSearchOptionToleratingSpaces( test )
       'range' : [ 0, 8 ],
       'counter' : 0,
       'input' : 'a   b c a   b c',
-      'charsRange' : [ 0, 8 ],
+      'charsRangeLeft' : [ 0, 8 ],
       'charsRangeRight' : [ 15, 7 ],
       'nearest' : [ '', 'a   b c ', 'a   b c' ]
     },
@@ -4049,7 +4049,7 @@ function strSearchOptionToleratingSpaces( test )
       'range' : [ 8, 15 ],
       'counter' : 1,
       'input' : 'a   b c a   b c',
-      'charsRange' : [ 8, 15 ],
+      'charsRangeLeft' : [ 8, 15 ],
       'charsRangeRight' : [ 7, 0 ],
       'nearest' : [ 'a   b c ', 'a   b c', '' ]
     }
@@ -4072,7 +4072,7 @@ function strSearchOptionToleratingSpaces( test )
       'range' : [ 0, 6 ],
       'counter' : 0,
       'input' : 'a   b c a   b c',
-      'charsRange' : [ 0, 6 ],
+      'charsRangeLeft' : [ 0, 6 ],
       'charsRangeRight' : [ 15, 9 ],
       'nearest' : [ '', 'a   b ', 'c a   b c' ]
     },
@@ -4083,7 +4083,7 @@ function strSearchOptionToleratingSpaces( test )
       'range' : [ 8, 14 ],
       'counter' : 1,
       'input' : 'a   b c a   b c',
-      'charsRange' : [ 8, 14 ],
+      'charsRangeLeft' : [ 8, 14 ],
       'charsRangeRight' : [ 7, 1 ],
       'nearest' : [ 'a   b c ', 'a   b ', 'c' ]
     }
@@ -4137,7 +4137,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 5, 8 ],
       'counter' : 0,
       'input' : 'f\nif\nabc\nin\nf',
-      'charsRange' : [ 5, 8 ],
+      'charsRangeLeft' : [ 5, 8 ],
       'charsRangeRight' : [ 8, 5 ],
       'nearest' :  [ 'if\n', 'abc', '\nin' ]
     }
@@ -4155,7 +4155,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 5, 6 ],
       'counter' : 0,
       'input' : 'f\nif\nb\nin\nf',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' :  [ 'if\n', 'b', '\nin' ]
     }
@@ -4173,7 +4173,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 2, 4 ],
       'counter' : 0,
       'input' : 'f\nif\nb\nif\nf',
-      'charsRange' : [ 2, 4  ],
+      'charsRangeLeft' : [ 2, 4  ],
       'charsRangeRight' : [ 9, 7 ],
       'nearest' :  [ 'f\n', 'if', '\nb' ]
     },
@@ -4184,7 +4184,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 7, 9 ],
       'counter' : 1,
       'input' : 'f\nif\nb\nif\nf',
-      'charsRange' : [ 7, 9  ],
+      'charsRangeLeft' : [ 7, 9  ],
       'charsRangeRight' : [ 4, 2 ],
       'nearest' :  [ 'b\n', 'if', '\nf' ]
     }
@@ -4202,7 +4202,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 6, 7 ],
       'counter' : 0,
       'input' : 'f\nf\n[all]\nf\nf',
-      'charsRange' : [ 6, 7  ],
+      'charsRangeLeft' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'nearest' :  [ 'f\n[a', 'l', 'l]\nf' ]
     },
@@ -4213,7 +4213,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 7, 8 ],
       'counter' : 1,
       'input' : 'f\nf\n[all]\nf\nf',
-      'charsRange' : [ 7, 8  ],
+      'charsRangeLeft' : [ 7, 8  ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' :  [ 'f\n[al', 'l', ']\nf' ]
     }
@@ -4231,7 +4231,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : '{}\n()\nb\n{}',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 10, 8 ],
       'nearest' :  [ '', '{}', '\n()' ]
     },
@@ -4242,7 +4242,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : '{}\n()\nb\n{}',
-      'charsRange' : [ 3, 5 ],
+      'charsRangeLeft' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'nearest' :  [ '{}\n', '()', '\nb' ]
     },
@@ -4253,7 +4253,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 8, 10 ],
       'counter' : 2,
       'input' : '{}\n()\nb\n{}',
-      'charsRange' : [ 8, 10 ],
+      'charsRangeLeft' : [ 8, 10 ],
       'charsRangeRight' : [ 2, 0 ],
       'nearest' :  [ 'b\n', '{}', '' ]
     }
@@ -4271,7 +4271,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\n(a)\n(a)\n',
-      'charsRange' : [ 1, 4 ],
+      'charsRangeLeft' : [ 1, 4 ],
       'charsRangeRight' : [ 8, 5 ],
       'nearest' :  [ '\n', '(a)', '\n(a)' ]
     },
@@ -4282,7 +4282,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 5, 8 ],
       'counter' : 1,
       'input' : '\n(a)\n(a)\n',
-      'charsRange' : [ 5, 8 ],
+      'charsRangeLeft' : [ 5, 8 ],
       'charsRangeRight' : [ 4, 1 ],
       'nearest' :  [ '(a)\n', '(a)', '\n' ]
     }
@@ -4300,7 +4300,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\n(a)\n(a)\n',
-      'charsRange' : [ 1, 2 ],
+      'charsRangeLeft' : [ 1, 2 ],
       'charsRangeRight' : [ 8, 7 ],
       'nearest' :  [ '\n', '(', 'a)\n(a)' ]
     },
@@ -4311,7 +4311,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 5, 6 ],
       'counter' : 1,
       'input' : '\n(a)\n(a)\n',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 4, 3 ],
       'nearest' :  [ '(a)\n', '(', 'a)\n' ]
     }
@@ -4355,7 +4355,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 5, 8 ],
       'counter' : 0,
       'input' : 'f\nif\nabc\nin\nf',
-      'charsRange' : [ 5, 8 ],
+      'charsRangeLeft' : [ 5, 8 ],
       'charsRangeRight' : [ 8, 5 ],
       'nearest' :  [ 'if\n', 'abc', '\nin' ]
     }
@@ -4373,7 +4373,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 5, 6 ],
       'counter' : 0,
       'input' : 'f\nif\nb\nin\nf',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' :  [ 'if\n', 'b', '\nin' ]
     }
@@ -4391,7 +4391,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 2, 4 ],
       'counter' : 0,
       'input' : 'f\nif\nb\nif\nf',
-      'charsRange' : [ 2, 4  ],
+      'charsRangeLeft' : [ 2, 4  ],
       'charsRangeRight' : [ 9, 7 ],
       'nearest' :  [ 'f\n', 'if', '\nb' ]
     },
@@ -4402,7 +4402,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 7, 9 ],
       'counter' : 1,
       'input' : 'f\nif\nb\nif\nf',
-      'charsRange' : [ 7, 9  ],
+      'charsRangeLeft' : [ 7, 9  ],
       'charsRangeRight' : [ 4, 2 ],
       'nearest' :  [ 'b\n', 'if', '\nf' ]
     }
@@ -4420,7 +4420,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 6, 7 ],
       'counter' : 0,
       'input' : 'f\nf\n[all]\nf\nf',
-      'charsRange' : [ 6, 7  ],
+      'charsRangeLeft' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'nearest' :  [ 'f\n[a', 'l', 'l]\nf' ]
     },
@@ -4431,7 +4431,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 7, 8 ],
       'counter' : 1,
       'input' : 'f\nf\n[all]\nf\nf',
-      'charsRange' : [ 7, 8  ],
+      'charsRangeLeft' : [ 7, 8  ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' :  [ 'f\n[al', 'l', ']\nf' ]
     }
@@ -4449,7 +4449,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 0, 2 ],
       'counter' : 0,
       'input' : '{}\n()\nb\n{}',
-      'charsRange' : [ 0, 2 ],
+      'charsRangeLeft' : [ 0, 2 ],
       'charsRangeRight' : [ 10, 8 ],
       'nearest' :  [ '', '{}', '\n()' ]
     },
@@ -4460,7 +4460,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 3, 5 ],
       'counter' : 1,
       'input' : '{}\n()\nb\n{}',
-      'charsRange' : [ 3, 5 ],
+      'charsRangeLeft' : [ 3, 5 ],
       'charsRangeRight' : [ 7, 5 ],
       'nearest' :  [ '{}\n', '()', '\nb' ]
     },
@@ -4471,7 +4471,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 8, 10 ],
       'counter' : 2,
       'input' : '{}\n()\nb\n{}',
-      'charsRange' : [ 8, 10 ],
+      'charsRangeLeft' : [ 8, 10 ],
       'charsRangeRight' : [ 2, 0 ],
       'nearest' :  [ 'b\n', '{}', '' ]
     }
@@ -4489,7 +4489,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\n(a)\n(a)\n',
-      'charsRange' : [ 1, 4 ],
+      'charsRangeLeft' : [ 1, 4 ],
       'charsRangeRight' : [ 8, 5 ],
       'nearest' :  [ '\n', '(a)', '\n(a)' ]
     },
@@ -4500,7 +4500,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 5, 8 ],
       'counter' : 1,
       'input' : '\n(a)\n(a)\n',
-      'charsRange' : [ 5, 8 ],
+      'charsRangeLeft' : [ 5, 8 ],
       'charsRangeRight' : [ 4, 1 ],
       'nearest' :  [ '(a)\n', '(a)', '\n' ]
     }
@@ -4518,7 +4518,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 1, 2 ],
       'counter' : 0,
       'input' : '\n(a)\n(a)\n',
-      'charsRange' : [ 1, 2 ],
+      'charsRangeLeft' : [ 1, 2 ],
       'charsRangeRight' : [ 8, 7 ],
       'nearest' :  [ '\n', '(', 'a)\n(a)' ]
     },
@@ -4529,7 +4529,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 5, 6 ],
       'counter' : 1,
       'input' : '\n(a)\n(a)\n',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 4, 3 ],
       'nearest' :  [ '(a)\n', '(', 'a)\n' ]
     }
@@ -4587,7 +4587,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 5, 6 ],
       'counter' : 0,
       'input' : 'f\nif\nb\nin\nf',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' :  [ 'if\n', 'b', '\nin' ]
     }
@@ -4610,7 +4610,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 6, 7 ],
       'counter' : 0,
       'input' : 'f\nf\n[all]\nf\nf',
-      'charsRange' : [ 6, 7  ],
+      'charsRangeLeft' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'nearest' :  [ 'f\n[a', 'l', 'l]\nf' ]
     },
@@ -4621,7 +4621,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 7, 8 ],
       'counter' : 1,
       'input' : 'f\nf\n[all]\nf\nf',
-      'charsRange' : [ 7, 8  ],
+      'charsRangeLeft' : [ 7, 8  ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' :  [ 'f\n[al', 'l', ']\nf' ]
     }
@@ -4644,7 +4644,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\n(a)\n(a)\n',
-      'charsRange' : [ 1, 4 ],
+      'charsRangeLeft' : [ 1, 4 ],
       'charsRangeRight' : [ 8, 5 ],
       'nearest' :  [ '\n', '(a)', '\n(a)' ]
     },
@@ -4655,7 +4655,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 5, 8 ],
       'counter' : 1,
       'input' : '\n(a)\n(a)\n',
-      'charsRange' : [ 5, 8 ],
+      'charsRangeLeft' : [ 5, 8 ],
       'charsRangeRight' : [ 4, 1 ],
       'nearest' :  [ '(a)\n', '(a)', '\n' ]
     }
@@ -4709,7 +4709,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 5, 6 ],
       'counter' : 0,
       'input' : 'f\nif\nb\nin\nf',
-      'charsRange' : [ 5, 6 ],
+      'charsRangeLeft' : [ 5, 6 ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' :  [ 'if\n', 'b', '\nin' ]
     }
@@ -4732,7 +4732,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 6, 7 ],
       'counter' : 0,
       'input' : 'f\nf\n[all]\nf\nf',
-      'charsRange' : [ 6, 7  ],
+      'charsRangeLeft' : [ 6, 7  ],
       'charsRangeRight' : [ 7, 6 ],
       'nearest' :  [ 'f\n[a', 'l', 'l]\nf' ]
     },
@@ -4743,7 +4743,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 7, 8 ],
       'counter' : 1,
       'input' : 'f\nf\n[all]\nf\nf',
-      'charsRange' : [ 7, 8  ],
+      'charsRangeLeft' : [ 7, 8  ],
       'charsRangeRight' : [ 6, 5 ],
       'nearest' :  [ 'f\n[al', 'l', ']\nf' ]
     }
@@ -4766,7 +4766,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 1, 4 ],
       'counter' : 0,
       'input' : '\n(a)\n(a)\n',
-      'charsRange' : [ 1, 4 ],
+      'charsRangeLeft' : [ 1, 4 ],
       'charsRangeRight' : [ 8, 5 ],
       'nearest' :  [ '\n', '(a)', '\n(a)' ]
     },
@@ -4777,7 +4777,7 @@ function strSearchOptionOnTokenize( test )
       'range' : [ 5, 8 ],
       'counter' : 1,
       'input' : '\n(a)\n(a)\n',
-      'charsRange' : [ 5, 8 ],
+      'charsRangeLeft' : [ 5, 8 ],
       'charsRangeRight' : [ 4, 1 ],
       'nearest' :  [ '(a)\n', '(a)', '\n' ]
     }
