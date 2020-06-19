@@ -422,8 +422,6 @@ function strSearchLog_body( o )
 
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-  debugger;
-
   o.found = this.strSearch( _.mapOnly( o, this.strSearch.defaults ) );
 
   _.each( o.found, ( it ) =>
@@ -455,6 +453,46 @@ strSearchLog_body.defaults =
 }
 
 let strSearchLog = _.routineFromPreAndBody( strSearch_pre, strSearchLog_body );
+
+//
+
+function strSearchReplace( o )
+{
+
+  _.assert( arguments.length === 1 );
+  _.routineOptions( strSearchReplace, o );
+
+  for( let i = 0 ; i < tokens.length ; i++ )
+  {
+    let it = tokens[ i ];
+
+    logger.log( it.log );
+
+    
+
+    debugger;
+
+  }
+
+}
+
+strSearchReplace.defaults =
+{
+  tokens : null,
+}
+
+// strSearchReplace.defaults =
+// {
+//   charsRangeLeft : null,
+//   charsRangeRight : null,
+//   // counter: 2
+//   // groups: []
+//   // log: "#foreground : bright black##foreground : default##foreground : bright black#2#foreground : default# : #inputRaw:1#Second line#inputRaw:0#↵#foreground : bright black##foreground : default##foreground : bright black#3#foreground : default# : #inputRaw:1#Third #inputRaw:0##foreground : red#line#foreground : default##foreground : green#line2#foreground : default##inputRaw:1##inputRaw:0#↵#foreground : bright black##foreground : default##foreground : bright black#4#foreground : default# : #inputRaw:1#Last one#inputRaw:0#"
+//   match : null, /* xxx : rename to ins? */
+//   // nearest : (3) ["Second line↵Third ", "line", "↵Last one"]
+//   sub : null,
+//   // tokenId : 0
+// }
 
 //
 
@@ -689,7 +727,7 @@ function strFindAll( src, ins )
       groups = _.longSlice( execed, 1, execed.length );
     }
 
-    it.match = foundIns;
+    it.match = foundIns; /* xxx : rename to ins? */
     it.groups = groups;
     it.tokenId = tokenId;
     it.charsRangeLeft = [ index, index + foundIns.length ]; /* yyy */
@@ -3259,8 +3297,10 @@ let Extend =
   strVarNameFor,
   strHtmlEscape,
 
-  strSearch,
+  strSearch, /* xxx : move out? */
   strSearchLog, /* qqq2 : cover please */
+  strSearchReplace,
+
   strFindAll,
 
   TokensSyntax,
