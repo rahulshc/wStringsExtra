@@ -350,13 +350,13 @@ function strSearch_body( o )
   function splitAdjust( it )
   {
 
-    it.charsRangeLeft = it.range;
+    // it.charsRangeLeft = it.range; /* yyy */
     it.charsRangeRight = [ o.src.length - it.charsRangeLeft[ 0 ], o.src.length - it.charsRangeLeft[ 1 ] ];
 
     let first;
     if( o.determiningLineNumber )
     {
-      first = o.src.substring( 0,it.charsRangeLeft[ 0 ] ).split( '\n' ).length;
+      first = o.src.substring( 0, it.charsRangeLeft[ 0 ] ).split( '\n' ).length;
       it.linesRange = [ first, first+o.src.substring( it.charsRangeLeft[ 0 ], it.charsRangeLeft[ 1 ] ).split( '\n' ).length ];
     }
 
@@ -365,7 +365,7 @@ function strSearch_body( o )
     ({
       src : o.src,
       charsRangeLeft : it.charsRangeLeft,
-      numberOfLines : o.nearestLines,
+      nearestLines : o.nearestLines,
     }).splits;
 
     if( o.determiningLineNumber )
@@ -375,7 +375,7 @@ function strSearch_body( o )
     {
       let tokens = o.onTokenize( it.nearest.join( '' ) );
 
-      let ranges = _.select( tokens, '*/range/0' ); /* xxx : separate routine */
+      let ranges = _.select( tokens, '*/charsRangeLeft/0' );
       let range = [ it.nearest[ 0 ].length, it.nearest[ 0 ].length + it.nearest[ 1 ].length ];
       let having = _.sorted.lookUpIntervalHaving( ranges, range );
 
@@ -417,45 +417,50 @@ let strSearch = _.routineFromPreAndBody( strSearch_pre, strSearch_body );
 
 //
 
-function strSearchReport_body( o )
+function strSearchLog_body( o )
 {
 
   _.assert( arguments.length === 1, 'Expects single argument' );
+
+  debugger;
 
   o.found = this.strSearch( _.mapOnly( o, this.strSearch.defaults ) );
 
   _.each( o.found, ( it ) =>
   {
-    it.report = _.strLinesNearestReport
+    it.log = _.strLinesNearestLog
     ({
       src : o.src,
+      sub : o.sub,
       charsRangeLeft : it.charsRangeLeft,
-      numberOfLines : o.numberOfLines,
-      gray : o.gray
-    }).report;
+      nearestLines : o.nearestLines,
+      nearest : it.nearest,
+      gray : o.gray,
+    }).log;
+    if( o.sub !== undefined )
+    it.sub = o.sub;
   });
 
-  o.report = o.found.map( ( it ) => it.report ).join( '\n\n' );
+  o.log = o.found.map( ( it ) => it.log ).join( '\n' );
 
   return o;
 }
 
-strSearchReport_body.defaults =
+strSearchLog_body.defaults =
 {
   ... strSearch.defaults,
+  sub : null, /* qqq2 : cover the option */
   gray : 0,
-  numberOfLines : _.strLinesNearestReport.defaults.numberOfLines,
+  nearestLines : _.strLinesNearestLog.defaults.nearestLines,
 }
 
-let strSearchReport = _.routineFromPreAndBody( strSearch_pre, strSearchReport_body );
+let strSearchLog = _.routineFromPreAndBody( strSearch_pre, strSearchLog_body );
 
 //
 
 function strFindAll( src, ins )
 {
   let o;
-
-  /* xxx : sync names with _.strLeft / _.strRight */
 
   if( arguments.length === 2 )
   {
@@ -485,12 +490,13 @@ function strFindAll( src, ins )
   let closestTokenId = -1;
   let closestIndex = o.src.length;
   let currentIndex = 0;
+  let descriptorFor = o.fast ? descriptorForFast : descriptorForFull;
 
   /* */
 
   tokensSyntax.idToValue.forEach( ( ins, tokenId ) =>
   {
-    // Dmytro : not optimal - double check
+    // Dmytro : not optimal - double check. qqq : ?
     _.assert( _.strIs( ins ) || _.regexpIs( ins ) );
 
     if( _.regexpIs( ins ) )
@@ -552,14 +558,11 @@ function strFindAll( src, ins )
 
     if( _.strIs( ins ) )
     {
-      if( !ins.length )
-      result = src.length;
-      else
       result = findWithString( o.src, ins, tokenId );
     }
     else if( _.regexpIs( ins ) )
     {
-      if( ins.source === '(?:)' ) // Dmytro : missed, it's regexp for empty string
+      if( ins.source === '(?:)' )
       result = src.length;
       else
       result = findWithRegexp( o.src, ins, tokenId );
@@ -575,7 +578,7 @@ function strFindAll( src, ins )
   function findWithString( src, ins )
   {
 
-    if( !ins.length ) // Dmytro : duplicate from previous subroutine
+    if( !ins.length )
     return src.length;
 
     let index = src.indexOf( ins, currentIndex );
@@ -626,65 +629,31 @@ function strFindAll( src, ins )
 
   /* */
 
-  function descriptorFor( src, index, tokenId )
+  function descriptorForFast( src, index, tokenId )
   {
     let originalIns = tokensSyntax.idToValue[ tokenId ];
     let foundIns;
+    let it = [];
 
     if( tokenId === -1 )
     originalIns = src.substring( index, closestIndex );
 
-    if( o.fast )
+    if( _.strIs( originalIns ) )
     {
-      let it = [];
-
-      if( _.strIs( originalIns ) )
-      {
-        foundIns = originalIns;
-      }
-      else
-      {
-        let execed = execeds[ tokenId ];
-        _.assert( !!execed );
-        foundIns = execed[ 0 ];
-      }
-
-      it[ 0 ] = index;
-      it[ 1 ] = index + foundIns.length;
-      it[ 2 ] = tokenId;
-
-      descriptorsArray.push( it );
+      foundIns = originalIns;
     }
     else
     {
-      let it = Object.create( null );
-      let groups;
-
-      if( _.strIs( originalIns ) )
-      {
-        foundIns = originalIns;
-        groups = [];
-      }
-      else
-      {
-        let execed = execeds[ tokenId ];
-        _.assert( !!execed );
-        foundIns = execed[ 0 ];
-        groups = _.longSlice( execed, 1, execed.length );
-      }
-
-      it.match = foundIns;
-      it.groups = groups;
-      it.tokenId = tokenId;
-      it.range = [ index, index + foundIns.length ];
-      it.counter = o.counter;
-      it.input = src;
-
-      if( tokensSyntax.idToName && tokensSyntax.idToName[ tokenId ] )
-      it.tokenName = tokensSyntax.idToName[ tokenId ];
-
-      descriptorsArray.push( it );
+      let execed = execeds[ tokenId ];
+      _.assert( !!execed );
+      foundIns = execed[ 0 ];
     }
+
+    it[ 0 ] = index;
+    it[ 1 ] = index + foundIns.length;
+    it[ 2 ] = tokenId;
+
+    descriptorsArray.push( it );
 
     _.assert( _.strIs( foundIns ) );
     if( foundIns.length > 0 )
@@ -694,6 +663,54 @@ function strFindAll( src, ins )
 
     o.counter += 1;
   }
+
+  /* */
+
+  function descriptorForFull( src, index, tokenId )
+  {
+    let originalIns = tokensSyntax.idToValue[ tokenId ];
+    let foundIns;
+    let it = Object.create( null );
+    let groups;
+
+    if( tokenId === -1 )
+    originalIns = src.substring( index, closestIndex );
+
+    if( _.strIs( originalIns ) )
+    {
+      foundIns = originalIns;
+      groups = [];
+    }
+    else
+    {
+      let execed = execeds[ tokenId ];
+      _.assert( !!execed );
+      foundIns = execed[ 0 ];
+      groups = _.longSlice( execed, 1, execed.length );
+    }
+
+    it.match = foundIns;
+    it.groups = groups;
+    it.tokenId = tokenId;
+    it.charsRangeLeft = [ index, index + foundIns.length ]; /* yyy */
+    it.counter = o.counter;
+    it.input = src;
+
+    if( tokensSyntax.idToName && tokensSyntax.idToName[ tokenId ] )
+    it.tokenName = tokensSyntax.idToName[ tokenId ];
+
+    descriptorsArray.push( it );
+
+    _.assert( _.strIs( foundIns ) );
+    if( foundIns.length > 0 )
+    currentIndex = index + foundIns.length;
+    else
+    currentIndex = index + 1;
+
+    o.counter += 1;
+  }
+
+  /* */
 
 }
 
@@ -756,7 +773,7 @@ function tokensSyntaxFrom( ins )
         for( let e = 0 ; e < element.length ; e++ )
         {
           let name2 = name + '_' + element[ e ];
-          result.idToValue[ i ] = ins[ name ][ e ]; // Dmytro : better to use local variable 'let element'. Also, maybe, needs check type of element - regexp or string.
+          result.idToValue[ i ] = ins[ name ][ e ]; // qqq : ? Dmytro : better to use local variable 'let element'. Also, maybe, needs check type of element - regexp or string.
           result.idToName[ i ] = name2;
           result.nameToId[ name2 ] = i;
           alternative.push( name2 );
@@ -765,7 +782,7 @@ function tokensSyntaxFrom( ins )
       }
       else
       {
-        result.idToValue[ i ] = ins[ name ]; // Dmytro : better to use local variable 'let element'
+        result.idToValue[ i ] = ins[ name ]; // qqq : ? Dmytro : better to use local variable 'let element'
         result.idToName[ i ] = name;
         result.nameToId[ name ] = i;
         i += 1;
@@ -985,7 +1002,7 @@ function strReplaceAll( src, ins, sub )
   found.forEach( ( it ) =>
   {
     let sub = o.sub[ it.tokenId ];
-    let unknown = o.src.substring( index, it.range[ 0 ] );
+    let unknown = o.src.substring( index, it.charsRangeLeft[ 0 ] );
     if( unknown )
     if( o.onUnknown )
     unknown = o.onUnknown( unknown, it, o );
@@ -993,10 +1010,9 @@ function strReplaceAll( src, ins, sub )
     result.push( unknown );
     if( _.routineIs( sub ) )
     sub = sub.call( o, it.match, it );
-    // _.assert( _.strIs( sub ) );
     if( sub !== '' )
     result.push( sub );
-    index = it.range[ 1 ];
+    index = it.charsRangeLeft[ 1 ];
   });
 
   result.push( o.src.substring( index, o.src.length ) );
@@ -1403,6 +1419,7 @@ let _metrics =
  */
 
 /* qqq : cover routine strMetricFormat | Dmytro : covered */
+/* xxx : use it for time measurement */
 
 function strMetricFormat( number,o )
 {
@@ -1435,7 +1452,8 @@ function strMetricFormat( number,o )
       while( Math.abs( number ) >= o.thousand || !o.metrics[ String( o.metric ) ] )
       {
 
-        if( o.metric + o.divisor > o.metrics.range[ 1 ] ) break;
+        if( o.metric + o.divisor > o.metrics.range[ 1 ] )
+        break;
 
         number /= o.thousand;
         o.metric += o.divisor;
@@ -3242,7 +3260,7 @@ let Extend =
   strHtmlEscape,
 
   strSearch,
-  strSearchReport, /* qqq2 : cover please */
+  strSearchLog, /* qqq2 : cover please */
   strFindAll,
 
   TokensSyntax,
