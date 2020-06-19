@@ -1519,6 +1519,4 @@ module:
       ../.im.will.yml:
         hash: c723ab5d336eb01c830ff48d35652688
         size: 5240
-      wStringsExtra.out.will.yml:
-        hash: 74118b7a99144b95381048cfae98180b
-        size: 38727
+      wStringsExtra.out.will.yml: *ref_0
