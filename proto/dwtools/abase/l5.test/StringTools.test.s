@@ -4796,6 +4796,344 @@ function strSearchOptionOnTokenize( test )
 
 //
 
+function strSearchLog( test )
+{
+  test.open( 'one line' );
+
+  test.case = '1 letter match at the start'
+  var input = 
+  {
+    src : 'abcdefg',
+    ins : [ 'a' ],
+    gray : 1
+  }
+  var expectedFound = 
+  [
+    {
+      'match' : 'a',
+      'groups' : [],
+      'tokenId' : 0,
+      'charsRangeLeft' : [ 0, 1 ],
+      'counter' : 0,
+      'input' : 'abcdefg',
+      'charsRangeRight' : [ 7, 6 ],
+      'nearest' : [ '', 'a', 'bcdefg' ],
+      'log' : '1 : abcdefg',
+      'sub' : null
+    }
+  ];
+  var expectedLog = '1 : abcdefg';
+  var got = _.strSearchLog( input );
+  test.identical( got.found, expectedFound );
+  test.identical( got.log, expectedLog );
+
+  test.case = '1 letter match at the middle'
+  var input = 
+  {
+    src : 'abcdefg',
+    ins : [ 'c' ],
+    gray : 1
+  }
+  var expectedFound = 
+  [
+    {
+      'match' : 'c',
+      'groups' : [],
+      'tokenId' : 0,
+      'charsRangeLeft' : [ 2, 3 ],
+      'counter' : 0,
+      'input' : 'abcdefg',
+      'charsRangeRight' : [ 5, 4 ],
+      'nearest' : [ 'ab', 'c', 'defg' ],
+      'log' : '1 : abcdefg',
+      'sub' : null
+    }
+  ];
+  var expectedLog = '1 : abcdefg';
+  var got = _.strSearchLog( input );
+  test.identical( got.found, expectedFound );
+  test.identical( got.log, expectedLog );
+
+  test.case = '1 letter match at the end'
+  var input = 
+  {
+    src : 'abcdefg',
+    ins : [ 'g' ],
+    gray : 1
+  }
+  var expectedFound = 
+  [
+    {
+      'match' : 'g',
+      'groups' : [],
+      'tokenId' : 0,
+      'charsRangeLeft' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'abcdefg',
+      'charsRangeRight' : [ 1, 0 ],
+      'nearest' : [ 'abcdef', 'g', '' ],
+      'log' : '1 : abcdefg',
+      'sub' : null
+    }
+  ];
+  var expectedLog = '1 : abcdefg';
+  var got = _.strSearchLog( input );
+  test.identical( got.found, expectedFound );
+  test.identical( got.log, expectedLog );
+  
+  /* */
+
+  test.case = 'a few letters match at the start'
+  var input = 
+  {
+    src : 'abcdefg',
+    ins : [ 'abc' ],
+    gray : 1
+  }
+  var expectedFound = 
+  [
+    {
+      'match' : 'abc',
+      'groups' : [],
+      'tokenId' : 0,
+      'charsRangeLeft' : [ 0, 3 ],
+      'counter' : 0,
+      'input' : 'abcdefg',
+      'charsRangeRight' : [ 7, 4 ],
+      'nearest' : [ '', 'abc', 'defg' ],
+      'log' : '1 : abcdefg',
+      'sub' : null
+    }
+  ];
+  var expectedLog = '1 : abcdefg';
+  var got = _.strSearchLog( input );
+  test.identical( got.found, expectedFound );
+  test.identical( got.log, expectedLog );
+
+  test.case = 'a few letters match at the middle'
+  var input = 
+  {
+    src : 'abcdefg',
+    ins : [ 'cde' ],
+    gray : 1
+  }
+  var expectedFound = 
+  [
+    {
+      'match' : 'cde',
+      'groups' : [],
+      'tokenId' : 0,
+      'charsRangeLeft' : [ 2, 5 ],
+      'counter' : 0,
+      'input' : 'abcdefg',
+      'charsRangeRight' : [ 5, 2 ],
+      'nearest' : [ 'ab', 'cde', 'fg' ],
+      'log' : '1 : abcdefg',
+      'sub' : null
+    }
+  ];
+  var expectedLog = '1 : abcdefg';
+  var got = _.strSearchLog( input );
+  test.identical( got.found, expectedFound );
+  test.identical( got.log, expectedLog );
+
+  test.case = 'a few letters match at the end'
+  var input = 
+  {
+    src : 'abcdefg',
+    ins : [ 'efg' ],
+    gray : 1
+  }
+  var expectedFound = 
+  [
+    {
+      'match' : 'efg',
+      'groups' : [],
+      'tokenId' : 0,
+      'charsRangeLeft' : [ 4, 7 ],
+      'counter' : 0,
+      'input' : 'abcdefg',
+      'charsRangeRight' : [ 3, 0 ],
+      'nearest' : [ 'abcd', 'efg', '' ],
+      'log' : '1 : abcdefg',
+      'sub' : null
+    }
+  ];
+  var expectedLog = '1 : abcdefg';
+  var got = _.strSearchLog( input );
+  test.identical( got.found, expectedFound );
+  test.identical( got.log, expectedLog );
+
+  /* */
+
+  test.case = 'all letters match'
+  var input = 
+  {
+    src : 'abcdefg',
+    ins : [ 'abcdefg' ],
+    gray : 1
+  }
+  var expectedFound = 
+  [
+    {
+      'match' : 'abcdefg',
+      'groups' : [],
+      'tokenId' : 0,
+      'charsRangeLeft' : [ 0, 7 ],
+      'counter' : 0,
+      'input' : 'abcdefg',
+      'charsRangeRight' : [ 7, 0 ],
+      'nearest' : [ '', 'abcdefg', '' ],
+      'log' : '1 : abcdefg',
+      'sub' : null
+    }
+  ];
+  var expectedLog = '1 : abcdefg';
+  var got = _.strSearchLog( input );
+  test.identical( got.found, expectedFound );
+  test.identical( got.log, expectedLog );
+
+  test.case = 'no match'
+  var input = 
+  {
+    src : 'abcdefg',
+    ins : [ 'h' ],
+    gray : 1
+  }
+  var expectedFound = [];
+  var expectedLog = '';
+  var got = _.strSearchLog( input );
+  test.identical( got.found, expectedFound );
+  test.identical( got.log, expectedLog );
+
+  /* */ 
+
+  test.case = 'multiple matches 1 letter'
+  var input = 
+  {
+    src : 'abcabcabc',
+    ins : [ 'a' ],
+    gray : 1
+  }
+  var expectedFound = 
+  [
+    {
+      match : 'a',
+      groups : [],
+      tokenId : 0,
+      charsRangeLeft : [ 0, 1 ],
+      counter : 0,
+      input : 'abcabcabc',
+      charsRangeRight : [ 9, 8 ],
+      nearest : [ '', 'a', 'bcabcabc' ],
+      log : '1 : abcabcabc',
+      sub : null
+    },
+    {
+      match : 'a',
+      groups : [],
+      tokenId : 0,
+      charsRangeLeft : [ 3, 4 ],
+      counter : 1,
+      input : 'abcabcabc',
+      charsRangeRight : [ 6, 5 ],
+      nearest : [ 'abc', 'a', 'bcabc' ],
+      log : '1 : abcabcabc',
+      sub : null
+    },
+    {
+      match : 'a',
+      groups : [],
+      tokenId : 0,
+      charsRangeLeft : [ 6, 7 ],
+      counter : 2,
+      input : 'abcabcabc',
+      charsRangeRight : [ 3, 2 ],
+      nearest : [ 'abcabc', 'a', 'bc' ],
+      log : '1 : abcabcabc',
+      sub : null
+    }
+  ]
+  var expectedLog = '1 : abcabcabc\n1 : abcabcabc\n1 : abcabcabc';
+  var got = _.strSearchLog( input );
+  test.identical( got.found, expectedFound );
+  test.identical( got.log, expectedLog );
+
+  test.case = 'multiple matches a few letters'
+  var input = 
+  {
+    src : 'abcabcabc',
+    ins : [ 'bc' ],
+    gray : 1
+  }
+  var expectedFound = 
+  [
+    {
+      match : 'bc',
+      groups : [],
+      tokenId : 0,
+      charsRangeLeft : [ 1, 3 ],
+      counter : 0,
+      input : 'abcabcabc',
+      charsRangeRight : [ 8, 6 ],
+      nearest : [ 'a', 'bc', 'abcabc' ],
+      log : '1 : abcabcabc',
+      sub : null
+    },
+    {
+      match : 'bc',
+      groups : [],
+      tokenId : 0,
+      charsRangeLeft : [ 4, 6 ],
+      counter : 1,
+      input : 'abcabcabc',
+      charsRangeRight : [ 5, 3 ],
+      nearest : [ 'abca', 'bc', 'abc' ],
+      log : '1 : abcabcabc',
+      sub : null
+    },
+    {
+      match : 'bc',
+      groups : [],
+      tokenId : 0,
+      charsRangeLeft : [ 7, 9 ],
+      counter : 2,
+      input : 'abcabcabc',
+      charsRangeRight : [ 2, 0 ],
+      nearest : [ 'abcabca', 'bc', '' ],
+      log : '1 : abcabcabc',
+      sub : null
+    }
+  ]
+  var expectedLog = '1 : abcabcabc\n1 : abcabcabc\n1 : abcabcabc';
+  var got = _.strSearchLog( input );
+  test.identical( got.found, expectedFound );
+  test.identical( got.log, expectedLog );
+
+  test.close( 'one line' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.open( 'throwing' );
+
+  test.case = 'Wrong arguments : without arguments';
+  test.shouldThrowErrorSync( () => _.strSearchLog() );
+
+  test.case = 'Wrong arguments : wrong type of argument';
+  test.shouldThrowErrorSync( () => _.strSearchLog( 13 ) );
+
+  test.case = 'Wrong arguments : extra arguments';
+  test.shouldThrowErrorSync( () => _.strSearchLog( { src : 'abcabcabc', ins : [ 'bc' ], gray : 1 }, 13 ) );
+
+  test.close( 'throwing' );
+
+}
+
+//
+
 /*
   qqq : duplicate test cases for fast : 1 | Dmytro : improved test routine and added test cases with fast : 1
 */
@@ -13633,6 +13971,8 @@ var Self =
     strSearchOptionStringWithRegexp,
     strSearchOptionToleratingSpaces,
     strSearchOptionOnTokenize,
+
+    strSearchLog,
 
     strFindAll,
     strFindAllValueWithLong,
