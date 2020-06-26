@@ -338,12 +338,12 @@ function strSearch_body( o )
 
   /* */
 
-  let result = [];
+  o.parcels = [];
   let found = _.strFindAll( o.src, o.ins );
 
   found.forEach( ( it ) => splitAdjust( it ) );
 
-  return result;
+  return o;
 
   /* */
 
@@ -396,7 +396,7 @@ function strSearch_body( o )
     if( !o.nearestSplitting )
     it.nearest = it.nearest.join( '' );
 
-    result.push( it );
+    o.parcels.push( it );
   }
 }
 
@@ -422,24 +422,26 @@ function strSearchLog_body( o )
 
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-  o.found = this.strSearch( _.mapOnly( o, this.strSearch.defaults ) );
+  let o2 = _.mapOnly( o, this.strSearch.defaults );
+  this.strSearch( o2 );
+  _.mapExtend( o, o2 );
 
-  _.each( o.found, ( it ) =>
+  _.each( o.parcels, ( parcel ) =>
   {
-    it.log = _.strLinesNearestLog
+    parcel.log = _.strLinesNearestLog
     ({
       src : o.src,
       sub : o.sub,
-      charsRangeLeft : it.charsRangeLeft,
+      charsRangeLeft : parcel.charsRangeLeft,
       nearestLines : o.nearestLines,
-      nearest : it.nearest,
+      nearest : parcel.nearest,
       gray : o.gray,
     }).log;
     if( o.sub !== undefined )
-    it.sub = o.sub;
+    parcel.sub = o.sub;
   });
 
-  o.log = o.found.map( ( it ) => it.log ).join( '\n' );
+  o.log = o.parcels.map( ( parcel ) => parcel.log ).join( '\n' );
 
   return o;
 }
@@ -449,7 +451,6 @@ strSearchLog_body.defaults =
   ... strSearch.defaults,
   sub : null, /* qqq2 : cover the option */
   gray : 0,
-  nearestLines : _.strLinesNearestLog.defaults.nearestLines,
 }
 
 let strSearchLog = _.routineFromPreAndBody( strSearch_pre, strSearchLog_body );
@@ -458,27 +459,49 @@ let strSearchLog = _.routineFromPreAndBody( strSearch_pre, strSearchLog_body );
 
 function strSearchReplace( o )
 {
+  let result = '';
+  let last = 0;
 
-  _.assert( arguments.length === 1 );
   _.routineOptions( strSearchReplace, o );
+  _.assert( arguments.length === 1 );
+  _.assert( _.strIs( o.src ) );
 
-  for( let i = 0 ; i < tokens.length ; i++ )
+  debugger;
+
+  for( let i = 0 ; i < o.parcels.length ; i++ )
   {
-    let it = tokens[ i ];
+    let parcel = o.parcels[ i ];
 
-    logger.log( it.log );
+    if( o.logging )
+    logger.log( parcel.log );
 
-    
+    result += src.slice( last, parcel.charsRangeRight[ 0 ] );
+
+    _.assert( _.strIs( parcel.sub ), 'Expects string::parcel.sub' );
+    _.assert
+    (
+      parcel.match === undefined && parcel.match === src.slice( parcel.charsRangeRight[ 0 ], parcel.charsRangeRight[ 1 ] )
+      , () => `Match does not match:`
+      + ` - ${parcel.match}`
+      + ` - ${src.slice( parcel.charsRangeRight[ 0 ], parcel.charsRangeRight[ 1 ] )}`
+    );
+
+    last = parcel.charsRangeRight[ 1 ];
+    result += parcel.sub;
 
     debugger;
-
   }
 
+  result += src.slice( last, src.length );
+
+  return result;
 }
 
 strSearchReplace.defaults =
 {
-  tokens : null,
+  src : null,
+  parcels : null,
+  logging : 0,
 }
 
 // strSearchReplace.defaults =
@@ -488,7 +511,7 @@ strSearchReplace.defaults =
 //   // counter: 2
 //   // groups: []
 //   // log: "#foreground : bright black##foreground : default##foreground : bright black#2#foreground : default# : #inputRaw:1#Second line#inputRaw:0#↵#foreground : bright black##foreground : default##foreground : bright black#3#foreground : default# : #inputRaw:1#Third #inputRaw:0##foreground : red#line#foreground : default##foreground : green#line2#foreground : default##inputRaw:1##inputRaw:0#↵#foreground : bright black##foreground : default##foreground : bright black#4#foreground : default# : #inputRaw:1#Last one#inputRaw:0#"
-//   match : null, /* xxx : rename to ins? */
+//   match : null,
 //   // nearest : (3) ["Second line↵Third ", "line", "↵Last one"]
 //   sub : null,
 //   // tokenId : 0
@@ -670,7 +693,7 @@ function strFindAll( src, ins )
   function descriptorForFast( src, index, tokenId )
   {
     let originalIns = tokensSyntax.idToValue[ tokenId ];
-    let foundIns;
+    let match;
     let it = [];
 
     if( tokenId === -1 )
@@ -678,24 +701,24 @@ function strFindAll( src, ins )
 
     if( _.strIs( originalIns ) )
     {
-      foundIns = originalIns;
+      match = originalIns;
     }
     else
     {
       let execed = execeds[ tokenId ];
       _.assert( !!execed );
-      foundIns = execed[ 0 ];
+      match = execed[ 0 ];
     }
 
     it[ 0 ] = index;
-    it[ 1 ] = index + foundIns.length;
+    it[ 1 ] = index + match.length;
     it[ 2 ] = tokenId;
 
     descriptorsArray.push( it );
 
-    _.assert( _.strIs( foundIns ) );
-    if( foundIns.length > 0 )
-    currentIndex = index + foundIns.length;
+    _.assert( _.strIs( match ) );
+    if( match.length > 0 )
+    currentIndex = index + match.length;
     else
     currentIndex = index + 1;
 
@@ -707,7 +730,7 @@ function strFindAll( src, ins )
   function descriptorForFull( src, index, tokenId )
   {
     let originalIns = tokensSyntax.idToValue[ tokenId ];
-    let foundIns;
+    let match;
     let it = Object.create( null );
     let groups;
 
@@ -716,21 +739,21 @@ function strFindAll( src, ins )
 
     if( _.strIs( originalIns ) )
     {
-      foundIns = originalIns;
+      match = originalIns;
       groups = [];
     }
     else
     {
       let execed = execeds[ tokenId ];
       _.assert( !!execed );
-      foundIns = execed[ 0 ];
+      match = execed[ 0 ];
       groups = _.longSlice( execed, 1, execed.length );
     }
 
-    it.match = foundIns; /* xxx : rename to ins? */
+    it.match = match;
     it.groups = groups;
     it.tokenId = tokenId;
-    it.charsRangeLeft = [ index, index + foundIns.length ]; /* yyy */
+    it.charsRangeLeft = [ index, index + match.length ]; /* yyy */
     it.counter = o.counter;
     it.input = src;
 
@@ -739,9 +762,9 @@ function strFindAll( src, ins )
 
     descriptorsArray.push( it );
 
-    _.assert( _.strIs( foundIns ) );
-    if( foundIns.length > 0 )
-    currentIndex = index + foundIns.length;
+    _.assert( _.strIs( match ) );
+    if( match.length > 0 )
+    currentIndex = index + match.length;
     else
     currentIndex = index + 1;
 
@@ -791,10 +814,6 @@ function tokensSyntaxFrom( ins )
   _.assert( _.arrayLike( ins ) || _.objectIs( ins ) );
 
   /* */
-
-  /*
-  qqq2 : ins could be also array _.strFindAll( 'some string2', { a : 'some', b : [ 'string1', 'string2' ] } ) cover extension please | Dmytro : covered routines tokensSyntaxFrom and strFindAll
-  */
 
   result.idToValue = ins;
   if( _.mapIs( ins ) )
@@ -3299,7 +3318,7 @@ let Extend =
 
   strSearch, /* xxx : move out? */
   strSearchLog, /* qqq2 : cover please */
-  strSearchReplace,
+  strSearchReplace, /* qqq2 : cover please */
 
   strFindAll,
 
