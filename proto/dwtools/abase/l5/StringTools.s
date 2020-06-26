@@ -456,30 +456,76 @@ let strSearchLog = _.routineFromPreAndBody( strSearch_pre, strSearchLog_body );
 
 //
 
-function strSearchReplace( o )
+function strSearchReplace_body( o )
 {
 
   _.assert( arguments.length === 1 );
   _.routineOptions( strSearchReplace, o );
 
-  for( let i = 0 ; i < tokens.length ; i++ )
-  {
-    let it = tokens[ i ];
+  // for( let i = 0 ; i < tokens.length ; i++ )
+  // {
+  //   let it = tokens[ i ];
 
-    logger.log( it.log );
+  //   logger.log( it.log );
 
     
 
-    debugger;
+  //   debugger;
 
-  }
+  // }
+
+  let found = this.strSearch( _.mapOnly( o, this.strSearch.defaults ) );
+
+  _.each( found, ( it ) =>
+  {
+    it.log = _.strLinesNearestLog
+    ({
+      src : o.src,
+      sub : o.sub,
+      charsRangeLeft : it.charsRangeLeft,
+      nearestLines : o.nearestLines,
+      nearest : it.nearest,
+      gray : o.gray,
+    }).log;
+    if( o.sub !== undefined )
+    it.sub = o.sub;
+  });
+
+  o.replaced = found.map( el =>
+  {
+    let regexp = new RegExp( el.match, 'g' )
+    let rep = 
+    {
+      input : el.input.replace( regexp, o.delimeter ),
+      log : el.log.replace( regexp, o.delimeter ),
+      nearest : [ el.nearest[ 0 ].replace( regexp, o.delimeter ), el.nearest[ 1 ].replace( regexp, o.delimeter ), el.nearest[ 2 ].replace( regexp, o.delimeter ) ],
+      match : o.delimeter,
+      groups : el.groups,
+      tokenId : el.tokenId,
+      charsRangeLeft : el.charsRangeLeft,
+      counter : el.counter,
+      charsRangeRight : el.charsRangeRight,
+      sub : el.sub
+    }
+    return rep;
+  });
+
+  return o;
 
 }
 
-strSearchReplace.defaults =
+strSearchReplace_body.defaults =
 {
+  ... strSearch.defaults,
+  src: null,
+  delimeter: '_',
+  sub : null,
+  gray : 0,
+  nearestLines : _.strLinesNearestLog.defaults.nearestLines,
   tokens : null,
 }
+
+let strSearchReplace = _.routineFromPreAndBody( strSearch_pre, strSearchReplace_body );
 
 // strSearchReplace.defaults =
 // {

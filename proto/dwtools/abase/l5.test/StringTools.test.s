@@ -5372,6 +5372,84 @@ function strSearchLog( test )
 
 function strSearchReplace( test )
 {
+  test.open( 'one line' );
+
+  test.case = 'replace 1 letter at the middle - one line';
+  var expectedReplaced = 
+  [
+    {
+      input : 'aa_aa',
+      log : '1 : aa_aa',
+      nearest : [ 'aa', '_', 'aa' ],
+      match : '_',
+      groups : [],
+      tokenId : 0,
+      charsRangeLeft : [ 2, 3 ],
+      counter : 0,
+      charsRangeRight : [ 3, 2 ],
+      sub : null
+    }
+  ];
+  var got = _.strSearchReplace({ src : 'aabaa', ins : 'b', gray : 1 });
+  test.identical( got.replaced, expectedReplaced );
+
+  test.case = 'replace multiple letters - one line';
+  var expectedReplaced = 
+  [
+    {
+      input : '__b__',
+      log : '1 : __b__',
+      nearest : [ '', '_', '_b__' ],
+      match : '_',
+      groups : [],
+      tokenId : 0,
+      charsRangeLeft : [ 0, 1 ],
+      counter : 0,
+      charsRangeRight : [ 5, 4 ],
+      sub : null
+    },
+    {
+      input : '__b__',
+      log : '1 : __b__',
+      nearest : [ '_', '_', 'b__' ],
+      match : '_',
+      groups : [],
+      tokenId : 0,
+      charsRangeLeft : [ 1, 2 ],
+      counter : 1,
+      charsRangeRight : [ 4, 3 ],
+      sub : null
+    },
+    {
+      input : '__b__',
+      log : '1 : __b__',
+      nearest : [ '__b', '_', '_' ],
+      match : '_',
+      groups : [],
+      tokenId : 0,
+      charsRangeLeft : [ 3, 4 ],
+      counter : 2,
+      charsRangeRight : [ 2, 1 ],
+      sub : null
+    },
+    {
+      input : '__b__',
+      log : '1 : __b__',
+      nearest : [ '__b_', '_', '' ],
+      match : '_',
+      groups : [],
+      tokenId : 0,
+      charsRangeLeft : [ 4, 5 ],
+      counter : 3,
+      charsRangeRight : [ 1, 0 ],
+      sub : null
+    }
+  ];
+  var got = _.strSearchReplace({ src : 'aabaa', ins : 'a', gray : 1 });
+  test.identical( got.replaced, expectedReplaced );
+
+  test.close( 'one line' );
+
   if( !Config.debug )
   return;
 
