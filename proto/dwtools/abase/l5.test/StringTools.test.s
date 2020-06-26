@@ -5372,18 +5372,6 @@ function strSearchLog( test )
 
 function strSearchReplace( test )
 {
-  test.open ( 'one line' )
-
-  test.close( 'one line' );
-
-  /* - */
-
-  test.open( 'multiple lines' );
-
-  test.close( 'multiple lines' );
-
-  /* - */
-
   if( !Config.debug )
   return;
 
@@ -5394,9 +5382,6 @@ function strSearchReplace( test )
 
   test.case = 'Wrong arguments : wrong type of argument';
   test.shouldThrowErrorSync( () => _.strSearchLog( 13 ) );
-
-  test.case = 'Wrong arguments : extra arguments';
-  test.shouldThrowErrorSync( () => _.strSearchLog( { src : 'abcabcabc', ins : [ 'bc' ], gray : 1 }, 13 ) );
 
   test.close( 'throwing' );
 }
