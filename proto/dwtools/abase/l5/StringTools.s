@@ -462,7 +462,7 @@ function strSearchReplace_body( o )
   let result = '';
   let last = 0;
 
-  _.routineOptions( strSearchReplace, o );
+  _.routineOptions( strSearchReplace_body, o );
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( o.src ) );
 
