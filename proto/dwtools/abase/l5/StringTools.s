@@ -491,45 +491,6 @@ function strSearchReplace_body( o )
 
   return result;
 
-  // Implementation Yevhen S.
-
-  // let found = this.strSearch( _.mapOnly( o, this.strSearch.defaults ) );
-
-  // _.each( found, ( it ) =>
-  // {
-  //   it.log = _.strLinesNearestLog
-  //   ({
-  //     src : o.src,
-  //     sub : o.sub,
-  //     charsRangeLeft : it.charsRangeLeft,
-  //     nearestLines : o.nearestLines,
-  //     nearest : it.nearest,
-  //     gray : o.gray,
-  //   }).log;
-  //   if( o.sub !== undefined )
-  //   it.sub = o.sub;
-  // });
-
-  // o.replaced = found.map( el =>
-  // {
-  //   let regexp = new RegExp( el.match, 'g' )
-  //   let rep = 
-  //   {
-  //     input : el.input.replace( regexp, o.delimeter ),
-  //     log : el.log.replace( regexp, o.delimeter ),
-  //     nearest : [ el.nearest[ 0 ].replace( regexp, o.delimeter ), el.nearest[ 1 ].replace( regexp, o.delimeter ), el.nearest[ 2 ].replace( regexp, o.delimeter ) ],
-  //     match : o.delimeter,
-  //     groups : el.groups,
-  //     tokenId : el.tokenId,
-  //     charsRangeLeft : el.charsRangeLeft,
-  //     counter : el.counter,
-  //     charsRangeRight : el.charsRangeRight,
-  //     sub : el.sub
-  //   }
-  //   return rep;
-  // });
-
-  // return o;
 }
 
 strSearchReplace_body.defaults =

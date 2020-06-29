@@ -5519,81 +5519,151 @@ function strSearchReplace( test )
 {
   test.open( 'one line' );
 
-  // test.case = 'replace 1 letter at the middle - one line';
-  // var expectedReplaced = 
-  // [
-  //   {
-  //     input : 'aa_aa',
-  //     log : '1 : aa_aa',
-  //     nearest : [ 'aa', '_', 'aa' ],
-  //     match : '_',
-  //     groups : [],
-  //     tokenId : 0,
-  //     charsRangeLeft : [ 2, 3 ],
-  //     counter : 0,
-  //     charsRangeRight : [ 3, 2 ],
-  //     sub : null
-  //   }
-  // ];
-  // var got = _.strSearchReplace({ src : 'aabaa', ins : 'b', gray : 1 });
-  // test.identical( got.replaced, expectedReplaced );
+  test.case = 'src - empty string';
+  var input = { src : '', parcels : _.strSearchLog({ src : '', ins : [ 'a' ], sub : '_', gray : 1 }).parcels };
+  var expected = '';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
 
-  // test.case = 'replace multiple letters - one line';
-  // var expectedReplaced = 
-  // [
-  //   {
-  //     input : '__b__',
-  //     log : '1 : __b__',
-  //     nearest : [ '', '_', '_b__' ],
-  //     match : '_',
-  //     groups : [],
-  //     tokenId : 0,
-  //     charsRangeLeft : [ 0, 1 ],
-  //     counter : 0,
-  //     charsRangeRight : [ 5, 4 ],
-  //     sub : null
-  //   },
-  //   {
-  //     input : '__b__',
-  //     log : '1 : __b__',
-  //     nearest : [ '_', '_', 'b__' ],
-  //     match : '_',
-  //     groups : [],
-  //     tokenId : 0,
-  //     charsRangeLeft : [ 1, 2 ],
-  //     counter : 1,
-  //     charsRangeRight : [ 4, 3 ],
-  //     sub : null
-  //   },
-  //   {
-  //     input : '__b__',
-  //     log : '1 : __b__',
-  //     nearest : [ '__b', '_', '_' ],
-  //     match : '_',
-  //     groups : [],
-  //     tokenId : 0,
-  //     charsRangeLeft : [ 3, 4 ],
-  //     counter : 2,
-  //     charsRangeRight : [ 2, 1 ],
-  //     sub : null
-  //   },
-  //   {
-  //     input : '__b__',
-  //     log : '1 : __b__',
-  //     nearest : [ '__b_', '_', '' ],
-  //     match : '_',
-  //     groups : [],
-  //     tokenId : 0,
-  //     charsRangeLeft : [ 4, 5 ],
-  //     counter : 3,
-  //     charsRangeRight : [ 1, 0 ],
-  //     sub : null
-  //   }
-  // ];
+  test.case = 'replace 1 letter with one at the start';
+  var input = { src : 'abcde', parcels : _.strSearchLog({ src : 'abcde', ins : [ 'a' ], sub : '_', gray : 1 }).parcels };
+  var expected = '_bcde';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
 
-  var got = _.strSearchReplace({ src : 'aabaa', parcels : _.strSearch({ src : 'aabaa', ins : [ 'a' ]}) });
+  test.case = 'replace 1 letter with one at the middle';
+  var input = { src : 'abcde', parcels : _.strSearchLog({ src : 'abcde', ins : [ 'c' ], sub : '_', gray : 1 }).parcels };
+  var expected = 'ab_de';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  test.case = 'replace 1 letter with one at the end';
+  var input = { src : 'abcde', parcels : _.strSearchLog({ src : 'abcde', ins : [ 'e' ], sub : '_', gray : 1 }).parcels };
+  var expected = 'abcd_';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  test.case = 'replace 1 letter with a few';
+  var input = { src : 'abcde', parcels : _.strSearchLog({ src : 'abcde', ins : [ 'a' ], sub : '_-_', gray : 1 }).parcels };
+  var expected = '_-_bcde';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'replace multiple matches of 1 letter with one';
+  var input = { src : 'abcdeaba', parcels : _.strSearchLog({ src : 'abcdeaba', ins : [ 'a' ], sub : '_', gray : 1 }).parcels };
+  var expected = '_bcde_b_';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  test.case = 'replace multiple matches of 1 letter with a few';
+  var input = { src : 'abcdeaba', parcels : _.strSearchLog({ src : 'abcdeaba', ins : [ 'a' ], sub : '_-_', gray : 1 }).parcels };
+  var expected = '_-_bcde_-_b_-_';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  test.case = 'replace multiple matches of a few letters with one';
+  var input = { src : 'abcdeabcab', parcels : _.strSearchLog({ src : 'abcdeabcab', ins : [ 'ab' ], sub : '_', gray : 1 }).parcels };
+  var expected = '_cde_c_';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  test.case = 'replace multiple matches of a few letters with a few';
+  var input = { src : 'abcdeabcab', parcels : _.strSearchLog({ src : 'abcdeabcab', ins : [ 'ab' ], sub : '_-_', gray : 1 }).parcels };
+  var expected = '_-_cde_-_c_-_';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'replace a few letters with one';
+  var input = { src : 'abcde', parcels : _.strSearchLog({ src : 'abcde', ins : [ 'bcd' ], sub : '_', gray : 1 }).parcels };
+  var expected = 'a_e';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  test.case = 'replace a few letters with a few';
+  var input = { src : 'abcde', parcels : _.strSearchLog({ src : 'abcde', ins : [ 'bcd' ], sub : '_-_', gray : 1 }).parcels };
+  var expected = 'a_-_e';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  test.case = 'replace none';
+  var input = { src : 'abcde', parcels : _.strSearchLog({ src : 'abcde', ins : [ '1' ], sub : '-', gray : 1 }).parcels };
+  var expected = 'abcde';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  test.case = 'replace all';
+  var input = { src : 'abcde', parcels : _.strSearchLog({ src : 'abcde', ins : [ 'abcde' ], sub : '-', gray : 1 }).parcels };
+  var expected = '-';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
 
   test.close( 'one line' );
+
+  /* - */
+
+  test.open( 'multiple lines' )
+
+  test.case = 'replace one letter with one';
+  var input = { src : 'aa\nbc\nde', parcels : _.strSearchLog({ src : 'aa\nbc\nde', ins : [ 'b' ], sub : '_', gray : 1 }).parcels };
+  var expected = 'aa\n_c\nde';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  test.case = 'replace one letter with a few';
+  var input = { src : 'aa\nbc\nde', parcels : _.strSearchLog({ src : 'aa\nbc\nde', ins : [ 'b' ], sub : '_-_', gray : 1 }).parcels };
+  var expected = 'aa\n_-_c\nde';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  test.case = 'replace a few letters with one';
+  var input = { src : 'aa\nbc\nde', parcels : _.strSearchLog({ src : 'aa\nbc\nde', ins : [ 'bc' ], sub : '_', gray : 1 }).parcels };
+  var expected = 'aa\n_\nde';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  test.case = 'replace a few letters with a few';
+  var input = { src : 'aa\nbc\nde', parcels : _.strSearchLog({ src : 'aa\nbc\nde', ins : [ 'bc' ], sub : '_-_', gray : 1 }).parcels };
+  var expected = 'aa\n_-_\nde';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'replace with one in a few lines';
+  var input = { src : 'aa\nbc\nde', parcels : _.strSearchLog({ src : 'aa\nbc\nde', ins : [ 'bc\nde' ], sub : '_', gray : 1 }).parcels };
+  var expected = 'aa\n_';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  test.case = 'replace with a few in a few lines';
+  var input = { src : 'aa\nbc\nde', parcels : _.strSearchLog({ src : 'aa\nbc\nde', ins : [ 'bc\nde' ], sub : 'fg\nhi', gray : 1 }).parcels };
+  var expected = 'aa\nfg\nhi';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  test.case = 'replace a line break with one';
+  var input = { src : 'aa\nbcde', parcels : _.strSearchLog({ src : 'aa\nbcde', ins : [ '\n' ], sub : '_', gray : 1 }).parcels };
+  var expected = 'aa_bcde';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  test.case = 'replace none';
+  var input = { src : 'aa\nbc\nde', parcels : _.strSearchLog({ src : 'aa\nbc\nde', ins : [ '1' ], sub : '_', gray : 1 }).parcels };
+  var expected = 'aa\nbc\nde';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  test.case = 'replace all';
+  var input = { src : 'aa\nbc\nde', parcels : _.strSearchLog({ src : 'aa\nbc\nde', ins : [ 'aa\nbc\nde' ], sub : '_', gray : 1 }).parcels };
+  var expected = '_';
+  var got = _.strSearchReplace( input );
+  test.identical( got, expected );
+
+  test.close( 'multiple lines' )
 
   if( !Config.debug )
   return;
@@ -5601,10 +5671,13 @@ function strSearchReplace( test )
   test.open( 'throwing' );
 
   test.case = 'Wrong arguments : without arguments';
-  test.shouldThrowErrorSync( () => _.strSearchLog() );
+  test.shouldThrowErrorSync( () => _.strSearchReplace() );
 
   test.case = 'Wrong arguments : wrong type of argument';
-  test.shouldThrowErrorSync( () => _.strSearchLog( 13 ) );
+  test.shouldThrowErrorSync( () => _.strSearchReplace( 13 ) );
+
+  test.case = 'Wrong arguments : more than one';
+  test.shouldThrowErrorSync( () => _.strSearchReplace( { src : 'aa\nbc\nde', parcels : _.strSearchLog({ src : 'aa\nbc\nde', ins : [ 'aa\nbc\nde' ], sub : '_', gray : 1 }).parcels }, 13 ) );
 
   test.close( 'throwing' );
 }
