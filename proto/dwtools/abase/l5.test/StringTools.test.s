@@ -4807,7 +4807,7 @@ function strSearchLog( test )
     ins : [ 'a' ],
     gray : 1
   }
-  var expectedFound = 
+  var expectedParcels = 
   [
     {
       'match' : 'a',
@@ -4824,7 +4824,7 @@ function strSearchLog( test )
   ];
   var expectedLog = '1 : abcdefg';
   var got = _.strSearchLog( input );
-  test.identical( got.found, expectedFound );
+  test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
 
   test.case = '1 letter match at the middle - one line'
@@ -4834,7 +4834,7 @@ function strSearchLog( test )
     ins : [ 'c' ],
     gray : 1
   }
-  var expectedFound = 
+  var expectedParcels = 
   [
     {
       'match' : 'c',
@@ -4851,7 +4851,7 @@ function strSearchLog( test )
   ];
   var expectedLog = '1 : abcdefg';
   var got = _.strSearchLog( input );
-  test.identical( got.found, expectedFound );
+  test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
 
   test.case = '1 letter match at the end - one line'
@@ -4861,7 +4861,7 @@ function strSearchLog( test )
     ins : [ 'g' ],
     gray : 1
   }
-  var expectedFound = 
+  var expectedParcels = 
   [
     {
       'match' : 'g',
@@ -4878,7 +4878,7 @@ function strSearchLog( test )
   ];
   var expectedLog = '1 : abcdefg';
   var got = _.strSearchLog( input );
-  test.identical( got.found, expectedFound );
+  test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
   
   /* */
@@ -4890,7 +4890,7 @@ function strSearchLog( test )
     ins : [ 'abc' ],
     gray : 1
   }
-  var expectedFound = 
+  var expectedParcels = 
   [
     {
       'match' : 'abc',
@@ -4907,7 +4907,7 @@ function strSearchLog( test )
   ];
   var expectedLog = '1 : abcdefg';
   var got = _.strSearchLog( input );
-  test.identical( got.found, expectedFound );
+  test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
 
   test.case = 'a few letters match at the middle - one line'
@@ -4917,7 +4917,7 @@ function strSearchLog( test )
     ins : [ 'cde' ],
     gray : 1
   }
-  var expectedFound = 
+  var expectedParcels = 
   [
     {
       'match' : 'cde',
@@ -4934,7 +4934,7 @@ function strSearchLog( test )
   ];
   var expectedLog = '1 : abcdefg';
   var got = _.strSearchLog( input );
-  test.identical( got.found, expectedFound );
+  test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
 
   test.case = 'a few letters match at the end - one line'
@@ -4944,7 +4944,7 @@ function strSearchLog( test )
     ins : [ 'efg' ],
     gray : 1
   }
-  var expectedFound = 
+  var expectedParcels = 
   [
     {
       'match' : 'efg',
@@ -4961,7 +4961,7 @@ function strSearchLog( test )
   ];
   var expectedLog = '1 : abcdefg';
   var got = _.strSearchLog( input );
-  test.identical( got.found, expectedFound );
+  test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
 
   /* */
@@ -4973,7 +4973,7 @@ function strSearchLog( test )
     ins : [ 'abcdefg' ],
     gray : 1
   }
-  var expectedFound = 
+  var expectedParcels = 
   [
     {
       'match' : 'abcdefg',
@@ -4990,7 +4990,7 @@ function strSearchLog( test )
   ];
   var expectedLog = '1 : abcdefg';
   var got = _.strSearchLog( input );
-  test.identical( got.found, expectedFound );
+  test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
 
   test.case = 'no match - one line'
@@ -5000,10 +5000,10 @@ function strSearchLog( test )
     ins : [ 'h' ],
     gray : 1
   }
-  var expectedFound = [];
+  var expectedParcels = [];
   var expectedLog = '';
   var got = _.strSearchLog( input );
-  test.identical( got.found, expectedFound );
+  test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
 
   /* */ 
@@ -5015,7 +5015,7 @@ function strSearchLog( test )
     ins : [ 'a' ],
     gray : 1
   }
-  var expectedFound = 
+  var expectedParcels = 
   [
     {
       match : 'a',
@@ -5056,7 +5056,7 @@ function strSearchLog( test )
   ]
   var expectedLog = '1 : abcabcabc\n1 : abcabcabc\n1 : abcabcabc';
   var got = _.strSearchLog( input );
-  test.identical( got.found, expectedFound );
+  test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
 
   test.case = 'multiple matches a few letters - one line'
@@ -5066,7 +5066,7 @@ function strSearchLog( test )
     ins : [ 'bc' ],
     gray : 1
   }
-  var expectedFound = 
+  var expectedParcels = 
   [
     {
       match : 'bc',
@@ -5107,7 +5107,44 @@ function strSearchLog( test )
   ]
   var expectedLog = '1 : abcabcabc\n1 : abcabcabc\n1 : abcabcabc';
   var got = _.strSearchLog( input );
-  test.identical( got.found, expectedFound );
+  test.identical( got.parcels, expectedParcels );
+  test.identical( got.log, expectedLog );
+
+  /* */
+
+  test.case = 'src - empty string, ins - regexp for empty strings';
+  var input = { src : '', ins : /(?:)/g, onTokenize : _.strTokenizeJs, excludingTokens : 'name', gray : 1  };
+  var got = _.strSearchLog( input );
+  var expectedParcels = [];
+  var expectedLog = '';
+  test.identical( got.parcels, expectedParcels );
+  test.identical( got.log, expectedLog )
+
+  test.case = 'src - string, ins - regexp for empty string';
+  var input = { src : 'abc', ins : /(?:)/g, onTokenize : _.strTokenizeJs, excludingTokens : 'name', gray : 1  };
+  var got = _.strSearchLog( input );
+  var expectedParcels = [];
+  var expectedLog = '';
+  test.identical( got.parcels, expectedParcels );
+  test.identical( got.log, expectedLog );
+
+  test.case = 'src - empty string, ins - regexp';
+  var input = { src : '', ins : /x/, onTokenize : _.strTokenizeJs, excludingTokens : 'name', gray : 1 };
+  var got = _.strSearchLog( input );
+  console.log(got)
+  var expectedParcels = [];
+  var expectedLog = '';
+  test.identical( got.parcels, expectedParcels );
+  test.identical( got.log, expectedLog );
+
+
+  test.case = 'src - string, ins - regexp, not entry';
+  var input = { src : 'hello', ins : /x/, onTokenize : _.strTokenizeJs, excludingTokens : 'name', gray : 1 };
+  var got = _.strSearchLog( input );
+  var expectedParcels = [];
+  var expectedLog = '';
+  console.log(got)
+  test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
 
   test.close( 'one line' );
@@ -5123,7 +5160,7 @@ function strSearchLog( test )
     ins : [ 'a' ],
     gray : 1
   }
-  var expectedFound = 
+  var expectedParcels = 
   [
     {
       'match' : 'a',
@@ -5140,7 +5177,7 @@ function strSearchLog( test )
   ];
   var expectedLog = '1 : ab\n2 : cd';
   var got = _.strSearchLog( input );
-  test.identical( got.found, expectedFound );
+  test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
 
   test.case = '1 letter match at the middle line - multiple lines'
@@ -5150,7 +5187,7 @@ function strSearchLog( test )
     ins : [ 'd' ],
     gray : 1
   }
-  var expectedFound = 
+  var expectedParcels = 
   [
     {
       'match' : 'd',
@@ -5167,7 +5204,7 @@ function strSearchLog( test )
   ];
   var expectedLog = '1 : ab\n2 : cd\n3 : ef';
   var got = _.strSearchLog( input );
-  test.identical( got.found, expectedFound );
+  test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
 
   test.case = '1 letter match at the last line - multiple lines'
@@ -5177,7 +5214,7 @@ function strSearchLog( test )
     ins : [ 'g' ],
     gray : 1
   }
-  var expectedFound = 
+  var expectedParcels = 
   [
     {
       'match' : 'g',
@@ -5194,7 +5231,7 @@ function strSearchLog( test )
   ];
   var expectedLog = '3 : ef\n4 : gh';
   var got = _.strSearchLog( input );
-  test.identical( got.found, expectedFound );
+  test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
 
   /* */
@@ -5206,7 +5243,7 @@ function strSearchLog( test )
     ins : [ 'cd' ],
     gray : 1
   }
-  var expectedFound = 
+  var expectedParcels = 
   [
     {
       'match' : 'cd',
@@ -5223,7 +5260,7 @@ function strSearchLog( test )
   ];
   var expectedLog = '1 : ab\n2 : cd\n3 : ef';
   var got = _.strSearchLog( input );
-  test.identical( got.found, expectedFound );
+  test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
 
   test.case = 'a few letters match across lines - multiple lines'
@@ -5233,7 +5270,7 @@ function strSearchLog( test )
     ins : [ 'cd\nef' ],
     gray : 1
   }
-  var expectedFound = 
+  var expectedParcels = 
   [
     {
       'match' : 'cdef',
@@ -5250,7 +5287,7 @@ function strSearchLog( test )
   ];
   var expectedLog = '2 : cd\n3 : ef';
   var got = _.strSearchLog( input );
-  test.identical( got.found, expectedFound );
+  test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
 
   test.case = 'a few letters wrong match (without line break) across lines - multiple lines'
@@ -5260,10 +5297,10 @@ function strSearchLog( test )
     ins : [ 'cdef' ],
     gray : 1
   }
-  var expectedFound = [];
+  var expectedParcels = [];
   var expectedLog = '';
   var got = _.strSearchLog( input );
-  test.identical( got.found, expectedFound );
+  test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
 
   test.case = 'all letters match - multiple lines'
@@ -5273,7 +5310,7 @@ function strSearchLog( test )
     ins : [ 'ab\ncd\nef\ngh' ],
     gray : 1
   }
-  var expectedFound = 
+  var expectedParcels = 
   [
     {
       'match' : 'ab\ncd\nef\ngh',
@@ -5290,7 +5327,7 @@ function strSearchLog( test )
   ];
   var expectedLog = '1 : ab\n2 : cd\n3 : ef\n4 : gh';
   var got = _.strSearchLog( input );
-  test.identical( got.found, expectedFound );
+  test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
 
   /* */
@@ -5302,7 +5339,7 @@ function strSearchLog( test )
     ins : [ 'ab' ],
     gray : 1
   }
-  var expectedFound = 
+  var expectedParcels = 
   [
     {      
       match: 'ab',
@@ -5343,8 +5380,83 @@ function strSearchLog( test )
   ];
   var expectedLog = '1 : ab\n2 : ab\n1 : ab\n2 : ab\n3 : ef\n3 : ef\n4 : ab';
   var got = _.strSearchLog( input );
-  test.identical( got.found, expectedFound );
+  test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
+
+  /* */
+
+  test.case = 'src - multiline, excludingTokens - multiple lines';
+  var input = { src : 'f\nif\nabc\nin\nf', ins : /abc/g, onTokenize : _.strTokenizeJs, excludingTokens : 'name', gray : 1 };
+  var got = _.strSearchLog( input );
+  var expectedParcels = [];
+  var expectedLog = '';
+  test.identical( got.parcels, expectedParcels );
+  test.identical( got.log, expectedLog );
+
+  test.case = 'ins - regexp, two entries, excludingTokens - multiple lines';
+  var input = { src : 'f\nif\nb\nif\nf', ins : /if+/, onTokenize : _.strTokenizeJs, excludingTokens : [ 'name', 'keyword' ], gray : 1 };
+  var got = _.strSearchLog( input );
+  var expectedParcels = [];
+  var expectedLog = '';
+  test.identical( got.parcels, expectedParcels );
+  test.identical( got.log, expectedLog );
+
+  test.case = 'ins - regexp, one entry - multiple lines';
+  var input = { src : 'f\nif\nb\nin\nf', ins : /b+/g, onTokenize : _.strTokenizeJs, excludingTokens : 'keyword', gray : 1 };
+  var got = _.strSearchLog( input );
+  var expectedParcels =
+  [
+    {
+      'match' : 'b',
+      'groups' : [],
+      'tokenId' : 0,
+      'charsRangeLeft' : [ 5, 6 ],
+      'counter' : 0,
+      'input' : 'f\nif\nb\nin\nf',
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  [ 'if\n', 'b', '\nin' ],
+      'log' : '2 : if\n3 : b\n4 : in',
+      'sub' : null
+    }
+  ];
+  var expectedLog = '2 : if\n3 : b\n4 : in';
+  test.identical( got.parcels, expectedParcels );
+  test.identical( got.log, expectedLog )
+
+  test.case = 'ins - array of regexps, has empty string, two entries of single ins - multiple lines';
+  var input = { src : 'f\nf\n[all]\nf\nf', ins : [ /[los]/, /o/, /x/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'parenthes' ], gray : 1 };
+  var got = _.strSearchLog( input );
+  var expectedParcels =
+  [
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'charsRangeLeft' : [ 6, 7 ],
+      'counter' : 0,
+      'input' : 'f\nf\n[all]\nf\nf',
+      'charsRangeRight' : [ 7, 6 ],
+      'nearest' :  [ 'f\n[a', 'l', 'l]\nf' ],
+      'log' : '2 : f\n3 : [all]\n4 : f',
+      'sub' : null
+    },
+    {
+      'match' : 'l',
+      'groups' : [],
+      'tokenId' : 0,
+      'charsRangeLeft' : [ 7, 8 ],
+      'counter' : 1,
+      'input' : 'f\nf\n[all]\nf\nf',
+      'charsRangeRight' : [ 6, 5 ],
+      'nearest' :  [ 'f\n[al', 'l', ']\nf' ],
+      'log' : '2 : f\n3 : [all]\n4 : f',
+      'sub' : null
+    }
+  ];
+  var expectedLog = '2 : f\n3 : [all]\n4 : f\n2 : f\n3 : [all]\n4 : f';
+  console.log(got.parcels)
+  test.identical( got.parcels, expectedParcels );
+  test.identical( got.log, expectedLog )
 
   test.close( 'multiple lines' );
   
@@ -5372,83 +5484,84 @@ function strSearchLog( test )
 
 function strSearchReplace( test )
 {
-  test.open( 'one line' );
+  // test.open( 'one line' );
 
-  test.case = 'replace 1 letter at the middle - one line';
-  var expectedReplaced = 
-  [
-    {
-      input : 'aa_aa',
-      log : '1 : aa_aa',
-      nearest : [ 'aa', '_', 'aa' ],
-      match : '_',
-      groups : [],
-      tokenId : 0,
-      charsRangeLeft : [ 2, 3 ],
-      counter : 0,
-      charsRangeRight : [ 3, 2 ],
-      sub : null
-    }
-  ];
-  var got = _.strSearchReplace({ src : 'aabaa', ins : 'b', gray : 1 });
-  test.identical( got.replaced, expectedReplaced );
+  // test.case = 'replace 1 letter at the middle - one line';
+  // var expectedReplaced = 
+  // [
+  //   {
+  //     input : 'aa_aa',
+  //     log : '1 : aa_aa',
+  //     nearest : [ 'aa', '_', 'aa' ],
+  //     match : '_',
+  //     groups : [],
+  //     tokenId : 0,
+  //     charsRangeLeft : [ 2, 3 ],
+  //     counter : 0,
+  //     charsRangeRight : [ 3, 2 ],
+  //     sub : null
+  //   }
+  // ];
+  // var got = _.strSearchReplace({ src : 'aabaa', ins : 'b', gray : 1 });
+  // test.identical( got.replaced, expectedReplaced );
 
-  test.case = 'replace multiple letters - one line';
-  var expectedReplaced = 
-  [
-    {
-      input : '__b__',
-      log : '1 : __b__',
-      nearest : [ '', '_', '_b__' ],
-      match : '_',
-      groups : [],
-      tokenId : 0,
-      charsRangeLeft : [ 0, 1 ],
-      counter : 0,
-      charsRangeRight : [ 5, 4 ],
-      sub : null
-    },
-    {
-      input : '__b__',
-      log : '1 : __b__',
-      nearest : [ '_', '_', 'b__' ],
-      match : '_',
-      groups : [],
-      tokenId : 0,
-      charsRangeLeft : [ 1, 2 ],
-      counter : 1,
-      charsRangeRight : [ 4, 3 ],
-      sub : null
-    },
-    {
-      input : '__b__',
-      log : '1 : __b__',
-      nearest : [ '__b', '_', '_' ],
-      match : '_',
-      groups : [],
-      tokenId : 0,
-      charsRangeLeft : [ 3, 4 ],
-      counter : 2,
-      charsRangeRight : [ 2, 1 ],
-      sub : null
-    },
-    {
-      input : '__b__',
-      log : '1 : __b__',
-      nearest : [ '__b_', '_', '' ],
-      match : '_',
-      groups : [],
-      tokenId : 0,
-      charsRangeLeft : [ 4, 5 ],
-      counter : 3,
-      charsRangeRight : [ 1, 0 ],
-      sub : null
-    }
-  ];
-  var got = _.strSearchReplace({ src : 'aabaa', ins : 'a', gray : 1 });
-  test.identical( got.replaced, expectedReplaced );
+  // test.case = 'replace multiple letters - one line';
+  // var expectedReplaced = 
+  // [
+  //   {
+  //     input : '__b__',
+  //     log : '1 : __b__',
+  //     nearest : [ '', '_', '_b__' ],
+  //     match : '_',
+  //     groups : [],
+  //     tokenId : 0,
+  //     charsRangeLeft : [ 0, 1 ],
+  //     counter : 0,
+  //     charsRangeRight : [ 5, 4 ],
+  //     sub : null
+  //   },
+  //   {
+  //     input : '__b__',
+  //     log : '1 : __b__',
+  //     nearest : [ '_', '_', 'b__' ],
+  //     match : '_',
+  //     groups : [],
+  //     tokenId : 0,
+  //     charsRangeLeft : [ 1, 2 ],
+  //     counter : 1,
+  //     charsRangeRight : [ 4, 3 ],
+  //     sub : null
+  //   },
+  //   {
+  //     input : '__b__',
+  //     log : '1 : __b__',
+  //     nearest : [ '__b', '_', '_' ],
+  //     match : '_',
+  //     groups : [],
+  //     tokenId : 0,
+  //     charsRangeLeft : [ 3, 4 ],
+  //     counter : 2,
+  //     charsRangeRight : [ 2, 1 ],
+  //     sub : null
+  //   },
+  //   {
+  //     input : '__b__',
+  //     log : '1 : __b__',
+  //     nearest : [ '__b_', '_', '' ],
+  //     match : '_',
+  //     groups : [],
+  //     tokenId : 0,
+  //     charsRangeLeft : [ 4, 5 ],
+  //     counter : 3,
+  //     charsRangeRight : [ 1, 0 ],
+  //     sub : null
+  //   }
+  // ];
+  var got = _.strSearchReplace({ src : 'aabaa', parcels : _.strSearch({ src : 'aabaa', ins : [ 'a' ]}) });
+  console.log( got );
+  // test.identical( got.replaced, expectedReplaced );
 
-  test.close( 'one line' );
+  // test.close( 'one line' );
 
   if( !Config.debug )
   return;

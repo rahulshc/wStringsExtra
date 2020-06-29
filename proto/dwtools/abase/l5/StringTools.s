@@ -461,7 +461,7 @@ function strSearchReplace_body( o )
 {
   let result = '';
   let last = 0;
-
+  let src = o.src;
   _.routineOptions( strSearchReplace_body, o );
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( o.src ) );
