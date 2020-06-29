@@ -8,10 +8,6 @@
   @extends Tools
 */
 
-/**
- * @file StringTools.s.
- */
-
 if( typeof module !== 'undefined' )
 {
 
@@ -461,38 +457,37 @@ function strSearchReplace_body( o )
 {
   let result = '';
   let last = 0;
-  let src = o.src;
   _.routineOptions( strSearchReplace_body, o );
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( o.src ) );
-
-  debugger;
 
   for( let i = 0 ; i < o.parcels.length ; i++ )
   {
     let parcel = o.parcels[ i ];
 
+    debugger;
     if( o.logging )
+    if( o.verbosity )
     logger.log( parcel.log );
 
-    result += src.slice( last, parcel.charsRangeRight[ 0 ] );
+    result += o.src.slice( last, o.src.length - parcel.charsRangeRight[ 0 ] );
 
-    _.assert( _.strIs( parcel.sub ), 'Expects string::parcel.sub' );
-    _.assert
+    _.sure( _.strIs( parcel.sub ), 'Expects string::parcel.sub' );
+    _.sure
     (
-      parcel.match === undefined && parcel.match === src.slice( parcel.charsRangeRight[ 0 ], parcel.charsRangeRight[ 1 ] )
+         parcel.match === undefined
+      || parcel.match === o.src.substring( o.src.length-parcel.charsRangeRight[ 0 ], o.src.length-parcel.charsRangeRight[ 1 ] )
       , () => `Match does not match:`
       + ` - ${parcel.match}`
-      + ` - ${src.slice( parcel.charsRangeRight[ 0 ], parcel.charsRangeRight[ 1 ] )}`
+      + ` - ${o.src.slice( parcel.charsRangeRight[ 0 ], parcel.charsRangeRight[ 1 ] )}`
     );
 
-    last = parcel.charsRangeRight[ 1 ];
+    last = o.src.length - parcel.charsRangeRight[ 1 ];
     result += parcel.sub;
 
-    debugger;
   }
 
-  result += src.slice( last, src.length );
+  result += o.src.slice( last, o.src.length );
 
   return result;
 
@@ -542,15 +537,7 @@ strSearchReplace_body.defaults =
   src : null,
   parcels : null,
   logging : 0,
-
-  // Implementation Yevhen S.
-  // ... strSearch.defaults,
-  // src: null,
-  // delimeter: '_',
-  // sub : null,
-  // gray : 0,
-  // nearestLines : _.strLinesNearestLog.defaults.nearestLines,
-  // tokens : null,
+  verbosity : 0,
 }
 
 let strSearchReplace = _.routineFromPreAndBody( strSearch_pre, strSearchReplace_body );
