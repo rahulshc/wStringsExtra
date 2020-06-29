@@ -4755,34 +4755,34 @@ function strSearchOptionOnTokenize( test )
   var expected = [];
   test.identical( got, expected );
 
-  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
-  var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ /\(a\)/, /\(/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'square' ] } );
-  var expected =
-  [
-   {
-      'match' : '(a)',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 1, 4 ],
-      'counter' : 0,
-      'input' : '\n(a)\n(a)\n',
-      'charsRangeLeft' : [ 1, 4 ],
-      'charsRangeRight' : [ 8, 5 ],
-      'nearest' :  [ '\n', '(a)', '\n(a)' ]
-    },
-    {
-      'match' : '(a)',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 5, 8 ],
-      'counter' : 1,
-      'input' : '\n(a)\n(a)\n',
-      'charsRangeLeft' : [ 5, 8 ],
-      'charsRangeRight' : [ 4, 1 ],
-      'nearest' :  [ '(a)\n', '(a)', '\n' ]
-    }
-  ];
-  test.identical( got, expected );
+  // test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  // var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ /\(a\)/, /\(/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'square' ] } );
+  // var expected =
+  // [
+  //  {
+  //     'match' : '(a)',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 1, 4 ],
+  //     'counter' : 0,
+  //     'input' : '\n(a)\n(a)\n',
+  //     'charsRangeLeft' : [ 1, 4 ],
+  //     'charsRangeRight' : [ 8, 5 ],
+  //     'nearest' :  [ '\n', '(a)', '\n(a)' ]
+  //   },
+  //   {
+  //     'match' : '(a)',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 5, 8 ],
+  //     'counter' : 1,
+  //     'input' : '\n(a)\n(a)\n',
+  //     'charsRangeLeft' : [ 5, 8 ],
+  //     'charsRangeRight' : [ 4, 1 ],
+  //     'nearest' :  [ '(a)\n', '(a)', '\n' ]
+  //   }
+  // ];
+  // test.identical( got, expected );
 
   test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be, excludingTokens';
   var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ /\(/, /\(a\)/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'parenthes' ] } );
@@ -5454,7 +5454,40 @@ function strSearchLog( test )
     }
   ];
   var expectedLog = '2 : f\n3 : [all]\n4 : f\n2 : f\n3 : [all]\n4 : f';
-  console.log(got.parcels)
+  test.identical( got.parcels, expectedParcels );
+  test.identical( got.log, expectedLog );
+
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var input = { src : '\n(a)\n(a)\n', ins : [ /\(a\)/, /\(/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'square' ], gray : 1 };
+  var got = _.strSearchLog( input );
+  var expectedParcels =
+  [
+   {
+      'match' : '(a)',
+      'groups' : [],
+      'tokenId' : 0,
+      'charsRangeLeft' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\n(a)\n(a)\n',
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' :  [ '\n', '(a)', '\n(a)' ],
+      'log' : '2: \n3 : (a)\n4 : (a)',
+      'sub' : null
+    },
+    {
+      'match' : '(a)',
+      'groups' : [],
+      'tokenId' : 0,
+      'charsRangeLeft' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\n(a)\n(a)\n',
+      'charsRangeRight' : [ 4, 1 ],
+      'nearest' :  [ '(a)\n', '(a)', '\n' ],
+      'log' : '3 : (a)\n4 : (a)\n5 : \n',
+      'sub' : null
+    }
+  ];
+  var expectedLog = '2: \n3 : (a)\n4 : (a)\n3 : (a)\n4 : (a)\n5 : \n';
   test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog )
 
@@ -5484,7 +5517,7 @@ function strSearchLog( test )
 
 function strSearchReplace( test )
 {
-  // test.open( 'one line' );
+  test.open( 'one line' );
 
   // test.case = 'replace 1 letter at the middle - one line';
   // var expectedReplaced = 
@@ -5557,11 +5590,10 @@ function strSearchReplace( test )
   //     sub : null
   //   }
   // ];
-  var got = _.strSearchReplace({ src : 'aabaa', parcels : _.strSearch({ src : 'aabaa', ins : [ 'a' ]}) });
-  console.log( got );
-  // test.identical( got.replaced, expectedReplaced );
 
-  // test.close( 'one line' );
+  var got = _.strSearchReplace({ src : 'aabaa', parcels : _.strSearch({ src : 'aabaa', ins : [ 'a' ]}) });
+
+  test.close( 'one line' );
 
   if( !Config.debug )
   return;
