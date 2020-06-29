@@ -4755,34 +4755,34 @@ function strSearchOptionOnTokenize( test )
   var expected = [];
   test.identical( got, expected );
 
-  // test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
-  // var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ /\(a\)/, /\(/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'square' ] } );
-  // var expected =
-  // [
-  //  {
-  //     'match' : '(a)',
-  //     'groups' : [],
-  //     'tokenId' : 0,
-  //     'charsRangeLeft' : [ 1, 4 ],
-  //     'counter' : 0,
-  //     'input' : '\n(a)\n(a)\n',
-  //     'charsRangeLeft' : [ 1, 4 ],
-  //     'charsRangeRight' : [ 8, 5 ],
-  //     'nearest' :  [ '\n', '(a)', '\n(a)' ]
-  //   },
-  //   {
-  //     'match' : '(a)',
-  //     'groups' : [],
-  //     'tokenId' : 0,
-  //     'charsRangeLeft' : [ 5, 8 ],
-  //     'counter' : 1,
-  //     'input' : '\n(a)\n(a)\n',
-  //     'charsRangeLeft' : [ 5, 8 ],
-  //     'charsRangeRight' : [ 4, 1 ],
-  //     'nearest' :  [ '(a)\n', '(a)', '\n' ]
-  //   }
-  // ];
-  // test.identical( got, expected );
+  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ /\(a\)/, /\(/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'square' ] } );
+  var expected =
+  [
+   {
+      'match' : '(a)',
+      'groups' : [],
+      'tokenId' : 0,
+      'charsRangeLeft' : [ 1, 4 ],
+      'counter' : 0,
+      'input' : '\n(a)\n(a)\n',
+      'charsRangeLeft' : [ 1, 4 ],
+      'charsRangeRight' : [ 8, 5 ],
+      'nearest' :  [ '\n', '(a)', '\n(a)' ]
+    },
+    {
+      'match' : '(a)',
+      'groups' : [],
+      'tokenId' : 0,
+      'charsRangeLeft' : [ 5, 8 ],
+      'counter' : 1,
+      'input' : '\n(a)\n(a)\n',
+      'charsRangeLeft' : [ 5, 8 ],
+      'charsRangeRight' : [ 4, 1 ],
+      'nearest' :  [ '(a)\n', '(a)', '\n' ]
+    }
+  ];
+  test.identical( got, expected );
 
   test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be, excludingTokens';
   var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ /\(/, /\(a\)/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'parenthes' ] } );
