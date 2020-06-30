@@ -462,14 +462,21 @@ function strSearchReplace( o )
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( o.src ) );
 
+  o.log = '';
+
   for( let i = 0 ; i < o.parcels.length ; i++ )
   {
     let parcel = o.parcels[ i ];
 
-    debugger;
-    if( o.logging )
     if( o.verbosity )
-    logger.log( parcel.log );
+    {
+      if( o.log )
+      o.log += '\n' + parcel.log;
+      else
+      o.log += parcel.log;
+      if( o.logging )
+      logger.log( parcel.log );
+    }
 
     result += o.src.slice( last, o.src.length - parcel.charsRangeRight[ 0 ] );
 
@@ -499,20 +506,8 @@ strSearchReplace.defaults =
   parcels : null,
   logging : 0,
   verbosity : 0,
+  // direct : 1,
 }
-
-// strSearchReplace.defaults =
-// {
-//   charsRangeLeft : null,
-//   charsRangeRight : null,
-//   // counter: 2
-//   // groups: []
-//   // log: "#foreground : bright black##foreground : default##foreground : bright black#2#foreground : default# : #inputRaw:1#Second line#inputRaw:0#↵#foreground : bright black##foreground : default##foreground : bright black#3#foreground : default# : #inputRaw:1#Third #inputRaw:0##foreground : red#line#foreground : default##foreground : green#line2#foreground : default##inputRaw:1##inputRaw:0#↵#foreground : bright black##foreground : default##foreground : bright black#4#foreground : default# : #inputRaw:1#Last one#inputRaw:0#"
-//   match : null,
-//   // nearest : (3) ["Second line↵Third ", "line", "↵Last one"]
-//   sub : null,
-//   // tokenId : 0
-// }
 
 //
 
