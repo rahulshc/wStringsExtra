@@ -1,6 +1,6 @@
 {
   "name" : "wstringsextra",
-  "version" : "0.3.199",
+  "version" : "0.3.200",
   "description" : "Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.",
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "license" : "MIT",
