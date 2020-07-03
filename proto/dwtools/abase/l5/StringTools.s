@@ -462,6 +462,9 @@ function strSearchReplace( o )
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( o.src ) );
 
+  if( _.boolLikeTrue( o.logger ) )
+  o.logger = _global_.logger;
+
   o.log = '';
 
   for( let i = 0 ; i < o.parcels.length ; i++ )
@@ -474,8 +477,8 @@ function strSearchReplace( o )
       o.log += '\n' + parcel.log;
       else
       o.log += parcel.log;
-      if( o.logging )
-      logger.log( parcel.log );
+      if( o.logger )
+      o.logger.log( parcel.log );
     }
 
     result += o.src.slice( last, o.src.length - parcel.charsRangeRight[ 0 ] );
@@ -504,7 +507,7 @@ strSearchReplace.defaults =
 {
   src : null,
   parcels : null,
-  logging : 0,
+  logger : 0,
   verbosity : 0,
   // direct : 1,
 }
@@ -2660,7 +2663,6 @@ defaults.unquoting = 1;
 defaults.parsingArrays = 1;
 defaults.severalValues = 0;
 defaults.src = null;
-defaults.severalValues = 0;
 
 //
 
