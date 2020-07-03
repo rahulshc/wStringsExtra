@@ -2503,7 +2503,10 @@ function strRequestParse( o )
 
   /* should be strSplit, not strIsolateLeftOrAll because of quoting */
 
-  let commands = _.strSplit
+  let commands
+
+  if( o.commandsDelimeter )
+  commands = _.strSplit
   ({
     src : o.src,
     delimeter : o.commandsDelimeter,
@@ -2512,6 +2515,8 @@ function strRequestParse( o )
     preservingDelimeters : 0,
     preservingEmpty : 0,
   });
+  else
+  commands = [ o.src ];  /* qqq : cover the case */
 
   /* */
 
