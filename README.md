@@ -1,5 +1,5 @@
 
-# wStringsExtra [![Build Status](https://travis-ci.org/Wandalen/wStringsExtra.svg?branch=master)](https://travis-ci.org/Wandalen/wStringsExtra)
+# module::StringsExtra [![Status](https://github.com/Wandalen/wStringsExtra/workflows/Test/badge.svg)](https://github.com/Wandalen/wStringsExtra}/actions?query=workflow%3ATest)
 
 Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.
 
