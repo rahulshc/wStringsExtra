@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "wstringsextra",
   "version": "0.3.199",
   "description": "Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.",
@@ -13,6 +14,20 @@
   "scripts": {
     "test": "wtest .run 'proto/**' rapidity:-3",
     "docgen": "wdocgen proto"
+=======
+  "name" : "wstringsextra",
+  "version" : "0.3.203",
+  "description" : "Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.",
+  "author" : "Kostiantyn Wandalen <wanalen@01.school>",
+  "license" : "MIT",
+  "main" : "proto/dwtools/abase/l5/StringTools.s",
+  "files" : [ "proto/dwtools/abase/l5", "proto/dwtools/Tools.s", "out" ],
+  "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-3", "docgen" : "wdocgen proto" },
+  "repository" :
+  {
+    "type" : "git",
+    "url" : "https://github.com/Wandalen/wStringsExtra.git"
+>>>>>>> c20ca1427c3d51ddbff00cb1f7899b62de10e4ac
   },
   "repository": {
     "type": "git",

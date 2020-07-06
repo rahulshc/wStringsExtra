@@ -461,14 +461,24 @@ function strSearchReplace_body( o )
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( o.src ) );
 
+  if( _.boolLikeTrue( o.logger ) )
+  o.logger = _global_.logger;
+
+  o.log = '';
+
   for( let i = 0 ; i < o.parcels.length ; i++ )
   {
     let parcel = o.parcels[ i ];
 
-    debugger;
-    if( o.logging )
     if( o.verbosity )
-    logger.log( parcel.log );
+    {
+      if( o.log )
+      o.log += '\n' + parcel.log;
+      else
+      o.log += parcel.log;
+      if( o.logger )
+      o.logger.log( parcel.log );
+    }
 
     result += o.src.slice( last, o.src.length - parcel.charsRangeRight[ 0 ] );
 
@@ -497,24 +507,12 @@ strSearchReplace_body.defaults =
 {
   src : null,
   parcels : null,
-  logging : 0,
+  logger : 0,
   verbosity : 0,
+  // direct : 1,
 }
 
 let strSearchReplace = _.routineFromPreAndBody( strSearch_pre, strSearchReplace_body );
-
-// strSearchReplace.defaults =
-// {
-//   charsRangeLeft : null,
-//   charsRangeRight : null,
-//   // counter: 2
-//   // groups: []
-//   // log: "#foreground : bright black##foreground : default##foreground : bright black#2#foreground : default# : #inputRaw:1#Second line#inputRaw:0#↵#foreground : bright black##foreground : default##foreground : bright black#3#foreground : default# : #inputRaw:1#Third #inputRaw:0##foreground : red#line#foreground : default##foreground : green#line2#foreground : default##inputRaw:1##inputRaw:0#↵#foreground : bright black##foreground : default##foreground : bright black#4#foreground : default# : #inputRaw:1#Last one#inputRaw:0#"
-//   match : null,
-//   // nearest : (3) ["Second line↵Third ", "line", "↵Last one"]
-//   sub : null,
-//   // tokenId : 0
-// }
 
 //
 
@@ -2510,7 +2508,10 @@ function strRequestParse( o )
 
   /* should be strSplit, not strIsolateLeftOrAll because of quoting */
 
-  let commands = _.strSplit
+  let commands
+
+  if( o.commandsDelimeter )
+  commands = _.strSplit
   ({
     src : o.src,
     delimeter : o.commandsDelimeter,
@@ -2519,6 +2520,8 @@ function strRequestParse( o )
     preservingDelimeters : 0,
     preservingEmpty : 0,
   });
+  else
+  commands = [ o.src ];  /* qqq : cover the case */
 
   /* */
 
@@ -2662,7 +2665,6 @@ defaults.unquoting = 1;
 defaults.parsingArrays = 1;
 defaults.severalValues = 0;
 defaults.src = null;
-defaults.severalValues = 0;
 
 //
 
