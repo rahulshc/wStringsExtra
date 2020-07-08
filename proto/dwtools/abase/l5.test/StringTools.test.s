@@ -8020,14 +8020,11 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
   // var x = / 2 , y /;
   // var code = `for( var p = x / 2 , y / 2 ; p < pl ; p++ )`;
   //
-  // debugger;
   // var got = _.strTokenizeJs({ src : code, tokenizingUnknown : 1 });
   //
   // log( code );
   // log( _.toStr( select( got, '*/match' ), { multiline : 0 } ) );
   // log( select( got, '*/tokenName' ) );
-  //
-  // debugger;
   //
   // var tokenNamesGot = select( got, '*/tokenName' );
   // var tokenNamesExpected = [ 'whitespace', 'keyword', 'parenthes', 'whitespace', 'keyword', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'number', 'punctuation', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'punctuation', 'name', 'whitespace', 'punctuation', 'whitespace', 'number', 'punctuation', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'punctuation', 'whitespace', 'parenthes', 'whitespace', 'comment/singleline', 'whitespace' ];
@@ -10528,31 +10525,31 @@ function strStructureParseOptionDepthForMixed( test )
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 1';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ '{', '}', '[', '[', '{a:[{b:3}', ']}', ']', ']' ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ '{', '}', '[', '[', '{a:[{b:3}', ']}', ']', ']' ], '[[[', { '{b' : '' }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
   test.identical( got, exp );
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 2';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ {}, [ '[', '{a:[{b:3}', ']}', ']' ] ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ {}, [ '[', '{a:[{b:3}', ']}', ']' ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
   test.identical( got, exp );
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 3';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ {}, [ [ '{a:[{b:3}', ']}' ] ] ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ {}, [ [ '{a:[{b:3}', ']}' ] ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
   test.identical( got, exp );
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 4';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ {}, [ [ {a : '[{b:3' }, ']}' ] ] ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ {}, [ [ {a : '[{b:3' }, ']}' ] ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
   test.identical( got, exp );
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 5';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ {}, [ [ {a : { '[{b' : 3 } }, ']}' ] ] ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ {}, [ [ {a : { '[{b' : 3 } }, ']}' ] ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
   test.identical( got, exp );
 
@@ -12393,6 +12390,14 @@ function strRequestParseDefaultOptionsQuotedValues( test )
   test.identical( got.maps, [ { withModule : 'wPath' }, { v : [ 10, 'str' ] } ] );
   test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
   test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s', 'node ./test.js' ] );
+
+  test.case = 'src - string, options with quotes and spaces';
+  var src = `.command "path/key 1":val1 "path/key 2":val2 "path/key3":'val3'`;
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { 'path/key 1' : 'val1', 'path/key 2' : 'val2', 'path/key3' : 'val3' } );
+  test.identical( got.maps, [ { 'path/key 1' : 'val1', 'path/key 2' : 'val2', 'path/key3' : 'val3' } ] );
+  test.identical( got.subject, '.command' );
+  test.identical( got.subjects, [ '.command' ] );
 }
 
 //
