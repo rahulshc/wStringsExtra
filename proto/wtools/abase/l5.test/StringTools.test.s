@@ -5,7 +5,7 @@
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../../dwtools/Tools.s' );
+  let _ = require( '../../../wtools/Tools.s' );
 
   _.include( 'wTesting' );
   require( '../l5/StringTools.s' );
@@ -12123,12 +12123,12 @@ function strRequestParseDefaultOptions( test )
   test.identical( got.subjects, [ 'node' ] );
 
   test.case = 'src - string, command with args';
-  var src = 'node proto/dwtools/SomeTest.test.s';
+  var src = 'node proto/wtools/SomeTest.test.s';
   var got = _.strRequestParse( src );
   test.identical( got.map, {} );
   test.identical( got.maps, [ {} ] );
-  test.identical( got.subject, 'node proto/dwtools/SomeTest.test.s' );
-  test.identical( got.subjects, [ 'node proto/dwtools/SomeTest.test.s' ] );
+  test.identical( got.subject, 'node proto/wtools/SomeTest.test.s' );
+  test.identical( got.subjects, [ 'node proto/wtools/SomeTest.test.s' ] );
 
   test.case = 'src - string, few command with delimeter';
   var src = 'rm -rf node_modules ; npm i';
@@ -12221,36 +12221,36 @@ function strRequestParseDefaultOptions( test )
   test.identical( got.subjects, [ '', '', '' ] );
 
   test.case = 'src - string, command with options';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s v:5 r:some';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s v:5 r:some';
   var got = _.strRequestParse( src );
   test.identical( got.map, { v : 5, r : 'some' } );
   test.identical( got.maps, [ { v : 5, r : 'some' } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s' ] );
 
   test.case = 'src - string, command with options, same keys';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s withModule:wTools withModule:wPath';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s withModule:wTools withModule:wPath';
   var got = _.strRequestParse( src );
   test.identical( got.map, { withModule : 'wPath' } );
   test.identical( got.maps, [ { withModule : 'wPath' } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s' ] );
 
   test.case = 'src - string, two command with options';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s v:5 r:some ; node ./test.js v : [ 10, str ]';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s v:5 r:some ; node ./test.js v : [ 10, str ]';
   var got = _.strRequestParse( src );
   test.identical( got.map, { v : 5, r : 'some' } );
   test.identical( got.maps, [ { v : 5, r : 'some' }, { v : [ 10, 'str' ] } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s', 'node ./test.js' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s', 'node ./test.js' ] );
 
   test.case = 'src - string, two command with options, same keys';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s withModule:wTools withModule:wPath ; node ./test.js v : [ 10, str ]';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s withModule:wTools withModule:wPath ; node ./test.js v : [ 10, str ]';
   var got = _.strRequestParse( src );
   test.identical( got.map, { withModule : 'wPath' } );
   test.identical( got.maps, [ { withModule : 'wPath' }, { v : [ 10, 'str' ] } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s', 'node ./test.js' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s', 'node ./test.js' ] );
 
 }
 
@@ -12267,12 +12267,12 @@ function strRequestParseDefaultOptionsQuotedValues( test )
   test.identical( got.subjects, [ 'node' ] );
 
   test.case = 'src - string, command with args';
-  var src = '"node proto/dwtools/SomeTest.test.s"';
+  var src = '"node proto/wtools/SomeTest.test.s"';
   var got = _.strRequestParse( src );
   test.identical( got.map, {} );
   test.identical( got.maps, [ {} ] );
-  test.identical( got.subject, 'node proto/dwtools/SomeTest.test.s' );
-  test.identical( got.subjects, [ 'node proto/dwtools/SomeTest.test.s' ] );
+  test.identical( got.subject, 'node proto/wtools/SomeTest.test.s' );
+  test.identical( got.subjects, [ 'node proto/wtools/SomeTest.test.s' ] );
 
   test.case = 'src - string, few command with delimeter';
   var src = 'rm -rf "node_modules" ; npm i';
@@ -12363,36 +12363,36 @@ function strRequestParseDefaultOptionsQuotedValues( test )
   test.identical( got.subjects, [ '', '', '' ] );
 
   test.case = 'src - string, command with options';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s v:"5" r:"some"';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s v:"5" r:"some"';
   var got = _.strRequestParse( src );
   test.identical( got.map, { v : 5, r : 'some' } );
   test.identical( got.maps, [ { v : 5, r : 'some' } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s' ] );
 
   test.case = 'src - string, command with options, same keys';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s withModule:"wTools" withModule:wPath';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s withModule:"wTools" withModule:wPath';
   var got = _.strRequestParse( src );
   test.identical( got.map, { withModule : 'wPath' } );
   test.identical( got.maps, [ { withModule : 'wPath' } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s' ] );
 
   test.case = 'src - string, two command with options';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s v:5 r:"some" ; node ./test.js v : "[ 10, str ]"';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s v:5 r:"some" ; node ./test.js v : "[ 10, str ]"';
   var got = _.strRequestParse( src );
   test.identical( got.map, { v : 5, r : 'some' } );
   test.identical( got.maps, [ { v : 5, r : 'some' }, { v : [ 10, 'str' ] } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s', 'node ./test.js' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s', 'node ./test.js' ] );
 
   test.case = 'src - string, two command with options, same keys';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s withModule:"wTools" withModule:"wPath" ; node ./test.js v : "[ 10, str ]"';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s withModule:"wTools" withModule:"wPath" ; node ./test.js v : "[ 10, str ]"';
   var got = _.strRequestParse( src );
   test.identical( got.map, { withModule : 'wPath' } );
   test.identical( got.maps, [ { withModule : 'wPath' }, { v : [ 10, 'str' ] } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s', 'node ./test.js' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s', 'node ./test.js' ] );
 }
 
 //
@@ -12519,12 +12519,12 @@ function strRequestParseOptionSeveralValues( test )
   test.identical( got.subjects, [ 'node' ] );
 
   test.case = 'src - string, command with args';
-  var src = '"node proto/dwtools/SomeTest.test.s"';
+  var src = '"node proto/wtools/SomeTest.test.s"';
   var got = _.strRequestParse( { src : src, severalValues : 1 } );
   test.identical( got.map, {} );
   test.identical( got.maps, [ {} ] );
-  test.identical( got.subject, 'node proto/dwtools/SomeTest.test.s' );
-  test.identical( got.subjects, [ 'node proto/dwtools/SomeTest.test.s' ] );
+  test.identical( got.subject, 'node proto/wtools/SomeTest.test.s' );
+  test.identical( got.subjects, [ 'node proto/wtools/SomeTest.test.s' ] );
 
   test.case = 'src - string, few command with delimeter';
   var src = 'rm -rf "node_modules" ; npm i';
@@ -12615,36 +12615,36 @@ function strRequestParseOptionSeveralValues( test )
   test.identical( got.subjects, [ '', '', '' ] );
 
   test.case = 'src - string, command with options';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s v:"5" r:"some"';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s v:"5" r:"some"';
   var got = _.strRequestParse( { src : src, severalValues : 1 } );
   test.identical( got.map, { v : 5, r : 'some' } );
   test.identical( got.maps, [ { v : 5, r : 'some' } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s' ] );
 
   test.case = 'src - string, command with options, same keys';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s withModule:"wTools" withModule:wPath';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s withModule:"wTools" withModule:wPath';
   var got = _.strRequestParse( { src : src, severalValues : 1 } );
   test.identical( got.map, { withModule : [ 'wTools', 'wPath' ] } );
   test.identical( got.maps, [ { withModule : [ 'wTools', 'wPath' ] } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s' ] );
 
   test.case = 'src - string, two command with options';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s v:5 r:"some" ; node ./test.js v : "[ 10, str ]"';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s v:5 r:"some" ; node ./test.js v : "[ 10, str ]"';
   var got = _.strRequestParse( { src : src, severalValues : 1 } );
   test.identical( got.map, { v : 5, r : 'some' } );
   test.identical( got.maps, [ { v : 5, r : 'some' }, { v : [ 10, 'str' ] } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s', 'node ./test.js' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s', 'node ./test.js' ] );
 
   test.case = 'src - string, two command with options, same keys';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s withModule:"wTools" withModule:wPath ; node ./test.js v : "[ 10, str ]"';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s withModule:"wTools" withModule:wPath ; node ./test.js v : "[ 10, str ]"';
   var got = _.strRequestParse( { src : src, severalValues : 1 } );
   test.identical( got.map, { withModule : [ 'wTools', 'wPath' ] } );
   test.identical( got.maps, [ { withModule : [ 'wTools', 'wPath' ] }, { v : [ 10, 'str' ] } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s', 'node ./test.js' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s', 'node ./test.js' ] );
 }
 
 //
