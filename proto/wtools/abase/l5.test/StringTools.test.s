@@ -13609,7 +13609,7 @@ function strLattersSpectre( test )
 //
 // --
 
-var Self =
+let Self =
 {
 
   name : 'Tools.base.StringsExtra',

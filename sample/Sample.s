@@ -1,7 +1,7 @@
 
 if( typeof module !== 'undefined' )
 require( 'wstringsextra' );
-var _ = wTools;
+let _ = wTools;
 
 /**/
 
