@@ -12388,8 +12388,8 @@ function strRequestParseDefaultOptionsQuotedValues( test )
   var got = _.strRequestParse( src );
   test.identical( got.map, { withModule : 'wPath' } );
   test.identical( got.maps, [ { withModule : 'wPath' }, { v : [ 10, 'str' ] } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s', 'node ./test.js' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s', 'node ./test.js' ] );
 
   test.case = 'src - string, options with quotes and spaces';
   var src = `.command "path/key 1":val1 "path/key 2":val2 "path/key3":'val3'`;
