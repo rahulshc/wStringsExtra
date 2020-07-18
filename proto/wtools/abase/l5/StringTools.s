@@ -2573,13 +2573,13 @@ function strRequestParse( o )
 
 
     let subject;
-    let map;
+    let map = Object.create( null );
     // let subject, map;
     // if( mapEntries.length === 1 )
     if( !mapEntries[ 1 ] )
     {
       subject = mapEntries[ 0 ];
-      map = Object.create( null );
+      // map = Object.create( null );
     }
     else
     {
@@ -2597,14 +2597,75 @@ function strRequestParse( o )
       subject = subjectAndKey[ 0 ];
       mapEntries[ 0 ] = subjectAndKey[ 2 ];
 
-      map = _.strStructureParse
+      // map = _.strStructureParse
+      // ({
+      //   src : mapEntries.join( '' ),
+      //   keyValDelimeter : o.keyValDelimeter,
+      //   parsingArrays : o.parsingArrays,
+      //   quoting : o.quoting,
+      //   severalValues : o.severalValues,
+      // });
+
+      /* Dmytro : it uses to get valid result when the quotes is used, also, it used no additional options, so performance is improved */
+
+      let splits = _.strSplit
       ({
         src : mapEntries.join( '' ),
-        keyValDelimeter : o.keyValDelimeter,
-        parsingArrays : o.parsingArrays,
-        quoting : o.quoting,
-        severalValues : o.severalValues,
+        delimeter : o.keyValDelimeter,
+        stripping : 0,
+        quoting : 0,
+        preservingEmpty : 1,
+        preservingDelimeters : 1,
+        preservingQuoting : 0
       });
+
+      let pairs = [];
+      for( let a = 0 ; a < splits.length-2 ; a += 2 )
+      {
+        let left = splits[ a ];
+        let right = splits[ a+2 ].trim();
+
+        _.assert( _.strIs( left ) );
+        _.assert( _.strIs( right ) );
+
+        while( a < splits.length-3 )
+        {
+          let cuts = _.strIsolateRightOrAll({ src : right, delimeter : o.entryDelimeter, quote : 1, times : 1 });
+          if( cuts[ 1 ] === undefined )
+          {
+            right = splits[ a+2 ] = splits[ a+2 ] + splits[ a+3 ] + splits[ a+4 ];
+            right = right.trim();
+            splits.splice( a+3, 2 );
+            continue;
+          }
+          right = cuts[ 0 ];
+          splits[ a+2 ] = cuts[ 2 ];
+          break;
+        }
+
+        left = left.trim();
+        right = right.trim();
+        if( o.quoting )
+        {
+          left = _.strUnquote( left );
+          right = _.strUnquote( right );
+        }
+
+        pairs.push( left, right );
+      }
+
+      for( let a = 0 ; a < pairs.length-1 ; a += 2 )
+      {
+        let left = pairs[ a ];
+        let right = pairs[ a+1 ];
+        right = _.numberFromStrMaybe( right );
+        right = strToArrayMaybe( right );
+
+        if( o.severalValues )
+        map[ left ] = _.scalarAppendOnce( map[ left ], right );
+        else
+        map[ left ] = right;
+      }
 
     }
 
@@ -2652,6 +2713,30 @@ function strRequestParse( o )
   result.map = result.maps[ 0 ];
 
   return result;
+
+  /* */
+
+  function strToArrayMaybe( str )
+  {
+    if( !_.strIs( str ) )
+    return str;
+
+    let inside = _.strInsideOf( str, '[', ']' );
+    if( inside === false )
+    return str;
+
+    let result = _.strSplit
+    ({
+      src : inside,
+      delimeter : [ ' ', ',' ],
+      stripping : 1,
+      quoting : o.quoting,
+      preservingDelimeters : 0,
+      preservingEmpty : 0,
+      preservingQuoting : 0,
+    });
+    return result.map( ( e ) => _.numberFromStrMaybe( e ) );
+  }
 }
 
 var defaults = strRequestParse.defaults = Object.create( null );
