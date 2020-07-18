@@ -55,7 +55,6 @@ _.assert( _.routineIs( _.sorted.addOnce ) );
 // strDecamelize.defaults =
 // {
 //   src : null,
-//   delimeter : '-',
 // }
 
 //
@@ -3021,11 +3020,273 @@ strJoinMap.defaults =
 
 function strTable( o )
 {
+
+  if( !_.mapIs( o ) )
+  o = { data : arguments[ 0 ], dim : arguments[ 1 ] }
+
+  _.routineOptions( strTable, o );
+  _.assert( arguments.length === 1 || arguments.length === 2, 'Expects single argument' );
+  _.assert( o.data !== undefined );
+  _.assert( o.dim.length === 2 );
+  _.assert( _.numbersAreAll( o.dim ) );
+
+  if( _.strIs( o.style ) )
+  {
+    _.assert( !!strTable.style[ o.style ], `Unknown style ${o.style}` );
+    o.style = strTable.style[ o.style ];
+  }
+  debugger;
+  _.mapSupplementNulls( o, o.style );
+  debugger;
+
+  o.cellHeight = _.scalarToVector( o.cellHeight, o.dim[ 0 ] );
+  o.cellWidth = _.scalarToVector( o.cellWidth, o.dim[ 1 ] );
+  o.cellAlign = scalarToVector( o.cellAlign, 2 );
+  o.cellAlign = o.cellAlign.map( ( cellAlign ) => cellAlign === null ? 'center' : cellAlign );
+  o.tablePadding = scalarToVector( o.tablePadding, 4 );
+  o.head = scalarToVector( o.head, 4 );
+  if( o.onCellGet === null )
+  o.onCellGet = onCellGetDefault;
+  if( o.onCellDrawAfter === null )
+  o.onCellDrawAfter = onCellDrawAfterDefault;
+  if( o.onCellDraw === null )
+  o.onCellDraw = cellDrawCenter;
+
+  sizeEval();
+
+  _.assert( o.style === null || _.mapIs( o.style ) );
+  _.assert( _.all( o.cellAlign, ( cellAlign ) => cellAlign === 'center' ), 'not implemented' );
+  _.assert( o.cellAlign.length === 2 );
+  _.assert( _.numbersAreAll( o.cellWidth ) );
+  _.assert( _.numbersAreAll( o.cellHeight ) );
+  _.assert( o.head.length === 4 );
+  _.assert( _.all( o.head, ( head ) => head === null ), 'not implemented' );
+  _.assert( o.tablePadding.length === 4 );
+  _.routineIs( o.onCellGet );
+  _.routineIs( o.onCellDrawAfter );
+
+  tableDraw();
+
+  return o;
+
+  /* */
+
+  function tableDraw()
+  {
+    let it = o;
+    it.i2d = [];
+    it.sz = [];
+
+    border( o.ltToken );
+    border( o.tToken );
+    border( o.rtToken );
+
+    for( let i = 0 ; i < o.dim[ 0 ] ; i++ )
+    {
+      it.i2d[ 0 ] = i;
+      it.sz[ 0 ] = o.cellHeight[ i ];
+      if( it.nlToken && i > 0 )
+      it.result += it.nlToken;
+
+      border( o.lToken );
+
+      for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
+      {
+        it.i2d[ 1 ] = j;
+        it.sz[ 1 ] = o.cellWidth[ j ];
+        it.cellOriginal = cellGet( it.i2d );
+        it.cellDrawn = it.onCellDraw( it );
+        it.cellDrawn = it.onCellDrawAfter( it );
+        if( it.ncToken && j > 0 )
+        it.result += it.ncToken;
+        it.result += it.cellDrawn;
+      }
+
+      border( o.rToken );
+
+    }
+
+    border( o.lbToken );
+    border( o.bToken );
+    border( o.rbToken );
+
+  }
+
+  /* */
+
+  function cellDrawCenter( it )
+  {
+    let sz = _.strLinesSize( it.cellOriginal );
+    _.assert( sz[ 0 ] === 1, 'not implemented' );
+    return it.cellOriginal;
+  }
+
+  /* */
+
+  function border( token )
+  {
+    if( o.withBorder && token )
+    o.result += token;
+  }
+
+  /* */
+
+  function sizeEval()
+  {
+    let h = _.longSlice( o.cellHeight );
+    let w = _.longSlice( o.cellWidth );
+
+    for( let i = 0 ; i < o.dim[ 0 ] ; i++ )
+    if( h[ i ] === undefined || h[ i ] === null )
+    {
+      o.cellHeight[ i ] = null;
+      h[ i ] = 0;
+    }
+
+    for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
+    if( w[ j ] === undefined || w[ j ] === null )
+    {
+      o.cellWidth[ j ] = null;
+      h[ j ] = 0;
+    }
+
+    let i2d = [];
+    for( let i = 0 ; i < o.dim[ 0 ] ; i++ )
+    {
+      i2d[ 0 ] = i;
+      for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
+      {
+        i2d[ 1 ] = j;
+        let e = cellGet( i2d );
+        let sz = _.strLinesSize( e );
+        if( o.cellHeight[ i ] === null )
+        h[ i ] = Math.max( h[ i ], sz[ 0 ] );
+        if( o.cellWidth[ j ] === null )
+        w[ j ] = Math.max( w[ j ], sz[ 1 ] );
+      }
+    }
+
+    o.cellHeight = h;
+    o.cellWidth = w;
+  }
+
+  /* */
+
+  function cellGet( i2d )
+  {
+    let e = o.onCellGet( i2d, o );
+    _.assert( _.strIs( e ) );
+    return e;
+  }
+
+  /* */
+
+  function scalarToVector( src, length )
+  {
+    if( _.mapIs( src ) )
+    return sideMapToArray( sideMap )
+    return _.scalarToVector( src, length );
+  }
+
+  /* */
+
+  function sideMapToArray( sideMap, length )
+  {
+    let result = _.dup( null, length );
+    _.assert( _.objectIs( sideMap ) ); debugger;
+    for( let s in sideMap )
+    {
+      _.assert( _.Side[ s ] >= 0, () => `Unknown side ${s}` );
+      result[ _.Side[ s ] ] = sideMap[ s ];
+    }
+    return result;
+  }
+
+  /* */
+
+  function onCellGetDefault( i2d, o )
+  {
+    let iFlat = i2d[ 1 ] + i2d[ 0 ]*o.dim[ 1 ];
+    return o.data[ iFlat ];
+  }
+
+  /* */
+
+  function onCellDrawAfterDefault( it )
+  {
+    return it.cellDrawn;
+  }
+
+  /* */
+
+}
+
+strTable.defaults =
+{
+  result : '',
+  data : null,
+  dim : null,
+  head : null,
+  cellHeight : null,
+  cellWidth : null,
+  cellAlign : 'center',
+  tablePadding : null,
+  compact : 1,
+  onCellGet : null,
+  onCellDraw : null,
+  onCellDrawAfter : null,
+
+  style : 'borderless',
+  withBorder : null,
+  lToken : null,
+  rToken : null,
+  tToken : null,
+  bToken : null,
+  ltToken : null,
+  rtToken : null,
+  lbToken : null,
+  rbToken : null,
+  lHeadToken : null,
+  rHeadToken : null,
+  ncToken : null,
+  nlToken : null,
+}
+
+strTable.style = Object.create( null );
+
+strTable.style.borderless =
+{
+  withBorder : 0,
+  ncToken : '\t',
+  nlToken : '\n',
+}
+
+strTable.style.doubleBorder =
+{
+  withBorder : 1,
+  lToken : '║',
+  rToken : '║',
+  tToken : '═',
+  bToken : '═',
+  ltToken : '╔',
+  rtToken : '╗',
+  lbToken : '╚',
+  rbToken : '╝',
+  lHeadToken : '╠',
+  rHeadToken : '╣',
+  ncToken : '\t',
+  nlToken : '\n',
+}
+
+//
+
+function strTable_old( o )
+{
   _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( !_.objectIs( o ) )
   o = { data : o }
-  _.routineOptions( strTable,o );
+  _.routineOptions( strTable_old,o );
   _.assert( _.longIs( o.data ) );
 
   if( typeof module !== 'undefined' )
@@ -3043,7 +3304,7 @@ function strTable( o )
   if( _.cliTable == undefined )
   {
     if( !o.silent )
-    throw _.err( 'version of strTable without support of cli-table2 is not implemented' );
+    throw _.err( 'version of strTable_old without support of cli-table2 is not implemented' );
     else
     return;
   }
@@ -3063,9 +3324,9 @@ function strTable( o )
     maxLen = Math.max( maxLen, o.data[ i ].length );
   }
 
-  let onCellGet = strTable.onCellGet;
+  let onCellGet = strTable_old.onCellGet;
   o.onCellGet = o.onCellGet || isArrayOfArrays ? onCellGet.ofArrayOfArray :  onCellGet.ofFlatArray ;
-  o.onCellAfter = o.onCellAfter || strTable.onCellAfter;
+  o.onCellAfter = o.onCellAfter || strTable_old.onCellAfter;
 
   if( isArrayOfArrays )
   {
@@ -3101,7 +3362,7 @@ function strTable( o )
 
   let table = new _.cliTable( tableOptions );
 
-  //
+  /* */
 
   for( let y = 0; y < o.rowsNumber; y++ )
   {
@@ -3150,7 +3411,7 @@ function strTable( o )
 
 }
 
-strTable.defaults =
+strTable_old.defaults =
 {
   data : null,
   rowsNumber : null,
@@ -3174,18 +3435,17 @@ strTable.defaults =
   paddingLeft : 0,
   paddingRight : 0,
 
-
   onCellGet : null,
   onCellAfter : null,
 }
 
-strTable.onCellGet =
+strTable_old.onCellGet =
 {
   ofFlatArray : ( data, index2d, o  ) => data[ index2d[ 0 ] * o.colsNumber + index2d[ 1 ] ],
   ofArrayOfArray : ( data, index2d, o  ) => data[ index2d[ 0 ] ][ index2d[ 1 ] ]
 }
 
-strTable.onCellAfter = ( cellStr, index2d, o ) => cellStr
+strTable_old.onCellAfter = ( cellStr, index2d, o ) => cellStr
 
 //
 
@@ -3304,10 +3564,20 @@ function strLattersSpectresSimilarity( src1, src2 )
 // declare
 // --
 
-let Extend =
+let Side =
+{
+  top : 0,
+  right : 1,
+  bottom : 2,
+  left : 3,
+  vertical : 0,
+  horizontal : 1,
+}
+
+let Extension =
 {
 
-  // strDecamelize,
+  // strDecamelize, /* qqq : implement */
   strCamelize,
   strToTitle,
 
@@ -3325,7 +3595,7 @@ let Extend =
   tokensSyntaxFrom,
 
   _strReplaceMapPrepare,
-  strReplaceAll, /* qqq : document me | Dmytro : extended documentation */
+  strReplaceAll,
   strTokenizeJs,
   strTokenizeCpp,
 
@@ -3358,6 +3628,7 @@ let Extend =
   strJoinMap, /* qqq : cover it by tests | Dmytro : covered */
 
   strTable,
+  strTable_old,
   strsSort,
 
   strSimilarity, /* experimental */
@@ -3365,9 +3636,13 @@ let Extend =
   strLattersSpectresSimilarity,
   // lattersSpectreComparison, /* experimental */
 
+  // fields
+
+  Side,
+
 }
 
-_.mapExtend( Self, Extend );
+_.mapExtend( Self, Extension );
 
 // --
 // export

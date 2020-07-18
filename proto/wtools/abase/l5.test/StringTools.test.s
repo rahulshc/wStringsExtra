@@ -17,7 +17,7 @@ let select = _testerGlobal_.wTools.select;
 let _ = _global_.wTools;
 
 // --
-//
+// converter
 // --
 
 function strCamelize( test )
@@ -8541,6 +8541,41 @@ function strTimeFormat( test )
 
 //
 
+function strTable( test )
+{
+
+  test.case = '2 arguments';
+  var exp =
+  `a	b	c
+d	e	f`;
+  var data = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
+  var dim = [ 2, 3 ];
+  var got = _.strTable( data, dim );
+  test.identical( got.result, exp );
+
+  test.case = 'options map, dim : [ 2, 3 ]';
+  var exp =
+  `a	b	c
+d	e	f`;
+  var data = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
+  var dim = [ 2, 3 ];
+  var got = _.strTable({ data, dim });
+  test.identical( got.result, exp );
+
+  test.case = 'options map, dim : [ 3, 2 ]';
+  var exp =
+  `a	b
+c	d
+e	f`;
+  var data = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
+  var dim = [ 3, 2 ];
+  var got = _.strTable({ data, dim });
+  test.identical( got.result, exp );
+
+}
+
+//
+
 function strTimeFormat( test )
 {
 
@@ -13612,19 +13647,20 @@ function strLattersSpectre( test )
 let Self =
 {
 
-  name : 'Tools.base.StringsExtra',
+  name : 'Tools.StringsExtra',
   silencing : 1,
 
   tests :
   {
 
+    // converter
+
     strCamelize,
     strToTitle,
-
     strFilenameFor,
     strHtmlEscape,
 
-    //
+    // search
 
     strSearchDefaultOptions,
     strSearchOptionNearestLines,
@@ -13645,12 +13681,15 @@ let Self =
     strTokenizeJs,
     strSorterParse,
 
-    //
+    // format
 
     strMetricFormat,
     strMetricFormatBytes,
     strToBytes,
     strTimeFormat,
+    strTable,
+
+    // parse
 
     strStructureParseDefaultOptions,
     strStructureParseOptionParsingArrays,
@@ -13685,7 +13724,7 @@ let Self =
 
     strJoinMap,
 
-    //
+    // etc
 
     strDifference,
     strLattersSpectre,
