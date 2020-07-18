@@ -3163,8 +3163,17 @@ function strTable( o )
     it.sz = [];
 
     border( o.ltToken );
-    border( o.tToken );
+    if( o.withBorder && o.tToken )
+    for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
+    {
+      if( j > 0 && o.ncToken )
+      for( let k = 0 ; k < o.ncToken.length ; k++ )
+      o.result += o.ttlToken;
+      for( let k = 0 ; k < o.cellWidth[ j ] ; k++ )
+      o.result += o.tToken;
+    }
     border( o.rtToken );
+    border( o.nlToken );
 
     for( let i = 0 ; i < o.dim[ 0 ] ; i++ )
     {
@@ -3172,9 +3181,7 @@ function strTable( o )
       it.sz[ 0 ] = o.cellHeight[ i ];
       if( it.nlToken && i > 0 )
       it.result += it.nlToken;
-
       border( o.lToken );
-
       for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
       {
         it.i2d[ 1 ] = j;
@@ -3186,13 +3193,20 @@ function strTable( o )
         it.result += it.ncToken;
         it.result += it.cellDrawn;
       }
-
       border( o.rToken );
-
     }
 
+    border( o.nlToken );
     border( o.lbToken );
-    border( o.bToken );
+    if( o.withBorder && o.bToken )
+    for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
+    {
+      if( j > 0 && o.ncToken )
+      for( let k = 0 ; k < o.ncToken.length ; k++ )
+      o.result += o.btlToken;
+      for( let k = 0 ; k < o.cellWidth[ j ] ; k++ )
+      o.result += o.bToken;
+    }
     border( o.rbToken );
 
   }
@@ -3203,6 +3217,13 @@ function strTable( o )
   {
     let sz = _.strLinesSize( it.cellOriginal );
     _.assert( sz[ 0 ] === 1, 'not implemented' );
+
+    if( sz[ 1 ] < it.sz[ 1 ] )
+    {
+      let hf = ( it.sz[ 1 ] - sz[ 1 ] ) / 2;
+      return _.strDup( it.spaceToken, Math.ceil( hf ) ) + it.cellOriginal + _.strDup( it.spaceToken, Math.floor( hf ) );
+    }
+
     return it.cellOriginal;
   }
 
@@ -3308,6 +3329,7 @@ function strTable( o )
 
 strTable.defaults =
 {
+
   result : '',
   data : null,
   dim : null,
@@ -3322,6 +3344,7 @@ strTable.defaults =
   onCellDrawAfter : null,
 
   style : 'borderless',
+  spaceToken : null,
   withBorder : null,
   lToken : null,
   rToken : null,
@@ -3331,10 +3354,15 @@ strTable.defaults =
   rtToken : null,
   lbToken : null,
   rbToken : null,
-  lHeadToken : null,
-  rHeadToken : null,
+  ltlToken : null,
+  rtlToken : null,
+  ttlToken : null,
+  btlToken : null,
+  hHeadToken : null,
+  vHeadToken : null,
   ncToken : null,
   nlToken : null,
+
 }
 
 strTable.style = Object.create( null );
@@ -3342,6 +3370,7 @@ strTable.style = Object.create( null );
 strTable.style.borderless =
 {
   withBorder : 0,
+  spaceToken : ' ',
   ncToken : '\t',
   nlToken : '\n',
 }
@@ -3349,6 +3378,7 @@ strTable.style.borderless =
 strTable.style.doubleBorder =
 {
   withBorder : 1,
+  spaceToken : ' ',
   lToken : '║',
   rToken : '║',
   tToken : '═',
@@ -3357,9 +3387,13 @@ strTable.style.doubleBorder =
   rtToken : '╗',
   lbToken : '╚',
   rbToken : '╝',
-  lHeadToken : '╠',
-  rHeadToken : '╣',
-  ncToken : '\t',
+  ltlToken : '╟',
+  rtlToken : '╢',
+  ttlToken : '╤',
+  btlToken : '╧',
+  hHeadToken : '─',
+  vHeadToken : '│',
+  ncToken : '│',
   nlToken : '\n',
 }
 

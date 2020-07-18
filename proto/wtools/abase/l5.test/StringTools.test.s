@@ -8538,36 +8538,72 @@ function strTimeFormat( test )
 
 //
 
-function strTable( test )
+function strTableBasic( test )
 {
+
+  /* */
 
   test.case = '2 arguments';
   var exp =
-  `a	b	c
+`a	b	c
 d	e	f`;
   var data = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
   var dim = [ 2, 3 ];
   var got = _.strTable( data, dim );
   test.identical( got.result, exp );
 
+  /* */
+
   test.case = 'options map, dim : [ 2, 3 ]';
   var exp =
-  `a	b	c
+`a	b	c
 d	e	f`;
   var data = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
   var dim = [ 2, 3 ];
   var got = _.strTable({ data, dim });
   test.identical( got.result, exp );
 
+  /* */
+
   test.case = 'options map, dim : [ 3, 2 ]';
   var exp =
-  `a	b
+`a	b
 c	d
 e	f`;
   var data = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
   var dim = [ 3, 2 ];
   var got = _.strTable({ data, dim });
   test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'style : doubleBorder';
+  var exp =
+`╔═╤═╤═╗
+║a│b│c║
+║d│e│f║
+╚═╧═╧═╝`;
+  var data = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
+  var dim = [ 2, 3 ];
+  var style = 'doubleBorder';
+  var got = _.strTable({ data, dim, style });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'style : doubleBorder, complex';
+  var exp =
+`╔══╤═══╤══════╗
+║ a│ b │c12345║
+║d1│e12│  f1  ║
+╚══╧═══╧══════╝`;
+  var data = [ 'a', 'b', 'c12345', 'd1', 'e12', 'f1' ];
+  var dim = [ 2, 3 ];
+  var style = 'doubleBorder';
+  var got = _.strTable({ data, dim, style });
+  test.identical( got.result, exp );
+
+  /* */
 
 }
 
@@ -13692,7 +13728,7 @@ let Self =
     strMetricFormatBytes,
     strToBytes,
     strTimeFormat,
-    strTable,
+    strTableBasic, /* xxx qqq : extend */
 
     // parse
 
