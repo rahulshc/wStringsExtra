@@ -3120,14 +3120,18 @@ function strTable( o )
     _.assert( !!strTable.style[ o.style ], `Unknown style ${o.style}` );
     o.style = strTable.style[ o.style ];
   }
-  debugger;
   _.mapSupplementNulls( o, o.style );
-  debugger;
 
-  o.cellHeight = _.scalarToVector( o.cellHeight, o.dim[ 0 ] );
-  o.cellWidth = _.scalarToVector( o.cellWidth, o.dim[ 1 ] );
+  o.rowHeight = _.scalarToVector( o.rowHeight, o.dim[ 0 ] );
+  o.minRowHeight = _.scalarToVector( o.minRowHeight, o.dim[ 0 ] );
+  o.maxRowHeight = _.scalarToVector( o.maxRowHeight, o.dim[ 0 ] );
+  o.colWidth = _.scalarToVector( o.colWidth, o.dim[ 1 ] );
+  o.minColWidth = _.scalarToVector( o.minColWidth, o.dim[ 1 ] );
+  o.maxColWidth = _.scalarToVector( o.maxColWidth, o.dim[ 1 ] );
+
   o.cellAlign = scalarToVector( o.cellAlign, 2 );
   o.cellAlign = o.cellAlign.map( ( cellAlign ) => cellAlign === null ? 'center' : cellAlign );
+  o.cellPadding = scalarToVector( o.cellPadding, 4 );
   o.tablePadding = scalarToVector( o.tablePadding, 4 );
   o.head = scalarToVector( o.head, 4 );
   if( o.onCellGet === null )
@@ -3135,20 +3139,43 @@ function strTable( o )
   if( o.onCellDrawAfter === null )
   o.onCellDrawAfter = onCellDrawAfterDefault;
   if( o.onCellDraw === null )
-  o.onCellDraw = cellDrawCenter;
+  o.onCellDraw = cellDraw;
 
   sizeEval();
 
   _.assert( o.style === null || _.mapIs( o.style ) );
   _.assert( _.all( o.cellAlign, ( cellAlign ) => cellAlign === 'center' ), 'not implemented' );
   _.assert( o.cellAlign.length === 2 );
-  _.assert( _.numbersAreAll( o.cellWidth ) );
-  _.assert( _.numbersAreAll( o.cellHeight ) );
+  _.assert( _.numbersAreAll( o.rowHeight ) );
+  _.assert( _.numbersAreAll( o.colWidth ) );
   _.assert( o.head.length === 4 );
   _.assert( _.all( o.head, ( head ) => head === null ), 'not implemented' );
+  _.assert( o.cellAlign[ 0 ] === 'center' && o.cellAlign[ 1 ] === 'center', 'not implemented' );
+  _.assert( o.cellPadding.length === 4 );
   _.assert( o.tablePadding.length === 4 );
   _.routineIs( o.onCellGet );
   _.routineIs( o.onCellDrawAfter );
+  _.assert
+  (
+    _.all( o.minColWidth, ( n ) => n === null || _.numberIs( n ) )
+    , () => 'Expects number or null {- o.minColWidth -}'
+  );
+  _.assert
+  (
+    _.all( o.maxColWidth, ( n ) => n === null || _.numberIs( n ) )
+    , () => 'Expects number or null {- o.maxColWidth -}'
+  );
+
+  _.assert
+  (
+    _.all( o.minRowHeight, ( n ) => n === null || _.numberIs( n ) )
+    , () => 'Expects number or null {- o.minRowHeight -}'
+  );
+  _.assert
+  (
+    _.all( o.maxRowHeight, ( n ) => n === null || _.numberIs( n ) )
+    , () => 'Expects number or null {- o.maxRowHeight -}'
+  );
 
   tableDraw();
 
@@ -3161,6 +3188,7 @@ function strTable( o )
     let it = o;
     it.i2d = [];
     it.sz = [];
+    it.lines = [];
 
     border( o.ltToken );
     if( o.withBorder && o.tToken )
@@ -3169,7 +3197,7 @@ function strTable( o )
       if( j > 0 && o.ncToken )
       for( let k = 0 ; k < o.ncToken.length ; k++ )
       o.result += o.ttlToken;
-      for( let k = 0 ; k < o.cellWidth[ j ] ; k++ )
+      for( let k = 0 ; k < o.colWidth[ j ] ; k++ )
       o.result += o.tToken;
     }
     border( o.rtToken );
@@ -3178,22 +3206,37 @@ function strTable( o )
     for( let i = 0 ; i < o.dim[ 0 ] ; i++ )
     {
       it.i2d[ 0 ] = i;
-      it.sz[ 0 ] = o.cellHeight[ i ];
-      if( it.nlToken && i > 0 )
-      it.result += it.nlToken;
-      border( o.lToken );
+      it.sz[ 0 ] = o.rowHeight[ i ];
+
       for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
       {
         it.i2d[ 1 ] = j;
-        it.sz[ 1 ] = o.cellWidth[ j ];
+        it.sz[ 1 ] = o.colWidth[ j ];
         it.cellOriginal = cellGet( it.i2d );
         it.cellDrawn = it.onCellDraw( it );
         it.cellDrawn = it.onCellDrawAfter( it );
-        if( it.ncToken && j > 0 )
-        it.result += it.ncToken;
-        it.result += it.cellDrawn;
+        if( _.longIs( it.cellDrawn ) )
+        {
+          it.cellDrawn.forEach( ( cellDrawn, k ) =>
+          {
+            _.assert( _.strIs( cellDrawn ) );
+            it.lines[ k ] = it.lines[ k ] || [];
+            if( it.ncToken && j > 0 )
+            it.lines[ k ].push( it.ncToken );
+            it.lines[ k ].push( cellDrawn );
+          });
+        }
+        else
+        {
+          _.assert( _.strIs( it.cellDrawn ) );
+          it.lines[ 0 ] = it.lines[ 0 ] || [];
+          if( it.ncToken && j > 0 )
+          it.lines[ 0 ].push( it.ncToken );
+          it.lines[ 0 ].push( it.cellDrawn );
+        }
       }
-      border( o.rToken );
+
+      linesDraw( it );
     }
 
     border( o.nlToken );
@@ -3204,7 +3247,7 @@ function strTable( o )
       if( j > 0 && o.ncToken )
       for( let k = 0 ; k < o.ncToken.length ; k++ )
       o.result += o.btlToken;
-      for( let k = 0 ; k < o.cellWidth[ j ] ; k++ )
+      for( let k = 0 ; k < o.colWidth[ j ] ; k++ )
       o.result += o.bToken;
     }
     border( o.rbToken );
@@ -3213,18 +3256,63 @@ function strTable( o )
 
   /* */
 
-  function cellDrawCenter( it )
+  function linesDraw( it )
+  {
+    debugger;
+    it.lines.forEach( ( line, k ) =>
+    {
+      if( it.nlToken )
+      if( it.i2d[ 0 ] > 0 || k > 0 )
+      it.result += it.nlToken;
+      border( o.lToken );
+      it.result += line.join( '' );
+      border( o.rToken );
+    });
+    debugger;
+    it.lines.splice( 0, it.lines.length );
+  }
+
+  /* */
+
+  function cellDraw( it )
   {
     let sz = _.strLinesSize( it.cellOriginal );
-    _.assert( sz[ 0 ] === 1, 'not implemented' );
 
-    if( sz[ 1 ] < it.sz[ 1 ] )
+    if( it.sz[ 0 ] > 1 )
     {
-      let hf = ( it.sz[ 1 ] - sz[ 1 ] ) / 2;
-      return _.strDup( it.spaceToken, Math.ceil( hf ) ) + it.cellOriginal + _.strDup( it.spaceToken, Math.floor( hf ) );
+      let lines = _.strLinesSplit( it.cellOriginal );
+      let hf = ( it.sz[ 0 ] - lines.length ) / 2;
+      let result = lines.map( ( line ) => cellLineDraw( line, it ) );
+      for( let k = Math.floor( hf )-1 ; k >= 0 ; k-- )
+      result.unshift( _.strDup( it.spaceToken, it.sz[ 1 ] ) );
+      for( let k = Math.ceil( hf )-1 ; k >= 0 ; k-- )
+      result.push( _.strDup( it.spaceToken, it.sz[ 1 ] ) );
+      return result;
+    }
+    else
+    {
+      cellLineDraw( it.cellOriginal, it );
     }
 
-    return it.cellOriginal;
+    return cellLineDraw( it.cellOriginal, it );;
+  }
+
+  /* */
+
+  function cellLineDraw( line, it )
+  {
+
+    if( line.length < it.sz[ 1 ] )
+    {
+      let hf = ( it.sz[ 1 ] - line.length ) / 2;
+      return _.strDup( it.spaceToken, Math.ceil( hf ) ) + line + _.strDup( it.spaceToken, Math.floor( hf ) );
+    }
+    else
+    {
+      return line;
+    }
+
+    return line;
   }
 
   /* */
@@ -3239,20 +3327,20 @@ function strTable( o )
 
   function sizeEval()
   {
-    let h = _.longSlice( o.cellHeight );
-    let w = _.longSlice( o.cellWidth );
+    let h = _.longSlice( o.rowHeight );
+    let w = _.longSlice( o.colWidth );
 
     for( let i = 0 ; i < o.dim[ 0 ] ; i++ )
     if( h[ i ] === undefined || h[ i ] === null )
     {
-      o.cellHeight[ i ] = null;
+      o.rowHeight[ i ] = null;
       h[ i ] = 0;
     }
 
     for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
     if( w[ j ] === undefined || w[ j ] === null )
     {
-      o.cellWidth[ j ] = null;
+      o.colWidth[ j ] = null;
       h[ j ] = 0;
     }
 
@@ -3265,15 +3353,43 @@ function strTable( o )
         i2d[ 1 ] = j;
         let e = cellGet( i2d );
         let sz = _.strLinesSize( e );
-        if( o.cellHeight[ i ] === null )
+        if( o.rowHeight[ i ] === null )
         h[ i ] = Math.max( h[ i ], sz[ 0 ] );
-        if( o.cellWidth[ j ] === null )
+        if( o.colWidth[ j ] === null )
         w[ j ] = Math.max( w[ j ], sz[ 1 ] );
       }
     }
 
-    o.cellHeight = h;
-    o.cellWidth = w;
+    for( let i = 0 ; i < o.dim[ 0 ] ; i++ )
+    {
+      if( o.minRowHeight[ i ] )
+      {
+        _.assert( 0, 'not tested' );
+        h[ i ] = Math.max( h[ i ], o.minRowHeight[ i ] );
+      }
+      if( o.maxRowHeight[ i ] )
+      {
+        _.assert( 0, 'not tested' );
+        h[ i ] = Math.min( h[ i ], o.maxRowHeight[ i ] );
+      }
+    }
+
+    for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
+    {
+      if( o.minColWidth[ j ] )
+      {
+        _.assert( 0, 'not tested' );
+        w[ j ] = Math.max( w[ j ], o.minColWidth[ j ] );
+      }
+      if( o.maxColWidth[ j ] )
+      {
+        _.assert( 0, 'not tested' );
+        w[ j ] = Math.min( w[ j ], o.maxColWidth[ j ] );
+      }
+    }
+
+    o.rowHeight = h;
+    o.colWidth = w;
   }
 
   /* */
@@ -3300,6 +3416,7 @@ function strTable( o )
   {
     let result = _.dup( null, length );
     _.assert( _.objectIs( sideMap ) ); debugger;
+    _.assert( 0, 'not tested' );
     for( let s in sideMap )
     {
       _.assert( _.Side[ s ] >= 0, () => `Unknown side ${s}` );
@@ -3334,18 +3451,24 @@ strTable.defaults =
   data : null,
   dim : null,
   head : null,
-  cellHeight : null,
-  cellWidth : null,
+  rowHeight : null,
+  minRowHeight : null,
+  maxRowHeight : null,
+  colWidth : null,
+  minColWidth : null,
+  maxColWidth : null,
   cellAlign : 'center',
+  cellPadding : null,
   tablePadding : null,
-  compact : 1,
   onCellGet : null,
   onCellDraw : null,
   onCellDrawAfter : null,
 
   style : 'borderless',
-  spaceToken : null,
   withBorder : null,
+  withColBorder : null,
+  withRowBorder : null,
+  spaceToken : null,
   lToken : null,
   rToken : null,
   tToken : null,
@@ -3370,6 +3493,8 @@ strTable.style = Object.create( null );
 strTable.style.borderless =
 {
   withBorder : 0,
+  withColBorder : 0,
+  withRowBorder : 0,
   spaceToken : ' ',
   ncToken : '\t',
   nlToken : '\n',
@@ -3378,6 +3503,8 @@ strTable.style.borderless =
 strTable.style.doubleBorder =
 {
   withBorder : 1,
+  withColBorder : 1,
+  withRowBorder : 1,
   spaceToken : ' ',
   lToken : '║',
   rToken : '║',

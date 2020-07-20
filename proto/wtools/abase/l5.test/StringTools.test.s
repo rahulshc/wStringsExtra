@@ -8591,13 +8591,30 @@ e	f`;
 
   /* */
 
-  test.case = 'style : doubleBorder, complex';
+  test.case = 'style : doubleBorder, diff width';
   var exp =
 `╔══╤═══╤══════╗
 ║ a│ b │c12345║
 ║d1│e12│  f1  ║
 ╚══╧═══╧══════╝`;
   var data = [ 'a', 'b', 'c12345', 'd1', 'e12', 'f1' ];
+  var dim = [ 2, 3 ];
+  var style = 'doubleBorder';
+  var got = _.strTable({ data, dim, style });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'style : doubleBorder, diff width, diff height';
+  var exp =
+`╔═══╤═══╤══════╗
+║ a │ b │c12345║
+║aa2│   │      ║
+║   │ e │      ║
+║ d1│e12│  f1  ║
+║   │ e │      ║
+╚═══╧═══╧══════╝`;
+  var data = [ 'a\naa2', 'b', 'c12345', 'd1', 'e\ne12\ne', 'f1' ];
   var dim = [ 2, 3 ];
   var style = 'doubleBorder';
   var got = _.strTable({ data, dim, style });
