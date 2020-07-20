@@ -3294,27 +3294,27 @@ function strSearchOptionStringWithRegexp( test )
   test.case = 'src - empty string, ins - empty string';
   var got = _.strSearch( { src : '', ins : '',  stringWithRegexp : 1 } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - empty string, ins - string';
   var got = _.strSearch( { src : '', ins : 'x',  stringWithRegexp : 1 } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - string, ins - empty string';
   var got = _.strSearch( { src : 'abc', ins : '',  stringWithRegexp : 1 } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - string, ins - string, not entry';
   var got = _.strSearch( { src : 'hello', ins : 'x',  stringWithRegexp : 1 } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - string, ins - empty array';
   var got = _.strSearch( { src : 'hello', ins : [],  stringWithRegexp : 1 } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src === ins';
   var got = _.strSearch( { src : 'abc', ins : 'abc',  stringWithRegexp : 1 } );
@@ -3332,7 +3332,7 @@ function strSearchOptionStringWithRegexp( test )
       'nearest' : [ '', 'abc', '' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - string, one entry';
   var got = _.strSearch( { src : 'aabaa', ins : 'b',  stringWithRegexp : 1 } );
@@ -3350,7 +3350,7 @@ function strSearchOptionStringWithRegexp( test )
       'nearest' : [ 'aa', 'b', 'aa' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - string, two entries';
   var got = _.strSearch( { src : 'aabaa', ins : 'aa',  stringWithRegexp : 1 } );
@@ -3379,7 +3379,7 @@ function strSearchOptionStringWithRegexp( test )
       'nearest' : [ 'aab', 'aa', '' ]
     }
   ]
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of strings, has empty string, two entries of single ins';
   var got = _.strSearch( { src : 'hello', ins : [ 'l', '', 'x' ],  stringWithRegexp : 1 } );
@@ -3408,7 +3408,7 @@ function strSearchOptionStringWithRegexp( test )
       'nearest' : [ 'hel', 'l', 'o' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of strings, entries';
   var got = _.strSearch( { src : 'abaabab', ins : [ 'aa', 'ab', 'a' ],  stringWithRegexp : 1 } );
@@ -3448,7 +3448,7 @@ function strSearchOptionStringWithRegexp( test )
       'nearest' : [ 'abaab', 'ab', '' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
   var got = _.strSearch( { src : 'abcabc', ins : [ 'abc', 'a' ],  stringWithRegexp : 1 } );
@@ -3477,7 +3477,7 @@ function strSearchOptionStringWithRegexp( test )
       'nearest' : [ 'abc', 'abc', '' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
   var got = _.strSearch( { src : 'abcabc', ins : [ 'a', 'abc' ],  stringWithRegexp : 1 } );
@@ -3506,7 +3506,7 @@ function strSearchOptionStringWithRegexp( test )
       'nearest' : [ 'abc', 'a', 'bc' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.close( 'ins - simple string' );
 
@@ -3517,17 +3517,17 @@ function strSearchOptionStringWithRegexp( test )
   test.case = 'src - string, ins - has one symbol and double slash, not entry, stringWithRegexp - 0';
   var got = _.strSearch( { src : 'hello', ins : 'o//',  stringWithRegexp : 0 } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - string, ins - has one symbol and double slash, not entry, stringWithRegexp - 1';
   var got = _.strSearch( { src : 'hello', ins : 'o//',  stringWithRegexp : 1 } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - symbols separated by double slash, stringWithRegexp - 0';
   var got = _.strSearch( { src : 'abc', ins : 'a//b//c',  stringWithRegexp : 0 } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - symbols separated by double slash, stringWithRegexp - 1';
   var got = _.strSearch( { src : 'abc', ins : 'a//b//c',  stringWithRegexp : 1 } );
@@ -3545,12 +3545,12 @@ function strSearchOptionStringWithRegexp( test )
       'nearest' : [ '', 'abc', '' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - symbols separated by double slash, two entries, stringWithRegexp - 0';
   var got = _.strSearch( { src : 'aabaa', ins : 'a//a',  stringWithRegexp : 0 } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - symbols separated by double slash, two entries, stringWithRegexp - 1';
   var got = _.strSearch( { src : 'aabaa', ins : 'a//a//',  stringWithRegexp : 1 } );
@@ -3579,12 +3579,12 @@ function strSearchOptionStringWithRegexp( test )
       'nearest' : [ 'aab', 'aa', '' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of strings, separated by double slash, entries, stringWithRegexp : 0';
   var got = _.strSearch( { src : 'abaabab', ins : [ '//a//a', 'a//b//' ],  stringWithRegexp : 0 } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of strings, separated by double slash, entries, stringWithRegexp : 1';
   var got = _.strSearch( { src : 'abaabab', ins : [ 'a//a//', 'a//b//', 'a' ],  stringWithRegexp : 1 } );
@@ -3624,12 +3624,12 @@ function strSearchOptionStringWithRegexp( test )
       'nearest' : [ 'abaab', 'ab', '' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of string, separated by double slash, ins[ 0 ] explore full src, no other entries should be, stringWithRegexp - 0';
   var got = _.strSearch( { src : 'abcabc', ins : [ 'a//b//c', 'a//b//' ],  stringWithRegexp : 0 } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of string, separated by double slash, ins[ 0 ] explore full src, no other entries should be, stringWithRegexp - 1';
   var got = _.strSearch( { src : 'abcabc', ins : [ 'a//b//c', 'a//b//' ],  stringWithRegexp : 1 } );
@@ -3658,12 +3658,12 @@ function strSearchOptionStringWithRegexp( test )
       'nearest' : [ 'abc', 'abc', '' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of string, separated by double slash, ins[ 0 ] explore full src, no other entries should be, stringWithRegexp - 0';
   var got = _.strSearch( { src : 'abcabc', ins : [ 'a//b//', 'ab//c' ],  stringWithRegexp : 0 } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of string, separated by double slash, ins[ 0 ] explore full src, no other entries should be, stringWithRegexp - 1';
   var got = _.strSearch( { src : 'abcabc', ins : [ 'a//b//', 'ab//c' ],  stringWithRegexp : 1 } );
@@ -3692,7 +3692,7 @@ function strSearchOptionStringWithRegexp( test )
       'nearest' : [ 'abc', 'ab', 'c' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.close( 'ins - string with double slashes' );
 }
@@ -3719,7 +3719,7 @@ function strSearchOptionToleratingSpaces( test )
       'nearest' : [ 'hell', 'o ', ' ' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - string, ins - has one symbol and double slash, not entry, toleratingSpaces - 1';
   var got = _.strSearch( { src : 'hello  ', ins : 'o ',  toleratingSpaces : 1 } );
@@ -3737,12 +3737,12 @@ function strSearchOptionToleratingSpaces( test )
       'nearest' : [ 'hell', 'o  ', '' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - symbols separated by one space, toleratingSpaces - 0';
   var got = _.strSearch( { src : 'a b c', ins : ' a b c ',  toleratingSpaces : 0 } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - symbols separated by one space, toleratingSpaces - 1';
   var got = _.strSearch( { src : 'a b c', ins : ' a b c ',  toleratingSpaces : 1 } );
@@ -3760,12 +3760,12 @@ function strSearchOptionToleratingSpaces( test )
       'nearest' : [ '', 'a b c', '' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - symbols separated by double space, two entries, toleratingSpaces - 0';
   var got = _.strSearch( { src : 'a   aba   a', ins : 'a  a',  toleratingSpaces : 0 } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - symbols separated by double space, two entries, toleratingSpaces - 1';
   var got = _.strSearch( { src : 'a   aba   a', ins : 'a  a',  toleratingSpaces : 1 } );
@@ -3794,12 +3794,12 @@ function strSearchOptionToleratingSpaces( test )
       'nearest' : [ 'a   ab', 'a   a', '' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of strings, separated by spaces, entries, toleratingSpaces : 0';
   var got = _.strSearch( { src : 'a  b  a  a  b  a  b', ins : [ ' a a ', 'a b', '   a' ],  toleratingSpaces : 0 } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of strings, separated by double slash, entries, toleratingSpaces : 1';
   var got = _.strSearch( { src : 'a  b  a  a  b  a  b', ins : [ ' a a ', 'a b', '   a' ],  toleratingSpaces : 1 } );
@@ -3839,12 +3839,12 @@ function strSearchOptionToleratingSpaces( test )
       'nearest' : [ 'a  b  a  a  b', '  a', '  b' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of string, separated by space, ins[ 0 ] explore full src, no other entries should be, toleratingSpaces - 0';
   var got = _.strSearch( { src : 'a   b c a   b c', ins : [ ' a b c ', 'a b ' ],  toleratingSpaces : 0 } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of string, separated by space, ins[ 0 ] explore full src, no other entries should be, toleratingSpaces - 1';
   var got = _.strSearch( { src : 'a   b c a   b c', ins : [ ' a b c ', 'a b ' ],  toleratingSpaces : 1 } );
@@ -3873,12 +3873,12 @@ function strSearchOptionToleratingSpaces( test )
       'nearest' : [ 'a   b c ', 'a   b c', '' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of string, separated by double slash, ins[ 0 ] explore full src, no other entries should be, toleratingSpaces - 0';
   var got = _.strSearch( { src : 'a   b c a   b c', ins : [ 'a b ', ' a b c ' ],  toleratingSpaces : 0 } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of string, separated by double slash, ins[ 0 ] explore full src, no other entries should be, toleratingSpaces - 1';
   var got = _.strSearch( { src : 'a   b c a   b c', ins : [ 'a b ', ' a b c ' ],  toleratingSpaces : 1 } );
@@ -3907,7 +3907,7 @@ function strSearchOptionToleratingSpaces( test )
       'nearest' : [ 'a   b c ', 'a   b ', 'c' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.close( 'ins - string with spaces' );
 }
@@ -3923,27 +3923,27 @@ function strSearchOptionOnTokenize( test )
   test.case = 'src - empty string, ins - empty string';
   var got = _.strSearch( { src : '', ins : '', onTokenize : _.strTokenizeJs } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - empty string, ins - string';
   var got = _.strSearch( { src : '', ins : 'x', onTokenize : _.strTokenizeJs } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - string, ins - empty string';
   var got = _.strSearch( { src : '//abc', ins : '', onTokenize : _.strTokenizeJs } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - string, ins - string, not entry';
   var got = _.strSearch( { src : '// hello', ins : 'x', onTokenize : _.strTokenizeJs } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - string, ins - empty array';
   var got = _.strSearch( { src : '/*hello*/', ins : [], onTokenize : _.strTokenizeJs } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - multiline';
   var got = _.strSearch( { src : 'f\nif\nabc\nin\nf', ins : 'abc', onTokenize : _.strTokenizeJs } );
@@ -3961,7 +3961,7 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ 'if\n', 'abc', '\nin' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - string, one entry';
   var got = _.strSearch( { src : 'f\nif\nb\nin\nf', ins : 'b', onTokenize : _.strTokenizeJs } );
@@ -3979,7 +3979,7 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ 'if\n', 'b', '\nin' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - string, two entries';
   var got = _.strSearch( { src : 'f\nif\nb\nif\nf', ins : 'if', onTokenize : _.strTokenizeJs } );
@@ -4008,7 +4008,7 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ 'b\n', 'if', '\nf' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of strings, has empty string, two entries of single ins';
   var got = _.strSearch( { src : 'f\nf\n[all]\nf\nf', ins : [ 'l', '', 'x' ], onTokenize : _.strTokenizeJs } );
@@ -4037,7 +4037,7 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ 'f\n[al', 'l', ']\nf' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of strings, entries';
   var got = _.strSearch( { src : '{}\n()\nb\n{}', ins : [ '()', '{}', 'a' ], onTokenize : _.strTokenizeJs } );
@@ -4077,7 +4077,7 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ 'b\n', '{}', '' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
   var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ '(a)', 'a' ], onTokenize : _.strTokenizeJs } );
@@ -4106,7 +4106,7 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ '(a)\n', '(a)', '\n' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
   var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ '(', '(a)' ], onTokenize : _.strTokenizeJs } );
@@ -4135,7 +4135,7 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ '(a)\n', '(', 'a)\n' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.close( 'ins - string' );
 
@@ -4146,22 +4146,22 @@ function strSearchOptionOnTokenize( test )
   test.case = 'src - empty string, ins - regexp for empty strings';
   var got = _.strSearch( { src : '', ins : /(?:)/g, onTokenize : _.strTokenizeJs } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - empty string, ins - regexp';
   var got = _.strSearch( { src : '', ins : /x/, onTokenize : _.strTokenizeJs } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - string, ins - regexp for empty string';
   var got = _.strSearch( { src : 'abc', ins : /(?:)/g, onTokenize : _.strTokenizeJs } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - string, ins - regexp, not entry';
   var got = _.strSearch( { src : 'hello', ins : /x/, onTokenize : _.strTokenizeJs } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - multiline';
   var got = _.strSearch( { src : 'f\nif\nabc\nin\nf', ins : /abc/g, onTokenize : _.strTokenizeJs } );
@@ -4179,7 +4179,7 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ 'if\n', 'abc', '\nin' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - regexp, one entry';
   var got = _.strSearch( { src : 'f\nif\nb\nin\nf', ins : /b+/g, onTokenize : _.strTokenizeJs } );
@@ -4197,7 +4197,7 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ 'if\n', 'b', '\nin' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - regexp, two entries';
   var got = _.strSearch( { src : 'f\nif\nb\nif\nf', ins : /if+/, onTokenize : _.strTokenizeJs } );
@@ -4226,7 +4226,7 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ 'b\n', 'if', '\nf' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of regexps, has empty string, two entries of single ins';
   var got = _.strSearch( { src : 'f\nf\n[all]\nf\nf', ins : [ /[los]/, /o/, /x/ ], onTokenize : _.strTokenizeJs } );
@@ -4255,7 +4255,7 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ 'f\n[al', 'l', ']\nf' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of regexps, entries';
   var got = _.strSearch( { src : '{}\n()\nb\n{}', ins : [ /\(\)/g, /\{\}/, /if+/ ], onTokenize : _.strTokenizeJs } );
@@ -4295,7 +4295,7 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ 'b\n', '{}', '' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
   var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ /\(a\)/, /\(/ ], onTokenize : _.strTokenizeJs } );
@@ -4324,7 +4324,7 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ '(a)\n', '(a)', '\n' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
   var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ /\(/, /\(a\)/ ], onTokenize : _.strTokenizeJs } );
@@ -4353,7 +4353,7 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ '(a)\n', '(', 'a)\n' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.close( 'ins - regexp' );
 
@@ -4368,32 +4368,32 @@ function strSearchOptionOnTokenize( test )
   test.case = 'src - empty string, ins - empty string';
   var got = _.strSearch( { src : '', ins : '', onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - empty string, ins - string';
   var got = _.strSearch( { src : '', ins : 'x', onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - string, ins - empty string';
   var got = _.strSearch( { src : '//abc', ins : '', onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - string, ins - string, not entry';
   var got = _.strSearch( { src : '// hello', ins : 'x', onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - string, ins - empty array';
   var got = _.strSearch( { src : '/*hello*/', ins : [], onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - multiline, with excludingTokens with glob';
   var got = _.strSearch( { src : 'f\nif\nabc\nin\nf', ins : 'abc', onTokenize : _.strTokenizeJs, excludingTokens : 'na*' } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - string, one entry, not excludingTokens';
   var got = _.strSearch( { src : 'f\nif\nb\nin\nf', ins : 'b', onTokenize : _.strTokenizeJs, excludingTokens : 'keyword' } );
@@ -4411,12 +4411,12 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ 'if\n', 'b', '\nin' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - string, two entries of excludingTokens';
   var got = _.strSearch( { src : 'f\nif\nb\nif\nf', ins : 'if', onTokenize : _.strTokenizeJs, excludingTokens : [ 'name', 'keywo??' ] } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of strings, has empty string, two entries of single ins';
   var got = _.strSearch( { src : 'f\nf\n[all]\nf\nf', ins : [ 'l', '', 'x' ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'parenthes' ] } );
@@ -4445,12 +4445,12 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ 'f\n[al', 'l', ']\nf' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of strings, entries, excludingTokens';
   var got = _.strSearch( { src : '{}\n()\nb\n{}', ins : [ '()', '{}', 'a' ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'cu???', 'parenthes' ] } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be';
   var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ '(a)', 'a' ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'square' ] } );
@@ -4479,12 +4479,12 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ '(a)\n', '(a)', '\n' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of string, ins[ 0 ] explore full src, no other entries should be, excludingTokens';
   var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ '(', '(a)' ], onTokenize : _.strTokenizeJs, excludingTokens : 'parenthes' } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.close( 'ins - string' );
 
@@ -4495,27 +4495,27 @@ function strSearchOptionOnTokenize( test )
   test.case = 'src - empty string, ins - regexp for empty strings';
   var got = _.strSearch( { src : '', ins : /(?:)/g, onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - empty string, ins - regexp';
   var got = _.strSearch( { src : '', ins : /x/, onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - string, ins - regexp for empty string';
   var got = _.strSearch( { src : 'abc', ins : /(?:)/g, onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - string, ins - regexp, not entry';
   var got = _.strSearch( { src : 'hello', ins : /x/, onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'src - multiline, excludingTokens';
   var got = _.strSearch( { src : 'f\nif\nabc\nin\nf', ins : /abc/g, onTokenize : _.strTokenizeJs, excludingTokens : 'name' } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - regexp, one entry';
   var got = _.strSearch( { src : 'f\nif\nb\nin\nf', ins : /b+/g, onTokenize : _.strTokenizeJs, excludingTokens : 'keyword' } );
@@ -4533,12 +4533,12 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ 'if\n', 'b', '\nin' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - regexp, two entries, excludingTokens';
   var got = _.strSearch( { src : 'f\nif\nb\nif\nf', ins : /if+/, onTokenize : _.strTokenizeJs, excludingTokens : [ 'name', 'keyword' ] } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of regexps, has empty string, two entries of single ins';
   var got = _.strSearch( { src : 'f\nf\n[all]\nf\nf', ins : [ /[los]/, /o/, /x/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'parenthes' ] } );
@@ -4567,12 +4567,12 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ 'f\n[al', 'l', ']\nf' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of regexps, entries, excludingTokens';
   var got = _.strSearch( { src : '{}\n()\nb\n{}', ins : [ /\(\)/g, /\{\}/, /if+/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'parenthes' ] } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
   var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ /\(a\)/, /\(/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'square' ] } );
@@ -4601,12 +4601,12 @@ function strSearchOptionOnTokenize( test )
       'nearest' :  [ '(a)\n', '(a)', '\n' ]
     }
   ];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be, excludingTokens';
   var got = _.strSearch( { src : '\n(a)\n(a)\n', ins : [ /\(/, /\(a\)/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'parenthes' ] } );
   var expected = [];
-  test.identical( got, expected );
+  test.identical( got.parcels, expected );
 
   test.close( 'ins - regexp' );
 
