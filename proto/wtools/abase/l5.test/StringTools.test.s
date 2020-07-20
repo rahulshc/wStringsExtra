@@ -4620,13 +4620,13 @@ function strSearchLog( test )
   test.open( 'one line' );
 
   test.case = '1 letter match at the start - one line'
-  var input = 
+  var input =
   {
     src : 'abcdefg',
     ins : [ 'a' ],
     gray : 1
   }
-  var expectedParcels = 
+  var expectedParcels =
   [
     {
       'match' : 'a',
@@ -4647,13 +4647,13 @@ function strSearchLog( test )
   test.identical( got.log, expectedLog );
 
   test.case = '1 letter match at the middle - one line'
-  var input = 
+  var input =
   {
     src : 'abcdefg',
     ins : [ 'c' ],
     gray : 1
   }
-  var expectedParcels = 
+  var expectedParcels =
   [
     {
       'match' : 'c',
@@ -4674,13 +4674,13 @@ function strSearchLog( test )
   test.identical( got.log, expectedLog );
 
   test.case = '1 letter match at the end - one line'
-  var input = 
+  var input =
   {
     src : 'abcdefg',
     ins : [ 'g' ],
     gray : 1
   }
-  var expectedParcels = 
+  var expectedParcels =
   [
     {
       'match' : 'g',
@@ -4699,17 +4699,17 @@ function strSearchLog( test )
   var got = _.strSearchLog( input );
   test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
-  
+
   /* */
 
   test.case = 'a few letters match at the start - one line'
-  var input = 
+  var input =
   {
     src : 'abcdefg',
     ins : [ 'abc' ],
     gray : 1
   }
-  var expectedParcels = 
+  var expectedParcels =
   [
     {
       'match' : 'abc',
@@ -4730,13 +4730,13 @@ function strSearchLog( test )
   test.identical( got.log, expectedLog );
 
   test.case = 'a few letters match at the middle - one line'
-  var input = 
+  var input =
   {
     src : 'abcdefg',
     ins : [ 'cde' ],
     gray : 1
   }
-  var expectedParcels = 
+  var expectedParcels =
   [
     {
       'match' : 'cde',
@@ -4757,13 +4757,13 @@ function strSearchLog( test )
   test.identical( got.log, expectedLog );
 
   test.case = 'a few letters match at the end - one line'
-  var input = 
+  var input =
   {
     src : 'abcdefg',
     ins : [ 'efg' ],
     gray : 1
   }
-  var expectedParcels = 
+  var expectedParcels =
   [
     {
       'match' : 'efg',
@@ -4786,13 +4786,13 @@ function strSearchLog( test )
   /* */
 
   test.case = 'all letters match - one line'
-  var input = 
+  var input =
   {
     src : 'abcdefg',
     ins : [ 'abcdefg' ],
     gray : 1
   }
-  var expectedParcels = 
+  var expectedParcels =
   [
     {
       'match' : 'abcdefg',
@@ -4813,7 +4813,7 @@ function strSearchLog( test )
   test.identical( got.log, expectedLog );
 
   test.case = 'no match - one line'
-  var input = 
+  var input =
   {
     src : 'abcdefg',
     ins : [ 'h' ],
@@ -4825,16 +4825,16 @@ function strSearchLog( test )
   test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
 
-  /* */ 
+  /* */
 
   test.case = 'multiple matches 1 letter  - one line'
-  var input = 
+  var input =
   {
     src : 'abcabcabc',
     ins : [ 'a' ],
     gray : 1
   }
-  var expectedParcels = 
+  var expectedParcels =
   [
     {
       match : 'a',
@@ -4879,13 +4879,13 @@ function strSearchLog( test )
   test.identical( got.log, expectedLog );
 
   test.case = 'multiple matches a few letters - one line'
-  var input = 
+  var input =
   {
     src : 'abcabcabc',
     ins : [ 'bc' ],
     gray : 1
   }
-  var expectedParcels = 
+  var expectedParcels =
   [
     {
       match : 'bc',
@@ -4973,13 +4973,13 @@ function strSearchLog( test )
   test.open( 'multiple lines' );
 
   test.case = '1 letter match at first line - multiple lines'
-  var input = 
+  var input =
   {
     src : 'ab\ncd\nef\ngh',
     ins : [ 'a' ],
     gray : 1
   }
-  var expectedParcels = 
+  var expectedParcels =
   [
     {
       'match' : 'a',
@@ -5000,13 +5000,13 @@ function strSearchLog( test )
   test.identical( got.log, expectedLog );
 
   test.case = '1 letter match at the middle line - multiple lines'
-  var input = 
+  var input =
   {
     src : 'ab\ncd\nef\ngh',
     ins : [ 'd' ],
     gray : 1
   }
-  var expectedParcels = 
+  var expectedParcels =
   [
     {
       'match' : 'd',
@@ -5027,13 +5027,13 @@ function strSearchLog( test )
   test.identical( got.log, expectedLog );
 
   test.case = '1 letter match at the last line - multiple lines'
-  var input = 
+  var input =
   {
     src : 'ab\ncd\nef\ngh',
     ins : [ 'g' ],
     gray : 1
   }
-  var expectedParcels = 
+  var expectedParcels =
   [
     {
       'match' : 'g',
@@ -5056,13 +5056,13 @@ function strSearchLog( test )
   /* */
 
   test.case = 'a few letters match - multiple lines'
-  var input = 
+  var input =
   {
     src : 'ab\ncd\nef\ngh',
     ins : [ 'cd' ],
     gray : 1
   }
-  var expectedParcels = 
+  var expectedParcels =
   [
     {
       'match' : 'cd',
@@ -5083,16 +5083,16 @@ function strSearchLog( test )
   test.identical( got.log, expectedLog );
 
   test.case = 'a few letters match across lines - multiple lines'
-  var input = 
+  var input =
   {
     src : 'ab\ncd\nef\ngh',
     ins : [ 'cd\nef' ],
     gray : 1,
   }
-  var expectedParcels = 
+  var expectedParcels =
   [
     {
-      'match' : 'cdef',
+      'match' : 'cd\nef',
       'groups' : [],
       'tokenId' : 0,
       'charsRangeLeft' : [ 3, 8 ],
@@ -5110,7 +5110,7 @@ function strSearchLog( test )
   test.identical( got.log, expectedLog );
 
   test.case = 'a few letters wrong match (without line break) across lines - multiple lines'
-  var input = 
+  var input =
   {
     src : 'ab\ncd\nef\ngh',
     ins : [ 'cdef' ],
@@ -5123,13 +5123,13 @@ function strSearchLog( test )
   test.identical( got.log, expectedLog );
 
   test.case = 'all letters match - multiple lines'
-  var input = 
+  var input =
   {
     src : 'ab\ncd\nef\ngh',
     ins : [ 'ab\ncd\nef\ngh' ],
     gray : 1
   }
-  var expectedParcels = 
+  var expectedParcels =
   [
     {
       'match' : 'ab\ncd\nef\ngh',
@@ -5152,49 +5152,49 @@ function strSearchLog( test )
   /* */
 
   test.case = 'a few matches on different lines - multiple lines'
-  var input = 
+  var input =
   {
     src : 'ab\nab\nef\nab',
     ins : [ 'ab' ],
     gray : 1
   }
-  var expectedParcels = 
+  var expectedParcels =
   [
-    {      
-      match: 'ab',
-      groups: [],
-      tokenId: 0,
-      charsRangeLeft: [ 0, 2 ],     
-      counter: 0,
-      input: 'ab\nab\nef\nab',      
-      charsRangeRight: [ 11, 9 ],   
-      nearest: [ '', 'ab', '\nab' ],
-      log: '1 : ab\n2 : ab',
-      sub: null
+    {
+      match : 'ab',
+      groups : [],
+      tokenId : 0,
+      charsRangeLeft : [ 0, 2 ],
+      counter : 0,
+      input : 'ab\nab\nef\nab',
+      charsRangeRight : [ 11, 9 ],
+      nearest : [ '', 'ab', '\nab' ],
+      log : '1 : ab\n2 : ab',
+      sub : null
     },
     {
-      match: 'ab',
-      groups: [],
-      tokenId: 0,
-      charsRangeLeft: [ 3, 5 ],
-      counter: 1,
-      input: 'ab\nab\nef\nab',
-      charsRangeRight: [ 8, 6 ],
-      nearest: [ 'ab\n', 'ab', '\nef' ],
-      log: '1 : ab\n2 : ab\n3 : ef',
-      sub: null
+      match : 'ab',
+      groups : [],
+      tokenId : 0,
+      charsRangeLeft : [ 3, 5 ],
+      counter : 1,
+      input : 'ab\nab\nef\nab',
+      charsRangeRight : [ 8, 6 ],
+      nearest : [ 'ab\n', 'ab', '\nef' ],
+      log : '1 : ab\n2 : ab\n3 : ef',
+      sub : null
     },
     {
-      match: 'ab',
-      groups: [],
-      tokenId: 0,
-      charsRangeLeft: [ 9, 11 ],
-      counter: 2,
-      input: 'ab\nab\nef\nab',
-      charsRangeRight: [ 2, 0 ],
-      nearest: [ 'ef\n', 'ab', '' ],
-      log: '3 : ef\n4 : ab',
-      sub: null
+      match : 'ab',
+      groups : [],
+      tokenId : 0,
+      charsRangeLeft : [ 9, 11 ],
+      counter : 2,
+      input : 'ab\nab\nef\nab',
+      charsRangeRight : [ 2, 0 ],
+      nearest : [ 'ef\n', 'ab', '' ],
+      log : '3 : ef\n4 : ab',
+      sub : null
     }
   ];
   var expectedLog = '1 : ab\n2 : ab\n1 : ab\n2 : ab\n3 : ef\n3 : ef\n4 : ab';
