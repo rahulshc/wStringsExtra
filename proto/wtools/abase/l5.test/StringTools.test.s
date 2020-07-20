@@ -5071,7 +5071,7 @@ function strSearchLog( test )
       'charsRangeLeft' : [ 3, 5 ],
       'counter' : 0,
       'input' : 'ab\ncd\nef\ngh',
-      'charsRangeRight' : [ 2, 1 ],
+      'charsRangeRight' : [ 8, 6 ],
       'nearest' : [ 'ab\n', 'cd', '\nef' ],
       'log' : '1 : ab\n2 : cd\n3 : ef',
       'sub' : null
@@ -5099,12 +5099,12 @@ function strSearchLog( test )
       'counter' : 0,
       'input' : 'ab\ncd\nef\ngh',
       'charsRangeRight' : [ 8, 3 ],
-      'nearest' : [ '', 'cd\nef', '' ],
-      'log' : '2 : cd\n3 : ef',
+      'nearest' : [ 'ab\n', 'cd\nef', '\ngh' ],
+      'log' : '1 : ab\n2 : cd\n3 : ef\n4 : gh',
       'sub' : null
     }
   ];
-  var expectedLog = '2 : cd\n3 : ef';
+  var expectedLog = '1 : ab\n2 : cd\n3 : ef\n4 : gh';
   var got = _.strSearchLog( input );
   test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
@@ -5290,7 +5290,7 @@ function strSearchLog( test )
       'input' : '\n(a)\n(a)\n',
       'charsRangeRight' : [ 8, 5 ],
       'nearest' :  [ '\n', '(a)', '\n(a)' ],
-      'log' : '2: \n3 : (a)\n4 : (a)',
+      'log' : '1 : \n2 : (a)\n3 : (a)',
       'sub' : null
     },
     {
@@ -5302,11 +5302,11 @@ function strSearchLog( test )
       'input' : '\n(a)\n(a)\n',
       'charsRangeRight' : [ 4, 1 ],
       'nearest' :  [ '(a)\n', '(a)', '\n' ],
-      'log' : '3 : (a)\n4 : (a)\n5 : \n',
+      'log' : '2 : (a)\n3 : (a)\n4 : ',
       'sub' : null
     }
   ];
-  var expectedLog = '2 : \n3 : (a)\n4 : (a)\n3 : (a)\n4 : (a)\n5 : \n';
+  var expectedLog = '1 : \n2 : (a)\n3 : (a)\n2 : (a)\n3 : (a)\n4 : ';
   test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog )
 
