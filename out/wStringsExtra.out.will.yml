@@ -3,14 +3,14 @@ root:
   - wStringsExtra.out
 consistency:
   wStringsExtra.out.will.yml: &ref_0
-    hash: 74118b7a99144b95381048cfae98180b
-    size: 38727
+    hash: 32a8da9f9250beeb63921cae20f095c6
+    size: 38898
   ../.ex.will.yml: &ref_1
     hash: d1c91cc4f18d120f9d265447ec2d84c4
     size: 1851
   ../.im.will.yml: &ref_2
-    hash: c723ab5d336eb01c830ff48d35652688
-    size: 5240
+    hash: 5d1d91163410e5d29e83dda1b3cc96f4
+    size: 5237
 module:
   wStringsExtra.out:
     about:
@@ -116,7 +116,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: ../proto/dwtools/abase/l5/StringTools.s
+        path: ../proto/wtools/abase/l5/StringTools.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -126,13 +126,13 @@ module:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/abase/l5/StringTools.s'
+        path: '{path::out.*=1}/source/wtools/abase/l5/StringTools.s'
       entry.out.raw.debug.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/abase/l5/StringTools.s'
+        path: '{path::out.*=1}/source/wtools/abase/l5/StringTools.s'
       entry.out.compiled.debug.debug:
         criterion:
           debug: debug
@@ -159,15 +159,15 @@ module:
         path:
           - ../proto
           - ../proto/Integration.test.s
-          - ../proto/dwtools
-          - ../proto/dwtools/Tools.s
-          - ../proto/dwtools/abase
-          - ../proto/dwtools/abase/l5
-          - ../proto/dwtools/abase/l5/StringTools.s
-          - ../proto/dwtools/abase/l5.test
-          - ../proto/dwtools/abase/l5.test/StringTools.test.s
-          - ../proto/dwtools/amid
-          - ../proto/dwtools/atop
+          - ../proto/wtools
+          - ../proto/wtools/Tools.s
+          - ../proto/wtools/abase
+          - ../proto/wtools/abase/l5
+          - ../proto/wtools/abase/l5/StringTools.s
+          - ../proto/wtools/abase/l5.test
+          - ../proto/wtools/abase/l5.test/StringTools.test.s
+          - ../proto/wtools/amid
+          - ../proto/wtools/atop
     submodule:
       wTools:
         path: 'npm:///wTools'
@@ -614,7 +614,7 @@ module:
           debug: release
       reflect.proto.debug.raw:
         opts:
-          filePath: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.debug.raw'
         criterion:
           tests: no.tests
           debug: debug
@@ -624,7 +624,7 @@ module:
           - files.reflect
       reflect.proto.release.raw:
         opts:
-          filePath: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.release.raw'
         criterion:
           tests: no.tests
           debug: release
@@ -634,7 +634,7 @@ module:
           - files.reflect
       reflect.proto.debug.compiled:
         opts:
-          filePath: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.debug.compiled'
         criterion:
           tests: no.tests
           debug: debug
@@ -644,7 +644,7 @@ module:
           - files.reflect
       reflect.proto.release.compiled:
         opts:
-          filePath: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.release.compiled'
         criterion:
           tests: no.tests
           debug: release
@@ -655,7 +655,7 @@ module:
       transpile.proto.raw:
         opts:
           entry: 'path::entry.proto.no.tests'
-          filePath: 'reflector::transpile.proto.raw*'
+          filePath: 'reflector::transpile.proto.raw'
         criterion:
           raw: raw
           debug: release
@@ -665,7 +665,7 @@ module:
       transpile.proto.no.tests.compiled.debug:
         opts:
           entry: 'path::entry.proto.*=1'
-          filePath: 'reflector::transpile.proto.no.tests.compiled*'
+          filePath: 'reflector::transpile.proto.no.tests.compiled.debug'
         criterion:
           tests: no.tests
           raw: compiled
@@ -676,7 +676,7 @@ module:
       transpile.proto.no.tests.compiled.release:
         opts:
           entry: 'path::entry.proto.*=1'
-          filePath: 'reflector::transpile.proto.no.tests.compiled*'
+          filePath: 'reflector::transpile.proto.no.tests.compiled.release'
         criterion:
           tests: no.tests
           raw: compiled
@@ -688,7 +688,7 @@ module:
         opts:
           entry: 'path::entry.proto.*=1'
           external.before: '{path::out.*=1}/Main.s'
-          filePath: 'reflector::transpile.proto.only.tests.compiled*'
+          filePath: 'reflector::transpile.proto.only.tests.compiled.debug'
         criterion:
           tests: only.tests
           raw: compiled
@@ -700,7 +700,7 @@ module:
         opts:
           entry: 'path::entry.proto.*=1'
           external.before: '{path::out.*=1}/Main.s'
-          filePath: 'reflector::transpile.proto.only.tests.compiled*'
+          filePath: 'reflector::transpile.proto.only.tests.compiled.release'
         criterion:
           tests: only.tests
           raw: compiled
@@ -921,7 +921,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: proto/dwtools/abase/l5/StringTools.s
+        path: proto/wtools/abase/l5/StringTools.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -931,13 +931,13 @@ module:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/abase/l5/StringTools.s'
+        path: '{path::out.*=1}/source/wtools/abase/l5/StringTools.s'
       entry.out.raw.debug.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/abase/l5/StringTools.s'
+        path: '{path::out.*=1}/source/wtools/abase/l5/StringTools.s'
       entry.out.compiled.debug.debug:
         criterion:
           debug: debug
@@ -1518,6 +1518,6 @@ module:
         hash: d1c91cc4f18d120f9d265447ec2d84c4
         size: 1851
       ../.im.will.yml:
-        hash: c723ab5d336eb01c830ff48d35652688
-        size: 5240
+        hash: 5d1d91163410e5d29e83dda1b3cc96f4
+        size: 5237
       wStringsExtra.out.will.yml: *ref_0

@@ -5,7 +5,7 @@
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../../dwtools/Tools.s' );
+  let _ = require( '../../../wtools/Tools.s' );
 
   _.include( 'wTesting' );
   require( '../l5/StringTools.s' );
@@ -17,7 +17,7 @@ let select = _testerGlobal_.wTools.select;
 let _ = _global_.wTools;
 
 // --
-//
+// converter
 // --
 
 function strCamelize( test )
@@ -8908,14 +8908,11 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
   // var x = / 2 , y /;
   // var code = `for( var p = x / 2 , y / 2 ; p < pl ; p++ )`;
   //
-  // debugger;
   // var got = _.strTokenizeJs({ src : code, tokenizingUnknown : 1 });
   //
   // log( code );
   // log( _.toStr( select( got, '*/match' ), { multiline : 0 } ) );
   // log( select( got, '*/tokenName' ) );
-  //
-  // debugger;
   //
   // var tokenNamesGot = select( got, '*/tokenName' );
   // var tokenNamesExpected = [ 'whitespace', 'keyword', 'parenthes', 'whitespace', 'keyword', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'number', 'punctuation', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'punctuation', 'name', 'whitespace', 'punctuation', 'whitespace', 'number', 'punctuation', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'whitespace', 'punctuation', 'whitespace', 'name', 'punctuation', 'whitespace', 'parenthes', 'whitespace', 'comment/singleline', 'whitespace' ];
@@ -9424,6 +9421,94 @@ function strTimeFormat( test )
 
   test.case = 'bad arguments';
   test.shouldThrowErrorOfAnyKind( () => _.strTimeFormat( '24:00' ) );
+
+}
+
+//
+
+function strTableBasic( test )
+{
+
+  /* */
+
+  test.case = '2 arguments';
+  var exp =
+`a	b	c
+d	e	f`;
+  var data = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
+  var dim = [ 2, 3 ];
+  var got = _.strTable( data, dim );
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'options map, dim : [ 2, 3 ]';
+  var exp =
+`a	b	c
+d	e	f`;
+  var data = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
+  var dim = [ 2, 3 ];
+  var got = _.strTable({ data, dim });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'options map, dim : [ 3, 2 ]';
+  var exp =
+`a	b
+c	d
+e	f`;
+  var data = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
+  var dim = [ 3, 2 ];
+  var got = _.strTable({ data, dim });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'style : doubleBorder';
+  var exp =
+`╔═╤═╤═╗
+║a│b│c║
+║d│e│f║
+╚═╧═╧═╝`;
+  var data = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
+  var dim = [ 2, 3 ];
+  var style = 'doubleBorder';
+  var got = _.strTable({ data, dim, style });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'style : doubleBorder, diff width';
+  var exp =
+`╔══╤═══╤══════╗
+║ a│ b │c12345║
+║d1│e12│  f1  ║
+╚══╧═══╧══════╝`;
+  var data = [ 'a', 'b', 'c12345', 'd1', 'e12', 'f1' ];
+  var dim = [ 2, 3 ];
+  var style = 'doubleBorder';
+  var got = _.strTable({ data, dim, style });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'style : doubleBorder, diff width, diff height';
+  var exp =
+`╔═══╤═══╤══════╗
+║ a │ b │c12345║
+║aa2│   │      ║
+║   │ e │      ║
+║ d1│e12│  f1  ║
+║   │ e │      ║
+╚═══╧═══╧══════╝`;
+  var data = [ 'a\naa2', 'b', 'c12345', 'd1', 'e\ne12\ne', 'f1' ];
+  var dim = [ 2, 3 ];
+  var style = 'doubleBorder';
+  var got = _.strTable({ data, dim, style });
+  test.identical( got.result, exp );
+
+  /* */
 
 }
 
@@ -11416,31 +11501,31 @@ function strStructureParseOptionDepthForMixed( test )
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 1';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ '{', '}', '[', '[', '{a:[{b:3}', ']}', ']', ']' ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ '{', '}', '[', '[', '{a:[{b:3}', ']}', ']', ']' ], '[[[', { '{b' : '' }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 1 } );
   test.identical( got, exp );
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 2';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ {}, [ '[', '{a:[{b:3}', ']}', ']' ] ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ {}, [ '[', '{a:[{b:3}', ']}', ']' ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 2 } );
   test.identical( got, exp );
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 3';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ {}, [ [ '{a:[{b:3}', ']}' ] ] ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ {}, [ [ '{a:[{b:3}', ']}' ] ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 3 } );
   test.identical( got, exp );
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 4';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ {}, [ [ {a : '[{b:3' }, ']}' ] ] ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ {}, [ [ {a : '[{b:3' }, ']}' ] ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 4 } );
   test.identical( got, exp );
 
   test.case = 'array with nested maps, extra hard unbalanced elements delimeters, depth - 5';
   var src = ' [[ {   },[  [ {a:[{b:3} ]} ] ],],[[[ {b: {c  :2}  },[   ]]  ] ],[] ] ';
-  var exp = [ [ {}, [ [ {a : { '[{b' : 3 } }, ']}' ] ] ], '[[[', { '{b' : 0 }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
+  var exp = [ [ {}, [ [ {a : { '[{b' : 3 } }, ']}' ] ] ], '[[[', { '{b' : {} }, '{c', { '' : '2}' }, '}', [ ']]' ], ']', [] ];
   var got = _.strStructureParse( { src : src, parsingArrays : 1, depth : 5 } );
   test.identical( got, exp );
 
@@ -13011,12 +13096,12 @@ function strRequestParseDefaultOptions( test )
   test.identical( got.subjects, [ 'node' ] );
 
   test.case = 'src - string, command with args';
-  var src = 'node proto/dwtools/SomeTest.test.s';
+  var src = 'node proto/wtools/SomeTest.test.s';
   var got = _.strRequestParse( src );
   test.identical( got.map, {} );
   test.identical( got.maps, [ {} ] );
-  test.identical( got.subject, 'node proto/dwtools/SomeTest.test.s' );
-  test.identical( got.subjects, [ 'node proto/dwtools/SomeTest.test.s' ] );
+  test.identical( got.subject, 'node proto/wtools/SomeTest.test.s' );
+  test.identical( got.subjects, [ 'node proto/wtools/SomeTest.test.s' ] );
 
   test.case = 'src - string, few command with delimeter';
   var src = 'rm -rf node_modules ; npm i';
@@ -13109,36 +13194,36 @@ function strRequestParseDefaultOptions( test )
   test.identical( got.subjects, [ '', '', '' ] );
 
   test.case = 'src - string, command with options';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s v:5 r:some';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s v:5 r:some';
   var got = _.strRequestParse( src );
   test.identical( got.map, { v : 5, r : 'some' } );
   test.identical( got.maps, [ { v : 5, r : 'some' } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s' ] );
 
   test.case = 'src - string, command with options, same keys';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s withModule:wTools withModule:wPath';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s withModule:wTools withModule:wPath';
   var got = _.strRequestParse( src );
   test.identical( got.map, { withModule : 'wPath' } );
   test.identical( got.maps, [ { withModule : 'wPath' } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s' ] );
 
   test.case = 'src - string, two command with options';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s v:5 r:some ; node ./test.js v : [ 10, str ]';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s v:5 r:some ; node ./test.js v : [ 10, str ]';
   var got = _.strRequestParse( src );
   test.identical( got.map, { v : 5, r : 'some' } );
   test.identical( got.maps, [ { v : 5, r : 'some' }, { v : [ 10, 'str' ] } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s', 'node ./test.js' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s', 'node ./test.js' ] );
 
   test.case = 'src - string, two command with options, same keys';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s withModule:wTools withModule:wPath ; node ./test.js v : [ 10, str ]';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s withModule:wTools withModule:wPath ; node ./test.js v : [ 10, str ]';
   var got = _.strRequestParse( src );
   test.identical( got.map, { withModule : 'wPath' } );
   test.identical( got.maps, [ { withModule : 'wPath' }, { v : [ 10, 'str' ] } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s', 'node ./test.js' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s', 'node ./test.js' ] );
 
 }
 
@@ -13155,12 +13240,12 @@ function strRequestParseDefaultOptionsQuotedValues( test )
   test.identical( got.subjects, [ 'node' ] );
 
   test.case = 'src - string, command with args';
-  var src = '"node proto/dwtools/SomeTest.test.s"';
+  var src = '"node proto/wtools/SomeTest.test.s"';
   var got = _.strRequestParse( src );
   test.identical( got.map, {} );
   test.identical( got.maps, [ {} ] );
-  test.identical( got.subject, 'node proto/dwtools/SomeTest.test.s' );
-  test.identical( got.subjects, [ 'node proto/dwtools/SomeTest.test.s' ] );
+  test.identical( got.subject, 'node proto/wtools/SomeTest.test.s' );
+  test.identical( got.subjects, [ 'node proto/wtools/SomeTest.test.s' ] );
 
   test.case = 'src - string, few command with delimeter';
   var src = 'rm -rf "node_modules" ; npm i';
@@ -13251,36 +13336,44 @@ function strRequestParseDefaultOptionsQuotedValues( test )
   test.identical( got.subjects, [ '', '', '' ] );
 
   test.case = 'src - string, command with options';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s v:"5" r:"some"';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s v:"5" r:"some"';
   var got = _.strRequestParse( src );
   test.identical( got.map, { v : 5, r : 'some' } );
   test.identical( got.maps, [ { v : 5, r : 'some' } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s' ] );
 
   test.case = 'src - string, command with options, same keys';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s withModule:"wTools" withModule:wPath';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s withModule:"wTools" withModule:wPath';
   var got = _.strRequestParse( src );
   test.identical( got.map, { withModule : 'wPath' } );
   test.identical( got.maps, [ { withModule : 'wPath' } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s' ] );
 
   test.case = 'src - string, two command with options';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s v:5 r:"some" ; node ./test.js v : "[ 10, str ]"';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s v:5 r:"some" ; node ./test.js v : "[ 10, str ]"';
   var got = _.strRequestParse( src );
   test.identical( got.map, { v : 5, r : 'some' } );
   test.identical( got.maps, [ { v : 5, r : 'some' }, { v : [ 10, 'str' ] } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s', 'node ./test.js' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s', 'node ./test.js' ] );
 
   test.case = 'src - string, two command with options, same keys';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s withModule:"wTools" withModule:"wPath" ; node ./test.js v : "[ 10, str ]"';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s withModule:"wTools" withModule:"wPath" ; node ./test.js v : "[ 10, str ]"';
   var got = _.strRequestParse( src );
   test.identical( got.map, { withModule : 'wPath' } );
   test.identical( got.maps, [ { withModule : 'wPath' }, { v : [ 10, 'str' ] } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s', 'node ./test.js' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s', 'node ./test.js' ] );
+
+  test.case = 'src - string, options with quotes and spaces';
+  var src = `.command "path/key 1":val1 "path/key 2":val2 "path/key3":'val3'`;
+  var got = _.strRequestParse( src );
+  test.identical( got.map, { 'path/key 1' : 'val1', 'path/key 2' : 'val2', 'path/key3' : 'val3' } );
+  test.identical( got.maps, [ { 'path/key 1' : 'val1', 'path/key 2' : 'val2', 'path/key3' : 'val3' } ] );
+  test.identical( got.subject, '.command' );
+  test.identical( got.subjects, [ '.command' ] );
 }
 
 //
@@ -13407,12 +13500,12 @@ function strRequestParseOptionSeveralValues( test )
   test.identical( got.subjects, [ 'node' ] );
 
   test.case = 'src - string, command with args';
-  var src = '"node proto/dwtools/SomeTest.test.s"';
+  var src = '"node proto/wtools/SomeTest.test.s"';
   var got = _.strRequestParse( { src : src, severalValues : 1 } );
   test.identical( got.map, {} );
   test.identical( got.maps, [ {} ] );
-  test.identical( got.subject, 'node proto/dwtools/SomeTest.test.s' );
-  test.identical( got.subjects, [ 'node proto/dwtools/SomeTest.test.s' ] );
+  test.identical( got.subject, 'node proto/wtools/SomeTest.test.s' );
+  test.identical( got.subjects, [ 'node proto/wtools/SomeTest.test.s' ] );
 
   test.case = 'src - string, few command with delimeter';
   var src = 'rm -rf "node_modules" ; npm i';
@@ -13503,36 +13596,36 @@ function strRequestParseOptionSeveralValues( test )
   test.identical( got.subjects, [ '', '', '' ] );
 
   test.case = 'src - string, command with options';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s v:"5" r:"some"';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s v:"5" r:"some"';
   var got = _.strRequestParse( { src : src, severalValues : 1 } );
   test.identical( got.map, { v : 5, r : 'some' } );
   test.identical( got.maps, [ { v : 5, r : 'some' } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s' ] );
 
   test.case = 'src - string, command with options, same keys';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s withModule:"wTools" withModule:wPath';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s withModule:"wTools" withModule:wPath';
   var got = _.strRequestParse( { src : src, severalValues : 1 } );
   test.identical( got.map, { withModule : [ 'wTools', 'wPath' ] } );
   test.identical( got.maps, [ { withModule : [ 'wTools', 'wPath' ] } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s' ] );
 
   test.case = 'src - string, two command with options';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s v:5 r:"some" ; node ./test.js v : "[ 10, str ]"';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s v:5 r:"some" ; node ./test.js v : "[ 10, str ]"';
   var got = _.strRequestParse( { src : src, severalValues : 1 } );
   test.identical( got.map, { v : 5, r : 'some' } );
   test.identical( got.maps, [ { v : 5, r : 'some' }, { v : [ 10, 'str' ] } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s', 'node ./test.js' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s', 'node ./test.js' ] );
 
   test.case = 'src - string, two command with options, same keys';
-  var src = 'tst .run /proto/dwtools/someRoutine.test.s withModule:"wTools" withModule:wPath ; node ./test.js v : "[ 10, str ]"';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s withModule:"wTools" withModule:wPath ; node ./test.js v : "[ 10, str ]"';
   var got = _.strRequestParse( { src : src, severalValues : 1 } );
   test.identical( got.map, { withModule : [ 'wTools', 'wPath' ] } );
   test.identical( got.maps, [ { withModule : [ 'wTools', 'wPath' ] }, { v : [ 10, 'str' ] } ] );
-  test.identical( got.subject, 'tst .run /proto/dwtools/someRoutine.test.s' );
-  test.identical( got.subjects, [ 'tst .run /proto/dwtools/someRoutine.test.s', 'node ./test.js' ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s', 'node ./test.js' ] );
 }
 
 //
@@ -14497,22 +14590,23 @@ function strLattersSpectre( test )
 //
 // --
 
-var Self =
+let Self =
 {
 
-  name : 'Tools.base.StringsExtra',
+  name : 'Tools.StringsExtra',
   silencing : 1,
 
   tests :
   {
 
+    // converter
+
     strCamelize,
     strToTitle,
-
     strFilenameFor,
     strHtmlEscape,
 
-    //
+    // search
 
     strSearchDefaultOptions,
     strSearchOptionNearestLines,
@@ -14536,12 +14630,15 @@ var Self =
     strTokenizeJs,
     strSorterParse,
 
-    //
+    // format
 
     strMetricFormat,
     strMetricFormatBytes,
     strToBytes,
     strTimeFormat,
+    strTableBasic, /* xxx qqq : extend */
+
+    // parse
 
     strStructureParseDefaultOptions,
     strStructureParseOptionParsingArrays,
@@ -14576,7 +14673,7 @@ var Self =
 
     strJoinMap,
 
-    //
+    // etc
 
     strDifference,
     strLattersSpectre,

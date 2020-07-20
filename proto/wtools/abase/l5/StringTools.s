@@ -11,7 +11,7 @@
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../../dwtools/Tools.s' );
+  let _ = require( '../../../wtools/Tools.s' );
 
   _.include( 'wArraySorted' );
   _.include( 'wArraySparse' );
@@ -55,7 +55,6 @@ _.assert( _.routineIs( _.sorted.addOnce ) );
 // strDecamelize.defaults =
 // {
 //   src : null,
-//   delimeter : '-',
 // }
 
 //
@@ -2576,13 +2575,13 @@ function strRequestParse( o )
 
 
     let subject;
-    let map;
+    let map = Object.create( null );
     // let subject, map;
     // if( mapEntries.length === 1 )
     if( !mapEntries[ 1 ] )
     {
       subject = mapEntries[ 0 ];
-      map = Object.create( null );
+      // map = Object.create( null );
     }
     else
     {
@@ -2600,14 +2599,75 @@ function strRequestParse( o )
       subject = subjectAndKey[ 0 ];
       mapEntries[ 0 ] = subjectAndKey[ 2 ];
 
-      map = _.strStructureParse
+      // map = _.strStructureParse
+      // ({
+      //   src : mapEntries.join( '' ),
+      //   keyValDelimeter : o.keyValDelimeter,
+      //   parsingArrays : o.parsingArrays,
+      //   quoting : o.quoting,
+      //   severalValues : o.severalValues,
+      // });
+
+      /* Dmytro : it uses to get valid result when the quotes is used, also, it used no additional options, so performance is improved */
+
+      let splits = _.strSplit
       ({
         src : mapEntries.join( '' ),
-        keyValDelimeter : o.keyValDelimeter,
-        parsingArrays : o.parsingArrays,
-        quoting : o.quoting,
-        severalValues : o.severalValues,
+        delimeter : o.keyValDelimeter,
+        stripping : 0,
+        quoting : 0,
+        preservingEmpty : 1,
+        preservingDelimeters : 1,
+        preservingQuoting : 0
       });
+
+      let pairs = [];
+      for( let a = 0 ; a < splits.length-2 ; a += 2 )
+      {
+        let left = splits[ a ];
+        let right = splits[ a+2 ].trim();
+
+        _.assert( _.strIs( left ) );
+        _.assert( _.strIs( right ) );
+
+        while( a < splits.length-3 )
+        {
+          let cuts = _.strIsolateRightOrAll({ src : right, delimeter : o.entryDelimeter, quote : 1, times : 1 });
+          if( cuts[ 1 ] === undefined )
+          {
+            right = splits[ a+2 ] = splits[ a+2 ] + splits[ a+3 ] + splits[ a+4 ];
+            right = right.trim();
+            splits.splice( a+3, 2 );
+            continue;
+          }
+          right = cuts[ 0 ];
+          splits[ a+2 ] = cuts[ 2 ];
+          break;
+        }
+
+        left = left.trim();
+        right = right.trim();
+        if( o.quoting )
+        {
+          left = _.strUnquote( left );
+          right = _.strUnquote( right );
+        }
+
+        pairs.push( left, right );
+      }
+
+      for( let a = 0 ; a < pairs.length-1 ; a += 2 )
+      {
+        let left = pairs[ a ];
+        let right = pairs[ a+1 ];
+        right = _.numberFromStrMaybe( right );
+        right = strToArrayMaybe( right );
+
+        if( o.severalValues )
+        map[ left ] = _.scalarAppendOnce( map[ left ], right );
+        else
+        map[ left ] = right;
+      }
 
     }
 
@@ -2655,6 +2715,30 @@ function strRequestParse( o )
   result.map = result.maps[ 0 ];
 
   return result;
+
+  /* */
+
+  function strToArrayMaybe( str )
+  {
+    if( !_.strIs( str ) )
+    return str;
+
+    let inside = _.strInsideOf( str, '[', ']' );
+    if( inside === false )
+    return str;
+
+    let result = _.strSplit
+    ({
+      src : inside,
+      delimeter : [ ' ', ',' ],
+      stripping : 1,
+      quoting : o.quoting,
+      preservingDelimeters : 0,
+      preservingEmpty : 0,
+      preservingQuoting : 0,
+    });
+    return result.map( ( e ) => _.numberFromStrMaybe( e ) );
+  }
 }
 
 var defaults = strRequestParse.defaults = Object.create( null );
@@ -3023,11 +3107,434 @@ strJoinMap.defaults =
 
 function strTable( o )
 {
+
+  if( !_.mapIs( o ) )
+  o = { data : arguments[ 0 ], dim : arguments[ 1 ] }
+
+  _.routineOptions( strTable, o );
+  _.assert( arguments.length === 1 || arguments.length === 2, 'Expects single argument' );
+  _.assert( o.data !== undefined );
+  _.assert( o.dim.length === 2 );
+  _.assert( _.numbersAreAll( o.dim ) );
+
+  if( _.strIs( o.style ) )
+  {
+    _.assert( !!strTable.style[ o.style ], `Unknown style ${o.style}` );
+    o.style = strTable.style[ o.style ];
+  }
+  _.mapSupplementNulls( o, o.style );
+
+  o.rowHeight = _.scalarToVector( o.rowHeight, o.dim[ 0 ] );
+  o.minRowHeight = _.scalarToVector( o.minRowHeight, o.dim[ 0 ] );
+  o.maxRowHeight = _.scalarToVector( o.maxRowHeight, o.dim[ 0 ] );
+  o.colWidth = _.scalarToVector( o.colWidth, o.dim[ 1 ] );
+  o.minColWidth = _.scalarToVector( o.minColWidth, o.dim[ 1 ] );
+  o.maxColWidth = _.scalarToVector( o.maxColWidth, o.dim[ 1 ] );
+
+  o.cellAlign = scalarToVector( o.cellAlign, 2 );
+  o.cellAlign = o.cellAlign.map( ( cellAlign ) => cellAlign === null ? 'center' : cellAlign );
+  o.cellPadding = scalarToVector( o.cellPadding, 4 );
+  o.tablePadding = scalarToVector( o.tablePadding, 4 );
+  o.head = scalarToVector( o.head, 4 );
+  if( o.onCellGet === null )
+  o.onCellGet = onCellGetDefault;
+  if( o.onCellDrawAfter === null )
+  o.onCellDrawAfter = onCellDrawAfterDefault;
+  if( o.onCellDraw === null )
+  o.onCellDraw = cellDraw;
+
+  sizeEval();
+
+  _.assert( o.style === null || _.mapIs( o.style ) );
+  _.assert( _.all( o.cellAlign, ( cellAlign ) => cellAlign === 'center' ), 'not implemented' );
+  _.assert( o.cellAlign.length === 2 );
+  _.assert( _.numbersAreAll( o.rowHeight ) );
+  _.assert( _.numbersAreAll( o.colWidth ) );
+  _.assert( o.head.length === 4 );
+  _.assert( _.all( o.head, ( head ) => head === null ), 'not implemented' );
+  _.assert( o.cellAlign[ 0 ] === 'center' && o.cellAlign[ 1 ] === 'center', 'not implemented' );
+  _.assert( o.cellPadding.length === 4 );
+  _.assert( o.tablePadding.length === 4 );
+  _.routineIs( o.onCellGet );
+  _.routineIs( o.onCellDrawAfter );
+  _.assert
+  (
+    _.all( o.minColWidth, ( n ) => n === null || _.numberIs( n ) )
+    , () => 'Expects number or null {- o.minColWidth -}'
+  );
+  _.assert
+  (
+    _.all( o.maxColWidth, ( n ) => n === null || _.numberIs( n ) )
+    , () => 'Expects number or null {- o.maxColWidth -}'
+  );
+
+  _.assert
+  (
+    _.all( o.minRowHeight, ( n ) => n === null || _.numberIs( n ) )
+    , () => 'Expects number or null {- o.minRowHeight -}'
+  );
+  _.assert
+  (
+    _.all( o.maxRowHeight, ( n ) => n === null || _.numberIs( n ) )
+    , () => 'Expects number or null {- o.maxRowHeight -}'
+  );
+
+  tableDraw();
+
+  return o;
+
+  /* */
+
+  function tableDraw()
+  {
+    let it = o;
+    it.i2d = [];
+    it.sz = [];
+    it.lines = [];
+
+    border( o.ltToken );
+    if( o.withBorder && o.tToken )
+    for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
+    {
+      if( j > 0 && o.ncToken )
+      for( let k = 0 ; k < o.ncToken.length ; k++ )
+      o.result += o.ttlToken;
+      for( let k = 0 ; k < o.colWidth[ j ] ; k++ )
+      o.result += o.tToken;
+    }
+    border( o.rtToken );
+    border( o.nlToken );
+
+    for( let i = 0 ; i < o.dim[ 0 ] ; i++ )
+    {
+      it.i2d[ 0 ] = i;
+      it.sz[ 0 ] = o.rowHeight[ i ];
+
+      for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
+      {
+        it.i2d[ 1 ] = j;
+        it.sz[ 1 ] = o.colWidth[ j ];
+        it.cellOriginal = cellGet( it.i2d );
+        it.cellDrawn = it.onCellDraw( it );
+        it.cellDrawn = it.onCellDrawAfter( it );
+        if( _.longIs( it.cellDrawn ) )
+        {
+          it.cellDrawn.forEach( ( cellDrawn, k ) =>
+          {
+            _.assert( _.strIs( cellDrawn ) );
+            it.lines[ k ] = it.lines[ k ] || [];
+            if( it.ncToken && j > 0 )
+            it.lines[ k ].push( it.ncToken );
+            it.lines[ k ].push( cellDrawn );
+          });
+        }
+        else
+        {
+          _.assert( _.strIs( it.cellDrawn ) );
+          it.lines[ 0 ] = it.lines[ 0 ] || [];
+          if( it.ncToken && j > 0 )
+          it.lines[ 0 ].push( it.ncToken );
+          it.lines[ 0 ].push( it.cellDrawn );
+        }
+      }
+
+      linesDraw( it );
+    }
+
+    border( o.nlToken );
+    border( o.lbToken );
+    if( o.withBorder && o.bToken )
+    for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
+    {
+      if( j > 0 && o.ncToken )
+      for( let k = 0 ; k < o.ncToken.length ; k++ )
+      o.result += o.btlToken;
+      for( let k = 0 ; k < o.colWidth[ j ] ; k++ )
+      o.result += o.bToken;
+    }
+    border( o.rbToken );
+
+  }
+
+  /* */
+
+  function linesDraw( it )
+  {
+    debugger;
+    it.lines.forEach( ( line, k ) =>
+    {
+      if( it.nlToken )
+      if( it.i2d[ 0 ] > 0 || k > 0 )
+      it.result += it.nlToken;
+      border( o.lToken );
+      it.result += line.join( '' );
+      border( o.rToken );
+    });
+    debugger;
+    it.lines.splice( 0, it.lines.length );
+  }
+
+  /* */
+
+  function cellDraw( it )
+  {
+    let sz = _.strLinesSize( it.cellOriginal );
+
+    if( it.sz[ 0 ] > 1 )
+    {
+      let lines = _.strLinesSplit( it.cellOriginal );
+      let hf = ( it.sz[ 0 ] - lines.length ) / 2;
+      let result = lines.map( ( line ) => cellLineDraw( line, it ) );
+      for( let k = Math.floor( hf )-1 ; k >= 0 ; k-- )
+      result.unshift( _.strDup( it.spaceToken, it.sz[ 1 ] ) );
+      for( let k = Math.ceil( hf )-1 ; k >= 0 ; k-- )
+      result.push( _.strDup( it.spaceToken, it.sz[ 1 ] ) );
+      return result;
+    }
+    else
+    {
+      cellLineDraw( it.cellOriginal, it );
+    }
+
+    return cellLineDraw( it.cellOriginal, it );;
+  }
+
+  /* */
+
+  function cellLineDraw( line, it )
+  {
+
+    if( line.length < it.sz[ 1 ] )
+    {
+      let hf = ( it.sz[ 1 ] - line.length ) / 2;
+      return _.strDup( it.spaceToken, Math.ceil( hf ) ) + line + _.strDup( it.spaceToken, Math.floor( hf ) );
+    }
+    else
+    {
+      return line;
+    }
+
+    return line;
+  }
+
+  /* */
+
+  function border( token )
+  {
+    if( o.withBorder && token )
+    o.result += token;
+  }
+
+  /* */
+
+  function sizeEval()
+  {
+    let h = _.longSlice( o.rowHeight );
+    let w = _.longSlice( o.colWidth );
+
+    for( let i = 0 ; i < o.dim[ 0 ] ; i++ )
+    if( h[ i ] === undefined || h[ i ] === null )
+    {
+      o.rowHeight[ i ] = null;
+      h[ i ] = 0;
+    }
+
+    for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
+    if( w[ j ] === undefined || w[ j ] === null )
+    {
+      o.colWidth[ j ] = null;
+      h[ j ] = 0;
+    }
+
+    let i2d = [];
+    for( let i = 0 ; i < o.dim[ 0 ] ; i++ )
+    {
+      i2d[ 0 ] = i;
+      for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
+      {
+        i2d[ 1 ] = j;
+        let e = cellGet( i2d );
+        let sz = _.strLinesSize( e );
+        if( o.rowHeight[ i ] === null )
+        h[ i ] = Math.max( h[ i ], sz[ 0 ] );
+        if( o.colWidth[ j ] === null )
+        w[ j ] = Math.max( w[ j ], sz[ 1 ] );
+      }
+    }
+
+    for( let i = 0 ; i < o.dim[ 0 ] ; i++ )
+    {
+      if( o.minRowHeight[ i ] )
+      {
+        _.assert( 0, 'not tested' );
+        h[ i ] = Math.max( h[ i ], o.minRowHeight[ i ] );
+      }
+      if( o.maxRowHeight[ i ] )
+      {
+        _.assert( 0, 'not tested' );
+        h[ i ] = Math.min( h[ i ], o.maxRowHeight[ i ] );
+      }
+    }
+
+    for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
+    {
+      if( o.minColWidth[ j ] )
+      {
+        _.assert( 0, 'not tested' );
+        w[ j ] = Math.max( w[ j ], o.minColWidth[ j ] );
+      }
+      if( o.maxColWidth[ j ] )
+      {
+        _.assert( 0, 'not tested' );
+        w[ j ] = Math.min( w[ j ], o.maxColWidth[ j ] );
+      }
+    }
+
+    o.rowHeight = h;
+    o.colWidth = w;
+  }
+
+  /* */
+
+  function cellGet( i2d )
+  {
+    let e = o.onCellGet( i2d, o );
+    _.assert( _.strIs( e ) );
+    return e;
+  }
+
+  /* */
+
+  function scalarToVector( src, length )
+  {
+    if( _.mapIs( src ) )
+    return sideMapToArray( sideMap )
+    return _.scalarToVector( src, length );
+  }
+
+  /* */
+
+  function sideMapToArray( sideMap, length )
+  {
+    let result = _.dup( null, length );
+    _.assert( _.objectIs( sideMap ) ); debugger;
+    _.assert( 0, 'not tested' );
+    for( let s in sideMap )
+    {
+      _.assert( _.Side[ s ] >= 0, () => `Unknown side ${s}` );
+      result[ _.Side[ s ] ] = sideMap[ s ];
+    }
+    return result;
+  }
+
+  /* */
+
+  function onCellGetDefault( i2d, o )
+  {
+    let iFlat = i2d[ 1 ] + i2d[ 0 ]*o.dim[ 1 ];
+    return o.data[ iFlat ];
+  }
+
+  /* */
+
+  function onCellDrawAfterDefault( it )
+  {
+    return it.cellDrawn;
+  }
+
+  /* */
+
+}
+
+strTable.defaults =
+{
+
+  result : '',
+  data : null,
+  dim : null,
+  head : null,
+  rowHeight : null,
+  minRowHeight : null,
+  maxRowHeight : null,
+  colWidth : null,
+  minColWidth : null,
+  maxColWidth : null,
+  cellAlign : 'center',
+  cellPadding : null,
+  tablePadding : null,
+  onCellGet : null,
+  onCellDraw : null,
+  onCellDrawAfter : null,
+
+  style : 'borderless',
+  withBorder : null,
+  withColBorder : null,
+  withRowBorder : null,
+  spaceToken : null,
+  lToken : null,
+  rToken : null,
+  tToken : null,
+  bToken : null,
+  ltToken : null,
+  rtToken : null,
+  lbToken : null,
+  rbToken : null,
+  ltlToken : null,
+  rtlToken : null,
+  ttlToken : null,
+  btlToken : null,
+  hHeadToken : null,
+  vHeadToken : null,
+  ncToken : null,
+  nlToken : null,
+
+}
+
+strTable.style = Object.create( null );
+
+strTable.style.borderless =
+{
+  withBorder : 0,
+  withColBorder : 0,
+  withRowBorder : 0,
+  spaceToken : ' ',
+  ncToken : '\t',
+  nlToken : '\n',
+}
+
+strTable.style.doubleBorder =
+{
+  withBorder : 1,
+  withColBorder : 1,
+  withRowBorder : 1,
+  spaceToken : ' ',
+  lToken : '║',
+  rToken : '║',
+  tToken : '═',
+  bToken : '═',
+  ltToken : '╔',
+  rtToken : '╗',
+  lbToken : '╚',
+  rbToken : '╝',
+  ltlToken : '╟',
+  rtlToken : '╢',
+  ttlToken : '╤',
+  btlToken : '╧',
+  hHeadToken : '─',
+  vHeadToken : '│',
+  ncToken : '│',
+  nlToken : '\n',
+}
+
+//
+
+function strTable_old( o )
+{
   _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( !_.objectIs( o ) )
   o = { data : o }
-  _.routineOptions( strTable,o );
+  _.routineOptions( strTable_old,o );
   _.assert( _.longIs( o.data ) );
 
   if( typeof module !== 'undefined' )
@@ -3045,7 +3552,7 @@ function strTable( o )
   if( _.cliTable == undefined )
   {
     if( !o.silent )
-    throw _.err( 'version of strTable without support of cli-table2 is not implemented' );
+    throw _.err( 'version of strTable_old without support of cli-table2 is not implemented' );
     else
     return;
   }
@@ -3065,9 +3572,9 @@ function strTable( o )
     maxLen = Math.max( maxLen, o.data[ i ].length );
   }
 
-  let onCellGet = strTable.onCellGet;
+  let onCellGet = strTable_old.onCellGet;
   o.onCellGet = o.onCellGet || isArrayOfArrays ? onCellGet.ofArrayOfArray :  onCellGet.ofFlatArray ;
-  o.onCellAfter = o.onCellAfter || strTable.onCellAfter;
+  o.onCellAfter = o.onCellAfter || strTable_old.onCellAfter;
 
   if( isArrayOfArrays )
   {
@@ -3103,7 +3610,7 @@ function strTable( o )
 
   let table = new _.cliTable( tableOptions );
 
-  //
+  /* */
 
   for( let y = 0; y < o.rowsNumber; y++ )
   {
@@ -3152,7 +3659,7 @@ function strTable( o )
 
 }
 
-strTable.defaults =
+strTable_old.defaults =
 {
   data : null,
   rowsNumber : null,
@@ -3176,18 +3683,17 @@ strTable.defaults =
   paddingLeft : 0,
   paddingRight : 0,
 
-
   onCellGet : null,
   onCellAfter : null,
 }
 
-strTable.onCellGet =
+strTable_old.onCellGet =
 {
   ofFlatArray : ( data, index2d, o  ) => data[ index2d[ 0 ] * o.colsNumber + index2d[ 1 ] ],
   ofArrayOfArray : ( data, index2d, o  ) => data[ index2d[ 0 ] ][ index2d[ 1 ] ]
 }
 
-strTable.onCellAfter = ( cellStr, index2d, o ) => cellStr
+strTable_old.onCellAfter = ( cellStr, index2d, o ) => cellStr
 
 //
 
@@ -3306,10 +3812,20 @@ function strLattersSpectresSimilarity( src1, src2 )
 // declare
 // --
 
-let Extend =
+let Side =
+{
+  top : 0,
+  right : 1,
+  bottom : 2,
+  left : 3,
+  vertical : 0,
+  horizontal : 1,
+}
+
+let Extension =
 {
 
-  // strDecamelize,
+  // strDecamelize, /* qqq : implement */
   strCamelize,
   strToTitle,
 
@@ -3327,7 +3843,7 @@ let Extend =
   tokensSyntaxFrom,
 
   _strReplaceMapPrepare,
-  strReplaceAll, /* qqq : document me | Dmytro : extended documentation */
+  strReplaceAll,
   strTokenizeJs,
   strTokenizeCpp,
 
@@ -3360,6 +3876,7 @@ let Extend =
   strJoinMap, /* qqq : cover it by tests | Dmytro : covered */
 
   strTable,
+  strTable_old,
   strsSort,
 
   strSimilarity, /* experimental */
@@ -3367,9 +3884,13 @@ let Extend =
   strLattersSpectresSimilarity,
   // lattersSpectreComparison, /* experimental */
 
+  // fields
+
+  Side,
+
 }
 
-_.mapExtend( Self, Extend );
+_.mapExtend( Self, Extension );
 
 // --
 // export
