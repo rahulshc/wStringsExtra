@@ -414,7 +414,7 @@ let strSearch = _.routineFromPreAndBody( strSearch_pre, strSearch_body );
 
 function strSearchLog_body( o )
 {
-
+  debugger
   _.assert( arguments.length === 1, 'Expects single argument' );
 
   let o2 = _.mapOnly( o, this.strSearch.defaults );

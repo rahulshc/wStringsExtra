@@ -4798,387 +4798,387 @@ function strSearchOptionOnTokenize( test )
 
 function strSearchLog( test )
 {
-  test.open( 'one line' );
+  // test.open( 'one line' );
 
-  test.case = '1 letter match at the start - one line'
-  var input = 
-  {
-    src : 'abcdefg',
-    ins : [ 'a' ],
-    gray : 1
-  }
-  var expectedParcels = 
-  [
-    {
-      'match' : 'a',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 0, 1 ],
-      'counter' : 0,
-      'input' : 'abcdefg',
-      'charsRangeRight' : [ 7, 6 ],
-      'nearest' : [ '', 'a', 'bcdefg' ],
-      'log' : '1 : abcdefg',
-      'sub' : null
-    }
-  ];
-  var expectedLog = '1 : abcdefg';
-  var got = _.strSearchLog( input );
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = '1 letter match at the start - one line'
+  // var input = 
+  // {
+  //   src : 'abcdefg',
+  //   ins : [ 'a' ],
+  //   gray : 1
+  // }
+  // var expectedParcels = 
+  // [
+  //   {
+  //     'match' : 'a',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 0, 1 ],
+  //     'counter' : 0,
+  //     'input' : 'abcdefg',
+  //     'charsRangeRight' : [ 7, 6 ],
+  //     'nearest' : [ '', 'a', 'bcdefg' ],
+  //     'log' : '1 : abcdefg',
+  //     'sub' : null
+  //   }
+  // ];
+  // var expectedLog = '1 : abcdefg';
+  // var got = _.strSearchLog( input );
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  test.case = '1 letter match at the middle - one line'
-  var input = 
-  {
-    src : 'abcdefg',
-    ins : [ 'c' ],
-    gray : 1
-  }
-  var expectedParcels = 
-  [
-    {
-      'match' : 'c',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 2, 3 ],
-      'counter' : 0,
-      'input' : 'abcdefg',
-      'charsRangeRight' : [ 5, 4 ],
-      'nearest' : [ 'ab', 'c', 'defg' ],
-      'log' : '1 : abcdefg',
-      'sub' : null
-    }
-  ];
-  var expectedLog = '1 : abcdefg';
-  var got = _.strSearchLog( input );
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = '1 letter match at the middle - one line'
+  // var input = 
+  // {
+  //   src : 'abcdefg',
+  //   ins : [ 'c' ],
+  //   gray : 1
+  // }
+  // var expectedParcels = 
+  // [
+  //   {
+  //     'match' : 'c',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 2, 3 ],
+  //     'counter' : 0,
+  //     'input' : 'abcdefg',
+  //     'charsRangeRight' : [ 5, 4 ],
+  //     'nearest' : [ 'ab', 'c', 'defg' ],
+  //     'log' : '1 : abcdefg',
+  //     'sub' : null
+  //   }
+  // ];
+  // var expectedLog = '1 : abcdefg';
+  // var got = _.strSearchLog( input );
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  test.case = '1 letter match at the end - one line'
-  var input = 
-  {
-    src : 'abcdefg',
-    ins : [ 'g' ],
-    gray : 1
-  }
-  var expectedParcels = 
-  [
-    {
-      'match' : 'g',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 6, 7 ],
-      'counter' : 0,
-      'input' : 'abcdefg',
-      'charsRangeRight' : [ 1, 0 ],
-      'nearest' : [ 'abcdef', 'g', '' ],
-      'log' : '1 : abcdefg',
-      'sub' : null
-    }
-  ];
-  var expectedLog = '1 : abcdefg';
-  var got = _.strSearchLog( input );
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = '1 letter match at the end - one line'
+  // var input = 
+  // {
+  //   src : 'abcdefg',
+  //   ins : [ 'g' ],
+  //   gray : 1
+  // }
+  // var expectedParcels = 
+  // [
+  //   {
+  //     'match' : 'g',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 6, 7 ],
+  //     'counter' : 0,
+  //     'input' : 'abcdefg',
+  //     'charsRangeRight' : [ 1, 0 ],
+  //     'nearest' : [ 'abcdef', 'g', '' ],
+  //     'log' : '1 : abcdefg',
+  //     'sub' : null
+  //   }
+  // ];
+  // var expectedLog = '1 : abcdefg';
+  // var got = _.strSearchLog( input );
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
   
-  /* */
+  // /* */
 
-  test.case = 'a few letters match at the start - one line'
-  var input = 
-  {
-    src : 'abcdefg',
-    ins : [ 'abc' ],
-    gray : 1
-  }
-  var expectedParcels = 
-  [
-    {
-      'match' : 'abc',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 0, 3 ],
-      'counter' : 0,
-      'input' : 'abcdefg',
-      'charsRangeRight' : [ 7, 4 ],
-      'nearest' : [ '', 'abc', 'defg' ],
-      'log' : '1 : abcdefg',
-      'sub' : null
-    }
-  ];
-  var expectedLog = '1 : abcdefg';
-  var got = _.strSearchLog( input );
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = 'a few letters match at the start - one line'
+  // var input = 
+  // {
+  //   src : 'abcdefg',
+  //   ins : [ 'abc' ],
+  //   gray : 1
+  // }
+  // var expectedParcels = 
+  // [
+  //   {
+  //     'match' : 'abc',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 0, 3 ],
+  //     'counter' : 0,
+  //     'input' : 'abcdefg',
+  //     'charsRangeRight' : [ 7, 4 ],
+  //     'nearest' : [ '', 'abc', 'defg' ],
+  //     'log' : '1 : abcdefg',
+  //     'sub' : null
+  //   }
+  // ];
+  // var expectedLog = '1 : abcdefg';
+  // var got = _.strSearchLog( input );
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  test.case = 'a few letters match at the middle - one line'
-  var input = 
-  {
-    src : 'abcdefg',
-    ins : [ 'cde' ],
-    gray : 1
-  }
-  var expectedParcels = 
-  [
-    {
-      'match' : 'cde',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 2, 5 ],
-      'counter' : 0,
-      'input' : 'abcdefg',
-      'charsRangeRight' : [ 5, 2 ],
-      'nearest' : [ 'ab', 'cde', 'fg' ],
-      'log' : '1 : abcdefg',
-      'sub' : null
-    }
-  ];
-  var expectedLog = '1 : abcdefg';
-  var got = _.strSearchLog( input );
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = 'a few letters match at the middle - one line'
+  // var input = 
+  // {
+  //   src : 'abcdefg',
+  //   ins : [ 'cde' ],
+  //   gray : 1
+  // }
+  // var expectedParcels = 
+  // [
+  //   {
+  //     'match' : 'cde',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 2, 5 ],
+  //     'counter' : 0,
+  //     'input' : 'abcdefg',
+  //     'charsRangeRight' : [ 5, 2 ],
+  //     'nearest' : [ 'ab', 'cde', 'fg' ],
+  //     'log' : '1 : abcdefg',
+  //     'sub' : null
+  //   }
+  // ];
+  // var expectedLog = '1 : abcdefg';
+  // var got = _.strSearchLog( input );
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  test.case = 'a few letters match at the end - one line'
-  var input = 
-  {
-    src : 'abcdefg',
-    ins : [ 'efg' ],
-    gray : 1
-  }
-  var expectedParcels = 
-  [
-    {
-      'match' : 'efg',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 4, 7 ],
-      'counter' : 0,
-      'input' : 'abcdefg',
-      'charsRangeRight' : [ 3, 0 ],
-      'nearest' : [ 'abcd', 'efg', '' ],
-      'log' : '1 : abcdefg',
-      'sub' : null
-    }
-  ];
-  var expectedLog = '1 : abcdefg';
-  var got = _.strSearchLog( input );
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = 'a few letters match at the end - one line'
+  // var input = 
+  // {
+  //   src : 'abcdefg',
+  //   ins : [ 'efg' ],
+  //   gray : 1
+  // }
+  // var expectedParcels = 
+  // [
+  //   {
+  //     'match' : 'efg',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 4, 7 ],
+  //     'counter' : 0,
+  //     'input' : 'abcdefg',
+  //     'charsRangeRight' : [ 3, 0 ],
+  //     'nearest' : [ 'abcd', 'efg', '' ],
+  //     'log' : '1 : abcdefg',
+  //     'sub' : null
+  //   }
+  // ];
+  // var expectedLog = '1 : abcdefg';
+  // var got = _.strSearchLog( input );
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  /* */
+  // /* */
 
-  test.case = 'all letters match - one line'
-  var input = 
-  {
-    src : 'abcdefg',
-    ins : [ 'abcdefg' ],
-    gray : 1
-  }
-  var expectedParcels = 
-  [
-    {
-      'match' : 'abcdefg',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 0, 7 ],
-      'counter' : 0,
-      'input' : 'abcdefg',
-      'charsRangeRight' : [ 7, 0 ],
-      'nearest' : [ '', 'abcdefg', '' ],
-      'log' : '1 : abcdefg',
-      'sub' : null
-    }
-  ];
-  var expectedLog = '1 : abcdefg';
-  var got = _.strSearchLog( input );
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = 'all letters match - one line'
+  // var input = 
+  // {
+  //   src : 'abcdefg',
+  //   ins : [ 'abcdefg' ],
+  //   gray : 1
+  // }
+  // var expectedParcels = 
+  // [
+  //   {
+  //     'match' : 'abcdefg',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 0, 7 ],
+  //     'counter' : 0,
+  //     'input' : 'abcdefg',
+  //     'charsRangeRight' : [ 7, 0 ],
+  //     'nearest' : [ '', 'abcdefg', '' ],
+  //     'log' : '1 : abcdefg',
+  //     'sub' : null
+  //   }
+  // ];
+  // var expectedLog = '1 : abcdefg';
+  // var got = _.strSearchLog( input );
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  test.case = 'no match - one line'
-  var input = 
-  {
-    src : 'abcdefg',
-    ins : [ 'h' ],
-    gray : 1
-  }
-  var expectedParcels = [];
-  var expectedLog = '';
-  var got = _.strSearchLog( input );
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = 'no match - one line'
+  // var input = 
+  // {
+  //   src : 'abcdefg',
+  //   ins : [ 'h' ],
+  //   gray : 1
+  // }
+  // var expectedParcels = [];
+  // var expectedLog = '';
+  // var got = _.strSearchLog( input );
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  /* */ 
+  // /* */ 
 
-  test.case = 'multiple matches 1 letter  - one line'
-  var input = 
-  {
-    src : 'abcabcabc',
-    ins : [ 'a' ],
-    gray : 1
-  }
-  var expectedParcels = 
-  [
-    {
-      match : 'a',
-      groups : [],
-      tokenId : 0,
-      charsRangeLeft : [ 0, 1 ],
-      counter : 0,
-      input : 'abcabcabc',
-      charsRangeRight : [ 9, 8 ],
-      nearest : [ '', 'a', 'bcabcabc' ],
-      log : '1 : abcabcabc',
-      sub : null
-    },
-    {
-      match : 'a',
-      groups : [],
-      tokenId : 0,
-      charsRangeLeft : [ 3, 4 ],
-      counter : 1,
-      input : 'abcabcabc',
-      charsRangeRight : [ 6, 5 ],
-      nearest : [ 'abc', 'a', 'bcabc' ],
-      log : '1 : abcabcabc',
-      sub : null
-    },
-    {
-      match : 'a',
-      groups : [],
-      tokenId : 0,
-      charsRangeLeft : [ 6, 7 ],
-      counter : 2,
-      input : 'abcabcabc',
-      charsRangeRight : [ 3, 2 ],
-      nearest : [ 'abcabc', 'a', 'bc' ],
-      log : '1 : abcabcabc',
-      sub : null
-    }
-  ]
-  var expectedLog = '1 : abcabcabc\n1 : abcabcabc\n1 : abcabcabc';
-  var got = _.strSearchLog( input );
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = 'multiple matches 1 letter  - one line'
+  // var input = 
+  // {
+  //   src : 'abcabcabc',
+  //   ins : [ 'a' ],
+  //   gray : 1
+  // }
+  // var expectedParcels = 
+  // [
+  //   {
+  //     match : 'a',
+  //     groups : [],
+  //     tokenId : 0,
+  //     charsRangeLeft : [ 0, 1 ],
+  //     counter : 0,
+  //     input : 'abcabcabc',
+  //     charsRangeRight : [ 9, 8 ],
+  //     nearest : [ '', 'a', 'bcabcabc' ],
+  //     log : '1 : abcabcabc',
+  //     sub : null
+  //   },
+  //   {
+  //     match : 'a',
+  //     groups : [],
+  //     tokenId : 0,
+  //     charsRangeLeft : [ 3, 4 ],
+  //     counter : 1,
+  //     input : 'abcabcabc',
+  //     charsRangeRight : [ 6, 5 ],
+  //     nearest : [ 'abc', 'a', 'bcabc' ],
+  //     log : '1 : abcabcabc',
+  //     sub : null
+  //   },
+  //   {
+  //     match : 'a',
+  //     groups : [],
+  //     tokenId : 0,
+  //     charsRangeLeft : [ 6, 7 ],
+  //     counter : 2,
+  //     input : 'abcabcabc',
+  //     charsRangeRight : [ 3, 2 ],
+  //     nearest : [ 'abcabc', 'a', 'bc' ],
+  //     log : '1 : abcabcabc',
+  //     sub : null
+  //   }
+  // ]
+  // var expectedLog = '1 : abcabcabc\n1 : abcabcabc\n1 : abcabcabc';
+  // var got = _.strSearchLog( input );
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  test.case = 'multiple matches a few letters - one line'
-  var input = 
-  {
-    src : 'abcabcabc',
-    ins : [ 'bc' ],
-    gray : 1
-  }
-  var expectedParcels = 
-  [
-    {
-      match : 'bc',
-      groups : [],
-      tokenId : 0,
-      charsRangeLeft : [ 1, 3 ],
-      counter : 0,
-      input : 'abcabcabc',
-      charsRangeRight : [ 8, 6 ],
-      nearest : [ 'a', 'bc', 'abcabc' ],
-      log : '1 : abcabcabc',
-      sub : null
-    },
-    {
-      match : 'bc',
-      groups : [],
-      tokenId : 0,
-      charsRangeLeft : [ 4, 6 ],
-      counter : 1,
-      input : 'abcabcabc',
-      charsRangeRight : [ 5, 3 ],
-      nearest : [ 'abca', 'bc', 'abc' ],
-      log : '1 : abcabcabc',
-      sub : null
-    },
-    {
-      match : 'bc',
-      groups : [],
-      tokenId : 0,
-      charsRangeLeft : [ 7, 9 ],
-      counter : 2,
-      input : 'abcabcabc',
-      charsRangeRight : [ 2, 0 ],
-      nearest : [ 'abcabca', 'bc', '' ],
-      log : '1 : abcabcabc',
-      sub : null
-    }
-  ]
-  var expectedLog = '1 : abcabcabc\n1 : abcabcabc\n1 : abcabcabc';
-  var got = _.strSearchLog( input );
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = 'multiple matches a few letters - one line'
+  // var input = 
+  // {
+  //   src : 'abcabcabc',
+  //   ins : [ 'bc' ],
+  //   gray : 1
+  // }
+  // var expectedParcels = 
+  // [
+  //   {
+  //     match : 'bc',
+  //     groups : [],
+  //     tokenId : 0,
+  //     charsRangeLeft : [ 1, 3 ],
+  //     counter : 0,
+  //     input : 'abcabcabc',
+  //     charsRangeRight : [ 8, 6 ],
+  //     nearest : [ 'a', 'bc', 'abcabc' ],
+  //     log : '1 : abcabcabc',
+  //     sub : null
+  //   },
+  //   {
+  //     match : 'bc',
+  //     groups : [],
+  //     tokenId : 0,
+  //     charsRangeLeft : [ 4, 6 ],
+  //     counter : 1,
+  //     input : 'abcabcabc',
+  //     charsRangeRight : [ 5, 3 ],
+  //     nearest : [ 'abca', 'bc', 'abc' ],
+  //     log : '1 : abcabcabc',
+  //     sub : null
+  //   },
+  //   {
+  //     match : 'bc',
+  //     groups : [],
+  //     tokenId : 0,
+  //     charsRangeLeft : [ 7, 9 ],
+  //     counter : 2,
+  //     input : 'abcabcabc',
+  //     charsRangeRight : [ 2, 0 ],
+  //     nearest : [ 'abcabca', 'bc', '' ],
+  //     log : '1 : abcabcabc',
+  //     sub : null
+  //   }
+  // ]
+  // var expectedLog = '1 : abcabcabc\n1 : abcabcabc\n1 : abcabcabc';
+  // var got = _.strSearchLog( input );
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  /* */
+  // /* */
 
-  test.case = 'src - empty string, ins - regexp for empty strings';
-  var input = { src : '', ins : /(?:)/g, onTokenize : _.strTokenizeJs, excludingTokens : 'name', gray : 1  };
-  var got = _.strSearchLog( input );
-  var expectedParcels = [];
-  var expectedLog = '';
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog )
+  // test.case = 'src - empty string, ins - regexp for empty strings';
+  // var input = { src : '', ins : /(?:)/g, onTokenize : _.strTokenizeJs, excludingTokens : 'name', gray : 1  };
+  // var got = _.strSearchLog( input );
+  // var expectedParcels = [];
+  // var expectedLog = '';
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog )
 
-  test.case = 'src - string, ins - regexp for empty string';
-  var input = { src : 'abc', ins : /(?:)/g, onTokenize : _.strTokenizeJs, excludingTokens : 'name', gray : 1  };
-  var got = _.strSearchLog( input );
-  var expectedParcels = [];
-  var expectedLog = '';
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = 'src - string, ins - regexp for empty string';
+  // var input = { src : 'abc', ins : /(?:)/g, onTokenize : _.strTokenizeJs, excludingTokens : 'name', gray : 1  };
+  // var got = _.strSearchLog( input );
+  // var expectedParcels = [];
+  // var expectedLog = '';
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  test.case = 'src - empty string, ins - regexp';
-  var input = { src : '', ins : /x/, onTokenize : _.strTokenizeJs, excludingTokens : 'name', gray : 1 };
-  var got = _.strSearchLog( input );
-  console.log(got)
-  var expectedParcels = [];
-  var expectedLog = '';
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = 'src - empty string, ins - regexp';
+  // var input = { src : '', ins : /x/, onTokenize : _.strTokenizeJs, excludingTokens : 'name', gray : 1 };
+  // var got = _.strSearchLog( input );
+  // console.log(got)
+  // var expectedParcels = [];
+  // var expectedLog = '';
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
 
-  test.case = 'src - string, ins - regexp, not entry';
-  var input = { src : 'hello', ins : /x/, onTokenize : _.strTokenizeJs, excludingTokens : 'name', gray : 1 };
-  var got = _.strSearchLog( input );
-  var expectedParcels = [];
-  var expectedLog = '';
-  console.log(got)
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = 'src - string, ins - regexp, not entry';
+  // var input = { src : 'hello', ins : /x/, onTokenize : _.strTokenizeJs, excludingTokens : 'name', gray : 1 };
+  // var got = _.strSearchLog( input );
+  // var expectedParcels = [];
+  // var expectedLog = '';
+  // console.log(got)
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  test.close( 'one line' );
+  // test.close( 'one line' );
 
-  /* - */
+  // /* - */
 
-  test.open( 'multiple lines' );
+  // test.open( 'multiple lines' );
 
-  test.case = '1 letter match at first line - multiple lines'
-  var input = 
-  {
-    src : 'ab\ncd\nef\ngh',
-    ins : [ 'a' ],
-    gray : 1
-  }
-  var expectedParcels = 
-  [
-    {
-      'match' : 'a',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 0, 1 ],
-      'counter' : 0,
-      'input' : 'ab\ncd\nef\ngh',
-      'charsRangeRight' : [ 11, 10 ],
-      'nearest' : [ '', 'a', 'b\ncd' ],
-      'log' : '1 : ab\n2 : cd',
-      'sub' : null
-    }
-  ];
-  var expectedLog = '1 : ab\n2 : cd';
-  var got = _.strSearchLog( input );
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = '1 letter match at first line - multiple lines'
+  // var input = 
+  // {
+  //   src : 'ab\ncd\nef\ngh',
+  //   ins : [ 'a' ],
+  //   gray : 1
+  // }
+  // var expectedParcels = 
+  // [
+  //   {
+  //     'match' : 'a',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 0, 1 ],
+  //     'counter' : 0,
+  //     'input' : 'ab\ncd\nef\ngh',
+  //     'charsRangeRight' : [ 11, 10 ],
+  //     'nearest' : [ '', 'a', 'b\ncd' ],
+  //     'log' : '1 : ab\n2 : cd',
+  //     'sub' : null
+  //   }
+  // ];
+  // var expectedLog = '1 : ab\n2 : cd';
+  // var got = _.strSearchLog( input );
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
   test.case = '1 letter match at the middle line - multiple lines'
   var input = 
@@ -5207,309 +5207,309 @@ function strSearchLog( test )
   test.identical( got.parcels, expectedParcels );
   test.identical( got.log, expectedLog );
 
-  test.case = '1 letter match at the last line - multiple lines'
-  var input = 
-  {
-    src : 'ab\ncd\nef\ngh',
-    ins : [ 'g' ],
-    gray : 1
-  }
-  var expectedParcels = 
-  [
-    {
-      'match' : 'g',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 9, 10 ],
-      'counter' : 0,
-      'input' : 'ab\ncd\nef\ngh',
-      'charsRangeRight' : [ 2, 1 ],
-      'nearest' : [ 'ef\n', 'g', 'h' ],
-      'log' : '3 : ef\n4 : gh',
-      'sub' : null
-    }
-  ];
-  var expectedLog = '3 : ef\n4 : gh';
-  var got = _.strSearchLog( input );
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = '1 letter match at the last line - multiple lines'
+  // var input = 
+  // {
+  //   src : 'ab\ncd\nef\ngh',
+  //   ins : [ 'g' ],
+  //   gray : 1
+  // }
+  // var expectedParcels = 
+  // [
+  //   {
+  //     'match' : 'g',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 9, 10 ],
+  //     'counter' : 0,
+  //     'input' : 'ab\ncd\nef\ngh',
+  //     'charsRangeRight' : [ 2, 1 ],
+  //     'nearest' : [ 'ef\n', 'g', 'h' ],
+  //     'log' : '3 : ef\n4 : gh',
+  //     'sub' : null
+  //   }
+  // ];
+  // var expectedLog = '3 : ef\n4 : gh';
+  // var got = _.strSearchLog( input );
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  /* */
+  // /* */
 
-  test.case = 'a few letters match - multiple lines'
-  var input = 
-  {
-    src : 'ab\ncd\nef\ngh',
-    ins : [ 'cd' ],
-    gray : 1
-  }
-  var expectedParcels = 
-  [
-    {
-      'match' : 'cd',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 3, 5 ],
-      'counter' : 0,
-      'input' : 'ab\ncd\nef\ngh',
-      'charsRangeRight' : [ 2, 1 ],
-      'nearest' : [ 'ab\n', 'cd', '\nef' ],
-      'log' : '1 : ab\n2 : cd\n3 : ef',
-      'sub' : null
-    }
-  ];
-  var expectedLog = '1 : ab\n2 : cd\n3 : ef';
-  var got = _.strSearchLog( input );
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = 'a few letters match - multiple lines'
+  // var input = 
+  // {
+  //   src : 'ab\ncd\nef\ngh',
+  //   ins : [ 'cd' ],
+  //   gray : 1
+  // }
+  // var expectedParcels = 
+  // [
+  //   {
+  //     'match' : 'cd',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 3, 5 ],
+  //     'counter' : 0,
+  //     'input' : 'ab\ncd\nef\ngh',
+  //     'charsRangeRight' : [ 2, 1 ],
+  //     'nearest' : [ 'ab\n', 'cd', '\nef' ],
+  //     'log' : '1 : ab\n2 : cd\n3 : ef',
+  //     'sub' : null
+  //   }
+  // ];
+  // var expectedLog = '1 : ab\n2 : cd\n3 : ef';
+  // var got = _.strSearchLog( input );
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  test.case = 'a few letters match across lines - multiple lines'
-  var input = 
-  {
-    src : 'ab\ncd\nef\ngh',
-    ins : [ 'cd\nef' ],
-    gray : 1
-  }
-  var expectedParcels = 
-  [
-    {
-      'match' : 'cdef',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 3, 8 ],
-      'counter' : 0,
-      'input' : 'ab\ncd\nef\ngh',
-      'charsRangeRight' : [ 8, 3 ],
-      'nearest' : [ '', 'cd\nef', '' ],
-      'log' : '2 : cd\n3 : ef',
-      'sub' : null
-    }
-  ];
-  var expectedLog = '2 : cd\n3 : ef';
-  var got = _.strSearchLog( input );
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = 'a few letters match across lines - multiple lines'
+  // var input = 
+  // {
+  //   src : 'ab\ncd\nef\ngh',
+  //   ins : [ 'cd\nef' ],
+  //   gray : 1,
+  // }
+  // var expectedParcels = 
+  // [
+  //   {
+  //     'match' : 'cdef',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 3, 8 ],
+  //     'counter' : 0,
+  //     'input' : 'ab\ncd\nef\ngh',
+  //     'charsRangeRight' : [ 8, 3 ],
+  //     'nearest' : [ '', 'cd\nef', '' ],
+  //     'log' : '2 : cd\n3 : ef',
+  //     'sub' : null
+  //   }
+  // ];
+  // var expectedLog = '2 : cd\n3 : ef';
+  // var got = _.strSearchLog( input );
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  test.case = 'a few letters wrong match (without line break) across lines - multiple lines'
-  var input = 
-  {
-    src : 'ab\ncd\nef\ngh',
-    ins : [ 'cdef' ],
-    gray : 1
-  }
-  var expectedParcels = [];
-  var expectedLog = '';
-  var got = _.strSearchLog( input );
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = 'a few letters wrong match (without line break) across lines - multiple lines'
+  // var input = 
+  // {
+  //   src : 'ab\ncd\nef\ngh',
+  //   ins : [ 'cdef' ],
+  //   gray : 1
+  // }
+  // var expectedParcels = [];
+  // var expectedLog = '';
+  // var got = _.strSearchLog( input );
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  test.case = 'all letters match - multiple lines'
-  var input = 
-  {
-    src : 'ab\ncd\nef\ngh',
-    ins : [ 'ab\ncd\nef\ngh' ],
-    gray : 1
-  }
-  var expectedParcels = 
-  [
-    {
-      'match' : 'ab\ncd\nef\ngh',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 0, 11 ],
-      'counter' : 0,
-      'input' : 'ab\ncd\nef\ngh',
-      'charsRangeRight' : [ 11, 0 ],
-      'nearest' : [ '', 'ab\ncd\nef\ngh', '' ],
-      'log' : '1 : ab\n2 : cd\n3 : ef\n4 : gh',
-      'sub' : null
-    }
-  ];
-  var expectedLog = '1 : ab\n2 : cd\n3 : ef\n4 : gh';
-  var got = _.strSearchLog( input );
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = 'all letters match - multiple lines'
+  // var input = 
+  // {
+  //   src : 'ab\ncd\nef\ngh',
+  //   ins : [ 'ab\ncd\nef\ngh' ],
+  //   gray : 1
+  // }
+  // var expectedParcels = 
+  // [
+  //   {
+  //     'match' : 'ab\ncd\nef\ngh',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 0, 11 ],
+  //     'counter' : 0,
+  //     'input' : 'ab\ncd\nef\ngh',
+  //     'charsRangeRight' : [ 11, 0 ],
+  //     'nearest' : [ '', 'ab\ncd\nef\ngh', '' ],
+  //     'log' : '1 : ab\n2 : cd\n3 : ef\n4 : gh',
+  //     'sub' : null
+  //   }
+  // ];
+  // var expectedLog = '1 : ab\n2 : cd\n3 : ef\n4 : gh';
+  // var got = _.strSearchLog( input );
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  /* */
+  // /* */
 
-  test.case = 'a few matches on different lines - multiple lines'
-  var input = 
-  {
-    src : 'ab\nab\nef\nab',
-    ins : [ 'ab' ],
-    gray : 1
-  }
-  var expectedParcels = 
-  [
-    {      
-      match: 'ab',
-      groups: [],
-      tokenId: 0,
-      charsRangeLeft: [ 0, 2 ],     
-      counter: 0,
-      input: 'ab\nab\nef\nab',      
-      charsRangeRight: [ 11, 9 ],   
-      nearest: [ '', 'ab', '\nab' ],
-      log: '1 : ab\n2 : ab',
-      sub: null
-    },
-    {
-      match: 'ab',
-      groups: [],
-      tokenId: 0,
-      charsRangeLeft: [ 3, 5 ],
-      counter: 1,
-      input: 'ab\nab\nef\nab',
-      charsRangeRight: [ 8, 6 ],
-      nearest: [ 'ab\n', 'ab', '\nef' ],
-      log: '1 : ab\n2 : ab\n3 : ef',
-      sub: null
-    },
-    {
-      match: 'ab',
-      groups: [],
-      tokenId: 0,
-      charsRangeLeft: [ 9, 11 ],
-      counter: 2,
-      input: 'ab\nab\nef\nab',
-      charsRangeRight: [ 2, 0 ],
-      nearest: [ 'ef\n', 'ab', '' ],
-      log: '3 : ef\n4 : ab',
-      sub: null
-    }
-  ];
-  var expectedLog = '1 : ab\n2 : ab\n1 : ab\n2 : ab\n3 : ef\n3 : ef\n4 : ab';
-  var got = _.strSearchLog( input );
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = 'a few matches on different lines - multiple lines'
+  // var input = 
+  // {
+  //   src : 'ab\nab\nef\nab',
+  //   ins : [ 'ab' ],
+  //   gray : 1
+  // }
+  // var expectedParcels = 
+  // [
+  //   {      
+  //     match: 'ab',
+  //     groups: [],
+  //     tokenId: 0,
+  //     charsRangeLeft: [ 0, 2 ],     
+  //     counter: 0,
+  //     input: 'ab\nab\nef\nab',      
+  //     charsRangeRight: [ 11, 9 ],   
+  //     nearest: [ '', 'ab', '\nab' ],
+  //     log: '1 : ab\n2 : ab',
+  //     sub: null
+  //   },
+  //   {
+  //     match: 'ab',
+  //     groups: [],
+  //     tokenId: 0,
+  //     charsRangeLeft: [ 3, 5 ],
+  //     counter: 1,
+  //     input: 'ab\nab\nef\nab',
+  //     charsRangeRight: [ 8, 6 ],
+  //     nearest: [ 'ab\n', 'ab', '\nef' ],
+  //     log: '1 : ab\n2 : ab\n3 : ef',
+  //     sub: null
+  //   },
+  //   {
+  //     match: 'ab',
+  //     groups: [],
+  //     tokenId: 0,
+  //     charsRangeLeft: [ 9, 11 ],
+  //     counter: 2,
+  //     input: 'ab\nab\nef\nab',
+  //     charsRangeRight: [ 2, 0 ],
+  //     nearest: [ 'ef\n', 'ab', '' ],
+  //     log: '3 : ef\n4 : ab',
+  //     sub: null
+  //   }
+  // ];
+  // var expectedLog = '1 : ab\n2 : ab\n1 : ab\n2 : ab\n3 : ef\n3 : ef\n4 : ab';
+  // var got = _.strSearchLog( input );
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  /* */
+  // /* */
 
-  test.case = 'src - multiline, excludingTokens - multiple lines';
-  var input = { src : 'f\nif\nabc\nin\nf', ins : /abc/g, onTokenize : _.strTokenizeJs, excludingTokens : 'name', gray : 1 };
-  var got = _.strSearchLog( input );
-  var expectedParcels = [];
-  var expectedLog = '';
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = 'src - multiline, excludingTokens - multiple lines';
+  // var input = { src : 'f\nif\nabc\nin\nf', ins : /abc/g, onTokenize : _.strTokenizeJs, excludingTokens : 'name', gray : 1 };
+  // var got = _.strSearchLog( input );
+  // var expectedParcels = [];
+  // var expectedLog = '';
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  test.case = 'ins - regexp, two entries, excludingTokens - multiple lines';
-  var input = { src : 'f\nif\nb\nif\nf', ins : /if+/, onTokenize : _.strTokenizeJs, excludingTokens : [ 'name', 'keyword' ], gray : 1 };
-  var got = _.strSearchLog( input );
-  var expectedParcels = [];
-  var expectedLog = '';
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = 'ins - regexp, two entries, excludingTokens - multiple lines';
+  // var input = { src : 'f\nif\nb\nif\nf', ins : /if+/, onTokenize : _.strTokenizeJs, excludingTokens : [ 'name', 'keyword' ], gray : 1 };
+  // var got = _.strSearchLog( input );
+  // var expectedParcels = [];
+  // var expectedLog = '';
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  test.case = 'ins - regexp, one entry - multiple lines';
-  var input = { src : 'f\nif\nb\nin\nf', ins : /b+/g, onTokenize : _.strTokenizeJs, excludingTokens : 'keyword', gray : 1 };
-  var got = _.strSearchLog( input );
-  var expectedParcels =
-  [
-    {
-      'match' : 'b',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 5, 6 ],
-      'counter' : 0,
-      'input' : 'f\nif\nb\nin\nf',
-      'charsRangeRight' : [ 6, 5 ],
-      'nearest' :  [ 'if\n', 'b', '\nin' ],
-      'log' : '2 : if\n3 : b\n4 : in',
-      'sub' : null
-    }
-  ];
-  var expectedLog = '2 : if\n3 : b\n4 : in';
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog )
+  // test.case = 'ins - regexp, one entry - multiple lines';
+  // var input = { src : 'f\nif\nb\nin\nf', ins : /b+/g, onTokenize : _.strTokenizeJs, excludingTokens : 'keyword', gray : 1 };
+  // var got = _.strSearchLog( input );
+  // var expectedParcels =
+  // [
+  //   {
+  //     'match' : 'b',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 5, 6 ],
+  //     'counter' : 0,
+  //     'input' : 'f\nif\nb\nin\nf',
+  //     'charsRangeRight' : [ 6, 5 ],
+  //     'nearest' :  [ 'if\n', 'b', '\nin' ],
+  //     'log' : '2 : if\n3 : b\n4 : in',
+  //     'sub' : null
+  //   }
+  // ];
+  // var expectedLog = '2 : if\n3 : b\n4 : in';
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog )
 
-  test.case = 'ins - array of regexps, has empty string, two entries of single ins - multiple lines';
-  var input = { src : 'f\nf\n[all]\nf\nf', ins : [ /[los]/, /o/, /x/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'parenthes' ], gray : 1 };
-  var got = _.strSearchLog( input );
-  var expectedParcels =
-  [
-    {
-      'match' : 'l',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 6, 7 ],
-      'counter' : 0,
-      'input' : 'f\nf\n[all]\nf\nf',
-      'charsRangeRight' : [ 7, 6 ],
-      'nearest' :  [ 'f\n[a', 'l', 'l]\nf' ],
-      'log' : '2 : f\n3 : [all]\n4 : f',
-      'sub' : null
-    },
-    {
-      'match' : 'l',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 7, 8 ],
-      'counter' : 1,
-      'input' : 'f\nf\n[all]\nf\nf',
-      'charsRangeRight' : [ 6, 5 ],
-      'nearest' :  [ 'f\n[al', 'l', ']\nf' ],
-      'log' : '2 : f\n3 : [all]\n4 : f',
-      'sub' : null
-    }
-  ];
-  var expectedLog = '2 : f\n3 : [all]\n4 : f\n2 : f\n3 : [all]\n4 : f';
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog );
+  // test.case = 'ins - array of regexps, has empty string, two entries of single ins - multiple lines';
+  // var input = { src : 'f\nf\n[all]\nf\nf', ins : [ /[los]/, /o/, /x/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'parenthes' ], gray : 1 };
+  // var got = _.strSearchLog( input );
+  // var expectedParcels =
+  // [
+  //   {
+  //     'match' : 'l',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 6, 7 ],
+  //     'counter' : 0,
+  //     'input' : 'f\nf\n[all]\nf\nf',
+  //     'charsRangeRight' : [ 7, 6 ],
+  //     'nearest' :  [ 'f\n[a', 'l', 'l]\nf' ],
+  //     'log' : '2 : f\n3 : [all]\n4 : f',
+  //     'sub' : null
+  //   },
+  //   {
+  //     'match' : 'l',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 7, 8 ],
+  //     'counter' : 1,
+  //     'input' : 'f\nf\n[all]\nf\nf',
+  //     'charsRangeRight' : [ 6, 5 ],
+  //     'nearest' :  [ 'f\n[al', 'l', ']\nf' ],
+  //     'log' : '2 : f\n3 : [all]\n4 : f',
+  //     'sub' : null
+  //   }
+  // ];
+  // var expectedLog = '2 : f\n3 : [all]\n4 : f\n2 : f\n3 : [all]\n4 : f';
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog );
 
-  test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
-  var input = { src : '\n(a)\n(a)\n', ins : [ /\(a\)/, /\(/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'square' ], gray : 1 };
-  var got = _.strSearchLog( input );
-  var expectedParcels =
-  [
-   {
-      'match' : '(a)',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 1, 4 ],
-      'counter' : 0,
-      'input' : '\n(a)\n(a)\n',
-      'charsRangeRight' : [ 8, 5 ],
-      'nearest' :  [ '\n', '(a)', '\n(a)' ],
-      'log' : '2: \n3 : (a)\n4 : (a)',
-      'sub' : null
-    },
-    {
-      'match' : '(a)',
-      'groups' : [],
-      'tokenId' : 0,
-      'charsRangeLeft' : [ 5, 8 ],
-      'counter' : 1,
-      'input' : '\n(a)\n(a)\n',
-      'charsRangeRight' : [ 4, 1 ],
-      'nearest' :  [ '(a)\n', '(a)', '\n' ],
-      'log' : '3 : (a)\n4 : (a)\n5 : \n',
-      'sub' : null
-    }
-  ];
-  var expectedLog = '2: \n3 : (a)\n4 : (a)\n3 : (a)\n4 : (a)\n5 : \n';
-  test.identical( got.parcels, expectedParcels );
-  test.identical( got.log, expectedLog )
+  // test.case = 'ins - array of regexps, ins[ 0 ] explore full src, no other entries should be';
+  // var input = { src : '\n(a)\n(a)\n', ins : [ /\(a\)/, /\(/ ], onTokenize : _.strTokenizeJs, excludingTokens : [ 'curly', 'square' ], gray : 1 };
+  // var got = _.strSearchLog( input );
+  // var expectedParcels =
+  // [
+  //   {
+  //     'match' : '(a)',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 1, 4 ],
+  //     'counter' : 0,
+  //     'input' : '\n(a)\n(a)\n',
+  //     'charsRangeRight' : [ 8, 5 ],
+  //     'nearest' :  [ '\n', '(a)', '\n(a)' ],
+  //     'log' : '2: \n3 : (a)\n4 : (a)',
+  //     'sub' : null
+  //   },
+  //   {
+  //     'match' : '(a)',
+  //     'groups' : [],
+  //     'tokenId' : 0,
+  //     'charsRangeLeft' : [ 5, 8 ],
+  //     'counter' : 1,
+  //     'input' : '\n(a)\n(a)\n',
+  //     'charsRangeRight' : [ 4, 1 ],
+  //     'nearest' :  [ '(a)\n', '(a)', '\n' ],
+  //     'log' : '3 : (a)\n4 : (a)\n5 : \n',
+  //     'sub' : null
+  //   }
+  // ];
+  // var expectedLog = '2 : \n3 : (a)\n4 : (a)\n3 : (a)\n4 : (a)\n5 : \n';
+  // test.identical( got.parcels, expectedParcels );
+  // test.identical( got.log, expectedLog )
 
-  test.close( 'multiple lines' );
-  
-  /* - */
+  // test.close( 'multiple lines' );
 
-  if( !Config.debug )
-  return;
+  // /* - */
 
-  test.open( 'throwing' );
+  // if( !Config.debug )
+  // return;
 
-  test.case = 'Wrong arguments : without arguments';
-  test.shouldThrowErrorSync( () => _.strSearchLog() );
+  // test.open( 'throwing' );
 
-  test.case = 'Wrong arguments : wrong type of argument';
-  test.shouldThrowErrorSync( () => _.strSearchLog( 13 ) );
+  // test.case = 'Wrong arguments : without arguments';
+  // test.shouldThrowErrorSync( () => _.strSearchLog() );
 
-  test.case = 'Wrong arguments : extra arguments';
-  test.shouldThrowErrorSync( () => _.strSearchLog( { src : 'abcabcabc', ins : [ 'bc' ], gray : 1 }, 13 ) );
+  // test.case = 'Wrong arguments : wrong type of argument';
+  // test.shouldThrowErrorSync( () => _.strSearchLog( 13 ) );
 
-  test.close( 'throwing' );
+  // test.case = 'Wrong arguments : extra arguments';
+  // test.shouldThrowErrorSync( () => _.strSearchLog( { src : 'abcabcabc', ins : [ 'bc' ], gray : 1 }, 13 ) );
+
+  // test.close( 'throwing' );
 
 }
 
