@@ -3209,7 +3209,7 @@ function strTable( o )
       for( let k = lengthOf( o.ncToken )-1 ; k >= 0 ; k-- )
       o.result += o.ttlToken;
       // for( let k = 0 ; k < o.colWidth[ j ] ; k++ )
-      for( let k = o.colWidth[ j ] ; k >= 0 ; k-- )
+      for( let k = o.colWidth[ j ]-1 ; k >= 0 ; k-- )
       o.result += o.tToken;
     }
     border( o.rtToken );
@@ -3261,7 +3261,7 @@ function strTable( o )
       for( let k = lengthOf( o.ncToken )-1 ; k >= 0 ; k-- )
       o.result += o.btlToken;
       // for( let k = 0 ; k < o.colWidth[ j ] ; k++ )
-      for( let k = o.colWidth[ j ] ; k >= 0 ; k-- )
+      for( let k = o.colWidth[ j ]-1 ; k >= 0 ; k-- )
       o.result += o.bToken;
     }
     border( o.rbToken );
