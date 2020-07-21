@@ -9286,10 +9286,10 @@ e	f`;
 
   test.case = 'style : doubleBorder';
   var exp =
-`╔═╤═╤═╗
-║a│b│c║
-║d│e│f║
-╚═╧═╧═╝`;
+`╔═══╗
+║abc║
+║def║
+╚═══╝`;
   var data = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
   var dim = [ 2, 3 ];
   var style = 'doubleBorder';
@@ -9300,10 +9300,10 @@ e	f`;
 
   test.case = 'style : doubleBorder, diff width';
   var exp =
-`╔══╤═══╤══════╗
-║ a│ b │c12345║
-║d1│e12│  f1  ║
-╚══╧═══╧══════╝`;
+`╔═══════════╗
+║ a b c12345║
+║d1e12  f1  ║
+╚═══════════╝`;
   var data = [ 'a', 'b', 'c12345', 'd1', 'e12', 'f1' ];
   var dim = [ 2, 3 ];
   var style = 'doubleBorder';
@@ -9314,13 +9314,13 @@ e	f`;
 
   test.case = 'style : doubleBorder, diff width, diff height';
   var exp =
-`╔═══╤═══╤══════╗
-║ a │ b │c12345║
-║aa2│   │      ║
-║   │ e │      ║
-║ d1│e12│  f1  ║
-║   │ e │      ║
-╚═══╧═══╧══════╝`;
+`╔════════════╗
+║ a  b c12345║
+║aa2         ║
+║    e       ║
+║ d1e12  f1  ║
+║    e       ║
+╚════════════╝`;
   var data = [ 'a\naa2', 'b', 'c12345', 'd1', 'e\ne12\ne', 'f1' ];
   var dim = [ 2, 3 ];
   var style = 'doubleBorder';
@@ -9340,14 +9340,14 @@ function strTableOptionsColWidthRowHeight( test )
 
   test.case = 'more';
   var exp =
-`╔══╤══╤══╗
-║  │  │  ║
-║ a│ b│ c║
-║  │  │  ║
-║  │  │  ║
-║ d│ e│ f║
-║  │  │  ║
-╚══╧══╧══╝`;
+`╔══════╗
+║      ║
+║ a b c║
+║      ║
+║      ║
+║ d e f║
+║      ║
+╚══════╝`;
   var data = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
   var dim = [ 2, 3 ];
   var style = 'doubleBorder';
@@ -9360,10 +9360,10 @@ function strTableOptionsColWidthRowHeight( test )
 
   test.case = 'less width';
   var exp =
-`╔═══╤═══╤═══╗
-║a19│b19│c19║
-║ d1│ e1│ f1║
-╚═══╧═══╧═══╝`;
+`╔═════════╗
+║a19b19c19║
+║ d1 e1 f1║
+╚═════════╝`;
   var data = [ 'a123456789', 'b123456789', 'c123456789', 'd1', 'e1', 'f1' ];
   var dim = [ 2, 3 ];
   var style = 'doubleBorder';
@@ -9376,12 +9376,12 @@ function strTableOptionsColWidthRowHeight( test )
 
   test.case = 'less height';
   var exp =
-`╔═══╤═══╤═══╗
-║a12│b12│c12║
-║   │   │   ║
-║ d1│ e1│ f1║
-║...│...│...║
-╚═══╧═══╧═══╝`;
+`╔═════════╗
+║a12b12c12║
+║         ║
+║ d1 e1 f1║
+║.........║
+╚═════════╝`;
   var data = [ 'a12', 'b12', 'c12', 'd1\nd2\nd3', 'e1\ne2\ne3', 'f1\nf2\nf3' ];
   var dim = [ 2, 3 ];
   var style = 'doubleBorder';
@@ -9394,17 +9394,572 @@ function strTableOptionsColWidthRowHeight( test )
 
   test.case = 'less height with auto width';
   var exp =
-`╔═╤═╤═╗
-║a│b│c║
-║ │ │ ║
-║d│e│f║
-║.│.│.║
-╚═╧═╧═╝`;
+`╔═══╗
+║abc║
+║   ║
+║def║
+║...║
+╚═══╝`;
   var data = [ 'a', 'b', 'c', 'd\nd\nd', 'e\ne\ne', 'f\nf\nf' ];
   var dim = [ 2, 3 ];
   var style = 'doubleBorder';
   var rowHeight = 2;
   var got = _.strTable({ data, dim, style, rowHeight });
+  test.identical( got.result, exp );
+
+  /* */
+
+}
+
+//
+
+function strTableOptionsOnLength( test )
+{
+
+  /* */
+
+  test.case = 'more';
+  var exp =
+`╔═══╗
+║a13bc║
+║def1313║
+╚═══╝`;
+  var dim = [ 2, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313' ];
+  var style = 'doubleBorder';
+  var got = _.strTable({ data, dim, style, onLength });
+  test.identical( got.result, exp );
+
+  /* */
+
+  function onLength( src )
+  {
+    src = src.replace( /13/mg, '' );
+    return src.length;
+  }
+
+}
+
+//
+
+function strTableOptionsSplits( test )
+{
+
+  /* */
+
+  test.case = 'default';
+  var exp =
+`╔═════════╗
+║a13b  c  ║
+║ d ef1313║
+║ g h  i  ║
+║ k       ║
+╚═════════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var got = _.strTable({ data, dim, style, colSplits : 0 });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'colSplits : 0';
+  var exp =
+`╔═════════╗
+║a13b  c  ║
+║ d ef1313║
+║ g h  i  ║
+║ k       ║
+╚═════════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var got = _.strTable({ data, dim, style, colSplits : 0 });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'colSplits : 1';
+  var exp =
+`╔═══╤═╤═════╗
+║a13│b│  c  ║
+║ d │e│f1313║
+║ g │h│  i  ║
+║ k │ │     ║
+╚═══╧═╧═════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var got = _.strTable({ data, dim, style, colSplits : 1 });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'colSplits : [ 0 ]';
+  var exp =
+`╔═══╤══════╗
+║a13│b  c  ║
+║ d │ef1313║
+║ g │h  i  ║
+║ k │      ║
+╚═══╧══════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var got = _.strTable({ data, dim, style, colSplits : [ 0 ] });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'colSplits : [ 1 ]';
+  var exp =
+`╔════╤═════╗
+║a13b│  c  ║
+║ d e│f1313║
+║ g h│  i  ║
+║ k  │     ║
+╚════╧═════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var got = _.strTable({ data, dim, style, colSplits : [ 1 ] });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'rowSplits : 0';
+  var exp =
+`╔═════════╗
+║a13b  c  ║
+║ d ef1313║
+║ g h  i  ║
+║ k       ║
+╚═════════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var got = _.strTable({ data, dim, style, rowSplits : 0 });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'rowSplits : 1';
+  var exp =
+`╔═════════╗
+║a13b  c  ║
+╟─────────╢
+║ d ef1313║
+╟─────────╢
+║ g h  i  ║
+╟─────────╢
+║ k       ║
+╚═════════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var got = _.strTable({ data, dim, style, rowSplits : 1 });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'rowSplits : [ 0 ]';
+  var exp =
+`╔═════════╗
+║a13b  c  ║
+╟─────────╢
+║ d ef1313║
+║ g h  i  ║
+║ k       ║
+╚═════════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var got = _.strTable({ data, dim, style, rowSplits : [ 0 ] });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'rowSplits : [ 1 ]';
+  var exp =
+`╔═════════╗
+║a13b  c  ║
+║ d ef1313║
+╟─────────╢
+║ g h  i  ║
+║ k       ║
+╚═════════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var got = _.strTable({ data, dim, style, rowSplits : [ 1 ] });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'rowSplits : [ 2 ]';
+  var exp =
+`╔═════════╗
+║a13b  c  ║
+║ d ef1313║
+║ g h  i  ║
+╟─────────╢
+║ k       ║
+╚═════════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var got = _.strTable({ data, dim, style, rowSplits : [ 2 ] });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'rowSplits : 1, colSplits : 1';
+  var exp =
+`╔═══╤═╤═════╗
+║a13│b│  c  ║
+╟───┼─┼─────╢
+║ d │e│f1313║
+╟───┼─┼─────╢
+║ g │h│  i  ║
+╟───┼─┼─────╢
+║ k │ │     ║
+╚═══╧═╧═════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var got = _.strTable({ data, dim, style, rowSplits : 1, colSplits : 1 });
+  test.identical( got.result, exp );
+
+  /* */
+
+}
+
+//
+
+function strTableOptionsHead( test )
+{
+
+  /* */
+
+  test.case = 'topHead';
+  var exp =
+`╔═══════════╗
+║head12  3  ║
+╟───────────╢
+║ a13 b  c  ║
+║  d  ef1313║
+║  g  h  i  ║
+║  k        ║
+╚═══════════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var topHead = [ 'head1', '2', '3' ];
+  var got = _.strTable({ data, dim, style, topHead });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'topHead, rowSplits : 1';
+  var exp =
+`╔═════╤═╤═════╗
+║head1│2│  3  ║
+╟─────┼─┼─────╢
+║ a13 │b│  c  ║
+║  d  │e│f1313║
+║  g  │h│  i  ║
+║  k  │ │     ║
+╚═════╧═╧═════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var topHead = [ 'head1', '2', '3' ];
+  var colSplits = 1;
+  var got = _.strTable({ data, dim, style, topHead, colSplits });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'topHead, colSplits : 1, rowSplits : [ 0 ]';
+  var exp =
+`╔═════╤═╤═════╗
+║head1│2│  3  ║
+╟─────┼─┼─────╢
+║ a13 │b│  c  ║
+╟─────┼─┼─────╢
+║  d  │e│f1313║
+║  g  │h│  i  ║
+║  k  │ │     ║
+╚═════╧═╧═════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var topHead = [ 'head1', '2', '3' ];
+  var colSplits = 1;
+  var rowSplits = [ 0 ];
+  var got = _.strTable({ data, dim, style, topHead, colSplits, rowSplits });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'bottomHead';
+  var exp =
+`╔═══════════╗
+║ a13 b  c  ║
+║  d  ef1313║
+║  g  h  i  ║
+║  k        ║
+╟───────────╢
+║head12  3  ║
+╚═══════════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var bottomHead = [ 'head1', '2', '3' ];
+  var got = _.strTable({ data, dim, style, bottomHead });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'bottomHead, rowSplits : 1';
+  var exp =
+`╔═════╤═╤═════╗
+║ a13 │b│  c  ║
+║  d  │e│f1313║
+║  g  │h│  i  ║
+║  k  │ │     ║
+╟─────┼─┼─────╢
+║head1│2│  3  ║
+╚═════╧═╧═════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var bottomHead = [ 'head1', '2', '3' ];
+  var colSplits = 1;
+  var got = _.strTable({ data, dim, style, bottomHead, colSplits });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'bottomHead, colSplits : 1, rowSplits : [ 2 ]';
+  var exp =
+`╔═════╤═╤═════╗
+║ a13 │b│  c  ║
+║  d  │e│f1313║
+║  g  │h│  i  ║
+╟─────┼─┼─────╢
+║  k  │ │     ║
+╟─────┼─┼─────╢
+║head1│2│  3  ║
+╚═════╧═╧═════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var bottomHead = [ 'head1', '2', '3' ];
+  var colSplits = 1;
+  var rowSplits = [ 2 ];
+  var got = _.strTable({ data, dim, style, bottomHead, colSplits, rowSplits });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'leftHead';
+  var exp =
+`╔═════╤═════════╗
+║head1│a13b  c  ║
+║  h2 │ d ef1313║
+║  h3 │ g h  i  ║
+║  h4 │ k       ║
+╚═════╧═════════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var leftHead = [ 'head1', 'h2', 'h3', 'h4' ];
+  var got = _.strTable({ data, dim, style, leftHead });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'leftHead, rowSplits : 1';
+  var exp =
+`╔═════╤═════════╗
+║head1│a13b  c  ║
+╟─────┼─────────╢
+║  h2 │ d ef1313║
+╟─────┼─────────╢
+║  h3 │ g h  i  ║
+╟─────┼─────────╢
+║  h4 │ k       ║
+╚═════╧═════════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var leftHead = [ 'head1', 'h2', 'h3', 'h4' ];
+  var rowSplits = 1;
+  var got = _.strTable({ data, dim, style, leftHead, rowSplits });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'leftHead, rowSplits : 1, colSplits : [ 0 ]';
+  var exp =
+`╔═════╤═══╤══════╗
+║head1│a13│b  c  ║
+╟─────┼───┼──────╢
+║  h2 │ d │ef1313║
+╟─────┼───┼──────╢
+║  h3 │ g │h  i  ║
+╟─────┼───┼──────╢
+║  h4 │ k │      ║
+╚═════╧═══╧══════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var leftHead = [ 'head1', 'h2', 'h3', 'h4' ];
+  var rowSplits = 1;
+  var colSplits = [ 0 ];
+  var got = _.strTable({ data, dim, style, leftHead, rowSplits, colSplits });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'rightHead';
+  var exp =
+`╔═════════╤═════╗
+║a13b  c  │head1║
+║ d ef1313│  h2 ║
+║ g h  i  │  h3 ║
+║ k       │  h4 ║
+╚═════════╧═════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var rightHead = [ 'head1', 'h2', 'h3', 'h4' ];
+  var got = _.strTable({ data, dim, style, rightHead });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'rightHead, rowSplits : 1';
+  var exp =
+`╔═════════╤═════╗
+║a13b  c  │head1║
+╟─────────┼─────╢
+║ d ef1313│  h2 ║
+╟─────────┼─────╢
+║ g h  i  │  h3 ║
+╟─────────┼─────╢
+║ k       │  h4 ║
+╚═════════╧═════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var rightHead = [ 'head1', 'h2', 'h3', 'h4' ];
+  var rowSplits = 1;
+  var got = _.strTable({ data, dim, style, rightHead, rowSplits });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'rightHead, rowSplits : 1, rowSplits : [ 0 ]';
+  var exp =
+`╔════╤═════╤═════╗
+║a13b│  c  │head1║
+╟────┼─────┼─────╢
+║ d e│f1313│  h2 ║
+╟────┼─────┼─────╢
+║ g h│  i  │  h3 ║
+╟────┼─────┼─────╢
+║ k  │     │  h4 ║
+╚════╧═════╧═════╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var rightHead = [ 'head1', 'h2', 'h3', 'h4' ];
+  var rowSplits = 1;
+  var colSplits = [ 1 ];
+  var got = _.strTable({ data, dim, style, rightHead, rowSplits, colSplits });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'all';
+  var exp =
+`╔══╤══════════╤═══╗
+║t0│t11t2  t3 │ t4║
+╟──┼──────────┼───╢
+║l1│a13 b  c  │r11║
+║l2│ d  ef1313│ r2║
+║l3│ g  h  i  │ r3║
+║l4│ k        │ r4║
+╟──┼──────────┼───╢
+║b0│ b1b2  b3 │ b4║
+╚══╧══════════╧═══╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var topHead = [ 't0', 't11', 't2', 't3', 't4' ];
+  var bottomHead = [ 'b0', 'b1', 'b2', 'b3', 'b4' ];
+  var leftHead = [ 'l0', 'l1', 'l2', 'l3', 'l4', 'l55' ];
+  var rightHead = [ 'r0', 'r11', 'r2', 'r3', 'r4', 'r5' ];
+  var got = _.strTable({ data, dim, style, topHead, bottomHead, leftHead, rightHead });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'all, rowSplits : 1 colSplits : 1';
+  var exp =
+`╔══╤═══╤══╤═════╤═══╗
+║t0│t11│t2│  t3 │ t4║
+╟──┼───┼──┼─────┼───╢
+║l1│a13│ b│  c  │r11║
+╟──┼───┼──┼─────┼───╢
+║l2│ d │ e│f1313│ r2║
+╟──┼───┼──┼─────┼───╢
+║l3│ g │ h│  i  │ r3║
+╟──┼───┼──┼─────┼───╢
+║l4│ k │  │     │ r4║
+╟──┼───┼──┼─────┼───╢
+║b0│ b1│b2│  b3 │ b4║
+╚══╧═══╧══╧═════╧═══╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var rowSplits = 1;
+  var colSplits = 1;
+  var topHead = [ 't0', 't11', 't2', 't3', 't4' ];
+  var bottomHead = [ 'b0', 'b1', 'b2', 'b3', 'b4' ];
+  var leftHead = [ 'l0', 'l1', 'l2', 'l3', 'l4', 'l55' ];
+  var rightHead = [ 'r0', 'r11', 'r2', 'r3', 'r4', 'r5' ];
+  var got = _.strTable({ data, dim, style, topHead, bottomHead, leftHead, rightHead, rowSplits, colSplits });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'all, rowSplits : [ 0, 2 ] colSplits : [ 0, 1 ]';
+  var exp =
+`╔══╤═══╤══╤═════╤═══╗
+║t0│t11│t2│  t3 │ t4║
+╟──┼───┼──┼─────┼───╢
+║l1│a13│ b│  c  │r11║
+╟──┼───┼──┼─────┼───╢
+║l2│ d │ e│f1313│ r2║
+║l3│ g │ h│  i  │ r3║
+╟──┼───┼──┼─────┼───╢
+║l4│ k │  │     │ r4║
+╟──┼───┼──┼─────┼───╢
+║b0│ b1│b2│  b3 │ b4║
+╚══╧═══╧══╧═════╧═══╝`;
+  var dim = [ 4, 3 ];
+  var data = [ 'a13', 'b', 'c', 'd', 'e', 'f1313', 'g', 'h', 'i', 'k', '', '' ];
+  var style = 'doubleBorder';
+  var rowSplits = [ 0, 2 ];
+  var colSplits = [ 0, 1 ];
+  var topHead = [ 't0', 't11', 't2', 't3', 't4' ];
+  var bottomHead = [ 'b0', 'b1', 'b2', 'b3', 'b4' ];
+  var leftHead = [ 'l0', 'l1', 'l2', 'l3', 'l4', 'l55' ];
+  var rightHead = [ 'r0', 'r11', 'r2', 'r3', 'r4', 'r5' ];
+  var got = _.strTable({ data, dim, style, topHead, bottomHead, leftHead, rightHead, rowSplits, colSplits });
   test.identical( got.result, exp );
 
   /* */
@@ -14535,8 +15090,12 @@ let Self =
     strMetricFormatBytes,
     strToBytes,
     strTimeFormat,
+
     strTableBasic, /* xxx qqq : extend */
     strTableOptionsColWidthRowHeight,
+    strTableOptionsOnLength,
+    strTableOptionsSplits,
+    strTableOptionsHead,
 
     // parse
 
