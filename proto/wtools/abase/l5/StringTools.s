@@ -3112,7 +3112,7 @@ function strTable( o )
   _.routineOptions( strTable, o );
   _.assert( arguments.length === 1 || arguments.length === 2, 'Expects single argument' );
   _.assert( o.data !== undefined );
-  _.assert( o.dim.length === 2 );
+  _.assert( _.longIs( o.dim ) && o.dim.length === 2 );
   _.assert( _.numbersAreAll( o.dim ) );
 
   if( _.strIs( o.style ) )
@@ -3133,7 +3133,10 @@ function strTable( o )
   o.cellAlign = o.cellAlign.map( ( cellAlign ) => cellAlign === null ? 'center' : cellAlign );
   o.cellPadding = scalarToVector( o.cellPadding, 4 );
   o.tablePadding = scalarToVector( o.tablePadding, 4 );
-  o.head = scalarToVector( o.head, 4 );
+  o.topHead = scalarToVector( o.topHead, o.dim[ 1 ] );
+  o.bottomHead = scalarToVector( o.bottomHead, o.dim[ 1 ] );
+  o.leftHead = scalarToVector( o.leftHead, o.dim[ 0 ] );
+  o.rightHead = scalarToVector( o.rightHead, o.dim[ 0 ] );
   if( o.onCellGet === null )
   o.onCellGet = onCellGetDefault;
   if( o.onCellDrawAfter === null )
@@ -3148,8 +3151,9 @@ function strTable( o )
   _.assert( o.cellAlign.length === 2 );
   _.assert( _.numbersAreAll( o.rowHeight ) );
   _.assert( _.numbersAreAll( o.colWidth ) );
-  _.assert( o.head.length === 4 );
-  _.assert( _.all( o.head, ( head ) => head === null ), 'not implemented' );
+  _.assert( _.all( o.bottomHead, ( h ) => h === null ), 'not implemented' );
+  _.assert( _.all( o.leftHead, ( h ) => h === null ), 'not implemented' );
+  _.assert( _.all( o.rightHead, ( h ) => h === null ), 'not implemented' );
   _.assert( o.cellAlign[ 0 ] === 'center' && o.cellAlign[ 1 ] === 'center', 'not implemented' );
   _.assert( o.cellPadding.length === 4 );
   _.assert( o.tablePadding.length === 4 );
@@ -3165,7 +3169,6 @@ function strTable( o )
     _.all( o.maxColWidth, ( n ) => n === null || _.numberIs( n ) )
     , () => 'Expects number or null {- o.maxColWidth -}'
   );
-
   _.assert
   (
     _.all( o.minRowHeight, ( n ) => n === null || _.numberIs( n ) )
@@ -3258,7 +3261,6 @@ function strTable( o )
 
   function linesDraw( it )
   {
-    debugger;
     it.lines.forEach( ( line, k ) =>
     {
       if( it.nlToken )
@@ -3268,7 +3270,6 @@ function strTable( o )
       it.result += line.join( '' );
       border( o.rToken );
     });
-    debugger;
     it.lines.splice( 0, it.lines.length );
   }
 
@@ -3309,7 +3310,9 @@ function strTable( o )
     }
     else
     {
-      return line;
+      debugger;
+      return _.strShorter( line, it.sz[ 1 ] );
+      // return line;
     }
 
     return line;
@@ -3415,7 +3418,7 @@ function strTable( o )
   function sideMapToArray( sideMap, length )
   {
     let result = _.dup( null, length );
-    _.assert( _.objectIs( sideMap ) ); debugger;
+    _.assert( _.objectIs( sideMap ) );
     _.assert( 0, 'not tested' );
     for( let s in sideMap )
     {
@@ -3450,7 +3453,10 @@ strTable.defaults =
   result : '',
   data : null,
   dim : null,
-  head : null,
+  topHead : null,
+  bottomHead : null,
+  leftHead : null,
+  rightHead : null,
   rowHeight : null,
   minRowHeight : null,
   maxRowHeight : null,

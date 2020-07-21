@@ -8626,6 +8626,55 @@ e	f`;
 
 //
 
+function strTableOptionsColWidthRowHeight( test )
+{
+
+  /* */
+
+  test.case = 'more';
+  var exp =
+`╔══╤══╤══╗
+║  │  │  ║
+║ a│ b│ c║
+║  │  │  ║
+║  │  │  ║
+║ d│ e│ f║
+║  │  │  ║
+╚══╧══╧══╝`;
+  var data = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
+  var dim = [ 2, 3 ];
+  var style = 'doubleBorder';
+  var colWidth = 2;
+  var rowHeight = 3;
+  var got = _.strTable({ data, dim, style, colWidth, rowHeight });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'less';
+  var exp =
+`╔══╤══╤══╗
+║  │  │  ║
+║ a│ b│ c║
+║  │  │  ║
+║  │  │  ║
+║ d│ e│ f║
+║  │  │  ║
+╚══╧══╧══╝`;
+  var data = [ 'a123456789', 'b123456789', 'c123456789', 'd1\nd2\nd3', 'e1\ne2\ne3', 'f1\nf2\nf3' ];
+  var dim = [ 2, 3 ];
+  var style = 'doubleBorder';
+  var colWidth = 3;
+  var rowHeight = 2;
+  var got = _.strTable({ data, dim, style, colWidth, rowHeight });
+  test.identical( got.result, exp );
+
+  /* */
+
+}
+
+//
+
 function strTimeFormat( test )
 {
 
@@ -13746,6 +13795,7 @@ let Self =
     strToBytes,
     strTimeFormat,
     strTableBasic, /* xxx qqq : extend */
+    strTableOptionsColWidthRowHeight,
 
     // parse
 
