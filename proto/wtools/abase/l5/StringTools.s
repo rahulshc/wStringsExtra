@@ -3209,7 +3209,7 @@ function strTable( o )
       for( let k = lengthOf( o.ncToken )-1 ; k >= 0 ; k-- )
       o.result += o.ttlToken;
       // for( let k = 0 ; k < o.colWidth[ j ] ; k++ )
-      for( let k = o.colWidth[ j ] ; k >= 0 ; k++ )
+      for( let k = o.colWidth[ j ] ; k >= 0 ; k-- )
       o.result += o.tToken;
     }
     border( o.rtToken );
@@ -3261,7 +3261,7 @@ function strTable( o )
       for( let k = lengthOf( o.ncToken )-1 ; k >= 0 ; k-- )
       o.result += o.btlToken;
       // for( let k = 0 ; k < o.colWidth[ j ] ; k++ )
-      for( let k = o.colWidth[ j ] ; k >= 0 ; k++ )
+      for( let k = o.colWidth[ j ] ; k >= 0 ; k-- )
       o.result += o.bToken;
     }
     border( o.rbToken );
@@ -3288,7 +3288,7 @@ function strTable( o )
 
   function cellDraw( it )
   {
-    let sz = _.strLinesSize( it.cellOriginal );
+    let sz = _.strLinesSize({ src : it.cellOriginal, onLength : o.onLength });
 
     if( it.sz[ 0 ] > 1 )
     {
@@ -3322,9 +3322,10 @@ function strTable( o )
 
     _.assert( _.strIs( line ) );
 
-    if( line.length < it.sz[ 1 ] )
+    let l = lengthOf( line );
+    if( l < it.sz[ 1 ] )
     {
-      let hf = ( it.sz[ 1 ] - line.length ) / 2;
+      let hf = ( it.sz[ 1 ] - l ) / 2;
       return _.strDup( it.spaceToken, Math.ceil( hf ) ) + line + _.strDup( it.spaceToken, Math.floor( hf ) );
     }
     else
@@ -3334,7 +3335,7 @@ function strTable( o )
         src : line,
         limit : it.sz[ 1 ],
         onLength : o.onLength,
-        onEscape : o.onEscape,
+        // onEscape : o.onEscape,
       });
     }
 

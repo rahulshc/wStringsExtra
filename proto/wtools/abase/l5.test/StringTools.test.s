@@ -8646,8 +8646,12 @@ function strTableOptionsColWidthRowHeight( test )
   var style = 'doubleBorder';
   var colWidth = 2;
   var rowHeight = 3;
+  debugger;
   var got = _.strTable({ data, dim, style, colWidth, rowHeight });
+  debugger;
   test.identical( got.result, exp );
+
+  debugger; return; xxx
 
   /* */
 
