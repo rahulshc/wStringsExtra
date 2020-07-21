@@ -414,7 +414,7 @@ let strSearch = _.routineFromPreAndBody( strSearch_pre, strSearch_body );
 
 function strSearchLog_body( o )
 {
-
+  debugger
   _.assert( arguments.length === 1, 'Expects single argument' );
 
   let o2 = _.mapOnly( o, this.strSearch.defaults );
@@ -452,12 +452,11 @@ let strSearchLog = _.routineFromPreAndBody( strSearch_pre, strSearchLog_body );
 
 //
 
-function strSearchReplace( o )
+function strSearchReplace_body( o )
 {
   let result = '';
   let last = 0;
-
-  _.routineOptions( strSearchReplace, o );
+  _.routineOptions( strSearchReplace_body, o );
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( o.src ) );
 
@@ -500,9 +499,10 @@ function strSearchReplace( o )
   result += o.src.slice( last, o.src.length );
 
   return result;
+
 }
 
-strSearchReplace.defaults =
+strSearchReplace_body.defaults =
 {
   src : null,
   parcels : null,
@@ -510,6 +510,8 @@ strSearchReplace.defaults =
   verbosity : 0,
   // direct : 1,
 }
+
+let strSearchReplace = _.routineFromPreAndBody( strSearch_pre, strSearchReplace_body );
 
 //
 
