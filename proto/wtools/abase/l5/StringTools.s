@@ -3144,8 +3144,15 @@ function strTable( o )
   if( o.onCellDraw === null )
   o.onCellDraw = cellDraw;
 
+  debugger;
   sizeEval();
 
+  _.assert( o.rowHeight.length === o.dim[ 0 ] );
+  _.assert( o.minRowHeight.length === o.dim[ 0 ] );
+  _.assert( o.maxRowHeight.length === o.dim[ 0 ] );
+  _.assert( o.colWidth.length === o.dim[ 1 ] );
+  _.assert( o.minColWidth.length === o.dim[ 1 ] );
+  _.assert( o.maxColWidth.length === o.dim[ 1 ] );
   _.assert( o.style === null || _.mapIs( o.style ) );
   _.assert( _.all( o.cellAlign, ( cellAlign ) => cellAlign === 'center' ), 'not implemented' );
   _.assert( o.cellAlign.length === 2 );
@@ -3198,9 +3205,11 @@ function strTable( o )
     for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
     {
       if( j > 0 && o.ncToken )
-      for( let k = 0 ; k < o.ncToken.length ; k++ )
+      // for( let k = 0 ; k < o.ncToken.length ; k++ )
+      for( let k = lengthOf( o.ncToken )-1 ; k >= 0 ; k-- )
       o.result += o.ttlToken;
-      for( let k = 0 ; k < o.colWidth[ j ] ; k++ )
+      // for( let k = 0 ; k < o.colWidth[ j ] ; k++ )
+      for( let k = o.colWidth[ j ] ; k >= 0 ; k++ )
       o.result += o.tToken;
     }
     border( o.rtToken );
@@ -3248,9 +3257,11 @@ function strTable( o )
     for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
     {
       if( j > 0 && o.ncToken )
-      for( let k = 0 ; k < o.ncToken.length ; k++ )
+      // for( let k = 0 ; k < o.ncToken.length ; k++ )
+      for( let k = lengthOf( o.ncToken )-1 ; k >= 0 ; k-- )
       o.result += o.btlToken;
-      for( let k = 0 ; k < o.colWidth[ j ] ; k++ )
+      // for( let k = 0 ; k < o.colWidth[ j ] ; k++ )
+      for( let k = o.colWidth[ j ] ; k >= 0 ; k++ )
       o.result += o.bToken;
     }
     border( o.rbToken );
@@ -3283,17 +3294,23 @@ function strTable( o )
     {
       let lines = _.strLinesSplit( it.cellOriginal );
       let hf = ( it.sz[ 0 ] - lines.length ) / 2;
-      let result = lines.map( ( line ) => cellLineDraw( line, it ) );
+      let result = _.filter_( null, lines, ( line, k ) =>
+      {
+        if( k < it.sz[ 0 ] - 1 || it.sz[ 0 ] === 1 )
+        return cellLineDraw( line, it );
+        else if( k === it.sz[ 0 ] - 1 )
+        return cellLineDraw( o.moreToken, it );
+      });
       for( let k = Math.floor( hf )-1 ; k >= 0 ; k-- )
       result.unshift( _.strDup( it.spaceToken, it.sz[ 1 ] ) );
       for( let k = Math.ceil( hf )-1 ; k >= 0 ; k-- )
       result.push( _.strDup( it.spaceToken, it.sz[ 1 ] ) );
       return result;
     }
-    else
-    {
-      cellLineDraw( it.cellOriginal, it );
-    }
+    // else
+    // {
+    //   cellLineDraw( it.cellOriginal, it );
+    // }
 
     return cellLineDraw( it.cellOriginal, it );;
   }
@@ -3303,6 +3320,8 @@ function strTable( o )
   function cellLineDraw( line, it )
   {
 
+    _.assert( _.strIs( line ) );
+
     if( line.length < it.sz[ 1 ] )
     {
       let hf = ( it.sz[ 1 ] - line.length ) / 2;
@@ -3310,12 +3329,15 @@ function strTable( o )
     }
     else
     {
-      debugger;
-      return _.strShorter( line, it.sz[ 1 ] );
-      // return line;
+      return _.strStrShort
+      ({
+        src : line,
+        limit : it.sz[ 1 ],
+        onLength : o.onLength,
+        onEscape : o.onEscape,
+      });
     }
 
-    return line;
   }
 
   /* */
@@ -3344,7 +3366,7 @@ function strTable( o )
     if( w[ j ] === undefined || w[ j ] === null )
     {
       o.colWidth[ j ] = null;
-      h[ j ] = 0;
+      w[ j ] = 0;
     }
 
     let i2d = [];
@@ -3430,6 +3452,14 @@ function strTable( o )
 
   /* */
 
+  function lengthOf( src )
+  {
+    let l = o.onLength ? o.onLength( src ) : src.length;
+    return l;
+  }
+
+  /* */
+
   function onCellGetDefault( i2d, o )
   {
     let iFlat = i2d[ 1 ] + i2d[ 0 ]*o.dim[ 1 ];
@@ -3469,6 +3499,8 @@ strTable.defaults =
   onCellGet : null,
   onCellDraw : null,
   onCellDrawAfter : null,
+  onLength : null,
+  // onEscape : null,
 
   style : 'borderless',
   withBorder : null,
@@ -3491,6 +3523,7 @@ strTable.defaults =
   vHeadToken : null,
   ncToken : null,
   nlToken : null,
+  moreToken : null,
 
 }
 
@@ -3504,6 +3537,7 @@ strTable.style.borderless =
   spaceToken : ' ',
   ncToken : '\t',
   nlToken : '\n',
+  moreToken : '...',
 }
 
 strTable.style.doubleBorder =
@@ -3528,6 +3562,7 @@ strTable.style.doubleBorder =
   vHeadToken : '│',
   ncToken : '│',
   nlToken : '\n',
+  moreToken : '...',
 }
 
 //

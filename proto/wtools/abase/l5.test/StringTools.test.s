@@ -8651,22 +8651,53 @@ function strTableOptionsColWidthRowHeight( test )
 
   /* */
 
-  test.case = 'less';
+  test.case = 'less width';
   var exp =
-`╔══╤══╤══╗
-║  │  │  ║
-║ a│ b│ c║
-║  │  │  ║
-║  │  │  ║
-║ d│ e│ f║
-║  │  │  ║
-╚══╧══╧══╝`;
-  var data = [ 'a123456789', 'b123456789', 'c123456789', 'd1\nd2\nd3', 'e1\ne2\ne3', 'f1\nf2\nf3' ];
+`╔═══╤═══╤═══╗
+║a19│b19│c19║
+║ d1│ e1│ f1║
+╚═══╧═══╧═══╝`;
+  var data = [ 'a123456789', 'b123456789', 'c123456789', 'd1', 'e1', 'f1' ];
+  var dim = [ 2, 3 ];
+  var style = 'doubleBorder';
+  var colWidth = 3;
+  var rowHeight = 1;
+  var got = _.strTable({ data, dim, style, colWidth, rowHeight });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'less height';
+  var exp =
+`╔═══╤═══╤═══╗
+║a12│b12│c12║
+║   │   │   ║
+║ d1│ e1│ f1║
+║...│...│...║
+╚═══╧═══╧═══╝`;
+  var data = [ 'a12', 'b12', 'c12', 'd1\nd2\nd3', 'e1\ne2\ne3', 'f1\nf2\nf3' ];
   var dim = [ 2, 3 ];
   var style = 'doubleBorder';
   var colWidth = 3;
   var rowHeight = 2;
   var got = _.strTable({ data, dim, style, colWidth, rowHeight });
+  test.identical( got.result, exp );
+
+  /* */
+
+  test.case = 'less height with auto width';
+  var exp =
+`╔═╤═╤═╗
+║a│b│c║
+║ │ │ ║
+║d│e│f║
+║.│.│.║
+╚═╧═╧═╝`;
+  var data = [ 'a', 'b', 'c', 'd\nd\nd', 'e\ne\ne', 'f\nf\nf' ];
+  var dim = [ 2, 3 ];
+  var style = 'doubleBorder';
+  var rowHeight = 2;
+  var got = _.strTable({ data, dim, style, rowHeight });
   test.identical( got.result, exp );
 
   /* */
