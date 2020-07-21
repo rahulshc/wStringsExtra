@@ -3195,6 +3195,42 @@ function strTable( o )
 
   /* */
 
+  function tableTopDraw( it )
+  {
+    border( o.ltToken );
+    if( o.withBorder && o.tToken )
+    for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
+    {
+      if( j > 0 && o.ncToken )
+      for( let k = lengthOf( o.ncToken )-1 ; k >= 0 ; k-- )
+      o.result += o.ttlToken;
+      for( let k = o.colWidth[ j ]-1 ; k >= 0 ; k-- )
+      o.result += o.tToken;
+    }
+    border( o.rtToken );
+    border( o.nlToken );
+  }
+
+  /* */
+
+  function tableBottomDraw( it )
+  {
+    border( o.nlToken );
+    border( o.lbToken );
+    if( o.withBorder && o.bToken )
+    for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
+    {
+      if( j > 0 && o.ncToken )
+      for( let k = lengthOf( o.ncToken )-1 ; k >= 0 ; k-- )
+      o.result += o.btlToken;
+      for( let k = o.colWidth[ j ]-1 ; k >= 0 ; k-- )
+      o.result += o.bToken;
+    }
+    border( o.rbToken );
+  }
+
+  /* */
+
   function tableDraw()
   {
     let it = o;
@@ -3202,20 +3238,7 @@ function strTable( o )
     it.sz = [];
     it.lines = [];
 
-    border( o.ltToken );
-    if( o.withBorder && o.tToken )
-    for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
-    {
-      if( j > 0 && o.ncToken )
-      // for( let k = 0 ; k < o.ncToken.length ; k++ )
-      for( let k = lengthOf( o.ncToken )-1 ; k >= 0 ; k-- )
-      o.result += o.ttlToken;
-      // for( let k = 0 ; k < o.colWidth[ j ] ; k++ )
-      for( let k = o.colWidth[ j ]-1 ; k >= 0 ; k-- )
-      o.result += o.tToken;
-    }
-    border( o.rtToken );
-    border( o.nlToken );
+    tableTopDraw( it );
 
     for( let i = 0 ; i < o.dim[ 0 ] ; i++ )
     {
@@ -3253,20 +3276,7 @@ function strTable( o )
       linesDraw( it );
     }
 
-    border( o.nlToken );
-    border( o.lbToken );
-    if( o.withBorder && o.bToken )
-    for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
-    {
-      if( j > 0 && o.ncToken )
-      // for( let k = 0 ; k < o.ncToken.length ; k++ )
-      for( let k = lengthOf( o.ncToken )-1 ; k >= 0 ; k-- )
-      o.result += o.btlToken;
-      // for( let k = 0 ; k < o.colWidth[ j ] ; k++ )
-      for( let k = o.colWidth[ j ]-1 ; k >= 0 ; k-- )
-      o.result += o.bToken;
-    }
-    border( o.rbToken );
+    tableBottomDraw();
 
   }
 
@@ -3298,7 +3308,7 @@ function strTable( o )
       let hf = ( it.sz[ 0 ] - lines.length ) / 2;
       let result = _.filter_( null, lines, ( line, k ) =>
       {
-        if( k < it.sz[ 0 ] - 1 || it.sz[ 0 ] === 1 )
+        if( k < it.sz[ 0 ] - 1 || it.sz[ 0 ] === 1 || ( k === it.sz[ 0 ] - 1 && sz[ 0 ] <= it.sz[ 0 ] ) )
         return cellLineDraw( line, it );
         else if( k === it.sz[ 0 ] - 1 )
         return cellLineDraw( o.moreToken, it );
@@ -3309,10 +3319,6 @@ function strTable( o )
       result.push( _.strDup( it.spaceToken, it.sz[ 1 ] ) );
       return result;
     }
-    // else
-    // {
-    //   cellLineDraw( it.cellOriginal, it );
-    // }
 
     return cellLineDraw( it.cellOriginal, it );;
   }
