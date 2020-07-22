@@ -3775,31 +3775,35 @@ strTable.defaults =
   leftHead : null,
   rightHead : null,
   rowHeight : null,
-  minRowHeight : null,
-  maxRowHeight : null,
+  minRowHeight : null, /* qqq : cover */
+  maxRowHeight : null, /* qqq : cover */
   colWidth : null,
-  minColWidth : null,
-  maxColWidth : null,
+  minColWidth : null, /* qqq : cover */
+  maxColWidth : null, /* qqq : cover */
   rowSplits : null,
   colSplits : null,
+  /* qqq : implement option tableWidth */
+  /* qqq : implement option tableHeight */
+  /* qqq : implement option minTableWidth */
+  /* qqq : implement option minTableHeight */
+  /* qqq : implement option maxTableWidth */
+  /* qqq : implement option maxTableHeight */
 
   result : '',
-  cellAlign : 'center',
-  cellPadding : null,
-  tablePadding : null,
+  cellAlign : 'center', /* qqq : implement and cover */
+  cellPadding : null, /* qqq : implement and cover */
+  tablePadding : null, /* qqq : implement and cover */
   onCellGet : null,
   onCellDraw : null,
-  onCellDrawAfter : null,
+  onCellDrawAfter : null, /* qqq : cover */
   onLength : null,
 
   style : 'borderless',
-  withBorder : null,
-  withColBorder : null,
-  withRowBorder : null,
+  withBorder : null, /* qqq : cover */
   spaceToken : null,
   ncToken : null,
   nlToken : null,
-  moreToken : null,
+  moreToken : null, /* qqq : cover */
 
   lThickToken : null,
   rThickToken : null,
@@ -3836,8 +3840,6 @@ strTable.style = Object.create( null );
 strTable.style.borderless =
 {
   withBorder : 0,
-  withColBorder : 0,
-  withRowBorder : 0,
   spaceToken : ' ',
   ncToken : '\t',
   nlToken : '\n',
@@ -3848,8 +3850,6 @@ strTable.style.doubleBorder =
 {
 
   withBorder : 1,
-  withColBorder : 1,
-  withRowBorder : 1,
   spaceToken : ' ',
   ncToken : '',
   nlToken : '\n',
@@ -3868,6 +3868,45 @@ strTable.style.doubleBorder =
   tTlikeThickToken : '╤',
   bTlikeThickToken : '╧',
   xThickToken : '╬',
+
+  lThinToken : '│',
+  rThinToken : '│',
+  tThinToken : '─',
+  bThinToken : '─',
+  ltThinToken : '┌',
+  rtThinToken : '┐',
+  lbThinToken : '└',
+  rbThinToken : '┘',
+  lTlikeThinToken : '├',
+  rTlikeThinToken : '┤',
+  tTlikeThinToken : '┬',
+  bTlikeThinToken : '┴',
+  xThinToken : '┼',
+
+}
+
+strTable.style.border =  /* qqq : cover style ( lightly ) */
+{
+
+  withBorder : 1,
+  spaceToken : ' ',
+  ncToken : '',
+  nlToken : '\n',
+  moreToken : '...',
+
+  lThickToken : '│',
+  rThickToken : '│',
+  tThickToken : '─',
+  bThickToken : '─',
+  ltThickToken : '┌',
+  rtThickToken : '┐',
+  lbThickToken : '└',
+  rbThickToken : '┘',
+  lTlikeThickToken : '├',
+  rTlikeThickToken : '┤',
+  tTlikeThickToken : '┬',
+  bTlikeThickToken : '┴',
+  xThickToken : '┼',
 
   lThinToken : '│',
   rThinToken : '│',
