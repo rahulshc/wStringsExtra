@@ -3114,8 +3114,7 @@ function strTable( o )
   _.routineOptions( strTable, o );
   _.assert( arguments.length === 1 || arguments.length === 2, 'Expects single argument' );
   _.assert( o.data !== undefined );
-  _.assert( _.longIs( o.dim ) && o.dim.length === 2 );
-  _.assert( _.numbersAreAll( o.dim ) );
+  _.assert( _.longIs( o.dim ) && o.dim.length === 2 && _.numbersAreAll( o.dim ), 'Expects defined {- o.dim -}' );
 
   if( _.strIs( o.style ) )
   {
