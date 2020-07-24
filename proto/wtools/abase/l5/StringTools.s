@@ -3927,172 +3927,172 @@ strTable.style.border =  /* qqq : cover style ( lightly ) */
 
 //
 
-function strTable_old( o )
-{
-  _.assert( arguments.length === 1, 'Expects single argument' );
-
-  if( !_.objectIs( o ) )
-  o = { data : o }
-  _.routineOptions( strTable_old,o );
-  _.assert( _.longIs( o.data ) );
-
-  if( typeof module !== 'undefined' )
-  {
-    if( !_.cliTable  )
-    try
-    {
-      _.cliTable = require( 'cli-table2' );
-    }
-    catch( err )
-    {
-    }
-  }
-
-  if( _.cliTable == undefined )
-  {
-    if( !o.silent )
-    throw _.err( 'version of strTable_old without support of cli-table2 is not implemented' );
-    else
-    return;
-  }
-
-  /* */
-
-  let isArrayOfArrays = true;
-  let maxLen = 0;
-  for( let i = 0; i < o.data.length; i++ )
-  {
-    if( !_.longIs( o.data[ i ] ) )
-    {
-      isArrayOfArrays = false;
-      break;
-    }
-
-    maxLen = Math.max( maxLen, o.data[ i ].length );
-  }
-
-  let onCellGet = strTable_old.onCellGet;
-  o.onCellGet = o.onCellGet || isArrayOfArrays ? onCellGet.ofArrayOfArray :  onCellGet.ofFlatArray ;
-  o.onCellAfter = o.onCellAfter || strTable_old.onCellAfter;
-
-  if( isArrayOfArrays )
-  {
-    o.rowsNumber = o.data.length;
-    o.colsNumber = maxLen;
-  }
-  else
-  {
-    _.assert( _.numberIs( o.rowsNumber ) && _.numberIs( o.colsNumber ) );
-  }
-
-  /* */
-
-  makeWidth( 'colWidths', o.colWidth, o.colsNumber );
-  makeWidth( 'colAligns', o.colAlign, o.colsNumber );
-  makeWidth( 'rowWidths', o.rowWidth, o.rowsNumber );
-  makeWidth( 'rowAligns', o.rowAlign, o.rowsNumber );
-
-  let tableOptions =
-  {
-    head : o.head,
-    colWidths : o.colWidths,
-    rowWidths : o.rowWidths,
-    colAligns : o.colAligns,
-    rowAligns : o.rowAligns,
-    style :
-    {
-      compact : !!o.compact,
-      'padding-left' : o.paddingLeft,
-      'padding-right' : o.paddingRight,
-    }
-  }
-
-  let table = new _.cliTable( tableOptions );
-
-  /* */
-
-  for( let y = 0; y < o.rowsNumber; y++ )
-  {
-    let row = [];
-    table.push( row );
-
-    for( let x = 0; x < o.colsNumber; x++ )
-    {
-      let index2d = [ y, x ];
-      let cellData = o.onCellGet( o.data, index2d, o );
-      let cellStr;
-
-      if( cellData === undefined )
-      cellData = cellStr = '';
-      else
-      cellStr = _.toStr( cellData, { wrap : 0, stringWrapper : '' } );
-
-      cellStr = o.onCellAfter( cellStr, index2d, o );
-      row.push( cellStr );
-    }
-  }
-
-  return table.toString();
-
-  /* */
-
-  function makeWidth( propertyName, def, len )
-  {
-    let property = o[ propertyName ];
-    let _property = _.longFill( [], def, len );
-    if( property )
-    {
-      _.assert( _.mapIs( property ) || _.longIs( property ) , 'routine expects colWidths/rowWidths property as Object or Array-Like' );
-      for( let k in property )
-      {
-        k = _.numberFrom( k );
-        if( k < len )
-        {
-          _.assert( _.numberIs( property[ k ] ) );
-          _property[ k ] = property[ k ];
-        }
-      }
-    }
-    o[ propertyName ] = _property;
-  }
-
-}
-
-strTable_old.defaults =
-{
-  data : null,
-  rowsNumber : null,
-  colsNumber : null,
-
-  head : null,
-
-  rowWidth : 5,
-  rowWidths : null,
-  rowAlign : 'center',
-  rowAligns : null,
-
-  colWidth : 5,
-  colWidths : null,
-  colAlign : 'center',
-  colAligns : null,
-
-  compact : 1,
-  silent : 1,
-
-  paddingLeft : 0,
-  paddingRight : 0,
-
-  onCellGet : null,
-  onCellAfter : null,
-}
-
-strTable_old.onCellGet =
-{
-  ofFlatArray : ( data, index2d, o  ) => data[ index2d[ 0 ] * o.colsNumber + index2d[ 1 ] ],
-  ofArrayOfArray : ( data, index2d, o  ) => data[ index2d[ 0 ] ][ index2d[ 1 ] ]
-}
-
-strTable_old.onCellAfter = ( cellStr, index2d, o ) => cellStr
+// function strTable_old( o )
+// {
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//
+//   if( !_.objectIs( o ) )
+//   o = { data : o }
+//   _.routineOptions( strTable_old,o );
+//   _.assert( _.longIs( o.data ) );
+//
+//   if( typeof module !== 'undefined' )
+//   {
+//     if( !_.cliTable  )
+//     try
+//     {
+//       _.cliTable = require( 'cli-table2' );
+//     }
+//     catch( err )
+//     {
+//     }
+//   }
+//
+//   if( _.cliTable == undefined )
+//   {
+//     if( !o.silent )
+//     throw _.err( 'version of strTable_old without support of cli-table2 is not implemented' );
+//     else
+//     return;
+//   }
+//
+//   /* */
+//
+//   let isArrayOfArrays = true;
+//   let maxLen = 0;
+//   for( let i = 0; i < o.data.length; i++ )
+//   {
+//     if( !_.longIs( o.data[ i ] ) )
+//     {
+//       isArrayOfArrays = false;
+//       break;
+//     }
+//
+//     maxLen = Math.max( maxLen, o.data[ i ].length );
+//   }
+//
+//   let onCellGet = strTable_old.onCellGet;
+//   o.onCellGet = o.onCellGet || isArrayOfArrays ? onCellGet.ofArrayOfArray :  onCellGet.ofFlatArray ;
+//   o.onCellAfter = o.onCellAfter || strTable_old.onCellAfter;
+//
+//   if( isArrayOfArrays )
+//   {
+//     o.rowsNumber = o.data.length;
+//     o.colsNumber = maxLen;
+//   }
+//   else
+//   {
+//     _.assert( _.numberIs( o.rowsNumber ) && _.numberIs( o.colsNumber ) );
+//   }
+//
+//   /* */
+//
+//   makeWidth( 'colWidths', o.colWidth, o.colsNumber );
+//   makeWidth( 'colAligns', o.colAlign, o.colsNumber );
+//   makeWidth( 'rowWidths', o.rowWidth, o.rowsNumber );
+//   makeWidth( 'rowAligns', o.rowAlign, o.rowsNumber );
+//
+//   let tableOptions =
+//   {
+//     head : o.head,
+//     colWidths : o.colWidths,
+//     rowWidths : o.rowWidths,
+//     colAligns : o.colAligns,
+//     rowAligns : o.rowAligns,
+//     style :
+//     {
+//       compact : !!o.compact,
+//       'padding-left' : o.paddingLeft,
+//       'padding-right' : o.paddingRight,
+//     }
+//   }
+//
+//   let table = new _.cliTable( tableOptions );
+//
+//   /* */
+//
+//   for( let y = 0; y < o.rowsNumber; y++ )
+//   {
+//     let row = [];
+//     table.push( row );
+//
+//     for( let x = 0; x < o.colsNumber; x++ )
+//     {
+//       let index2d = [ y, x ];
+//       let cellData = o.onCellGet( o.data, index2d, o );
+//       let cellStr;
+//
+//       if( cellData === undefined )
+//       cellData = cellStr = '';
+//       else
+//       cellStr = _.toStr( cellData, { wrap : 0, stringWrapper : '' } );
+//
+//       cellStr = o.onCellAfter( cellStr, index2d, o );
+//       row.push( cellStr );
+//     }
+//   }
+//
+//   return table.toString();
+//
+//   /* */
+//
+//   function makeWidth( propertyName, def, len )
+//   {
+//     let property = o[ propertyName ];
+//     let _property = _.longFill( [], def, len );
+//     if( property )
+//     {
+//       _.assert( _.mapIs( property ) || _.longIs( property ) , 'routine expects colWidths/rowWidths property as Object or Array-Like' );
+//       for( let k in property )
+//       {
+//         k = _.numberFrom( k );
+//         if( k < len )
+//         {
+//           _.assert( _.numberIs( property[ k ] ) );
+//           _property[ k ] = property[ k ];
+//         }
+//       }
+//     }
+//     o[ propertyName ] = _property;
+//   }
+//
+// }
+//
+// strTable_old.defaults =
+// {
+//   data : null,
+//   rowsNumber : null,
+//   colsNumber : null,
+//
+//   head : null,
+//
+//   rowWidth : 5,
+//   rowWidths : null,
+//   rowAlign : 'center',
+//   rowAligns : null,
+//
+//   colWidth : 5,
+//   colWidths : null,
+//   colAlign : 'center',
+//   colAligns : null,
+//
+//   compact : 1,
+//   silent : 1,
+//
+//   paddingLeft : 0,
+//   paddingRight : 0,
+//
+//   onCellGet : null,
+//   onCellAfter : null,
+// }
+//
+// strTable_old.onCellGet =
+// {
+//   ofFlatArray : ( data, index2d, o  ) => data[ index2d[ 0 ] * o.colsNumber + index2d[ 1 ] ],
+//   ofArrayOfArray : ( data, index2d, o  ) => data[ index2d[ 0 ] ][ index2d[ 1 ] ]
+// }
+//
+// strTable_old.onCellAfter = ( cellStr, index2d, o ) => cellStr
 
 //
 
@@ -4277,7 +4277,7 @@ let Extension =
   strJoinMap, /* qqq : cover it by tests | Dmytro : covered */
 
   strTable,
-  strTable_old,
+  // strTable_old,
   strsSort,
 
   strSimilarity, /* experimental */
