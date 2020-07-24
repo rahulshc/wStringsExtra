@@ -9329,6 +9329,23 @@ e	f`;
 
   /* */
 
+  test.case = 'different primitives';
+  var exp =
+`╔════╤════╤═══════════╤═════╗
+║ ab │  0 │     1     │false║
+╟────┼────┼───────────┼─────╢
+║true│null│Symbol(sym)│  13 ║
+╚════╧════╧═══════════╧═════╝`;
+  var data = [ 'ab', 0, 1, false, true, null, Symbol.for( 'sym' ), BigInt( 13 ) ];
+  var dim = [ 2, 4 ];
+  var style = 'doubleBorder';
+  var rowSplits = 1;
+  var colSplits = 1;
+  var got = _.strTable({ data, dim, style, rowSplits, colSplits });
+  test.identical( got.result, exp );
+
+  /* */
+
 }
 
 //

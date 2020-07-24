@@ -36,7 +36,6 @@ let _FunctionBind = Function.prototype.bind;
 let _ObjectToString = Object.prototype.toString;
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
 
-// let __assert = _.assert;
 let _arraySlice = _.longSlice;
 let strType = _.strType;
 
@@ -3502,7 +3501,8 @@ function strTable( o )
   function cellGet( i2d )
   {
     let e = o.onCellGet( i2d, o );
-    _.assert( _.strIs( e ) );
+    _.assert( _.primitiveIs( e ) && e !== undefined, () => `Cell ${i2d} is ${_.strType( e )}` );
+    e = String( e );
     return e;
   }
 
@@ -3511,7 +3511,7 @@ function strTable( o )
   function scalarToVector( src, length )
   {
     if( _.mapIs( src ) )
-    return sideMapToArray( sideMap )
+    return sideMapToArray( sideMap, length )
     return _.scalarToVector( src, length );
   }
 
@@ -3787,6 +3787,8 @@ strTable.defaults =
   /* qqq : implement option minTableHeight */
   /* qqq : implement option maxTableWidth */
   /* qqq : implement option maxTableHeight */
+
+  /* qqq : cover topHead and other options in vector form having value { left, right, top, bottom } */
 
   result : '',
   cellAlign : 'center', /* qqq : implement and cover */
@@ -4260,7 +4262,7 @@ let Extension =
   strTimeFormat,
 
   strCsvFrom, /* experimental */
-  strToDom, /* experimental */ // xxx : move it out
+  strToDom, /* experimental */ // qqq xxx : move it out
   strToConfig, /* experimental */
 
   // numberFromStrMaybe,
