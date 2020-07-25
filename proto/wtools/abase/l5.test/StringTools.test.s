@@ -8624,8 +8624,7 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
   var code =
 `
   /**
-   * @file File.js.
-   */
+   *    */
 `
 
   var expected =
@@ -8641,8 +8640,7 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
     },
     {
       match : `/**
-   * @file File.js.
-   */`,
+   *    */`,
       groups : [],
       tokenId : 0,
       charsRangeLeft : [ 3, 32 ],
