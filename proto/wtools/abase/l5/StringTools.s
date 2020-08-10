@@ -1,4 +1,5 @@
-(function _StringTools_s_() {
+(function _StringTools_s_()
+{
 
 'use strict';
 
@@ -91,7 +92,7 @@ function strCamelize( srcStr )
   let result = srcStr;
   let regexp = /\.\w|-\w|_\w|\/\w/g;
 
-  result = result.replace( regexp,function( match )
+  result = result.replace( regexp, function( match )
   {
     return match[ 1 ].toUpperCase();
   });
@@ -163,10 +164,10 @@ function strFilenameFor( o )
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.strIs( o.srcString ) );
-  _.routineOptions( strFilenameFor,o );
+  _.routineOptions( strFilenameFor, o );
 
   let regexp = /<|>|:|"|'|\/|\\|\||\&|\?|\*|\n|\s/g;
-  let result = o.srcString.replace( regexp,function( match )
+  let result = o.srcString.replace( regexp, function( match )
   {
     return o.delimeter;
   });
@@ -212,10 +213,10 @@ function strVarNameFor( o )
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.strIs( o.src ) );
-  _.routineOptions( strVarNameFor,o );
+  _.routineOptions( strVarNameFor, o );
 
   let regexp = /\.|\-|\+|<|>|:|"|'|\/|\\|\||\&|\?|\*|\n|\s/g;
-  let result = o.src.replace( regexp,function( match )
+  let result = o.src.replace( regexp, function( match )
   {
     return o.delimeter;
   });
@@ -483,7 +484,7 @@ function strSearchReplace_body( o )
     _.sure( _.strIs( parcel.sub ), 'Expects string::parcel.sub' );
     _.sure
     (
-         parcel.match === undefined
+      parcel.match === undefined
       || parcel.match === o.src.substring( o.src.length-parcel.charsRangeRight[ 0 ], o.src.length-parcel.charsRangeRight[ 1 ] )
       , () => `Match does not match:`
       + ` - ${parcel.match}`
@@ -520,7 +521,7 @@ function strFindAll( src, ins )
 
   if( arguments.length === 2 )
   {
-    o = { src : arguments[ 0 ] , ins : arguments[ 1 ] };
+    o = { src : arguments[ 0 ], ins : arguments[ 1 ] };
   }
   else if( arguments.length === 1 )
   {
@@ -1026,7 +1027,7 @@ function strReplaceAll( src, ins, sub )
   }
   else if( arguments.length === 2 )
   {
-    o = { src : arguments[ 0 ] , dictionary : arguments[ 1 ] };
+    o = { src : arguments[ 0 ], dictionary : arguments[ 1 ] };
   }
   else if( arguments.length === 1 )
   {
@@ -1270,7 +1271,7 @@ function strSorterParse( o )
 
     if( valueForPostfix !== undefined )
     {
-      parsed.push( [ field,valueForPostfix ] )
+      parsed.push( [ field, valueForPostfix ] )
     }
     else
     {
@@ -1388,40 +1389,40 @@ function strToBytes( src )
 
 //
 
- /**
- * @summary Contains metric prefixes.
- * @enum {} _metrics
- * @module Tools/base/l5/StringTools
- */
+/**
+* @summary Contains metric prefixes.
+* @enum {} _metrics
+* @module Tools/base/l5/StringTools
+*/
 
 let _metrics =
 {
 
-  '24'  : { name : 'yotta', symbol : 'Y' , word : 'septillion' },
-  '21'  : { name : 'zetta', symbol : 'Z' , word : 'sextillion' },
-  '18'  : { name : 'exa'  , symbol : 'E' , word : 'quintillion' },
-  '15'  : { name : 'peta' , symbol : 'P' , word : 'quadrillion' },
-  '12'  : { name : 'tera' , symbol : 'T' , word : 'trillion' },
-  '9'   : { name : 'giga' , symbol : 'G' , word : 'billion' },
-  '6'   : { name : 'mega' , symbol : 'M' , word : 'million' },
-  '3'   : { name : 'kilo' , symbol : 'k' , word : 'thousand' },
-  '2'   : { name : 'hecto', symbol : 'h' , word : 'hundred' },
-  '1'   : { name : 'deca' , symbol : 'da', word : 'ten' },
+  '24'  : { name : 'yotta', symbol : 'Y',  word : 'septillion' },
+  '21'  : { name : 'zetta', symbol : 'Z',  word : 'sextillion' },
+  '18'  : { name : 'exa',   symbol : 'E',  word : 'quintillion' },
+  '15'  : { name : 'peta',  symbol : 'P',  word : 'quadrillion' },
+  '12'  : { name : 'tera',  symbol : 'T',  word : 'trillion' },
+  '9'   : { name : 'giga',  symbol : 'G',  word : 'billion' },
+  '6'   : { name : 'mega',  symbol : 'M',  word : 'million' },
+  '3'   : { name : 'kilo',  symbol : 'k',  word : 'thousand' },
+  '2'   : { name : 'hecto', symbol : 'h',  word : 'hundred' },
+  '1'   : { name : 'deca',  symbol : 'da', word : 'ten' },
 
-  '0'   : { name : ''     , symbol : ''  , word : '' },
+  '0'   : { name : '',      symbol : '',   word : '' },
 
-  '-1'  : { name : 'deci' , symbol : 'd' , word : 'tenth' },
-  '-2'  : { name : 'centi', symbol : 'c' , word : 'hundredth' },
-  '-3'  : { name : 'milli', symbol : 'm' , word : 'thousandth' },
-  '-6'  : { name : 'micro', symbol : 'μ' , word : 'millionth' },
-  '-9'  : { name : 'nano' , symbol : 'n' , word : 'billionth' },
-  '-12' : { name : 'pico' , symbol : 'p' , word : 'trillionth' },
-  '-15' : { name : 'femto', symbol : 'f' , word : 'quadrillionth' },
-  '-18' : { name : 'atto' , symbol : 'a' , word : 'quintillionth' },
-  '-21' : { name : 'zepto', symbol : 'z' , word : 'sextillionth' },
-  '-24' : { name : 'yocto', symbol : 'y' , word : 'septillionth' },
+  '-1'  : { name : 'deci',  symbol : 'd',  word : 'tenth' },
+  '-2'  : { name : 'centi', symbol : 'c',  word : 'hundredth' },
+  '-3'  : { name : 'milli', symbol : 'm',  word : 'thousandth' },
+  '-6'  : { name : 'micro', symbol : 'μ',  word : 'millionth' },
+  '-9'  : { name : 'nano',  symbol : 'n',  word : 'billionth' },
+  '-12' : { name : 'pico',  symbol : 'p',  word : 'trillionth' },
+  '-15' : { name : 'femto', symbol : 'f',  word : 'quadrillionth' },
+  '-18' : { name : 'atto',  symbol : 'a',  word : 'quintillionth' },
+  '-21' : { name : 'zepto', symbol : 'z',  word : 'sextillionth' },
+  '-24' : { name : 'yocto', symbol : 'y',  word : 'septillionth' },
 
-  range : [ -24,+24 ],
+  'range' : [ -24, +24 ],
 
 }
 
@@ -1473,7 +1474,7 @@ let _metrics =
 /* qqq : cover routine strMetricFormat | Dmytro : covered */
 /* xxx : use it for time measurement */
 
-function strMetricFormat( number,o )
+function strMetricFormat( number, o )
 {
 
   if( _.strIs( number ) )
@@ -1486,14 +1487,14 @@ function strMetricFormat( number,o )
 
   _.assert( _.numberIs( number ), '"number" should be Number' );
   _.assert( arguments.length === 1 || arguments.length === 2 );
-  _.assert( _.objectIs( o ) || o === undefined,'Expects map {-o-}' );
+  _.assert( _.objectIs( o ) || o === undefined, 'Expects map {-o-}' );
   _.assert( _.numberIs( o.fixed ) );
   _.assert( o.fixed <= 20 );
 
   let original = number;
 
   if( o.dimensions !== 1 )
-  o.thousand = Math.pow( o.thousand,o.dimensions );
+  o.thousand = Math.pow( o.thousand, o.dimensions );
 
   if( number !== 0 )
   {
@@ -1519,7 +1520,8 @@ function strMetricFormat( number,o )
       while( Math.abs( number ) < 1 || !o.metrics[ String( o.metric ) ] )
       {
 
-        if( o.metric - o.divisor < o.metrics.range[ 0 ] ) break;
+        if( o.metric - o.divisor < o.metrics.range[ 0 ] )
+        break;
 
         number *= o.thousand;
         o.metric -= o.divisor;
@@ -1527,7 +1529,15 @@ function strMetricFormat( number,o )
       }
 
       if( number / o.thousand > 1 )
-      return strMetricFormat( number, { thousand : o.thousand, metric : o.metric, fixed : o.fixed, divisor : o.divisor, metrics : o.metrics, dimensions : o.dimensions } );
+      return strMetricFormat( number,
+      {
+        thousand : o.thousand,
+        metric : o.metric,
+        fixed : o.fixed,
+        divisor : o.divisor,
+        metrics : o.metrics,
+        dimensions : o.dimensions
+      });
 
     }
 
@@ -1589,7 +1599,7 @@ strMetricFormat.defaults =
  *
  */
 
-function strMetricFormatBytes( number,o )
+function strMetricFormatBytes( number, o )
 {
 
   o = o || Object.create( null );
@@ -1599,9 +1609,9 @@ function strMetricFormatBytes( number,o )
     thousand : 1024,
   };
 
-  _.mapSupplement( o,defaultOptions );
+  _.mapSupplement( o, defaultOptions );
 
-  return _.strMetricFormat( number,o ) + 'b';
+  return _.strMetricFormat( number, o ) + 'b';
 }
 
 //
@@ -1639,13 +1649,13 @@ function strTimeFormat( time )
 {
   _.assert( arguments.length === 1 );
   time = _.time.from( time );
-  let result = _.strMetricFormat( time*0.001,{ fixed : 3 } ) + 's';
+  let result = _.strMetricFormat( time * 0.001, { fixed : 3 } ) + 's';
   return result;
 }
 
 //
 
-function strCsvFrom( src,o )
+function strCsvFrom( src, o )
 {
 
   let result = '';
@@ -1658,7 +1668,7 @@ function strCsvFrom( src,o )
 
     o.header = [];
 
-    _.look( _.entityValueWithIndex( src,0 ),function( e,k,i )
+    _.look( _.entityValueWithIndex( src, 0 ), function( e, k, i )
     {
       o.header.push( k );
     });
@@ -1674,34 +1684,34 @@ function strCsvFrom( src,o )
 
   if( o.withHeader )
   {
-    _.look( o.header,function( e,k,i ){
+    _.look( o.header, function( e, k, i )
+    {
       result += e + o.cellSeparator;
     });
-    result = result.substr( 0,result.length-o.cellSeparator.length ) + o.rowSeparator;
+    result = result.substr( 0, result.length-o.cellSeparator.length ) + o.rowSeparator;
   }
 
-  _.each( src,function( row )
+  _.each( src, function( row )
   {
 
     let rowString = '';
 
-    _.each( o.header,function( key )
+    _.each( o.header, function( key )
     {
 
-      debugger;
-      let element = _.entityWithKeyRecursive( row,key );
+      let element = _.entityWithKeyRecursive( row, key );
       if( element === undefined ) element = '';
       element = String( element );
       if( element.indexOf( o.rowSeparator ) !== -1 )
-      element = _.strReplaceAll( element,o.rowSeparator,o.substitute );
+      element = _.strReplaceAll( element, o.rowSeparator, o.substitute );
       if( element.indexOf( o.cellSeparator ) !== -1 )
-      element = _.strReplaceAll( element,o.cellSeparator,o.substitute );
+      element = _.strReplaceAll( element, o.cellSeparator, o.substitute );
 
       rowString += element + o.cellSeparator;
 
     });
 
-    result += rowString.substr( 0,rowString.length-o.cellSeparator.length ) + o.rowSeparator;
+    result += rowString.substr( 0, rowString.length - o.cellSeparator.length ) + o.rowSeparator;
 
   });
 
@@ -1714,9 +1724,10 @@ function strToDom( xmlStr )
 {
 
   let xmlDoc = null;
-  let isIEParser = window.ActiveXObject || "ActiveXObject" in window;
+  let isIEParser = window.ActiveXObject || 'ActiveXObject' in window;
 
-  if( xmlStr === undefined ) return xmlDoc;
+  if( xmlStr === undefined )
+  return xmlDoc;
 
   if( window.DOMParser )
   {
@@ -1724,20 +1735,22 @@ function strToDom( xmlStr )
     let parser = new window.DOMParser();
     let parsererrorNS = null;
 
-    if( !isIEParser ) {
-
-      try {
-        parsererrorNS = parser.parseFromString( "INVALID", "text/xml" ).childNodes[0].namespaceURI;
+    if( !isIEParser )
+    {
+      try
+      {
+        parsererrorNS = parser.parseFromString( 'INVALID', 'text/xml' ).childNodes[ 0 ].namespaceURI;
       }
-      catch( err ) {
+      catch( err )
+      {
         parsererrorNS = null;
       }
     }
 
     try
     {
-      xmlDoc = parser.parseFromString( xmlStr, "text/xml" );
-      if( parsererrorNS!= null && xmlDoc.getElementsByTagNameNS( parsererrorNS, "parsererror" ).length > 0 )
+      xmlDoc = parser.parseFromString( xmlStr, 'text/xml' );
+      if( parsererrorNS !== null && xmlDoc.getElementsByTagNameNS( parsererrorNS, 'parsererror' ).length > 0 )
       {
         throw Error( 'Error parsing XML' );
         xmlDoc = null;
@@ -1751,12 +1764,12 @@ function strToDom( xmlStr )
   }
   else
   {
-    if( xmlStr.indexOf( "<?" )==0 )
+    if( xmlStr.indexOf( '<?' ) === 0 )
     {
-      xmlStr = xmlStr.substr( xmlStr.indexOf( "?>" ) + 2 );
+      xmlStr = xmlStr.substr( xmlStr.indexOf( '?>' ) + 2 );
     }
-    xmlDoc = new ActiveXObject( "Microsoft.XMLDOM" );
-    xmlDoc.async = "false";
+    xmlDoc = new ActiveXObject( 'Microsoft.XMLDOM' );
+    xmlDoc.async = 'false';
     xmlDoc.loadXML( xmlStr );
   }
 
@@ -1765,11 +1778,11 @@ function strToDom( xmlStr )
 
 //
 
-function strToConfig( src,o )
+function strToConfig( src, o )
 {
   let result = Object.create( null );
   if( !_.strIs( src ) )
-  throw _.err( '_.strToConfig :','require string' );
+  throw _.err( '_.strToConfig :', 'require string' );
 
   o = o || Object.create( null );
   if( o.delimeter === undefined ) o.delimeter = ' :';
@@ -1781,10 +1794,11 @@ function strToConfig( src,o )
 
     let row = splitted[ s ];
     let i = row.indexOf( o.delimeter );
-    if( i === -1 ) continue;
+    if( i === -1 )
+    continue;
 
-    let key = row.substr( 0,i ).trim();
-    let val = row.substr( i+1 ).trim();
+    let key = row.substr( 0, i ).trim();
+    let val = row.substr( i + 1 ).trim();
 
     result[ key ] = val;
 
@@ -3281,13 +3295,20 @@ function strTable( o )
     for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
     {
       for( let k = o.colWidth[ j ]-1 ; k >= 0 ; k-- )
-      o.result += o.tThickToken;
+      {
+        o.result += o.tThickToken;
+      }
+
       if( o.ncToken && j < o.dim[ 1 ] -1 )
       for( let k = lengthOf( o.ncToken )-1 ; k >= 0 ; k-- )
-      o.result += o.tThickToken;
+      {
+        o.result += o.tThickToken;
+      }
       if( o.lThinToken && colSplitHas( j ) )
       for( let k = lengthOf( o.lThinToken )-1 ; k >= 0 ; k-- )
-      o.result += o.tTlikeThickToken;
+      {
+        o.result += o.tTlikeThickToken;
+      }
     }
     border( o.rtThickToken );
     border( o.nlToken );
@@ -3303,14 +3324,20 @@ function strTable( o )
     for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
     {
       for( let k = o.colWidth[ j ]-1 ; k >= 0 ; k-- )
-      o.result += o.bThickToken;
+      {
+        o.result += o.bThickToken;
+      }
 
       if( o.ncToken && j < o.dim[ 1 ] -1 )
       for( let k = lengthOf( o.ncToken )-1 ; k >= 0 ; k-- )
-      o.result += o.bThickToken;
+      {
+        o.result += o.bThickToken;
+      }
       if( o.lThinToken && colSplitHas( j ) )
       for( let k = lengthOf( o.lThinToken )-1 ; k >= 0 ; k-- )
-      o.result += o.bTlikeThickToken;
+      {
+        o.result += o.bTlikeThickToken;
+      }
     }
     border( o.rbThickToken );
   }
@@ -3377,13 +3404,19 @@ function strTable( o )
     for( let j = 0 ; j < o.dim[ 1 ] ; j++ )
     {
       for( let k = o.colWidth[ j ]-1 ; k >= 0 ; k-- )
-      o.result += o.tThinToken;
+      {
+        o.result += o.tThinToken;
+      }
       if( o.ncToken && j < o.dim[ 1 ] )
       for( let k = lengthOf( o.ncToken )-1 ; k >= 0 ; k-- )
-      o.result += o.tThinToken;
+      {
+        o.result += o.tThinToken;
+      }
       if( o.lThinToken && colSplitHas( j ) )
       for( let k = lengthOf( o.lThinToken )-1 ; k >= 0 ; k-- )
-      o.result += o.xThinToken;
+      {
+        o.result += o.xThinToken;
+      }
     }
     border( o.rTlikeThickToken );
   }
@@ -3578,8 +3611,10 @@ function strTable( o )
         let val = o2.rowSplits;
         o2.rowSplits = [];
         if( val )
-        for( let i = 1 ; i < o.dim[ 0 ] ; i++ )
-        o2.rowSplits.push( i );
+        {
+          for( let i = 1 ; i < o.dim[ 0 ] ; i++ )
+          o2.rowSplits.push( i );
+        }
       }
       o2.rowSplits.unshift( 0 );
     }
@@ -3611,8 +3646,10 @@ function strTable( o )
         let val = o2.rowSplits;
         o2.rowSplits = [];
         if( val )
-        for( let i = 0 ; i < o.dim[ 0 ]-1 ; i++ )
-        o2.rowSplits.push( i );
+        {
+          for( let i = 0 ; i < o.dim[ 0 ]-1 ; i++ )
+          o2.rowSplits.push( i );
+        }
       }
       o2.rowSplits.push( o2.dim[ 0 ]-2 );
     }
@@ -3644,8 +3681,10 @@ function strTable( o )
         let val = o2.colSplits;
         o2.colSplits = [];
         if( val )
-        for( let i = 1 ; i < o.dim[ 1 ] ; i++ )
-        o2.colSplits.push( i );
+        {
+          for( let i = 1 ; i < o.dim[ 1 ] ; i++ )
+          o2.colSplits.push( i );
+        }
       }
       o2.colSplits.unshift( 0 );
     }
@@ -3677,8 +3716,10 @@ function strTable( o )
         let val = o2.colSplits;
         o2.colSplits = [];
         if( val )
-        for( let i = 0 ; i < o.dim[ 1 ]-1 ; i++ )
-        o2.colSplits.push( i );
+        {
+          for( let i = 0 ; i < o.dim[ 1 ]-1 ; i++ )
+          o2.colSplits.push( i );
+        }
       }
       o2.colSplits.push( o2.dim[ 1 ]-2 );
     }
@@ -4115,7 +4156,7 @@ function strsSort( srcs )
 
 //
 
-function strSimilarity( src1,src2 )
+function strSimilarity( src1, src2 )
 {
   _.assert( _.strIs( src1 ) );
   _.assert( _.strIs( src2 ) );
@@ -4123,8 +4164,8 @@ function strSimilarity( src1,src2 )
 
   debugger;
 
-  let spectres = [ _.strLattersSpectre( src1 ),_.strLattersSpectre( src2 ) ];
-  let result = _.strLattersSpectresSimilarity( spectres[ 0 ],spectres[ 1 ] );
+  let spectres = [ _.strLattersSpectre( src1 ), _.strLattersSpectre( src2 ) ];
+  let result = _.strLattersSpectresSimilarity( spectres[ 0 ], spectres[ 1 ] );
 
   return result;
 }
@@ -4175,16 +4216,14 @@ function strLattersSpectresSimilarity( src1, src2 )
   _.assert( src1.length === src2.length );
 
   for( let s = 0 ; s < src1.length-1 ; s++ )
-  {
-    result += Math.abs( src1[ s ] - src2[ s ] );
-  }
+  result += Math.abs( src1[ s ] - src2[ s ] );
 
   result = ( minl / maxl ) - ( 0.5 * result / maxl );
 
   if( result > 1 )
   debugger;
 
-  result = _.numberClamp( result, [ 0,1 ] );
+  result = _.numberClamp( result, [ 0, 1 ] );
 
   return result;
 }
