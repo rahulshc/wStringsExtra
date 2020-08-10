@@ -8643,7 +8643,7 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
    *    */`,
       groups : [],
       tokenId : 0,
-      charsRangeLeft : [ 3, 32 ],
+      charsRangeLeft : [ 3, 17 ],
       counter : 1,
       input : code,
       tokenName : 'comment/multiline'
@@ -8652,7 +8652,7 @@ for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
       match : '\n',
       groups : [],
       tokenId : 5,
-      charsRangeLeft : [ 32, 33 ],
+      charsRangeLeft : [ 17, 18 ],
       counter : 2,
       input : code,
       tokenName : 'whitespace'
