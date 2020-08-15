@@ -1334,11 +1334,11 @@ function jsonParse( o )
   _.assert( arguments.length === 1 );
   _.assert( !!_.Gdf );
 
-  let selected = _.gdf.select({ in : 'string', out : 'structure', ext : 'json' });
-  _.assert( selected.length === 1 );
-  let jsonParser = selected[ 0 ];
+  let jsonParser = _.gdf.selectSingleContext({ inFormat : 'string', outFormat : 'structure', ext : 'json' });
 
-  result = jsonParser.encode({ data : o.src });
+  debugger;
+  result = jsonParser.encode({ data : o.src }).out.data;
+  debugger;
 
   return result.data;
 }
