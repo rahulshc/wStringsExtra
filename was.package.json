@@ -1,1 +1,29 @@
-{"name":"wstringsextra","version":"0.3.227","description":"Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.","author":"Kostiantyn Wandalen <wanalen@01.school>","license":"MIT","main":"proto/wtools/abase/l5/StringTools.s","files":["proto/wtools/abase/l5","proto/wtools/Tools.s","out"],"scripts":{"test":"wtest .run 'proto/**' rapidity:-1","docgen":"wdocgen proto"},"repository":{"type":"git","url":"https://github.com/Wandalen/wStringsExtra.git"},"bugs":{"url":"https://github.com/Wandalen/wStringsExtra/issues"},"dependencies":{"wTools":"","wstringer":"","warraysorted":"","warraysparse":"","wblueprint":""},"devDependencies":{"wTesting":"","wstringsextra":"file:."},"keywords":["wTools","wStringsExtra"]}
+{
+  "name" : "wstringsextra",
+  "version" : "0.3.228",
+  "description" : "Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.",
+  "author" : "Kostiantyn Wandalen <wanalen@01.school>",
+  "license" : "MIT",
+  "main" : "proto/wtools/abase/l5/StringTools.s",
+  "files" : [ "proto/wtools/abase/l5", "proto/wtools/Tools.s", "out" ],
+  "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-1", "docgen" : "wdocgen proto" },
+  "repository" :
+  {
+    "type" : "git",
+    "url" : "https://github.com/Wandalen/wStringsExtra.git"
+  },
+  "bugs" :
+  {
+    "url" : "https://github.com/Wandalen/wStringsExtra/issues"
+  },
+  "dependencies" :
+  {
+    "wTools" : "",
+    "wstringer" : "",
+    "warraysorted" : "",
+    "warraysparse" : "",
+    "wblueprint" : ""
+  },
+  "devDependencies" : { "wTesting" : "", "wstringsextra" : "file:." },
+  "keywords" : [ "wTools", "wStringsExtra" ]
+}
