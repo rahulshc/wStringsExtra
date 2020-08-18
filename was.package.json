@@ -24,6 +24,6 @@
     "warraysparse" : "",
     "wblueprint" : ""
   },
-  "devDependencies" : { "wTesting" : "", "wstringsextra" : "file:." },
+  "devDependencies" : { "wTesting" : "", "eslint" : "7.1.0", "wstringsextra" : "file:." },
   "keywords" : [ "wTools", "wStringsExtra" ]
 }
