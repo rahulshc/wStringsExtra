@@ -295,7 +295,7 @@ function strHtmlEscape( str )
 
 //
 
-function strSearch_pre( routine, args )
+function strSearch_head( routine, args )
 {
   let o = args[ 0 ];
 
@@ -408,7 +408,7 @@ strSearch_body.defaults =
   excludingTokens : null,
 }
 
-let strSearch = _.routineFromPreAndBody( strSearch_pre, strSearch_body );
+let strSearch = _.routineUnite( strSearch_head, strSearch_body );
 
 //
 
@@ -448,7 +448,7 @@ strSearchLog_body.defaults =
   gray : 0,
 }
 
-let strSearchLog = _.routineFromPreAndBody( strSearch_pre, strSearchLog_body );
+let strSearchLog = _.routineUnite( strSearch_head, strSearchLog_body );
 
 //
 
@@ -511,7 +511,7 @@ strSearchReplace_body.defaults =
   // direct : 1,
 }
 
-let strSearchReplace = _.routineFromPreAndBody( strSearch_pre, strSearchReplace_body );
+let strSearchReplace = _.routineUnite( strSearch_head, strSearchReplace_body );
 
 //
 
@@ -858,7 +858,7 @@ function _strReplaceMapPrepare( o )
   _.assert( _.objectIs( o.dictionary ) || _.longIs( o.dictionary ) || o.dictionary === null );
   _.assert( ( _.longIs( o.ins ) && _.longIs( o.sub ) ) || ( o.ins === null && o.sub === null ) );
 
-  /* pre */
+  /* head */
 
   if( o.dictionary )
   {
