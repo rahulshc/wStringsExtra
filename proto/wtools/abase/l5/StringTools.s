@@ -2154,7 +2154,7 @@ function strStructureParse( o )
     if( !_.strIs( result ) )
     return result;
     let inside = _.strInsideOf( result, o.longLeftDelimeter, o.longRightDelimeter );
-    if( inside !== false )
+    if( inside !== undefined )
     {
       let splits = _.strSplit
       ({
