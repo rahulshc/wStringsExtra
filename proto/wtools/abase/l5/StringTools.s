@@ -2737,7 +2737,7 @@ function strRequestParse( o )
     return str;
 
     let inside = _.strInsideOf( str, '[', ']' );
-    if( inside === false )
+    if( inside === undefined )
     return str;
 
     let result = _.strSplit
