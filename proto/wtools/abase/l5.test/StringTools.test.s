@@ -15032,6 +15032,8 @@ let Self =
     strToBytes,
     strTimeFormat,
 
+    // table
+
     strTableBasic, /* xxx qqq : extend */
     strTableOptionsColWidthRowHeight,
     strTableOptionsOnLength,

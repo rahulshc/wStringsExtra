@@ -2540,7 +2540,7 @@ function strRequestParse( o )
   for( let c = 0 ; c < commands.length ; c++ )
   {
 
-    /* xxx : imlement parsing with template
+    /* xxx : imlement parsing with template routine _.lexParse()
 
       b ?** ':' ** e
       b ?** ':' ?** ':' ** e
