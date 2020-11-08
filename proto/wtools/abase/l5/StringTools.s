@@ -1013,6 +1013,7 @@ _strReplaceMapPrepare.defaults =
 
 /*
 qqq : extend coverage | Dmytro : extended
+qqq for Dmytro : bad! Does not work: `_.strReplaceAll( arg, quote, ( match, it ) => `
 */
 
 function strReplaceAll( src, ins, sub )
