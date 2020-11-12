@@ -14,7 +14,7 @@ if( typeof module !== 'undefined' )
 
 }
 
-let select = _testerGlobal_.wTools.select;
+let select = _globals_.testing.wTools.select;
 let _ = _global_.wTools;
 
 // --
