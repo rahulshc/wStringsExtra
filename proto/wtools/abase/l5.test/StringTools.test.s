@@ -6889,6 +6889,259 @@ function strReplaceAllDefaultOptions( test )
 
 //
 
+function strReplaceAllSubIsRoutine( test )
+{
+  test.open( 'search in empty string, should not replace anyway' );
+
+  test.case = 'src - empty string, ins - empty string';
+  var got = _.strReplaceAll( '', '', ( e, it ) => e + it.tokenId );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - regexp';
+  var got = _.strReplaceAll( '', /(?:)/, ( e, it ) => e + it.tokenId );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - array of strings';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( '', [ 'a', '' ], [ callback, callback ] );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - array of regexp';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( '', [ /(?:)/, /(?:)/ ], [ callback, callback ] );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - mixed regexp and string';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( '', [ '', /(?:)/ ], [ callback, callback ] );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty string, ins - dictionary';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( '', { '' : callback, 'a' : callback } );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.close( 'search in empty string, should not replace anyway' );
+
+  /* - */
+
+  test.open( 'no entry in string' );
+
+  test.case = 'ins - empty string';
+  var got = _.strReplaceAll( 'abcd', 'e', ( e, it ) => e + it.tokenId );
+  var expected = 'abcd';
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp';
+  var got = _.strReplaceAll( 'abcd', /e/, ( e, it ) => e + it.tokenId );
+  var expected = 'abcd';
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( 'abcd', [ 'e', 'f' ], [ callback, callback ] );
+  var expected = 'abcd';
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexp';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( 'abcd', [ /e/, /f/ ], [ callback, callback ] );
+  var expected = 'abcd';
+  test.identical( got, expected );
+
+  test.case = 'ins - mixed regexp and string';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( 'abcd', [ 'e', /f/ ], [ callback, callback ] );
+  var expected = 'abcd';
+  test.identical( got, expected );
+
+  test.case = 'ins - dictionary';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( 'abcd', { 'e' : callback, 'f' : callback } );
+  var expected = 'abcd';
+  test.identical( got, expected );
+
+  test.close( 'no entry in string' );
+
+  /* - */
+
+  test.open( 'single entry in string' );
+
+  test.case = 'ins - empty string';
+  var got = _.strReplaceAll( 'abcd', 'a', ( e, it ) => e + it.tokenId );
+  var expected = 'a0bcd';
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp';
+  var got = _.strReplaceAll( 'abcd', /b/, ( e, it ) => e + it.tokenId );
+  var expected = 'ab0cd';
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( 'abcd', [ 'e', 'c' ], [ callback, callback ] );
+  var expected = 'abc1d';
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexp';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( 'abcd', [ /e/, /d/ ], [ callback, callback ] );
+  var expected = 'abcd1';
+  test.identical( got, expected );
+
+  test.case = 'ins - mixed regexp and string';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( 'abcd', [ 'e', /c+/ ], [ callback, callback ] );
+  var expected = 'abc1d';
+  test.identical( got, expected );
+
+  test.case = 'ins - dictionary';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( 'abcd', { 'e' : callback, 'd' : callback } );
+  var expected = 'abcd1';
+  test.identical( got, expected );
+
+  test.close( 'single entry in string' );
+
+  /* - */
+
+  test.open( 'several entries of a token' );
+
+  test.case = 'ins - empty string';
+  var got = _.strReplaceAll( 'abca', 'a', ( e, it ) => e + it.tokenId );
+  var expected = 'a0bca0';
+  test.identical( got, expected );
+
+  test.case = 'ins - regexp';
+  var got = _.strReplaceAll( 'abcb', /b/, ( e, it ) => e + it.tokenId );
+  var expected = 'ab0cb0';
+  test.identical( got, expected );
+
+  test.case = 'ins - array of strings';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( 'abcc', [ 'e', 'c' ], [ callback, callback ] );
+  var expected = 'abc1c1';
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexp';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( 'dbcd', [ /e/, /d/ ], [ callback, callback ] );
+  var expected = 'd1bcd1';
+  test.identical( got, expected );
+
+  test.case = 'ins - mixed regexp and string';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( 'ccbcd', [ 'e', /c+/ ], [ callback, callback ] );
+  var expected = 'cc1bc1d';
+  test.identical( got, expected );
+
+  test.case = 'ins - dictionary';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( 'dbcd', { 'e' : callback, 'd' : callback } );
+  var expected = 'd1bcd1';
+  test.identical( got, expected );
+
+  test.close( 'several entries of a token' );
+
+  /* - */
+
+  test.open( 'several entries of different tokens' );
+
+  test.case = 'ins - array of strings';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( 'abcc', [ 'a', 'c' ], [ callback, callback ] );
+  var expected = 'a0bc1c1';
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexp';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( 'dbcd', [ /b+/, /d/ ], [ callback, callback ] );
+  var expected = 'd1b0cd1';
+  test.identical( got, expected );
+
+  test.case = 'ins - mixed regexp and string';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( 'ccbcd', [ 'b', /c+/ ], [ callback, callback ] );
+  var expected = 'cc1b0c1d';
+  test.identical( got, expected );
+
+  test.case = 'ins - dictionary';
+  var callback = ( e, it ) => e + it.tokenId;
+  var got = _.strReplaceAll( 'dbcd', { 'b' : callback, 'd' : callback } );
+  var expected = 'd1b0cd1';
+  test.identical( got, expected );
+
+  test.close( 'several entries of different tokens' );
+
+  /* - */
+
+  test.open( 'entry, should replace once' );
+
+  test.case = 'ins - array of strings';
+  var callback = ( e, it ) => it.tokenId;
+  var got = _.strReplaceAll( 'aaab', [ 'aa', 'b' ], [ callback, callback ] );
+  var expected = '0a1';
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexp';
+  var callback = ( e, it ) => it.tokenId;
+  var got = _.strReplaceAll( 'aaab', [ /b+/, /aa/ ], [ callback, callback ] );
+  var expected = '1a0';
+  test.identical( got, expected );
+
+  test.case = 'ins - mixed regexp and string';
+  var callback = ( e, it ) => it.tokenId;
+  var got = _.strReplaceAll( 'aaab', [ 'aa', /b+/ ], [ callback, callback ] );
+  var expected = '0a1';
+  test.identical( got, expected );
+
+  test.case = 'ins - dictionary';
+  var callback = ( e, it ) => it.tokenId;
+  var got = _.strReplaceAll( 'aaab', { 'aa' : callback, 'b' : callback } );
+  var expected = '0a1';
+  test.identical( got, expected );
+
+  test.close( 'entry, should replace once' );
+
+  /* - */
+
+  test.open( 'several entries, should be not recursion' );
+
+  test.case = 'ins - array of strings';
+  var callback = ( e, it ) => it.tokenId;
+  var got = _.strReplaceAll( 'aaaa', [ 'aa', '0' ], [ callback, callback ] );
+  var expected = '00';
+  test.identical( got, expected );
+
+  test.case = 'ins - array of regexp';
+  var callback = ( e, it ) => it.tokenId;
+  var got = _.strReplaceAll( 'aaaa', [ /1+/, /aa/ ], [ callback, callback ] );
+  var expected = '11';
+  test.identical( got, expected );
+
+  test.case = 'ins - mixed regexp and string';
+  var callback = ( e, it ) => it.tokenId;
+  var got = _.strReplaceAll( 'aaaa', [ 'aa', /0+/ ], [ callback, callback ] );
+  var expected = '00';
+  test.identical( got, expected );
+
+  test.case = 'ins - dictionary';
+  var callback = ( e, it ) => it.tokenId;
+  var got = _.strReplaceAll( 'aaaa', { 'aa' : callback, '1' : callback } );
+  var expected = '11';
+  test.identical( got, expected );
+
+  test.close( 'several entries, should be not recursion' );
+}
+
+//
+
 function strReplaceAllOptionJoining( test )
 {
   test.open( 'string' );
@@ -9165,8 +9418,8 @@ function strTableBasic( test )
 
   test.case = '2 arguments';
   var exp =
-`a	b	c
-d	e	f`;
+`a\tb\tc
+d\te\tf`;
   var data = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
   var dim = [ 2, 3 ];
   var got = _.strTable( data, dim );
@@ -9176,8 +9429,8 @@ d	e	f`;
 
   test.case = 'options map, dim : [ 2, 3 ]';
   var exp =
-`a	b	c
-d	e	f`;
+`a\tb\tc
+d\te\tf`;
   var data = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
   var dim = [ 2, 3 ];
   var got = _.strTable({ data, dim });
@@ -9187,9 +9440,9 @@ d	e	f`;
 
   test.case = 'options map, dim : [ 3, 2 ]';
   var exp =
-`a	b
-c	d
-e	f`;
+`a\tb
+c\td
+e\tf`;
   var data = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
   var dim = [ 3, 2 ];
   var got = _.strTable({ data, dim });
@@ -12110,7 +12363,7 @@ function strStructureParseOptionDepthForMixed( test )
 
 function strStructureParseOptionOnTerminal( test )
 {
-  var onTerminal = function( e )
+  var onTerminal = ( e ) =>
   {
     if( !_.strIs( e ) )
     return e;
@@ -15020,6 +15273,7 @@ let Self =
     tokensSyntaxFrom,
 
     strReplaceAllDefaultOptions,
+    strReplaceAllSubIsRoutine,
     strReplaceAllOptionJoining,
     strReplaceAllOptionOnUnknown,
     strTokenizeJs,
