@@ -111,8 +111,13 @@ function strToTitle( srcStr )
 
   result = result.replace( _strToTitleRegexp1, '' );
   result = result.replace( _strToTitleRegexp2, ' ' );
-  result = result.replace( _strToTitleRegexp3, function( match, g1, g2, offset )
+  result = result.replace( _strToTitleRegexp3, function( /* match, g1, g2, offset */ )
   {
+    let match = arguments[ 0 ];
+    let g1 = arguments[ 1 ];
+    let g2 = arguments[ 2 ];
+    let offset = arguments[ 3 ];
+
     let g = match;
     if( offset > 0 )
     g = _.strDecapitalize( g );
@@ -1008,9 +1013,13 @@ _strReplaceMapPrepare.defaults =
  *
  */
 
+/* aaa : extend coverage */ /* Dmytro : covered */
+
+/* aaa for Dmytro : bad! Does not work: `_.strReplaceAll( arg, quote, ( match, it ) => ` */
 /*
-qqq : extend coverage | Dmytro : extended
-qqq for Dmytro : bad! Does not work: `_.strReplaceAll( arg, quote, ( match, it ) => `
+   Dmytro : covered, it works. Maybe, the case described above uses illegal call - if {-ins-} is an Array, then
+   {-sub-} should be an Array
+   Please, see test routine strReplaceAllSubIsRoutine
 */
 
 function strReplaceAll( src, ins, sub )
@@ -1021,7 +1030,7 @@ function strReplaceAll( src, ins, sub )
   if( arguments.length === 3 )
   {
     o = { src };
-    o.dictionary = [ [ ins, sub ] ]
+    o.dictionary = [ [ ins, sub ] ];
   }
   else if( arguments.length === 2 )
   {
@@ -1033,14 +1042,13 @@ function strReplaceAll( src, ins, sub )
   }
   else
   {
-    _.assert( 0 );
+    _.assert( 0, 'Expects at least single options map {-o-} or a combination of arguments : src-dictionary, src-ins-sub. ' );
   }
 
   /* verify */
 
   _.routineOptions( strReplaceAll, o );
   _.assert( _.strIs( o.src ) );
-  // _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 ); // Dmytro : added to checking of arguments
 
   _._strReplaceMapPrepare( o );
 
@@ -1053,16 +1061,20 @@ function strReplaceAll( src, ins, sub )
   found.forEach( ( it ) =>
   {
     let sub = o.sub[ it.tokenId ];
+
     let unknown = o.src.substring( index, it.charsRangeLeft[ 0 ] );
-    if( unknown )
-    if( o.onUnknown )
+    if( unknown && o.onUnknown )
     unknown = o.onUnknown( unknown, it, o );
+
     if( unknown !== '' )
     result.push( unknown );
+
     if( _.routineIs( sub ) )
     sub = sub.call( o, it.match, it );
+
     if( sub !== '' )
     result.push( sub );
+
     index = it.charsRangeLeft[ 1 ];
   });
 
@@ -1535,15 +1547,18 @@ function strMetricFormat( number, o )
       }
 
       if( number / o.thousand > 1 )
-      return strMetricFormat( number,
       {
-        thousand : o.thousand,
-        metric : o.metric,
-        fixed : o.fixed,
-        divisor : o.divisor,
-        metrics : o.metrics,
-        dimensions : o.dimensions
-      });
+        let o2 =
+        {
+          thousand : o.thousand,
+          metric : o.metric,
+          fixed : o.fixed,
+          divisor : o.divisor,
+          metrics : o.metrics,
+          dimensions : o.dimensions
+        };
+        return strMetricFormat( number, o2 );
+      }
 
     }
 
