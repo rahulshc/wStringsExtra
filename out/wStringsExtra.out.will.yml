@@ -163,8 +163,10 @@ module:
           - ../proto/wtools/Tools.s
           - ../proto/wtools/abase
           - ../proto/wtools/abase/l5
+          - ../proto/wtools/abase/l5/Dissector.s
           - ../proto/wtools/abase/l5/StringTools.s
           - ../proto/wtools/abase/l5.test
+          - ../proto/wtools/abase/l5.test/Dissector.test.s
           - ../proto/wtools/abase/l5.test/StringTools.test.s
           - ../proto/wtools/amid
           - ../proto/wtools/atop
