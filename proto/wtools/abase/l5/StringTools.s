@@ -11,13 +11,10 @@
 
 if( typeof module !== 'undefined' )
 {
-
   let _ = require( '../../../wtools/Tools.s' );
-
   _.include( 'wArraySorted' );
   _.include( 'wArraySparse' );
   _.include( 'wBlueprint' );
-
 }
 
 /**
@@ -1179,6 +1176,16 @@ strTokenizeCpp.defaults =
   tokenizingUnknown : 0,
 }
 
+// //
+//
+// function strSub( srcStr, range )
+// {
+//   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+//   _.assert( _.strIs( srcStr ) );
+//   _.assert( _.crange.is( sparse ) );
+//   return srcStr.substring( crange[ 0 ], crange[ 1 ]+1 );
+// }
+
 //
 
 /**
@@ -1207,11 +1214,9 @@ function strSubs( srcStr, sparse )
   _.assert( _.strIs( srcStr ) );
   _.assert( _.sparse.is( sparse ) );
 
-  debugger;
-
-  _.sparse.eachRange( sparse, ( range ) =>
+  _.sparse.eachRange( sparse, ( crange ) =>
   {
-    result.push( srcStr.substring( range[ 0 ], range[ 1 ] ) );
+    result.push( srcStr.substring( crange[ 0 ], crange[ 1 ]+1 ) );
   });
 
   return result;
@@ -1721,61 +1726,61 @@ function strCsvFrom( src, o )
 
 //
 
-function strToDom( xmlStr )
-{
-
-  let xmlDoc = null;
-  let isIEParser = window.ActiveXObject || 'ActiveXObject' in window;
-
-  if( xmlStr === undefined )
-  return xmlDoc;
-
-  if( window.DOMParser )
-  {
-
-    let parser = new window.DOMParser();
-    let parsererrorNS = null;
-
-    if( !isIEParser )
-    {
-      try
-      {
-        parsererrorNS = parser.parseFromString( 'INVALID', 'text/xml' ).childNodes[ 0 ].namespaceURI;
-      }
-      catch( err )
-      {
-        parsererrorNS = null;
-      }
-    }
-
-    try
-    {
-      xmlDoc = parser.parseFromString( xmlStr, 'text/xml' );
-      if( parsererrorNS !== null && xmlDoc.getElementsByTagNameNS( parsererrorNS, 'parsererror' ).length > 0 )
-      {
-        throw Error( 'Error parsing XML' );
-        xmlDoc = null;
-      }
-    }
-    catch( err )
-    {
-      throw Error( 'Error parsing XML' );
-      xmlDoc = null;
-    }
-  }
-  else
-  {
-    if( xmlStr.indexOf( '<?' ) === 0 )
-    {
-      xmlStr = xmlStr.substr( xmlStr.indexOf( '?>' ) + 2 );
-    }
-    xmlDoc = new ActiveXObject( 'Microsoft.XMLDOM' );
-    xmlDoc.async = 'false';
-    xmlDoc.loadXML( xmlStr );
-  }
-
-  return xmlDoc;
-}
+// function strToDom( xmlStr )
+// {
+//
+//   let xmlDoc = null;
+//   let isIEParser = window.ActiveXObject || 'ActiveXObject' in window;
+//
+//   if( xmlStr === undefined )
+//   return xmlDoc;
+//
+//   if( window.DOMParser )
+//   {
+//
+//     let parser = new window.DOMParser();
+//     let parsererrorNS = null;
+//
+//     if( !isIEParser )
+//     {
+//       try
+//       {
+//         parsererrorNS = parser.parseFromString( 'INVALID', 'text/xml' ).childNodes[ 0 ].namespaceURI;
+//       }
+//       catch( err )
+//       {
+//         parsererrorNS = null;
+//       }
+//     }
+//
+//     try
+//     {
+//       xmlDoc = parser.parseFromString( xmlStr, 'text/xml' );
+//       if( parsererrorNS !== null && xmlDoc.getElementsByTagNameNS( parsererrorNS, 'parsererror' ).length > 0 )
+//       {
+//         throw Error( 'Error parsing XML' );
+//         xmlDoc = null;
+//       }
+//     }
+//     catch( err )
+//     {
+//       throw Error( 'Error parsing XML' );
+//       xmlDoc = null;
+//     }
+//   }
+//   else
+//   {
+//     if( xmlStr.indexOf( '<?' ) === 0 )
+//     {
+//       xmlStr = xmlStr.substr( xmlStr.indexOf( '?>' ) + 2 );
+//     }
+//     xmlDoc = new ActiveXObject( 'Microsoft.XMLDOM' );
+//     xmlDoc.async = 'false';
+//     xmlDoc.loadXML( xmlStr );
+//   }
+//
+//   return xmlDoc;
+// }
 
 //
 
@@ -2541,7 +2546,7 @@ function strRequestParse( o )
   for( let c = 0 ; c < commands.length ; c++ )
   {
 
-    /* xxx : imlement parsing with template routine _.lexParse()
+    /* xxx : imlement parsing with template routine _.strShape()
 
       b ?** ':' ** e
       b ?** ':' ?** ':' ** e
@@ -2889,8 +2894,6 @@ function strRequestStr( o )
     }
 
   }
-  // _.assert( 0, 'not implemented' );
-  /* qqq : implement, document, cover please | Dmytro : implemented, covered, documented */
 
   return result.trim();
 }
@@ -4251,8 +4254,6 @@ function strLattersSpectresSimilarity( src1, src2 )
 // declare
 // --
 
-// let split = Symbol.for( 'split' );
-
 let Side =
 {
   top : 0,
@@ -4288,7 +4289,7 @@ let Extension =
   strTokenizeJs,
   strTokenizeCpp,
 
-  strSubs,
+  strSubs, // xxx : rename
 
   strSorterParse,
   jsonParse,
@@ -4302,19 +4303,19 @@ let Extension =
   strTimeFormat,
 
   strCsvFrom, /* experimental */
-  strToDom, /* experimental */ // qqq xxx : move it out
+  // strToDom, /* experimental */ // qqq xxx : move it out
   strToConfig, /* experimental */
 
   // numberFromStrMaybe,
-  strStructureParse, /* qqq : cover it by tests | Dmytro : covered */
-  strWebQueryParse, /* qqq : cover it by tests | Dmytro : covered */
+  strStructureParse,
+  strWebQueryParse,
   strWebQueryStr,
   strRequestParse,
   strRequestStr,
   strCommandParse,
   strCommandsParse,
 
-  strJoinMap, /* qqq : cover it by tests | Dmytro : covered */
+  strJoinMap,
 
   strTable,
   // strTable_old,
@@ -4332,11 +4333,16 @@ let Extension =
 
 }
 
-_.mapExtend( Self, Extension );
+_.mapExtend( _, Extension );
 
 // --
 // export
 // --
+
+if( typeof module !== 'undefined' )
+{
+  require( './Dissector.s' );
+}
 
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;

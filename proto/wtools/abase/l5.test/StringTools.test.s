@@ -5,13 +5,10 @@
 
 if( typeof module !== 'undefined' )
 {
-
   let _ = require( '../../../wtools/Tools.s' );
-
-  _.include( 'wTesting' );
   require( '../l5/StringTools.s' );
   _.include( 'wSelector' );
-
+  _.include( 'wTesting' );
 }
 
 let select = _globals_.testing.wTools.select;
@@ -14858,7 +14855,9 @@ function strJoinMap( test )
   test.shouldThrowErrorSync( () => _.strJoinMap( { src : { a : 'a' }, entryDelimeter : 1 } ) );
 }
 
-//
+// --
+// etc
+// --
 
 function strDifference( test )
 {
