@@ -1,4 +1,4 @@
-( function _StringTools_test_s_()
+( function _Dissector_test_s_()
 {
 
 'use strict';
@@ -1484,7 +1484,7 @@ function dissectText( test )
 let Self =
 {
 
-  name : 'Tools.StringsExtra',
+  name : 'Tools.Dissector',
   silencing : 1,
 
   tests :
