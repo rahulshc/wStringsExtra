@@ -104,21 +104,21 @@ function _codeLex( test )
       'type' : 'any',
       'val' : '**',
       'map' : { 'priority' : '', 'any' : '**' },
-      'priority' : 2
+      'priority' : 0
     },
     { 'type' : 'text', 'val' : 'r1' },
     {
       'type' : 'any',
       'val' : '**',
       'map' : { 'priority' : '', 'any' : '**' },
-      'priority' : 1
+      'priority' : -1
     },
     { 'type' : 'text', 'val' : 'r2' },
     {
       'type' : 'any',
       'val' : '**',
       'map' : { 'priority' : '', 'any' : '**' },
-      'priority' : 0
+      'priority' : -2
     }
   ]
   var got = _.dissector._codeLex( `**<r1>**<r2>**` );
@@ -126,28 +126,28 @@ function _codeLex( test )
 
   /* */
 
-  test.case = 'priority left lowered';
+  test.case = 'priority left higher';
   var exp =
   [
     {
       'type' : 'any',
       'val' : '^**',
       'map' : { 'priority' : '^', 'any' : '**' },
-      'priority' : 2
+      'priority' : -2
     },
     { 'type' : 'text', 'val' : 'r1' },
     {
       'type' : 'any',
       'val' : '**',
       'map' : { 'priority' : '', 'any' : '**' },
-      'priority' : 1
+      'priority' : 0
     },
     { 'type' : 'text', 'val' : 'r2' },
     {
       'type' : 'any',
       'val' : '**',
       'map' : { 'priority' : '', 'any' : '**' },
-      'priority' : 0
+      'priority' : -1
     }
   ]
   var got = _.dissector._codeLex( `^**<r1>**<r2>**` );
@@ -155,28 +155,28 @@ function _codeLex( test )
 
   /* */
 
-  test.case = 'priority mid lowered';
+  test.case = 'priority mid higher';
   var exp =
   [
     {
       'type' : 'any',
       'val' : '**',
       'map' : { 'priority' : '', 'any' : '**' },
-      'priority' : 1
+      'priority' : 0
     },
     { 'type' : 'text', 'val' : 'r1' },
     {
       'type' : 'any',
       'val' : '^**',
       'map' : { 'priority' : '^', 'any' : '**' },
-      'priority' : 2
+      'priority' : -2
     },
     { 'type' : 'text', 'val' : 'r2' },
     {
       'type' : 'any',
       'val' : '**',
       'map' : { 'priority' : '', 'any' : '**' },
-      'priority' : 0
+      'priority' : -1
     }
   ]
   var got = _.dissector._codeLex( `**<r1>^**<r2>**` );
@@ -184,28 +184,28 @@ function _codeLex( test )
 
   /* */
 
-  test.case = 'priority right lowered';
+  test.case = 'priority right higher';
   var exp =
   [
     {
       'type' : 'any',
       'val' : '**',
       'map' : { 'priority' : '', 'any' : '**' },
-      'priority' : 1
+      'priority' : 0
     },
     { 'type' : 'text', 'val' : 'r1' },
     {
       'type' : 'any',
       'val' : '**',
       'map' : { 'priority' : '', 'any' : '**' },
-      'priority' : 0
+      'priority' : -1
     },
     { 'type' : 'text', 'val' : 'r2' },
     {
       'type' : 'any',
       'val' : '^**',
       'map' : { 'priority' : '^', 'any' : '**' },
-      'priority' : 2
+      'priority' : -2
     }
   ]
   var got = _.dissector._codeLex( `**<r1>**<r2>^**` );
@@ -227,14 +227,14 @@ function _codeLex( test )
       'type' : 'any',
       'val' : '^^^**',
       'map' : { 'priority' : '^^^', 'any' : '**' },
-      'priority' : 1
+      'priority' : -1
     },
     { 'type' : 'text', 'val' : 'r2' },
     {
       'type' : 'any',
       'val' : '^^^^^**',
       'map' : { 'priority' : '^^^^^', 'any' : '**' },
-      'priority' : 2
+      'priority' : -2
     }
   ]
   var got = _.dissector._codeLex( `^**<r1>^^^**<r2>^^^^^**` );
@@ -253,29 +253,116 @@ function _codeLex( test )
 
   /* */
 
-  test.case = 'many any';
+  test.case = 'many any without spaces';
   var exp =
   [
     {
       'type' : 'any',
       'val' : '**',
       'map' : { 'priority' : '', 'any' : '**' },
-      'priority' : 2
+      'priority' : 0
     },
     {
       'type' : 'any',
       'val' : '**',
       'map' : { 'priority' : '', 'any' : '**' },
-      'priority' : 1
+      'priority' : -1
+    },
+    {
+      'type' : 'any',
+      'val' : '**',
+      'map' : { 'priority' : '', 'any' : '**' },
+      'priority' : -2
+    }
+  ]
+  var got = _.dissector._codeLex( `******` );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'many any with spaces';
+  var exp =
+  [
+    {
+      'type' : 'any',
+      'val' : '**',
+      'map' : { 'priority' : '', 'any' : '**' },
+      'priority' : 0
+    },
+    {
+      'type' : 'any',
+      'val' : '**',
+      'map' : { 'priority' : '', 'any' : '**' },
+      'priority' : -1
+    },
+    {
+      'type' : 'any',
+      'val' : '**',
+      'map' : { 'priority' : '', 'any' : '**' },
+      'priority' : -2
+    }
+  ]
+  var got = _.dissector._codeLex( `**  ** ** ` );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'many any with priorities';
+  var exp =
+  [
+    {
+      'type' : 'any',
+      'val' : '^^**',
+      'map' : { 'priority' : '^^', 'any' : '**' },
+      'priority' : -2
+    },
+    {
+      'type' : 'any',
+      'val' : '^**',
+      'map' : { 'priority' : '^', 'any' : '**' },
+      'priority' : -1
     },
     {
       'type' : 'any',
       'val' : '**',
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : 0
-    }
+    },
   ]
-  var got = _.dissector._codeLex( `******` );
+  var got = _.dissector._codeLex( `^^**^****` );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'many any with priorities and spaces';
+  var exp =
+  [
+    {
+      'type' : 'any',
+      'val' : '^^**',
+      'map' : { 'priority' : '^^', 'any' : '**' },
+      'priority' : -2
+    },
+    {
+      'type' : 'any',
+      'val' : '^**',
+      'map' : { 'priority' : '^', 'any' : '**' },
+      'priority' : -1
+    },
+    {
+      'type' : 'any',
+      'val' : '**',
+      'map' : { 'priority' : '', 'any' : '**' },
+      'priority' : 0
+    },
+  ]
+
+  /* xxx
+  - introduce char interval
+  - val should preserve spaces
+  */
+
+  var got = _.dissector._codeLex( ` ^^ ** ^ **  **  ` );
   test.identical( got, exp );
 
   /* */
@@ -293,149 +380,101 @@ function make( test )
   var code = '**<r1>**<r2>**';
   var dissector = _.dissector.make( code );
 
-  test.description = 'tsteps';
+  test.description = 'tokenSteps';
   var exp =
   [
     {
       'type' : 'any',
       'val' : '**',
       'map' : { 'priority' : '', 'any' : '**' },
-      'priority' : 2
+      'priority' : 0
     },
     { 'type' : 'text', 'val' : 'r1' },
     {
       'type' : 'any',
       'val' : '**',
       'map' : { 'priority' : '', 'any' : '**' },
-      'priority' : 1
+      'priority' : -1
     },
     { 'type' : 'text', 'val' : 'r2' },
     {
       'type' : 'any',
       'val' : '**',
       'map' : { 'priority' : '', 'any' : '**' },
-      'priority' : 0
+      'priority' : -2
     }
   ]
-  test.identical( dissector.tsteps, exp );
+  test.identical( dissector.tokenSteps, exp );
 
-  test.description = 'lsteps';
+  test.description = 'parcelSteps';
   var exp =
   [
     {
       'side' : 'left',
       'map' :
       {
-        'any' : dissector.tsteps[ 0 ],
-        'first' : dissector.tsteps[ 1 ],
-      },
-      'priority' : 2,
-      'type' : 'first',
-      'tsteps' :
-      [
-        dissector.tsteps[ 0 ],
-        dissector.tsteps[ 1 ],
-      ],
-      'eat' : dissector.eatMap.firstLeft,
-      'trange' : [ 0, 1 ]
-    },
-    {
-      'side' : 'left',
-      'map' :
-      {
-        'any' : dissector.tsteps[ 2 ],
-        'first' : dissector.tsteps[ 3 ],
-      },
-      'priority' : 1,
-      'type' : 'first',
-      'tsteps' :
-      [
-        dissector.tsteps[ 2 ],
-        dissector.tsteps[ 3 ],
-      ],
-      'eat' : dissector.eatMap.firstLeft,
-      'trange' : [ 2, 3 ]
-    },
-    {
-      'side' : 'left',
-      'map' :
-      {
-        'any' : dissector.tsteps[ 4 ],
-      },
-      'priority' : _.dissector._maxPriority + 10,
-      'type' : 'rest',
-      'tsteps' :
-      [
-        dissector.tsteps[ 4 ],
-      ],
-      'eat' : dissector.eatMap.restLeft,
-      'trange' : [ 4, 4 ]
-    }
-  ]
-  test.identical( dissector.lsteps, exp );
-
-  test.description = 'rsteps';
-  var exp =
-  [
-    {
-      'side' : 'right',
-      'map' :
-      {
-        'any' : dissector.tsteps[ 0 ],
-      },
-      'priority' : _.dissector._maxPriority + 10,
-      'type' : 'rest',
-      'tsteps' :
-      [
-        dissector.tsteps[ 0 ],
-      ],
-      'eat' : dissector.eatMap.restRight,
-      'trange' : [ 0, 0 ]
-    },
-    {
-      'side' : 'right',
-      'map' :
-      {
-        'any' : dissector.tsteps[ 2 ],
-        'first' : dissector.tsteps[ 1 ],
-      },
-      'priority' : 1,
-      'type' : 'first',
-      'tsteps' :
-      [
-        dissector.tsteps[ 2 ],
-        dissector.tsteps[ 1 ],
-      ],
-      'eat' : dissector.eatMap.firstRight,
-      'trange' : [ 1, 2 ]
-    },
-    {
-      'side' : 'right',
-      'map' :
-      {
-        'any' : dissector.tsteps[ 4 ],
-        'first' : dissector.tsteps[ 3 ],
+        'any' : dissector.tokenSteps[ 0 ],
+        'first' : dissector.tokenSteps[ 1 ],
       },
       'priority' : 0,
       'type' : 'first',
-      'tsteps' :
+      'tokenSteps' :
       [
-        dissector.tsteps[ 4 ],
-        dissector.tsteps[ 3 ],
+        dissector.tokenSteps[ 0 ],
+        dissector.tokenSteps[ 1 ],
       ],
-      'eat' : dissector.eatMap.firstRight,
-      'trange' : [ 3, 4 ]
+      'eat' : dissector.eatMap.firstLeft,
+      'tinterval' : [ 0, 1 ],
+      'sensetiveInterval' : [ 0, 1 ],
+      'index' : 1,
+    },
+    {
+      'side' : 'left',
+      'map' :
+      {
+        'any' : dissector.tokenSteps[ 2 ],
+        'first' : dissector.tokenSteps[ 3 ],
+      },
+      'priority' : -1,
+      'type' : 'first',
+      'tokenSteps' :
+      [
+        dissector.tokenSteps[ 2 ],
+        dissector.tokenSteps[ 3 ],
+      ],
+      'eat' : dissector.eatMap.firstLeft,
+      'tinterval' : [ 2, 3 ],
+      'sensetiveInterval' : [ 2, 3 ],
+      'index' : 2,
+    },
+    {
+      'side' : 'left',
+      'map' :
+      {
+        'any' : dissector.tokenSteps[ 4 ],
+      },
+      'priority' : _.dissector._maxPriority + 10,
+      'type' : 'rest',
+      'tokenSteps' :
+      [
+        dissector.tokenSteps[ 4 ],
+      ],
+      'eat' : dissector.eatMap.restLeft,
+      'tinterval' : [ 4, 4 ],
+      'sensetiveInterval' : [ 4, 4 ],
+      'index' : 3,
     }
   ]
-  test.identical( dissector.rsteps, exp );
+  test.identical( dissector.parcelSteps, exp );
 
   test.description = 'static';
-  test.is( _.mapIs( dissector.eatMap ) );
-  test.is( _.routineIs( dissector.parse ) );
+  test.true( _.mapIs( dissector.eatMap ) );
+  test.true( _.routineIs( dissector.parse ) );
 
-  delete dissector.tsteps
-  delete dissector.rsteps
-  delete dissector.lsteps
+  delete dissector.tokenSteps
+  delete dissector.rightSteps
+  delete dissector.leftSteps
+  delete dissector.parcelSteps
   delete dissector.eatMap;
   delete dissector.parse;
 
@@ -472,6 +511,16 @@ function dissectBasic( test )
   var got = _.select( dissection.parcels, '*/pstep/side' );
   test.identical( got, exp );
 
+  test.description = 'export';
+  var exp = '**<r1>^**<r2>^^**';
+  var got = _.dissector.dissectorExportToString( dissection.dissector );
+  test.identical( got, exp );
+
+  test.description = 'track';
+  var exp = 'first.left#1 first.left#2 rest.left#3';
+  var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
+  test.identical( got, exp );
+
   test.description = 'parcels/*/range';
   dissection.parcels.forEach( ( parcel ) =>
   {
@@ -502,12 +551,12 @@ function dissectBasic( test )
   test.identical( dissection.parcels.length, 3 );
 
   test.description = 'parcels[ 0 ]';
-  test.is( dissection.parcels[ 0 ].pstep !== dissection.parcels[ 0 ].tstep );
-  test.is( _.objectIs( dissection.parcels[ 0 ].pstep ) );
+  test.true( dissection.parcels[ 0 ].pstep !== dissection.parcels[ 0 ].tstep );
+  test.true( _.objectIs( dissection.parcels[ 0 ].pstep ) );
   delete dissection.parcels[ 0 ].pstep;
-  test.is( _.nullIs( dissection.parcels[ 0 ].tstep ) );
+  test.true( _.nullIs( dissection.parcels[ 0 ].tstep ) );
   delete dissection.parcels[ 0 ].tstep;
-  test.is( dissection.parcels[ 0 ].tokens.length === 2 );
+  test.true( dissection.parcels[ 0 ].tokens.length === 2 );
   delete dissection.parcels[ 0 ].tokens;
   test.identical( _.mapKeys( dissection.parcels[ 0 ].map ), [ 'any', 'first' ] );
   delete dissection.parcels[ 0 ].map;
@@ -520,12 +569,12 @@ function dissectBasic( test )
   console.log( _globals_.testing.wTools.toJs( dissection.parcels[ 0 ] ) );
 
   test.description = 'parcels[ 1 ]';
-  test.is( dissection.parcels[ 1 ].pstep !== dissection.parcels[ 1 ].tstep );
-  test.is( _.objectIs( dissection.parcels[ 1 ].pstep ) );
+  test.true( dissection.parcels[ 1 ].pstep !== dissection.parcels[ 1 ].tstep );
+  test.true( _.objectIs( dissection.parcels[ 1 ].pstep ) );
   delete dissection.parcels[ 1 ].pstep;
-  test.is( _.nullIs( dissection.parcels[ 1 ].tstep ) );
+  test.true( _.nullIs( dissection.parcels[ 1 ].tstep ) );
   delete dissection.parcels[ 1 ].tstep;
-  test.is( dissection.parcels[ 1 ].tokens.length === 2 );
+  test.true( dissection.parcels[ 1 ].tokens.length === 2 );
   delete dissection.parcels[ 1 ].tokens;
   test.identical( _.mapKeys( dissection.parcels[ 1 ].map ), [ 'any', 'first' ] );
   delete dissection.parcels[ 1 ].map;
@@ -538,12 +587,12 @@ function dissectBasic( test )
   console.log( _globals_.testing.wTools.toJs( dissection.parcels[ 1 ] ) );
 
   test.description = 'parcels[ 2 ]';
-  test.is( dissection.parcels[ 2 ].pstep !== dissection.parcels[ 2 ].tstep );
-  test.is( _.objectIs( dissection.parcels[ 2 ].pstep ) );
+  test.true( dissection.parcels[ 2 ].pstep !== dissection.parcels[ 2 ].tstep );
+  test.true( _.objectIs( dissection.parcels[ 2 ].pstep ) );
   delete dissection.parcels[ 2 ].pstep;
-  test.is( _.objectIs( dissection.parcels[ 2 ].tstep ) );
+  test.true( _.objectIs( dissection.parcels[ 2 ].tstep ) );
   delete dissection.parcels[ 2 ].tstep;
-  test.is( _.arrayIs( dissection.parcels[ 2 ].tokens ) );
+  test.true( _.arrayIs( dissection.parcels[ 2 ].tokens ) );
   delete dissection.parcels[ 2 ].tokens;
   test.identical( _.mapKeys( dissection.parcels[ 2 ].map ), [] );
   delete dissection.parcels[ 2 ].map;
@@ -566,18 +615,168 @@ function dissectAny( test )
 
   /* */
 
-  test.case = `**<r1>**<r2>**`;
+  test.case = `<r1>**<r2> -- r1abcr2`;
+  var text = 'r1abcr2';
+  var code = `<r1>**<r2>`;
+  var dissection = _.dissector.dissect( code, text );
+
+  test.description = 'export';
+  var exp = '<r1>**<r2>';
+  var got = _.dissector.dissectorExportToString( dissection.dissector );
+  test.identical( got, exp );
+
+  test.description = 'track';
+  var exp = 'text.left#1 rest.left#3 text.right#2';
+  var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/val';
+  var exp = [ 'r1', 'abc', 'r2' ];
+  var got = _.select( dissection, 'parcels/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'tokens/*/val';
+  var exp = [ 'r1', 'abc', 'r2' ];
+  var got = _.select( dissection, 'tokens/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/range';
+  var text2 = '';
+  dissection.parcels.forEach( ( parcel ) =>
+  {
+    test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
+    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    text2 += parcel.val;
+  });
+  test.identical( text2, text );
+
+  test.description = 'tokens/*/range';
+  var text2 = '';
+  dissection.tokens.forEach( ( token ) =>
+  {
+    test.description = `${token.tstep.type}`;
+    test.identical( token.val, _.strOnly( text, token.range ) );
+    text2 += token.val;
+  });
+  test.identical( text2, text );
+
+  test.description = 'matched';
+  test.identical( dissection.matched, true );
+
+  /* */
+
+  test.case = `<r1>**<r2> -- rabcr2`;
+  var text = 'rabcr2';
+  var code = `<r1>**<r2>`;
+  var dissection = _.dissector.dissect( code, text );
+
+  test.description = 'export';
+  var exp = '<r1>**<r2>';
+  var got = _.dissector.dissectorExportToString( dissection.dissector );
+  test.identical( got, exp );
+
+  test.description = 'track';
+  var exp = '';
+  var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/val';
+  var exp = [];
+  var got = _.select( dissection, 'parcels/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'tokens/*/val';
+  var exp = [];
+  var got = _.select( dissection, 'tokens/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/range';
+  var text2 = '';
+  dissection.parcels.forEach( ( parcel ) =>
+  {
+    test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
+    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    text2 += parcel.val;
+  });
+  test.identical( text2, '' );
+
+  test.description = 'tokens/*/range';
+  var text2 = '';
+  dissection.tokens.forEach( ( token ) =>
+  {
+    test.description = `${token.tstep.type}`;
+    test.identical( token.val, _.strOnly( text, token.range ) );
+    text2 += token.val;
+  });
+  test.identical( text2, '' );
+
+  test.description = 'matched';
+  test.identical( dissection.matched, false );
+
+  /* */
+
+  test.case = `<r1>**<r2> -- r1abcr`;
+  var text = 'r1abcr';
+  var code = `<r1>**<r2>`;
+  var dissection = _.dissector.dissect( code, text );
+
+  test.description = 'export';
+  var exp = '<r1>**<r2>';
+  var got = _.dissector.dissectorExportToString( dissection.dissector );
+  test.identical( got, exp );
+
+  test.description = 'track';
+  var exp = 'text.left#1';
+  var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/val';
+  var exp = [ 'r1' ];
+  var got = _.select( dissection, 'parcels/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'tokens/*/val';
+  var exp = [ 'r1' ];
+  var got = _.select( dissection, 'tokens/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/range';
+  var text2 = '';
+  dissection.parcels.forEach( ( parcel ) =>
+  {
+    test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
+    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    text2 += parcel.val;
+  });
+  test.identical( text2, 'r1' );
+
+  test.description = 'tokens/*/range';
+  var text2 = '';
+  dissection.tokens.forEach( ( token ) =>
+  {
+    test.description = `${token.tstep.type}`;
+    test.identical( token.val, _.strOnly( text, token.range ) );
+    text2 += token.val;
+  });
+  test.identical( text2, 'r1' );
+
+  test.description = 'matched';
+  test.identical( dissection.matched, false );
+
+  /* */
+
+  test.case = `**<r1>**<r2>** -- a r1 b r1 c r2 d r2 e`;
   var text = 'a r1 b r1 c r2 d r2 e';
   var code = `**<r1>**<r2>**`;
   var dissection = _.dissector.dissect( code, text );
 
   test.description = 'export';
-  var exp = '^^**<r1>^**<r2>**';
+  var exp = '**<r1>^**<r2>^^**';
   var got = _.dissector.dissectorExportToString( dissection.dissector );
   test.identical( got, exp );
 
   test.description = 'track';
-  var exp = 'first.left first.left rest.left';
+  var exp = 'first.left#1 first.left#2 rest.left#3';
   var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
   test.identical( got, exp );
 
@@ -616,107 +815,7 @@ function dissectAny( test )
 
   /* */
 
-  test.case = `^^**<r1>^**<r2>**`;
-  var text = 'a r1 b r1 c r2 d r2 e';
-  var code = `^^**<r1>^**<r2>**`;
-  var dissection = _.dissector.dissect( code, text );
-
-  test.description = 'export';
-  var exp = '^^**<r1>^**<r2>**';
-  var got = _.dissector.dissectorExportToString( dissection.dissector );
-  test.identical( got, exp );
-
-  test.description = 'track';
-  var exp = 'first.left first.left rest.left';
-  var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
-  test.identical( got, exp );
-
-  test.description = 'parcels/*/val';
-  var exp = [ 'a r1', ' b r1 c r2', ' d r2 e' ];
-  var got = _.select( dissection, 'parcels/*/val' );
-  test.identical( got, exp );
-
-  test.description = 'tokens/*/val';
-  var exp = [ 'a ', 'r1', ' b r1 c ', 'r2', ' d r2 e' ];
-  var got = _.select( dissection, 'tokens/*/val' );
-  test.identical( got, exp );
-
-  test.description = 'parcels/*/range';
-  var text2 = '';
-  dissection.parcels.forEach( ( parcel ) =>
-  {
-    test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
-    text2 += parcel.val;
-  });
-  test.identical( text2, text );
-
-  test.description = 'tokens/*/range';
-  var text2 = '';
-  dissection.tokens.forEach( ( token ) =>
-  {
-    test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
-    text2 += token.val;
-  });
-  test.identical( text2, text );
-
-  test.description = 'matched';
-  test.identical( dissection.matched, true );
-
-  /* */
-
-  test.case = `^^^^**<r1>^^**<r2>**`;
-  var text = 'a r1 b r1 c r2 d r2 e';
-  var code = `^^^^**<r1>^^**<r2>**`;
-  var dissection = _.dissector.dissect( code, text );
-
-  test.description = 'export';
-  var exp = '^^**<r1>^**<r2>**';
-  var got = _.dissector.dissectorExportToString( dissection.dissector );
-  test.identical( got, exp );
-
-  test.description = 'track';
-  var exp = 'first.left first.left rest.left';
-  var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
-  test.identical( got, exp );
-
-  test.description = 'parcels/*/val';
-  var exp = [ 'a r1', ' b r1 c r2', ' d r2 e' ];
-  var got = _.select( dissection, 'parcels/*/val' );
-  test.identical( got, exp );
-
-  test.description = 'tokens/*/val';
-  var exp = [ 'a ', 'r1', ' b r1 c ', 'r2', ' d r2 e' ];
-  var got = _.select( dissection, 'tokens/*/val' );
-  test.identical( got, exp );
-
-  test.description = 'parcels/*/range';
-  var text2 = '';
-  dissection.parcels.forEach( ( parcel ) =>
-  {
-    test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
-    text2 += parcel.val;
-  });
-  test.identical( text2, text );
-
-  test.description = 'tokens/*/range';
-  var text2 = '';
-  dissection.tokens.forEach( ( token ) =>
-  {
-    test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
-    text2 += token.val;
-  });
-  test.identical( text2, text );
-
-  test.description = 'matched';
-  test.identical( dissection.matched, true );
-
-  /* */
-
-  test.case = `**<r1>^**<r2>^^**`;
+  test.case = `**<r1>^**<r2>^^** -- a r1 b r1 c r2 d r2 e`;
   var text = 'a r1 b r1 c r2 d r2 e';
   var code = `**<r1>^**<r2>^^**`;
   var dissection = _.dissector.dissect( code, text );
@@ -727,7 +826,107 @@ function dissectAny( test )
   test.identical( got, exp );
 
   test.description = 'track';
-  var exp = 'rest.right first.right first.right';
+  var exp = 'first.left#1 first.left#2 rest.left#3';
+  var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/val';
+  var exp = [ 'a r1', ' b r1 c r2', ' d r2 e' ];
+  var got = _.select( dissection, 'parcels/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'tokens/*/val';
+  var exp = [ 'a ', 'r1', ' b r1 c ', 'r2', ' d r2 e' ];
+  var got = _.select( dissection, 'tokens/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/range';
+  var text2 = '';
+  dissection.parcels.forEach( ( parcel ) =>
+  {
+    test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
+    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    text2 += parcel.val;
+  });
+  test.identical( text2, text );
+
+  test.description = 'tokens/*/range';
+  var text2 = '';
+  dissection.tokens.forEach( ( token ) =>
+  {
+    test.description = `${token.tstep.type}`;
+    test.identical( token.val, _.strOnly( text, token.range ) );
+    text2 += token.val;
+  });
+  test.identical( text2, text );
+
+  test.description = 'matched';
+  test.identical( dissection.matched, true );
+
+  /* */
+
+  test.case = `**<r1>^^**<r2>^^^^** -- a r1 b r1 c r2 d r2 e`;
+  var text = 'a r1 b r1 c r2 d r2 e';
+  var code = `**<r1>^^**<r2>^^^^**`;
+  var dissection = _.dissector.dissect( code, text );
+
+  test.description = 'export';
+  var exp = '**<r1>^**<r2>^^**';
+  var got = _.dissector.dissectorExportToString( dissection.dissector );
+  test.identical( got, exp );
+
+  test.description = 'track';
+  var exp = 'first.left#1 first.left#2 rest.left#3';
+  var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/val';
+  var exp = [ 'a r1', ' b r1 c r2', ' d r2 e' ];
+  var got = _.select( dissection, 'parcels/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'tokens/*/val';
+  var exp = [ 'a ', 'r1', ' b r1 c ', 'r2', ' d r2 e' ];
+  var got = _.select( dissection, 'tokens/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/range';
+  var text2 = '';
+  dissection.parcels.forEach( ( parcel ) =>
+  {
+    test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
+    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    text2 += parcel.val;
+  });
+  test.identical( text2, text );
+
+  test.description = 'tokens/*/range';
+  var text2 = '';
+  dissection.tokens.forEach( ( token ) =>
+  {
+    test.description = `${token.tstep.type}`;
+    test.identical( token.val, _.strOnly( text, token.range ) );
+    text2 += token.val;
+  });
+  test.identical( text2, text );
+
+  test.description = 'matched';
+  test.identical( dissection.matched, true );
+
+  /* */
+
+  test.case = `^^**<r1>^**<r2>** -- a r1 b r1 c r2 d r2 e`;
+  var text = 'a r1 b r1 c r2 d r2 e';
+  var code = `^^**<r1>^**<r2>**`;
+  var dissection = _.dissector.dissect( code, text );
+
+  test.description = 'export';
+  var exp = '^^**<r1>^**<r2>**';
+  var got = _.dissector.dissectorExportToString( dissection.dissector );
+  test.identical( got, exp );
+
+  test.description = 'track';
+  var exp = 'rest.left#3 first.right#2 first.right#1';
   var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
   test.identical( got, exp );
 
@@ -759,7 +958,7 @@ function dissectAny( test )
     test.identical( token.val, _.strOnly( text, token.range ) );
     text2 += token.val;
   });
-  test.identical( text2, text ); debugger;
+  test.identical( text2, text );
 
   test.description = 'matched';
   test.identical( dissection.matched, true );
@@ -772,12 +971,12 @@ function dissectAny( test )
   var dissection = _.dissector.dissect( code, text );
 
   test.description = 'export';
-  var exp = '^^**^****';
+  var exp = '**^**^^**';
   var got = _.dissector.dissectorExportToString( dissection.dissector );
   test.identical( got, exp );
 
   test.description = 'track';
-  var exp = 'least.left least.left rest.left';
+  var exp = 'least.left#1 least.left#2 rest.left#3';
   var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
   test.identical( got, exp );
 
@@ -816,18 +1015,18 @@ function dissectAny( test )
 
   /* */
 
-  test.case = `^^^**^^**** -- abcde`;
+  test.case = `**^^**^^^** -- abcde`;
   var text = 'abcde';
-  var code = `^^^**^^****`;
+  var code = `**^^**^^^**`;
   var dissection = _.dissector.dissect( code, text );
 
   test.description = 'export';
-  var exp = '^^**^****';
+  var exp = '**^**^^**';
   var got = _.dissector.dissectorExportToString( dissection.dissector );
   test.identical( got, exp );
 
   test.description = 'track';
-  var exp = 'least.left least.left rest.left';
+  var exp = 'least.left#1 least.left#2 rest.left#3';
   var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
   test.identical( got, exp );
 
@@ -866,18 +1065,18 @@ function dissectAny( test )
 
   /* */
 
-  test.case = `**^**^^** -- abcde`;
+  test.case = `^^**^**** -- abcde`;
   var text = 'abcde';
-  var code = `**^**^^**`;
+  var code = `^^**^****`;
   var dissection = _.dissector.dissect( code, text );
 
   test.description = 'export';
-  var exp = `**^**^^**`;
+  var exp = `^^**^****`;
   var got = _.dissector.dissectorExportToString( dissection.dissector );
   test.identical( got, exp );
 
   test.description = 'track';
-  var exp = 'rest.right least.right least.right';
+  var exp = 'rest.left#3 least.right#2 least.right#1';
   var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
   test.identical( got, exp );
 
@@ -916,53 +1115,408 @@ function dissectAny( test )
 
   /* */
 
-  // test.case = `^** ** ^** -- abcde`;
-  // var text = 'abcde';
-  // var code = `^** ** ^**`;
-  // var dissection = _.dissector.dissect( code, text );
-  //
-  // test.description = 'export';
-  // var exp = `^^****^**`;
-  // var got = _.dissector.dissectorExportToString( dissection.dissector );
-  // test.identical( got, exp );
-  //
-  // test.description = 'track';
-  // var exp = 'least.left rest.left least.right';
-  // var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
-  // test.identical( got, exp );
-  //
-  // test.description = 'parcels/*/val';
-  // var exp = [ 'abcde', '', '' ];
-  // var got = _.select( dissection, 'parcels/*/val' );
-  // test.identical( got, exp );
-  //
-  // test.description = 'tokens/*/val';
-  // var exp = [ 'abcde', '', '' ];
-  // var got = _.select( dissection, 'tokens/*/val' );
-  // test.identical( got, exp );
-  //
-  // test.description = 'parcels/*/range';
-  // var text2 = '';
-  // dissection.parcels.forEach( ( parcel ) =>
-  // {
-  //   test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-  //   test.identical( parcel.val, _.strOnly( text, parcel.range ) );
-  //   text2 += parcel.val;
-  // });
-  // test.identical( text2, text );
-  //
-  // test.description = 'tokens/*/range';
-  // var text2 = '';
-  // dissection.tokens.forEach( ( token ) =>
-  // {
-  //   test.description = `${token.tstep.type}`;
-  //   test.identical( token.val, _.strOnly( text, token.range ) );
-  //   text2 += token.val;
-  // });
-  // test.identical( text2, text );
-  //
-  // test.description = 'matched';
-  // test.identical( dissection.matched, true );
+  test.case = `^** ** ^** -- abcde`;
+  var text = 'abcde';
+  var code = `^** ** ^**`;
+  var dissection = _.dissector.dissect( code, text );
+
+  test.description = 'export';
+  var exp = `^****^^**`;
+  var got = _.dissector.dissectorExportToString( dissection.dissector );
+  test.identical( got, exp );
+
+  test.description = 'track';
+  var exp = 'least.left#1 least.left#2 rest.left#3';
+  var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/val';
+  var exp = [ '', '', 'abcde' ];
+  var got = _.select( dissection, 'parcels/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'tokens/*/val';
+  var exp = [ '', '', 'abcde' ];
+  var got = _.select( dissection, 'tokens/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/range';
+  var text2 = '';
+  dissection.parcels.forEach( ( parcel ) =>
+  {
+    test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
+    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    text2 += parcel.val;
+  });
+  test.identical( text2, text );
+
+  test.description = 'tokens/*/range';
+  var text2 = '';
+  dissection.tokens.forEach( ( token ) =>
+  {
+    test.description = `${token.tstep.type}`;
+    test.identical( token.val, _.strOnly( text, token.range ) );
+    text2 += token.val;
+  });
+  test.identical( text2, text );
+
+  test.description = 'matched';
+  test.identical( dissection.matched, true );
+
+  /* */
+
+  test.case = `^** ** ^** -- ""`;
+  var text = '';
+  var code = `^** ** ^**`;
+  var dissection = _.dissector.dissect( code, text );
+
+  test.description = 'export';
+  var exp = `^****^^**`;
+  var got = _.dissector.dissectorExportToString( dissection.dissector );
+  test.identical( got, exp );
+
+  test.description = 'track';
+  var exp = 'least.left#1 least.left#2 rest.left#3';
+  var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/val';
+  var exp = [ '', '', '' ];
+  var got = _.select( dissection, 'parcels/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'tokens/*/val';
+  var exp = [ '', '', '' ];
+  var got = _.select( dissection, 'tokens/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/range';
+  var text2 = '';
+  dissection.parcels.forEach( ( parcel ) =>
+  {
+    test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
+    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    text2 += parcel.val;
+  });
+  test.identical( text2, text );
+
+  test.description = 'tokens/*/range';
+  var text2 = '';
+  dissection.tokens.forEach( ( token ) =>
+  {
+    test.description = `${token.tstep.type}`;
+    test.identical( token.val, _.strOnly( text, token.range ) );
+    text2 += token.val;
+  });
+  test.identical( text2, text );
+
+  test.description = 'matched';
+  test.identical( dissection.matched, true );
+
+  /* */
+
+/*
+    default   0  -1  -2
+    current   0  -2  -1
+*/
+
+  test.case = `** ^** ** -- abcde`;
+  var text = 'abcde';
+  var code = `** ^** **`;
+  var dissection = _.dissector.dissect( code, text );
+
+  test.description = 'export';
+  var exp = `**^^**^**`;
+  var got = _.dissector.dissectorExportToString( dissection.dissector );
+  test.identical( got, exp );
+
+  test.description = 'track';
+  var exp = 'least.left#1 rest.left#3 least.right#2';
+  var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/val';
+  var exp = [ '', 'abcde', '' ];
+  var got = _.select( dissection, 'parcels/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'tokens/*/val';
+  var exp = [ '', 'abcde', '' ];
+  var got = _.select( dissection, 'tokens/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/range';
+  var text2 = '';
+  dissection.parcels.forEach( ( parcel ) =>
+  {
+    test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
+    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    text2 += parcel.val;
+  });
+  test.identical( text2, text );
+
+  test.description = 'tokens/*/range';
+  var text2 = '';
+  dissection.tokens.forEach( ( token ) =>
+  {
+    test.description = `${token.tstep.type}`;
+    test.identical( token.val, _.strOnly( text, token.range ) );
+    text2 += token.val;
+  });
+  test.identical( text2, text );
+
+  test.description = 'matched';
+  test.identical( dissection.matched, true );
+
+  /* */
+
+  test.case = `** ^** ** -- ""`;
+  var text = '';
+  var code = `** ^** **`;
+  var dissection = _.dissector.dissect( code, text );
+
+  test.description = 'export';
+  var exp = `**^^**^**`;
+  var got = _.dissector.dissectorExportToString( dissection.dissector );
+  test.identical( got, exp );
+
+  test.description = 'track';
+  var exp = 'least.left#1 rest.left#3 least.right#2';
+  var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/val';
+  var exp = [ '', '', '' ];
+  var got = _.select( dissection, 'parcels/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'tokens/*/val';
+  var exp = [ '', '', '' ];
+  var got = _.select( dissection, 'tokens/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/range';
+  var text2 = '';
+  dissection.parcels.forEach( ( parcel ) =>
+  {
+    test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
+    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    text2 += parcel.val;
+  });
+  test.identical( text2, text );
+
+  test.description = 'tokens/*/range';
+  var text2 = '';
+  dissection.tokens.forEach( ( token ) =>
+  {
+    test.description = `${token.tstep.type}`;
+    test.identical( token.val, _.strOnly( text, token.range ) );
+    text2 += token.val;
+  });
+  test.identical( text2, text );
+
+  test.description = 'matched';
+  test.identical( dissection.matched, true );
+
+  /* */
+
+  test.case = `** <a> ^** <a> ** -- 0a1a2a3a4`;
+  var text = '0a1a2a3a4';
+  var code = `** <a> ^** <a> **`;
+  var dissection = _.dissector.dissect( code, text );
+
+  test.description = 'export';
+  var exp = `**<a>^^**<a>^**`;
+  var got = _.dissector.dissectorExportToString( dissection.dissector );
+  test.identical( got, exp );
+
+  test.description = 'track';
+  var exp = 'first.left#1 rest.left#3 first.right#2';
+  var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/val';
+  var exp = [ '0a', '1a2a3', 'a4' ];
+  var got = _.select( dissection, 'parcels/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'tokens/*/val';
+  var exp = [ '0', 'a', '1a2a3', 'a', '4' ];
+  var got = _.select( dissection, 'tokens/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/range';
+  var text2 = '';
+  dissection.parcels.forEach( ( parcel ) =>
+  {
+    test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
+    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    text2 += parcel.val;
+  });
+  test.identical( text2, text );
+
+  test.description = 'tokens/*/range';
+  var text2 = '';
+  dissection.tokens.forEach( ( token ) =>
+  {
+    test.description = `${token.tstep.type}`;
+    test.identical( token.val, _.strOnly( text, token.range ) );
+    text2 += token.val;
+  });
+  test.identical( text2, text );
+
+  test.description = 'matched';
+  test.identical( dissection.matched, true );
+
+  /* */
+
+  test.case = `** <a> ^** <a> ** -- 0a1b2b3b4`;
+  var text = '0a1b2b3b4';
+  var code = `** <a> ^** <a> **`;
+  var dissection = _.dissector.dissect( code, text );
+
+  test.description = 'export';
+  var exp = `**<a>^^**<a>^**`;
+  var got = _.dissector.dissectorExportToString( dissection.dissector );
+  test.identical( got, exp );
+
+  test.description = 'track';
+  var exp = 'first.left#1';
+  var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/val';
+  var exp = [ '0a' ];
+  var got = _.select( dissection, 'parcels/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'tokens/*/val';
+  var exp = [ '0', 'a' ];
+  var got = _.select( dissection, 'tokens/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/range';
+  var text2 = '';
+  dissection.parcels.forEach( ( parcel ) =>
+  {
+    test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
+    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    text2 += parcel.val;
+  });
+  test.identical( text2, '0a' );
+
+  test.description = 'tokens/*/range';
+  var text2 = '';
+  dissection.tokens.forEach( ( token ) =>
+  {
+    test.description = `${token.tstep.type}`;
+    test.identical( token.val, _.strOnly( text, token.range ) );
+    text2 += token.val;
+  });
+  test.identical( text2, '0a' );
+
+  test.description = 'matched';
+  test.identical( dissection.matched, false );
+
+  /* */
+
+  test.case = `^** <a> ** <a> ^** -- 0a1a2a3a4`;
+  var text = '0a1a2a3a4';
+  var code = `^** <a> ** <a> ^**`;
+  var dissection = _.dissector.dissect( code, text );
+
+  test.description = 'export';
+  var exp = `^**<a>**<a>^^**`;
+  var got = _.dissector.dissectorExportToString( dissection.dissector );
+  test.identical( got, exp );
+
+  test.description = 'track';
+  var exp = 'first.left#1 first.left#2 rest.left#3';
+  var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/val';
+  var exp = [ '0a', '1a', '2a3a4' ];
+  var got = _.select( dissection, 'parcels/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'tokens/*/val';
+  var exp = [ '0', 'a', '1', 'a', '2a3a4' ];
+  var got = _.select( dissection, 'tokens/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/range';
+  var text2 = '';
+  dissection.parcels.forEach( ( parcel ) =>
+  {
+    test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
+    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    text2 += parcel.val;
+  });
+  test.identical( text2, text );
+
+  test.description = 'tokens/*/range';
+  var text2 = '';
+  dissection.tokens.forEach( ( token ) =>
+  {
+    test.description = `${token.tstep.type}`;
+    test.identical( token.val, _.strOnly( text, token.range ) );
+    text2 += token.val;
+  });
+  test.identical( text2, text );
+
+  test.description = 'matched';
+  test.identical( dissection.matched, true );
+
+  /* */
+
+  test.case = `^** <a> ** <a> ^** -- 0a1b2b3b4`;
+  var text = '0a1b2b3b4';
+  var code = `^** <a> ** <a> ^**`;
+  var dissection = _.dissector.dissect( code, text );
+
+  test.description = 'export';
+  var exp = `^**<a>**<a>^^**`;
+  var got = _.dissector.dissectorExportToString( dissection.dissector );
+  test.identical( got, exp );
+
+  test.description = 'track';
+  var exp = 'first.left#1';
+  var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/val';
+  var exp = [ '0a' ];
+  var got = _.select( dissection, 'parcels/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'tokens/*/val';
+  var exp = [ '0', 'a' ];
+  var got = _.select( dissection, 'tokens/*/val' );
+  test.identical( got, exp );
+
+  test.description = 'parcels/*/range';
+  var text2 = '';
+  dissection.parcels.forEach( ( parcel ) =>
+  {
+    test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
+    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    text2 += parcel.val;
+  });
+  test.identical( text2, '0a' );
+
+  test.description = 'tokens/*/range';
+  var text2 = '';
+  dissection.tokens.forEach( ( token ) =>
+  {
+    test.description = `${token.tstep.type}`;
+    test.identical( token.val, _.strOnly( text, token.range ) );
+    text2 += token.val;
+  });
+  test.identical( text2, '0a' );
+
+  test.description = 'matched';
+  test.identical( dissection.matched, false );
 
   /* */
 
@@ -986,7 +1540,7 @@ function dissectText( test )
   test.identical( got, exp );
 
   test.description = 'track';
-  var exp = 'text.left text.left';
+  var exp = 'text.left#1 text.left#2';
   var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
   test.identical( got, exp );
 
@@ -1036,7 +1590,7 @@ function dissectText( test )
   test.identical( got, exp );
 
   test.description = 'track';
-  var exp = 'text.left';
+  var exp = 'text.left#1';
   var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
   test.identical( got, exp );
 
@@ -1086,7 +1640,7 @@ function dissectText( test )
   test.identical( got, exp );
 
   test.description = 'track';
-  var exp = 'text.left';
+  var exp = 'text.left#1';
   var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
   test.identical( got, exp );
 
@@ -1186,7 +1740,7 @@ function dissectText( test )
   test.identical( got, exp );
 
   test.description = 'track';
-  var exp = 'text.left rest.left';
+  var exp = 'text.left#1 rest.left#2';
   var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
   test.identical( got, exp );
 
@@ -1236,7 +1790,7 @@ function dissectText( test )
   test.identical( got, exp );
 
   test.description = 'track';
-  var exp = 'text.left rest.left';
+  var exp = 'text.left#1 rest.left#2';
   var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
   test.identical( got, exp );
 
@@ -1336,7 +1890,7 @@ function dissectText( test )
   test.identical( got, exp );
 
   test.description = 'track';
-  var exp = 'rest.right text.right';
+  var exp = 'rest.left#2 text.right#1';
   var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
   test.identical( got, exp );
 
@@ -1386,7 +1940,7 @@ function dissectText( test )
   test.identical( got, exp );
 
   test.description = 'track';
-  var exp = 'rest.right text.right';
+  var exp = 'rest.left#2 text.right#1';
   var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
   test.identical( got, exp );
 

@@ -6524,7 +6524,7 @@ function tokensSyntaxFrom( test )
   var got = _.tokensSyntaxFrom( src );
   var exp = _.TokensSyntax.apply( null, [] );
   test.identical( got, exp );
-  test.is( got === src );
+  test.true( got === src );
 
   test.case = 'ins - instance of _.TokensSyntax maked by tokensSyntaxFrom';
   var src = _.tokensSyntaxFrom( 'src' );
@@ -6537,7 +6537,7 @@ function tokensSyntaxFrom( test )
     alternatives : {},
   };
   test.equivalent( got, exp );
-  test.is( got === src );
+  test.true( got === src );
 
   /* */
 

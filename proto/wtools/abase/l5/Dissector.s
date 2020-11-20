@@ -103,7 +103,7 @@ function _codeLex_body( o )
 
   splitsUnescape( op.splits );
 
-  prioritize1( op.splits );
+  prioritize( op.splits );
 
   reprioritize( op.splits );
 
@@ -119,7 +119,6 @@ function _codeLex_body( o )
       continue;
       if( !/^\^+$/.test( split ) )
       continue;
-      debugger;
       _.assert( op.splits[ i + 1 ] === '**', 'Cant tokenize template' );
       op.splits[ i + 1 ] = split + op.splits[ i + 1 ];
       op.splits.splice( i, 1 );
@@ -127,7 +126,7 @@ function _codeLex_body( o )
 
   }
 
-  function prioritize1( splits )
+  function prioritize( splits )
   {
     for( let s = 0 ; s < splits.length ; s++ )
     {
@@ -143,7 +142,7 @@ function _codeLex_body( o )
       tstep.map = Object.create( null );
       tstep.map.priority = parsed[ 1 ];
       tstep.map.any = parsed[ 2 ];
-      tstep.priority = parsed[ 1 ].length;
+      tstep.priority = -parsed[ 1 ].length;
       splits[ s ] = tstep;
     }
   }
@@ -173,16 +172,18 @@ function _codeLex_body( o )
     }
 
     let effectivePriority = 0;
-    for( let p = 0 ; p < priorities.length ; p++ )
+    for( let p = priorities.length-1 ; p >= 0 ; p-- )
     {
       let current = priorities[ p ];
       splits[ current.index ].priority = effectivePriority;
-      effectivePriority += 1;
+      effectivePriority -= 1;
       _.assert( -_.dissector._maxPriority <= effectivePriority && effectivePriority <= _.dissector._maxPriority );
       if( Config.debug )
       {
-        if( p > 0 && priorities[ p-1 ].priority === priorities[ p ].priority )
-        _.assert( priorities[ p-1 ].index > priorities[ p ].index );
+        if( p < priorities.length-1 && priorities[ p+1 ].priority === priorities[ p ].priority )
+        _.assert( priorities[ p+1 ].index < priorities[ p ].index );
+        // if( p > 0 && priorities[ p-1 ].priority === priorities[ p ].priority )
+        // _.assert( priorities[ p-1 ].index > priorities[ p ].index );
       }
     }
 
@@ -252,23 +253,16 @@ function make_body( o )
 
   let dissector = Object.create( null );
   dissector.code = o.code;
-  dissector.tsteps = _.dissector._codeLex.body( o );
+  dissector.tokenSteps = _.dissector._codeLex.body( o );
   dissector.eatMap = eatMapGenerate();
-  dissector.lsteps = stepsLeftGenerate();
-  dissector.rsteps = stepsRightGenerate();
+  dissector.parcelSteps = stepsGenerate();
   dissector.parse = parse;
 
-  /* steps range */
-  let lstep = 0;
-  let rstep = dissector.rsteps.length - 1;
-
   /* token steps range */
-  let ltstep = 0;
-  let rtstep = dissector.tsteps.length - 1;
+  let tokenInterval = [ 0, dissector.tokenSteps.length - 1 ]
 
   /* input text range */
-  let ltext;
-  let rtext;
+  let textInterval = [];
 
   /* markers */
   let pmarker = 0;
@@ -291,30 +285,36 @@ function make_body( o )
     result.matched = null;
 
     text = _text;
-    ltext = 0;
-    rtext = text.length-1;
+    textInterval[ 0 ] = 0;
+    textInterval[ 1 ] = text.length-1;
 
     _.assert( arguments.length === 1 );
     _.assert( _.strIs( _text ) );
 
-    while( ltstep <= rtstep )
+    parseStatic( result );
+
+    if( result.matched === null )
     {
-      direct = dissector.lsteps[ lstep ].priority >= dissector.rsteps[ rstep ].priority;
-      pstep = direct ? dissector.lsteps[ lstep ] : dissector.rsteps[ rstep ];
+      result.matched = tokenInterval[ 0 ] > tokenInterval[ 1 ];
+      _.assert( !result.matched || textInterval[ 0 ] > textInterval[ 1 ] );
+    }
 
-      if( Config.debug )
-      {
-        /* xxx : use _.range.in* */
-        _.assert
-        (
-          ltstep <= pstep.trange[ 0 ] && pstep.trange[ 1 ] <= rtstep
-          , `Current pstep is ${_.dissector._stepExportToStringShort( pstep )}`
-          , `\nPstep has token interval ${pstep.trange[ 0 ]} .. ${pstep.trange[ 1 ]}.`
-          , `\nBut current token interval is ${ltstep} .. ${rtstep}`
-        );
-      }
+    return result;
+  }
 
+  /* */
+
+  function parseStatic( result )
+  {
+
+    for( let i = 0 ; i < dissector.parcelSteps.length ; i++ )
+    {
+      pstep = dissector.parcelSteps[ i ];
+      direct = pstep.side === 'left';
+
+      debugger;
       let parcel = pstep.eat();
+      debugger;
 
       if( !parcel )
       {
@@ -323,34 +323,31 @@ function make_body( o )
       }
 
       parcelNormalize( parcel );
-
-      if( direct )
-      {
-        result.parcels.splice( pmarker, 0, parcel );
-        pmarker += 1;
-        result.tokens.splice( tmarker, 0, ... parcel.tokens );
-        tmarker += parcel.tokens.length;
-        ltstep += pstep.tsteps.length;
-        lstep += 1;
-        ltext = parcel.range[ 1 ] + 1;
-      }
-      else
-      {
-        result.parcels.splice( pmarker, 0, parcel );
-        result.tokens.splice( tmarker, 0, ... [ ... parcel.tokens ].reverse() );
-        rtstep -= pstep.tsteps.length;
-        rstep -= 1;
-        rtext = parcel.range[ 0 ] - 1;
-      }
+      move( result, parcel );
     }
 
-    if( result.matched === null )
+  }
+
+  /* */
+
+  function move( result, parcel )
+  {
+    if( direct )
     {
-      result.matched = ltstep > rtstep;
-      _.assert( !result.matched || ltext > rtext );
+      result.parcels.splice( pmarker, 0, parcel );
+      pmarker += 1;
+      result.tokens.splice( tmarker, 0, ... parcel.tokens );
+      tmarker += parcel.tokens.length;
+      tokenInterval[ 0 ] += pstep.tokenSteps.length;
+      textInterval[ 0 ] = parcel.range[ 1 ] + 1;
     }
-
-    return result;
+    else
+    {
+      result.parcels.splice( pmarker, 0, parcel );
+      result.tokens.splice( tmarker, 0, ... [ ... parcel.tokens ].reverse() );
+      tokenInterval[ 1 ] -= pstep.tokenSteps.length;
+      textInterval[ 1 ] = parcel.range[ 0 ] - 1;
+    }
   }
 
   /* */
@@ -365,11 +362,11 @@ function make_body( o )
     parcel.pstep = pstep;
     if( parcel.tstep === undefined )
     {
-      _.assert( !!pstep.tsteps );
-      _.assert( pstep.tsteps.length === 1 );
-      parcel.tstep = pstep.tsteps[ 0 ];
+      _.assert( !!pstep.tokenSteps );
+      _.assert( pstep.tokenSteps.length === 1 );
+      parcel.tstep = pstep.tokenSteps[ 0 ];
     }
-    _.assert( _.range.is( parcel.range ) );
+    _.assert( _.cinterval.is( parcel.range ) );
     _.assert( _.mapIs( parcel.map ) );
   }
 
@@ -377,13 +374,13 @@ function make_body( o )
 
   function eatFirstLeft()
   {
-    let left = _.strLeft( text, pstep.map.first.val, [ ltext, rtext+1 ] );
-    if( left.index === -1 )
+    let left = _.strLeft( text, pstep.map.first.val, [ textInterval[ 0 ], textInterval[ 1 ] + 1 ] );
+    if( left.entry === undefined )
     return;
 
     let any = Object.create( null );
-    any.range = [ ltext, left.index-1 ];
-    any.val = text.slice( ltext, left.index );
+    any.range = [ textInterval[ 0 ], left.index-1 ];
+    any.val = text.slice( textInterval[ 0 ], left.index );
     any.tstep = pstep.map.any;
     any.pstep = null;
 
@@ -394,10 +391,10 @@ function make_body( o )
     first.pstep = null;
 
     let parcel = Object.create( null );
-    parcel.range ; [ ltext, left.index+pstep.map.first.val.length-1 ];
-    parcel.val = text.slice( ltext, left.index+pstep.map.first.val.length );
+    parcel.range ; [ textInterval[ 0 ], left.index+pstep.map.first.val.length-1 ];
+    parcel.val = text.slice( textInterval[ 0 ], left.index+pstep.map.first.val.length );
     parcel.tokens = [ any, first ];
-    parcel.range = [ ltext, left.index+pstep.map.first.val.length-1 ];
+    parcel.range = [ textInterval[ 0 ], left.index+pstep.map.first.val.length-1 ];
     parcel.tstep = null;
     parcel.pstep = pstep;
     parcel.map =
@@ -413,13 +410,13 @@ function make_body( o )
 
   function eatFirstRight()
   {
-    let right = _.strRight( text, pstep.map.first.val, [ ltext, rtext+1 ] );
-    if( right.index === -1 )
+    let right = _.strRight( text, pstep.map.first.val, [ textInterval[ 0 ], textInterval[ 1 ] + 1 ] );
+    if( right.entry === undefined )
     return;
 
     let any = Object.create( null );
-    any.range = [ right.index+pstep.map.first.val.length, rtext ];
-    any.val = text.slice( right.index+pstep.map.first.val.length, rtext+1 );
+    any.range = [ right.index+pstep.map.first.val.length, textInterval[ 1 ] ];
+    any.val = text.slice( right.index+pstep.map.first.val.length, textInterval[ 1 ] + 1 );
     any.tstep = pstep.map.any;
     any.pstep = null;
 
@@ -430,10 +427,10 @@ function make_body( o )
     first.pstep = null;
 
     let parcel = Object.create( null );
-    parcel.range = [ right.index, rtext ];
-    parcel.val = text.slice( right.index, rtext+1 );
+    parcel.range = [ right.index, textInterval[ 1 ] ];
+    parcel.val = text.slice( right.index, textInterval[ 1 ] + 1 );
     parcel.tokens = [ any, first ];
-    parcel.range = [ right.index, rtext ];
+    parcel.range = [ right.index, textInterval[ 1 ] ];
     parcel.tstep = null;
     parcel.pstep = pstep;
     parcel.map =
@@ -451,8 +448,8 @@ function make_body( o )
   {
     let parcel =
     {
-      range : [ ltext, text.length-1 ],
-      val : text.slice( ltext ),
+      range : [ textInterval[ 0 ], textInterval[ 1 ] ],
+      val : text.slice( textInterval[ 0 ], textInterval[ 1 ] + 1 ),
       map : Object.create( null ),
     };
     return parcel;
@@ -464,8 +461,8 @@ function make_body( o )
   {
     let parcel =
     {
-      range : [ 0, rtext ],
-      val : text.slice( o, rtext+1 ),
+      range : [ textInterval[ 0 ], textInterval[ 1 ] ],
+      val : text.slice( textInterval[ 0 ], textInterval[ 1 ] + 1 ),
       map : Object.create( null ),
     };
     return parcel;
@@ -477,7 +474,7 @@ function make_body( o )
   {
     let parcel =
     {
-      range : [ ltext, ltext-1 ],
+      range : [ textInterval[ 0 ], textInterval[ 0 ]-1 ],
       val : '',
       map : Object.create( null ),
     };
@@ -490,7 +487,7 @@ function make_body( o )
   {
     let parcel =
     {
-      range : [ rtext+1, rtext ],
+      range : [ textInterval[ 1 ] + 1, textInterval[ 1 ] ],
       val : '',
       map : Object.create( null ),
     };
@@ -501,12 +498,12 @@ function make_body( o )
 
   function eatTextLeft()
   {
-    let match = pstep.val === text.slice( ltext, ltext + pstep.val.length );
+    let match = pstep.val === text.slice( textInterval[ 0 ], textInterval[ 0 ] + pstep.val.length );
     if( !match )
     return;
     let parcel =
     {
-      range : [ ltext, ltext + pstep.val.length - 1 ],
+      range : [ textInterval[ 0 ], textInterval[ 0 ] + pstep.val.length - 1 ],
       val : pstep.val,
       map : Object.create( null ),
     };
@@ -518,12 +515,12 @@ function make_body( o )
   function eatTextRight()
   {
     debugger;
-    let match = pstep.val === text.slice( rtext - pstep.val.length + 1, rtext + 1 );
+    let match = pstep.val === text.slice( textInterval[ 1 ] - pstep.val.length + 1, textInterval[ 1 ] + 1 );
     if( !match )
     return;
     let parcel =
     {
-      range : [ rtext - pstep.val.length + 1, rtext ],
+      range : [ textInterval[ 1 ] - pstep.val.length + 1, textInterval[ 1 ] ],
       val : pstep.val,
       map : Object.create( null ),
     };
@@ -548,40 +545,71 @@ function make_body( o )
 
   /* */
 
-  function stepsLeftGenerate()
+  function stepsGenerate()
   {
-    let lsteps = [];
+    let parcelSteps = [];
+
     let op = Object.create( null );
     op.dissector = dissector;
-    op.tindex = 0;
-    op.direct = true;
-    while( op.tindex < dissector.tsteps.length )
-    {
-      op.tindex2 = op.tindex + 1;
-      let pstep = _.dissector._stepGenerate( op );
-      lsteps.push( pstep );
-      op.tindex += pstep.tsteps.length;
-    }
-    return lsteps;
-  }
+    op.tinterval = [ 0, dissector.tokenSteps.length-1 ];
 
-  /* */
+    let leftPstep = null;
+    let rightPstep = null;
 
-  function stepsRightGenerate()
-  {
-    let rsteps = [];
-    let op = Object.create( null );
-    op.dissector = dissector;
-    op.tindex = dissector.tsteps.length-1;
-    op.direct = false;
-    while( op.tindex >= 0 )
+    while( op.tinterval[ 0 ] <= op.tinterval[ 1 ] )
     {
-      op.tindex2 = op.tindex - 1;
-      let pstep = _.dissector._stepGenerate( op );
-      rsteps.unshift( pstep );
-      op.tindex -= pstep.tsteps.length;
+
+      if( leftPstep === null )
+      {
+        op.tindex = op.tinterval[ 0 ];
+        op.tindex2 = op.tindex + 1;
+        op.direct = true;
+        leftPstep = _.dissector._stepGenerate( op );
+      }
+
+      if( rightPstep === null )
+      {
+        op.tindex = op.tinterval[ 1 ];
+        op.tindex2 = op.tindex - 1;
+        op.direct = false;
+        rightPstep = _.dissector._stepGenerate( op );
+      }
+
+      let direct = leftPstep.priority >= rightPstep.priority;
+      let pstep = direct ? leftPstep : rightPstep;
+
+      if( Config.debug )
+      {
+        _.assert
+        (
+          _.cinterval.has( op.tinterval, pstep.tinterval )
+          , `Current pstep is ${_.dissector._stepExportToStringShort( pstep )}`
+          , `\nPstep has token interval ${pstep.tinterval[ 0 ]} .. ${pstep.tinterval[ 1 ]}.`
+          , `\nBut current token interval is ${op.tinterval[ 0 ]} .. ${op.tinterval[ 1 ]}`
+        );
+      }
+
+      parcelSteps.push( pstep );
+      pstep.index = parcelSteps.length;
+
+      if( direct )
+      {
+        op.tinterval[ 0 ] += pstep.tokenSteps.length;
+        leftPstep = null;
+        if( !_.cinterval.has( op.tinterval, rightPstep.sensetiveInterval ) )
+        rightPstep = null;
+      }
+      else
+      {
+        op.tinterval[ 1 ] -= pstep.tokenSteps.length;
+        rightPstep = null;
+        if( !_.cinterval.has( op.tinterval, leftPstep.sensetiveInterval ) )
+        leftPstep = null;
+      }
+
     }
-    return rsteps;
+
+    return parcelSteps;
   }
 
   /* */
@@ -601,8 +629,11 @@ function _stepGenerate( op )
 {
   let pstep;
 
-  op.tstep = op.dissector.tsteps[ op.tindex ];
-  op.tstep2 = op.dissector.tsteps[ op.tindex2 ];
+  op.tstep = op.dissector.tokenSteps[ op.tindex ];
+  if( _.cinterval.has( op.tinterval, op.tindex2 ) )
+  op.tstep2 = op.dissector.tokenSteps[ op.tindex2 ];
+  else
+  op.tstep2 = undefined;
 
   _.assert
   (
@@ -620,29 +651,33 @@ function _stepGenerate( op )
     {
       pstep.type = 'rest';
       pstep.priority = _.dissector._maxPriority + 10;
-      pstep.tsteps = [ op.tstep ];
+      pstep.tokenSteps = [ op.tstep ];
+      pstep.sensetiveInterval = [ 0, 0 ];
     }
     else if( op.tstep2.type === 'text' )
     {
       pstep.type = 'first';
       pstep.map.first = op.tstep2;
-      pstep.tsteps = [ op.tstep, op.tstep2 ];
+      pstep.tokenSteps = [ op.tstep, op.tstep2 ];
+      pstep.sensetiveInterval = [ 0, 1 ];
     }
     else if( op.tstep2.type === 'any' )
     {
       pstep.type = 'least';
       pstep.map.least = op.tstep2;
-      pstep.tsteps = [ op.tstep ];
+      pstep.tokenSteps = [ op.tstep ];
+      pstep.sensetiveInterval = [ 0, 1 ];
     }
     else _.assert( 0, 'Unexpected' );
   }
   else if( op.tstep.type === 'text' )
   {
     pstep = Object.create( null );
-    pstep.tsteps = [ op.tstep ];
+    pstep.tokenSteps = [ op.tstep ];
     pstep.type = op.tstep.type;
     pstep.val = op.tstep.val;
     pstep.priority = _.dissector._maxPriority + 20;
+    pstep.sensetiveInterval = [ 0, 0 ];
     _.assert( op.tstep.side === undefined );
     _.assert( op.tstep.priority === undefined );
   }
@@ -650,20 +685,32 @@ function _stepGenerate( op )
 
   if( pstep.side === undefined )
   pstep.side = ( op.direct ? 'left' : 'right' );
+  _.assert( _.longHas( [ 'left', 'right' ], pstep.side ) );
 
   _.assert( pstep.eat === undefined );
   let rname = pstep.type + ( op.direct ? 'Left' : 'Right' );
   pstep.eat = op.dissector.eatMap[ rname ];
   _.assert( _.routineIs( pstep.eat ), `No such eater ${rname}` );
 
-  _.assert( pstep.trange === undefined );
+  _.assert( pstep.tinterval === undefined );
+
+  debugger;
+
   if( op.direct )
-  pstep.trange = [ op.tindex, op.tindex + pstep.tsteps.length - 1 ];
+  {
+    pstep.tinterval = [ op.tindex, op.tindex + pstep.tokenSteps.length - 1 ];
+    pstep.sensetiveInterval[ 0 ] += op.tindex;
+    pstep.sensetiveInterval[ 1 ] += op.tindex;
+  }
   else
-  pstep.trange = [ op.tindex - pstep.tsteps.length + 1, op.tindex ];
+  {
+    pstep.tinterval = [ op.tindex - pstep.tokenSteps.length + 1, op.tindex ];
+    pstep.sensetiveInterval[ 0 ] = op.tindex - pstep.sensetiveInterval[ 1 ];
+    pstep.sensetiveInterval[ 1 ] = op.tindex;
+  }
 
   _.assert( _.numberIs( pstep.priority ) );
-  _.assert( _.arrayIs( pstep.tsteps ) );
+  _.assert( _.arrayIs( pstep.tokenSteps ) );
 
   return pstep;
 }
@@ -720,8 +767,8 @@ function _tstepExportToString( tstep )
 
   if( tstep.type === 'any' )
   {
-    _.assert( tstep.priority >= 0 );
-    return _.strDup( '^', tstep.priority ) + tstep.map.any;
+    _.assert( tstep.priority <= 0 );
+    return _.strDup( '^', -tstep.priority ) + tstep.map.any;
   }
   else if( tstep.type === 'text' )
   {
@@ -740,7 +787,7 @@ function dissectorExportToString( dissector )
 
   _.assert( _.dissector.dissectorIs( dissector ) );
 
-  dissector.tsteps.forEach( ( tstep ) =>
+  dissector.tokenSteps.forEach( ( tstep ) =>
   {
     result += _.dissector._tstepExportToString( tstep );
   });
@@ -752,7 +799,7 @@ function dissectorExportToString( dissector )
 
 function _stepExportToStringShort( step )
 {
-  return `${step.type}.${step.side}`;
+  return `${step.type}.${step.side}#${step.index}`;
 }
 
 //

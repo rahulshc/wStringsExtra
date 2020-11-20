@@ -1015,7 +1015,7 @@ _strReplaceMapPrepare.defaults =
 
 /* aaa : extend coverage */ /* Dmytro : covered */
 
-/* aaa for Dmytro : bad! Does not work: `_.strReplaceAll( arg, quote, ( match, it ) => ` */
+/* aaa Does not work: `_.strReplaceAll( arg, quote, ( match, it ) => ` */
 /*
    Dmytro : covered, it works. Maybe, the case described above uses illegal call - if {-ins-} is an Array, then
    {-sub-} should be an Array
@@ -1194,8 +1194,8 @@ strTokenizeCpp.defaults =
 // {
 //   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 //   _.assert( _.strIs( srcStr ) );
-//   _.assert( _.crange.is( sparse ) );
-//   return srcStr.substring( crange[ 0 ], crange[ 1 ]+1 );
+//   _.assert( _.cinterval.is( sparse ) );
+//   return srcStr.substring( cinterval[ 0 ], cinterval[ 1 ]+1 );
 // }
 
 //
@@ -1226,9 +1226,9 @@ function strSubs( srcStr, sparse )
   _.assert( _.strIs( srcStr ) );
   _.assert( _.sparse.is( sparse ) );
 
-  _.sparse.eachRange( sparse, ( crange ) =>
+  _.sparse.eachRange( sparse, ( cinterval ) =>
   {
-    result.push( srcStr.substring( crange[ 0 ], crange[ 1 ]+1 ) );
+    result.push( srcStr.substring( cinterval[ 0 ], cinterval[ 1 ]+1 ) );
   });
 
   return result;
