@@ -88,20 +88,9 @@ function _codeLex_body( o )
     onQuoting,
   });
 
-  _.strSplitsStrip.body
-  ({
-    splits : op.splits,
-    stripping : 1,
-  });
-
-  _.strSplitsDropEmpty.body
-  ({
-    splits : op.splits,
-  })
+  tstepsWrap();
 
   priorityRejoin();
-
-  splitsUnescape( op.splits );
 
   prioritize( op.splits );
 
@@ -109,18 +98,74 @@ function _codeLex_body( o )
 
   return op.splits;
 
+  /* - */
+
+  function tstepsWrap()
+  {
+    let orphan;
+    let left = 0;
+    for( let i = 0 ; i < op.splits.length ; i++ )
+    {
+      let split = op.splits[ i ];
+      if( !_.strIs( split ) )
+      {
+        let tstep = split;
+        _.assert( tstep.charInterval === undefined );
+        if( orphan !== undefined )
+        {
+          tstep.raw = orphan + tstep.raw;
+          orphan = undefined;
+        }
+        tstep.charInterval = [ left, left + tstep.raw.length - 1 ];
+        left += tstep.raw.length;
+        continue;
+      }
+      let stripped = split.trim();
+      if( stripped === '' )
+      {
+        op.splits.splice( i, 1 );
+        i -= 1;
+        if( i >= 0 )
+        {
+          let tstep = op.splits[ i ];
+          tstep.raw = tstep.raw + stripped;
+          tstep.charInterval[ 1 ] = tstep.charInterval[ 0 ] + tstep.raw.length;
+        }
+        else
+        {
+          orphan = split
+        }
+        continue;
+      }
+      let tstep = Object.create( null );
+      tstep.type = 'etc';
+      tstep.raw = split;
+      if( orphan !== undefined )
+      {
+        tstep.raw = orphan + tstep.raw;
+        orphan = undefined;
+      }
+      tstep.val = stripped;
+      tstep.charInterval = [ left, left + tstep.raw.length - 1 ];
+      left += tstep.raw.length;
+      op.splits[ i ] = tstep;
+    }
+  }
+
   function priorityRejoin()
   {
 
     for( let i = 0 ; i < op.splits.length ; i++ )
     {
       let split = op.splits[ i ];
-      if( !_.strIs( split ) )
+      _.assert( _.mapIs( split ) );
+      if( !/^\s*\^+\s*$/.test( split.val ) )
       continue;
-      if( !/^\^+$/.test( split ) )
-      continue;
-      _.assert( op.splits[ i + 1 ] === '**', 'Cant tokenize template' );
-      op.splits[ i + 1 ] = split + op.splits[ i + 1 ];
+      let nsplit = op.splits[ i + 1 ];
+      _.assert( !!nsplit && nsplit.val === '**', `Cant tokenize template. Priority ${split.val} should be followed by **` );
+      nsplit.val = split.val + nsplit.val;
+      nsplit.raw = split.raw + nsplit.raw;
+      nsplit.charInterval[ 0 ] = split.charInterval[ 0 ];
       op.splits.splice( i, 1 );
     }
 
@@ -131,14 +176,16 @@ function _codeLex_body( o )
     for( let s = 0 ; s < splits.length ; s++ )
     {
       let split = splits[ s ];
-      if( !_.strIs( split ) )
+      _.assert( !_.strIs( split ) );
+      if( split.type === 'text' )
       continue;
-      let parsed = /(\^*)(\*\*)/.exec( split );
+      _.assert( split.type === 'etc' );
+      let parsed = /(\^*)\s*(\*\*)/.exec( split.val );
       if( !parsed )
       continue;
-      let tstep = Object.create( null );
+      let tstep = split;
       tstep.type = 'any';
-      tstep.val = split;
+      tstep.val = parsed[ 1 ] + parsed[ 2 ];
       tstep.map = Object.create( null );
       tstep.map.priority = parsed[ 1 ];
       tstep.map.any = parsed[ 2 ];
@@ -182,8 +229,6 @@ function _codeLex_body( o )
       {
         if( p < priorities.length-1 && priorities[ p+1 ].priority === priorities[ p ].priority )
         _.assert( priorities[ p+1 ].index < priorities[ p ].index );
-        // if( p > 0 && priorities[ p-1 ].priority === priorities[ p ].priority )
-        // _.assert( priorities[ p-1 ].index > priorities[ p ].index );
       }
     }
 
@@ -194,28 +239,12 @@ function _codeLex_body( o )
     return _.sorted.addLeft( array, ins, ( e ) => e.priority );
   }
 
-  function splitsUnescape( splits )
-  {
-    for( let s = 0 ; s < splits.length ; s++ )
-    {
-      let split = splits[ s ];
-      if( !_.mapIs( split ) || split.type !== 'text' )
-      continue;
-      let map =
-      {
-        '\\<' : '<',
-        '\\>' : '>',
-        '\\\\' : '\\',
-      }
-      split.val = _.strReplaceAll( split.val, map );
-    }
-  }
-
   function onQuoting( e, op )
   {
     let tstep = Object.create( null );
     tstep.type = 'text';
-    tstep.val = e;
+    tstep.raw = e;
+    tstep.val = _.dissector.unescape( e );
     return tstep;
   }
 }
@@ -226,6 +255,33 @@ _codeLex_body.defaults =
 }
 
 let _codeLex = _.routineUnite( _codeLex_head, _codeLex_body );
+
+//
+
+function unescape( src )
+{
+  let map =
+  {
+    '\\<' : '<',
+    '\\>' : '>',
+    '\\\\' : '\\',
+  }
+  return _.strReplaceAll( src, map );
+}
+
+//
+
+function escape( src )
+{
+  let map =
+  {
+    '<' : '\\<',
+    '>' : '\\>',
+    '\\' : '\\\\',
+  }
+  return _.strReplaceAll( src, map );
+}
+
 
 //
 
@@ -258,10 +314,10 @@ function make_body( o )
   dissector.parcelSteps = stepsGenerate();
   dissector.parse = parse;
 
-  /* token steps range */
+  /* token steps interval */
   let tokenInterval = [ 0, dissector.tokenSteps.length - 1 ]
 
-  /* input text range */
+  /* input text interval */
   let textInterval = [];
 
   /* markers */
@@ -312,9 +368,7 @@ function make_body( o )
       pstep = dissector.parcelSteps[ i ];
       direct = pstep.side === 'left';
 
-      debugger;
       let parcel = pstep.eat();
-      debugger;
 
       if( !parcel )
       {
@@ -339,14 +393,14 @@ function make_body( o )
       result.tokens.splice( tmarker, 0, ... parcel.tokens );
       tmarker += parcel.tokens.length;
       tokenInterval[ 0 ] += pstep.tokenSteps.length;
-      textInterval[ 0 ] = parcel.range[ 1 ] + 1;
+      textInterval[ 0 ] = parcel.interval[ 1 ] + 1;
     }
     else
     {
       result.parcels.splice( pmarker, 0, parcel );
       result.tokens.splice( tmarker, 0, ... [ ... parcel.tokens ].reverse() );
       tokenInterval[ 1 ] -= pstep.tokenSteps.length;
-      textInterval[ 1 ] = parcel.range[ 0 ] - 1;
+      textInterval[ 1 ] = parcel.interval[ 0 ] - 1;
     }
   }
 
@@ -366,7 +420,7 @@ function make_body( o )
       _.assert( pstep.tokenSteps.length === 1 );
       parcel.tstep = pstep.tokenSteps[ 0 ];
     }
-    _.assert( _.cinterval.is( parcel.range ) );
+    _.assert( _.cinterval.is( parcel.interval ) );
     _.assert( _.mapIs( parcel.map ) );
   }
 
@@ -379,22 +433,22 @@ function make_body( o )
     return;
 
     let any = Object.create( null );
-    any.range = [ textInterval[ 0 ], left.index-1 ];
+    any.interval = [ textInterval[ 0 ], left.index-1 ];
     any.val = text.slice( textInterval[ 0 ], left.index );
     any.tstep = pstep.map.any;
     any.pstep = null;
 
     let first = Object.create( null );
-    first.range = [ left.index, left.index+pstep.map.first.val.length-1 ];
+    first.interval = [ left.index, left.index+pstep.map.first.val.length-1 ];
     first.val = pstep.map.first.val;
     first.tstep = pstep.map.first;
     first.pstep = null;
 
     let parcel = Object.create( null );
-    parcel.range ; [ textInterval[ 0 ], left.index+pstep.map.first.val.length-1 ];
+    parcel.interval ; [ textInterval[ 0 ], left.index+pstep.map.first.val.length-1 ];
     parcel.val = text.slice( textInterval[ 0 ], left.index+pstep.map.first.val.length );
     parcel.tokens = [ any, first ];
-    parcel.range = [ textInterval[ 0 ], left.index+pstep.map.first.val.length-1 ];
+    parcel.interval = [ textInterval[ 0 ], left.index+pstep.map.first.val.length-1 ];
     parcel.tstep = null;
     parcel.pstep = pstep;
     parcel.map =
@@ -415,22 +469,22 @@ function make_body( o )
     return;
 
     let any = Object.create( null );
-    any.range = [ right.index+pstep.map.first.val.length, textInterval[ 1 ] ];
+    any.interval = [ right.index+pstep.map.first.val.length, textInterval[ 1 ] ];
     any.val = text.slice( right.index+pstep.map.first.val.length, textInterval[ 1 ] + 1 );
     any.tstep = pstep.map.any;
     any.pstep = null;
 
     let first = Object.create( null );
-    first.range = [ right.index, right.index+pstep.map.first.val.length-1 ];
+    first.interval = [ right.index, right.index+pstep.map.first.val.length-1 ];
     first.val = pstep.map.first.val;
     first.tstep = pstep.map.first;
     first.pstep = null;
 
     let parcel = Object.create( null );
-    parcel.range = [ right.index, textInterval[ 1 ] ];
+    parcel.interval = [ right.index, textInterval[ 1 ] ];
     parcel.val = text.slice( right.index, textInterval[ 1 ] + 1 );
     parcel.tokens = [ any, first ];
-    parcel.range = [ right.index, textInterval[ 1 ] ];
+    parcel.interval = [ right.index, textInterval[ 1 ] ];
     parcel.tstep = null;
     parcel.pstep = pstep;
     parcel.map =
@@ -448,7 +502,7 @@ function make_body( o )
   {
     let parcel =
     {
-      range : [ textInterval[ 0 ], textInterval[ 1 ] ],
+      interval : [ textInterval[ 0 ], textInterval[ 1 ] ],
       val : text.slice( textInterval[ 0 ], textInterval[ 1 ] + 1 ),
       map : Object.create( null ),
     };
@@ -461,7 +515,7 @@ function make_body( o )
   {
     let parcel =
     {
-      range : [ textInterval[ 0 ], textInterval[ 1 ] ],
+      interval : [ textInterval[ 0 ], textInterval[ 1 ] ],
       val : text.slice( textInterval[ 0 ], textInterval[ 1 ] + 1 ),
       map : Object.create( null ),
     };
@@ -474,7 +528,7 @@ function make_body( o )
   {
     let parcel =
     {
-      range : [ textInterval[ 0 ], textInterval[ 0 ]-1 ],
+      interval : [ textInterval[ 0 ], textInterval[ 0 ]-1 ],
       val : '',
       map : Object.create( null ),
     };
@@ -487,7 +541,7 @@ function make_body( o )
   {
     let parcel =
     {
-      range : [ textInterval[ 1 ] + 1, textInterval[ 1 ] ],
+      interval : [ textInterval[ 1 ] + 1, textInterval[ 1 ] ],
       val : '',
       map : Object.create( null ),
     };
@@ -503,7 +557,7 @@ function make_body( o )
     return;
     let parcel =
     {
-      range : [ textInterval[ 0 ], textInterval[ 0 ] + pstep.val.length - 1 ],
+      interval : [ textInterval[ 0 ], textInterval[ 0 ] + pstep.val.length - 1 ],
       val : pstep.val,
       map : Object.create( null ),
     };
@@ -514,13 +568,12 @@ function make_body( o )
 
   function eatTextRight()
   {
-    debugger;
     let match = pstep.val === text.slice( textInterval[ 1 ] - pstep.val.length + 1, textInterval[ 1 ] + 1 );
     if( !match )
     return;
     let parcel =
     {
-      range : [ textInterval[ 1 ] - pstep.val.length + 1, textInterval[ 1 ] ],
+      interval : [ textInterval[ 1 ] - pstep.val.length + 1, textInterval[ 1 ] ],
       val : pstep.val,
       map : Object.create( null ),
     };
@@ -668,7 +721,7 @@ function _stepGenerate( op )
       pstep.tokenSteps = [ op.tstep ];
       pstep.sensetiveInterval = [ 0, 1 ];
     }
-    else _.assert( 0, 'Unexpected' );
+    else _.assert( 0, `Unknown type of token step : ${op.tstep2.type}` );
   }
   else if( op.tstep.type === 'text' )
   {
@@ -693,8 +746,6 @@ function _stepGenerate( op )
   _.assert( _.routineIs( pstep.eat ), `No such eater ${rname}` );
 
   _.assert( pstep.tinterval === undefined );
-
-  debugger;
 
   if( op.direct )
   {
@@ -863,6 +914,9 @@ let DissectorExtension =
   is : dissectorIs,
 
   _codeLex,
+  unescape,
+  escape,
+
   make,
   _stepGenerate,
   dissect,

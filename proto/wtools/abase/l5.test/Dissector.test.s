@@ -23,38 +23,99 @@ function _codeLex( test )
 
   /* */
 
-  test.case = 'basic';
+  test.case = '^**';
   var exp =
   [
-    'b',
-    { 'type' : 'text', 'val' : 'some text 1' },
     {
       'type' : 'any',
+      'raw' : '^**',
+      'val' : '^**',
+      'charInterval' : [ 0, 2 ],
+      'map' : { 'priority' : '^', 'any' : '**' },
+      'priority' : 0,
+    }
+  ]
+  var got = _.dissector._codeLex( '^**' );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'b<some text 1>**<some text 2>e';
+  var exp =
+  [
+    {
+      'type' : 'etc',
+      'raw' : 'b',
+      'val' : 'b',
+      'charInterval' : [ 0, 0 ]
+    },
+    {
+      'type' : 'text',
+      'raw' : 'some text 1',
+      'val' : 'some text 1',
+      'charInterval' : [ 1, 11 ]
+    },
+    {
+      'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 12, 13 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : 0
     },
-    { 'type' : 'text', 'val' : 'some text 2' },
-    'e',
+    {
+      'type' : 'text',
+      'raw' : 'some text 2',
+      'val' : 'some text 2',
+      'charInterval' : [ 14, 24 ]
+    },
+    {
+      'type' : 'etc',
+      'raw' : 'e',
+      'val' : 'e',
+      'charInterval' : [ 25, 25 ]
+    }
   ]
   var got = _.dissector._codeLex( 'b<some text 1>**<some text 2>e' );
   test.identical( got, exp );
 
   /* */
 
-  test.case = 'extra spaces';
+  test.case = '  b  < some text 1 > ** < some text 2 >  e  ';
   var exp =
   [
-    'b',
-    { 'type' : 'text', 'val' : ' some text 1 ' },
+    {
+      'type' : 'etc',
+      'raw' : ' b',
+      'val' : 'b',
+      'charInterval' : [ 0, 2 ]
+    },
+    {
+      'type' : 'text',
+      'raw' : ' some text 1 ',
+      'val' : ' some text 1 ',
+      'charInterval' : [ 2, 15 ]
+    },
     {
       'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 15, 17 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : 0
     },
-    { 'type' : 'text', 'val' : ' some text 2 ' },
-    'e'
+    {
+      'type' : 'text',
+      'raw' : ' some text 2 ',
+      'val' : ' some text 2 ',
+      'charInterval' : [ 17, 30 ]
+    },
+    {
+      'type' : 'etc',
+      'raw' : 'e',
+      'val' : 'e',
+      'charInterval' : [ 30, 31 ]
+    }
   ]
   var got = _.dissector._codeLex( '  b  < some text 1 > ** < some text 2 >  e  ' );
   test.identical( got, exp );
@@ -64,9 +125,24 @@ function _codeLex( test )
   test.case = 'escape left';
   var exp =
   [
-    'b',
-    { 'type' : 'text', 'val' : '<some<text1<' },
-    'e'
+    {
+      'type' : 'etc',
+      'raw' : 'b',
+      'val' : 'b',
+      'charInterval' : [ 0, 0 ]
+    },
+    {
+      'type' : 'text',
+      'raw' : '\\<some\\<text1\\<',
+      'val' : '<some<text1<',
+      'charInterval' : [ 1, 15 ]
+    },
+    {
+      'type' : 'etc',
+      'raw' : 'e',
+      'val' : 'e',
+      'charInterval' : [ 16, 16 ]
+    }
   ]
   var got = _.dissector._codeLex( 'b<\\<some\\<text1\\<>e' );
   test.identical( got, exp );
@@ -76,9 +152,24 @@ function _codeLex( test )
   test.case = 'escape right';
   var exp =
   [
-    'b',
-    { 'type' : 'text', 'val' : '>some>text1>' },
-    'e'
+    {
+      'type' : 'etc',
+      'raw' : 'b',
+      'val' : 'b',
+      'charInterval' : [ 0, 0 ]
+    },
+    {
+      'type' : 'text',
+      'raw' : '\\>some\\>text1\\>',
+      'val' : '>some>text1>',
+      'charInterval' : [ 1, 15 ]
+    },
+    {
+      'type' : 'etc',
+      'raw' : 'e',
+      'val' : 'e',
+      'charInterval' : [ 16, 16 ]
+    }
   ]
   var got = _.dissector._codeLex( 'b<\\>some\\>text1\\>>e' );
   test.identical( got, exp );
@@ -88,9 +179,24 @@ function _codeLex( test )
   test.case = 'escape slash';
   var exp =
   [
-    'b',
-    { 'type' : 'text', 'val' : '\\some\\text1\\' },
-    'e'
+    {
+      'type' : 'etc',
+      'raw' : 'b',
+      'val' : 'b',
+      'charInterval' : [ 0, 0 ]
+    },
+    {
+      'type' : 'text',
+      'raw' : '\\\\some\\\\text1\\\\',
+      'val' : '\\some\\text1\\',
+      'charInterval' : [ 1, 15 ]
+    },
+    {
+      'type' : 'etc',
+      'raw' : 'e',
+      'val' : 'e',
+      'charInterval' : [ 16, 16 ]
+    }
   ]
   var got = _.dissector._codeLex( 'b<\\\\some\\\\text1\\\\>e' );
   test.identical( got, exp );
@@ -102,21 +208,37 @@ function _codeLex( test )
   [
     {
       'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 0, 1 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : 0
     },
-    { 'type' : 'text', 'val' : 'r1' },
+    {
+      'type' : 'text',
+      'raw' : 'r1',
+      'val' : 'r1',
+      'charInterval' : [ 2, 3 ]
+    },
     {
       'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 4, 5 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : -1
     },
-    { 'type' : 'text', 'val' : 'r2' },
+    {
+      'type' : 'text',
+      'raw' : 'r2',
+      'val' : 'r2',
+      'charInterval' : [ 6, 7 ]
+    },
     {
       'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 8, 9 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : -2
     }
@@ -131,21 +253,37 @@ function _codeLex( test )
   [
     {
       'type' : 'any',
+      'raw' : '^**',
       'val' : '^**',
+      'charInterval' : [ 0, 2 ],
       'map' : { 'priority' : '^', 'any' : '**' },
       'priority' : -2
     },
-    { 'type' : 'text', 'val' : 'r1' },
+    {
+      'type' : 'text',
+      'raw' : 'r1',
+      'val' : 'r1',
+      'charInterval' : [ 3, 4 ]
+    },
     {
       'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 5, 6 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : 0
     },
-    { 'type' : 'text', 'val' : 'r2' },
+    {
+      'type' : 'text',
+      'raw' : 'r2',
+      'val' : 'r2',
+      'charInterval' : [ 7, 8 ]
+    },
     {
       'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 9, 10 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : -1
     }
@@ -160,21 +298,37 @@ function _codeLex( test )
   [
     {
       'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 0, 1 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : 0
     },
-    { 'type' : 'text', 'val' : 'r1' },
+    {
+      'type' : 'text',
+      'raw' : 'r1',
+      'val' : 'r1',
+      'charInterval' : [ 2, 3 ]
+    },
     {
       'type' : 'any',
+      'raw' : '^**',
       'val' : '^**',
+      'charInterval' : [ 4, 6 ],
       'map' : { 'priority' : '^', 'any' : '**' },
       'priority' : -2
     },
-    { 'type' : 'text', 'val' : 'r2' },
+    {
+      'type' : 'text',
+      'raw' : 'r2',
+      'val' : 'r2',
+      'charInterval' : [ 7, 8 ]
+    },
     {
       'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 9, 10 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : -1
     }
@@ -189,21 +343,37 @@ function _codeLex( test )
   [
     {
       'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 0, 1 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : 0
     },
-    { 'type' : 'text', 'val' : 'r1' },
+    {
+      'type' : 'text',
+      'raw' : 'r1',
+      'val' : 'r1',
+      'charInterval' : [ 2, 3 ]
+    },
     {
       'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 4, 5 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : -1
     },
-    { 'type' : 'text', 'val' : 'r2' },
+    {
+      'type' : 'text',
+      'raw' : 'r2',
+      'val' : 'r2',
+      'charInterval' : [ 6, 7 ]
+    },
     {
       'type' : 'any',
+      'raw' : '^**',
       'val' : '^**',
+      'charInterval' : [ 8, 10 ],
       'map' : { 'priority' : '^', 'any' : '**' },
       'priority' : -2
     }
@@ -218,21 +388,37 @@ function _codeLex( test )
   [
     {
       'type' : 'any',
+      'raw' : '^**',
       'val' : '^**',
+      'charInterval' : [ 0, 2 ],
       'map' : { 'priority' : '^', 'any' : '**' },
       'priority' : 0
     },
-    { 'type' : 'text', 'val' : 'r1' },
+    {
+      'type' : 'text',
+      'raw' : 'r1',
+      'val' : 'r1',
+      'charInterval' : [ 3, 4 ]
+    },
     {
       'type' : 'any',
+      'raw' : '^^^**',
       'val' : '^^^**',
+      'charInterval' : [ 5, 9 ],
       'map' : { 'priority' : '^^^', 'any' : '**' },
       'priority' : -1
     },
-    { 'type' : 'text', 'val' : 'r2' },
+    {
+      'type' : 'text',
+      'raw' : 'r2',
+      'val' : 'r2',
+      'charInterval' : [ 10, 11 ]
+    },
     {
       'type' : 'any',
+      'raw' : '^^^^^**',
       'val' : '^^^^^**',
+      'charInterval' : [ 12, 18 ],
       'map' : { 'priority' : '^^^^^', 'any' : '**' },
       'priority' : -2
     }
@@ -245,8 +431,18 @@ function _codeLex( test )
   test.case = 'text';
   var exp =
   [
-    { 'type' : 'text', 'val' : 'r1' },
-    { 'type' : 'text', 'val' : 'r2' },
+    {
+      'type' : 'text',
+      'raw' : 'r1',
+      'val' : 'r1',
+      'charInterval' : [ 0, 1 ]
+    },
+    {
+      'type' : 'text',
+      'raw' : 'r2',
+      'val' : 'r2',
+      'charInterval' : [ 2, 3 ]
+    }
   ]
   var got = _.dissector._codeLex( `<r1><r2>` );
   test.identical( got, exp );
@@ -258,19 +454,25 @@ function _codeLex( test )
   [
     {
       'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 0, 1 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : 0
     },
     {
       'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 2, 3 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : -1
     },
     {
       'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 4, 5 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : -2
     }
@@ -285,19 +487,25 @@ function _codeLex( test )
   [
     {
       'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 0, 2 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : 0
     },
     {
       'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 2, 4 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : -1
     },
     {
       'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 4, 6 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : -2
     }
@@ -312,22 +520,28 @@ function _codeLex( test )
   [
     {
       'type' : 'any',
+      'raw' : '^^**',
       'val' : '^^**',
+      'charInterval' : [ 0, 3 ],
       'map' : { 'priority' : '^^', 'any' : '**' },
       'priority' : -2
     },
     {
       'type' : 'any',
+      'raw' : '^**',
       'val' : '^**',
+      'charInterval' : [ 4, 6 ],
       'map' : { 'priority' : '^', 'any' : '**' },
       'priority' : -1
     },
     {
       'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 7, 8 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : 0
-    },
+    }
   ]
   var got = _.dissector._codeLex( `^^**^****` );
   test.identical( got, exp );
@@ -339,29 +553,29 @@ function _codeLex( test )
   [
     {
       'type' : 'any',
+      'raw' : ' ^^**',
       'val' : '^^**',
+      'charInterval' : [ 0, 5 ],
       'map' : { 'priority' : '^^', 'any' : '**' },
       'priority' : -2
     },
     {
       'type' : 'any',
+      'raw' : '^**',
       'val' : '^**',
+      'charInterval' : [ 5, 8 ],
       'map' : { 'priority' : '^', 'any' : '**' },
       'priority' : -1
     },
     {
       'type' : 'any',
+      'raw' : '**',
       'val' : '**',
+      'charInterval' : [ 8, 10 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : 0
-    },
+    }
   ]
-
-  /* xxx
-  - introduce char interval
-  - val should preserve spaces
-  */
-
   var got = _.dissector._codeLex( ` ^^ ** ^ **  **  ` );
   test.identical( got, exp );
 
@@ -386,20 +600,36 @@ function make( test )
     {
       'type' : 'any',
       'val' : '**',
+      'raw' : '**',
+      'charInterval' : [ 0, 1 ],
       'map' : { 'priority' : '', 'any' : '**' },
-      'priority' : 0
+      'priority' : 0,
     },
-    { 'type' : 'text', 'val' : 'r1' },
+    {
+      'type' : 'text',
+      'val' : 'r1',
+      'raw' : 'r1',
+      'charInterval' : [ 2, 3 ],
+    },
     {
       'type' : 'any',
       'val' : '**',
+      'raw' : '**',
+      'charInterval' : [ 4, 5 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : -1
     },
-    { 'type' : 'text', 'val' : 'r2' },
+    {
+      'type' : 'text',
+      'val' : 'r2',
+      'raw' : 'r2',
+      'charInterval' : [ 6, 7 ],
+    },
     {
       'type' : 'any',
       'val' : '**',
+      'raw' : '**',
+      'charInterval' : [ 8, 9 ],
       'map' : { 'priority' : '', 'any' : '**' },
       'priority' : -2
     }
@@ -521,19 +751,19 @@ function dissectBasic( test )
   var got = _.dissector.dissectionExportToString({ src : dissection, mode : 'track' });
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
   });
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -563,7 +793,7 @@ function dissectBasic( test )
   var exp =
   {
     val : 'a r1',
-    range : [ 0, 3 ],
+    interval : [ 0, 3 ],
   };
   test.identical( dissection.parcels[ 0 ], exp );
   console.log( _globals_.testing.wTools.toJs( dissection.parcels[ 0 ] ) );
@@ -581,7 +811,7 @@ function dissectBasic( test )
   var exp =
   {
     val : ' b r1 c r2',
-    range : [ 4, 13 ],
+    interval : [ 4, 13 ],
   };
   test.identical( dissection.parcels[ 1 ], exp );
   console.log( _globals_.testing.wTools.toJs( dissection.parcels[ 1 ] ) );
@@ -599,7 +829,7 @@ function dissectBasic( test )
   var exp =
   {
     val : ' d r2 e',
-    range : [ 14, 20 ],
+    interval : [ 14, 20 ],
   };
   test.identical( dissection.parcels[ 2 ], exp );
   console.log( _globals_.testing.wTools.toJs( dissection.parcels[ 2 ] ) );
@@ -640,22 +870,22 @@ function dissectAny( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -690,22 +920,22 @@ function dissectAny( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, '' );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, '' );
@@ -740,22 +970,22 @@ function dissectAny( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, 'r1' );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, 'r1' );
@@ -790,22 +1020,22 @@ function dissectAny( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -840,22 +1070,22 @@ function dissectAny( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -890,22 +1120,22 @@ function dissectAny( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -940,22 +1170,22 @@ function dissectAny( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -990,22 +1220,22 @@ function dissectAny( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -1040,22 +1270,22 @@ function dissectAny( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -1090,22 +1320,22 @@ function dissectAny( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -1140,22 +1370,22 @@ function dissectAny( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -1190,22 +1420,22 @@ function dissectAny( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -1245,22 +1475,22 @@ function dissectAny( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -1295,22 +1525,22 @@ function dissectAny( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -1345,22 +1575,22 @@ function dissectAny( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -1395,22 +1625,22 @@ function dissectAny( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, '0a' );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, '0a' );
@@ -1445,22 +1675,22 @@ function dissectAny( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -1495,22 +1725,22 @@ function dissectAny( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, '0a' );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, '0a' );
@@ -1554,22 +1784,22 @@ function dissectText( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -1604,22 +1834,22 @@ function dissectText( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -1654,22 +1884,22 @@ function dissectText( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -1704,22 +1934,22 @@ function dissectText( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, '' );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, '' );
@@ -1754,22 +1984,22 @@ function dissectText( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -1804,22 +2034,22 @@ function dissectText( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -1854,22 +2084,22 @@ function dissectText( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, '' );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, '' );
@@ -1904,22 +2134,22 @@ function dissectText( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -1954,22 +2184,22 @@ function dissectText( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, text );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, text );
@@ -2004,22 +2234,22 @@ function dissectText( test )
   var got = _.select( dissection, 'tokens/*/val' );
   test.identical( got, exp );
 
-  test.description = 'parcels/*/range';
+  test.description = 'parcels/*/interval';
   var text2 = '';
   dissection.parcels.forEach( ( parcel ) =>
   {
     test.description = `${parcel.pstep.type}.${parcel.pstep.side}`;
-    test.identical( parcel.val, _.strOnly( text, parcel.range ) );
+    test.identical( parcel.val, _.strOnly( text, parcel.interval ) );
     text2 += parcel.val;
   });
   test.identical( text2, '' );
 
-  test.description = 'tokens/*/range';
+  test.description = 'tokens/*/interval';
   var text2 = '';
   dissection.tokens.forEach( ( token ) =>
   {
     test.description = `${token.tstep.type}`;
-    test.identical( token.val, _.strOnly( text, token.range ) );
+    test.identical( token.val, _.strOnly( text, token.interval ) );
     text2 += token.val;
   });
   test.identical( text2, '' );
