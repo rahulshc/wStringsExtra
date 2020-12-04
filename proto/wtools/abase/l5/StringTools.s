@@ -2739,6 +2739,9 @@ function strRequestParse( o )
     //
     // }
 
+    if( o.subjectWinPathsMaybe )
+    subject = winPathSubjectCheck( subject, map );
+
     result.subjects.push( subject );
     result.maps.push( map );
   }
@@ -2773,6 +2776,23 @@ function strRequestParse( o )
     });
     return result.map( ( e ) => _.numberFromStrMaybe( e ) );
   }
+
+  /* */
+
+  function winPathSubjectCheck( subject, srcMap )
+  {
+
+    for( let key in srcMap )
+    {
+      if( _.strIs( srcMap[ key ] ) && _.strBegins( srcMap[ key ], '\\' ) && key.length === 1 )
+      {
+        subject += ` ${ key }:${ srcMap[ key ] }`;
+        delete srcMap[ key ];
+      }
+    }
+
+    return subject;
+  }
 }
 
 var defaults = strRequestParse.defaults = Object.create( null );
@@ -2782,6 +2802,7 @@ defaults.quoting = 1;
 defaults.unquoting = 1;
 defaults.parsingArrays = 1;
 defaults.severalValues = 0;
+defaults.subjectWinPathsMaybe = 0;
 defaults.src = null;
 
 //
