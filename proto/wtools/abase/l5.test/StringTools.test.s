@@ -14127,6 +14127,22 @@ function strRequestParseWithWindowsPathsAndOptionSubjectWinPathsMaybe( test )
 {
   test.open( 'unquoted windows path' );
 
+  test.case = 'src - string with only path';
+  var src = 'D:\\some\\path';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {} ] );
+  test.identical( got.subject, 'D:\\some\\path' );
+  test.identical( got.subjects, [ 'D:\\some\\path' ] );
+
+  test.case = 'src - string with only path and options';
+  var src = 'D:\\some\\path v:5 r:some';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { v : 5, r : 'some' } );
+  test.identical( got.maps, [ { v : 5, r : 'some' } ] );
+  test.identical( got.subject, 'D:\\some\\path' );
+  test.identical( got.subjects, [ 'D:\\some\\path' ] );
+
   test.case = 'src - string, command with args';
   var src = 'node D:\\some\\path';
   var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });

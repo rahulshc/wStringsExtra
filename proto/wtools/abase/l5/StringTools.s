@@ -2786,7 +2786,7 @@ function strRequestParse( o )
     {
       if( _.strIs( srcMap[ key ] ) && _.strBegins( srcMap[ key ], '\\' ) && key.length === 1 )
       {
-        subject += ` ${ key }:${ srcMap[ key ] }`;
+        subject += subject ? ` ${ key }:${ srcMap[ key ] }` : `${ key }:${ srcMap[ key ] }`;
         delete srcMap[ key ];
       }
     }
