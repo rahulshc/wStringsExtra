@@ -685,10 +685,7 @@ function make( test )
       },
       'priority' : _.dissector._maxPriority + 10,
       'type' : 'rest',
-      'tokenSteps' :
-      [
-        dissector.tokenSteps[ 4 ],
-      ],
+      'tokenSteps' : [ dissector.tokenSteps[ 4 ] ],
       'eat' : dissector.eatMap.restLeft,
       'tinterval' : [ 4, 4 ],
       'sensetiveInterval' : [ 4, 4 ],
@@ -1445,10 +1442,10 @@ function dissectAny( test )
 
   /* */
 
-/*
+  /*
     default   0  -1  -2
     current   0  -2  -1
-*/
+  */
 
   test.case = `** ^** ** -- abcde`;
   var text = 'abcde';

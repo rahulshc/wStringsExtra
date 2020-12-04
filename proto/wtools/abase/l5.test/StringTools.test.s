@@ -14123,6 +14123,125 @@ function strRequestParseDefaultOptionsWindowsPaths( test )
 
 //
 
+function strRequestParseWithWindowsPathsAndOptionSubjectWinPathsMaybe( test )
+{
+  test.open( 'unquoted windows path' );
+
+  test.case = 'src - string, command with args';
+  var src = 'node D:\\some\\path';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {} ] );
+  test.identical( got.subject, 'node D:\\some\\path' );
+  test.identical( got.subjects, [ 'node D:\\some\\path' ] );
+
+  test.case = 'src - string, few command with delimeter, relative windows path';
+  var src = 'rm -rf .\\node_modules ; npm i';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {}, {} ] );
+  test.identical( got.subject, 'rm -rf .\\node_modules' );
+  test.identical( got.subjects, [ 'rm -rf .\\node_modules', 'npm i' ] );
+
+  test.case = 'src - string, command with options';
+  var src = 'tst .run D:\\some\\path v:"5" r:"some"';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { v : 5, r : 'some' } );
+  test.identical( got.maps, [ { v : 5, r : 'some' } ] );
+  test.identical( got.subject, 'tst .run D:\\some\\path' );
+  test.identical( got.subjects, [ 'tst .run D:\\some\\path' ] );
+
+  test.case = 'src - string, command with options, same keys';
+  var src = 'tst .run D:\\some\\path withModule:"wTools" withModule:wPath';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { withModule : 'wPath' } );
+  test.identical( got.maps, [ { withModule : 'wPath' } ] );
+  test.identical( got.subject, 'tst .run D:\\some\\path' );
+  test.identical( got.subjects, [ 'tst .run D:\\some\\path' ] );
+
+  test.case = 'src - string, two command with options';
+  var src = 'tst .run D:\\some\\path v:5 r:"some" ; node .\\test.js v : "[ 10, str ]"';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { v : 5, r : 'some' } );
+  test.identical( got.maps, [ { v : 5, r : 'some' }, { v : [ 10, 'str' ] } ] );
+  test.identical( got.subject, 'tst .run D:\\some\\path' );
+  test.identical( got.subjects, [ 'tst .run D:\\some\\path', 'node .\\test.js' ] );
+
+  test.case = 'src - string, two command with options, same keys';
+  var src = 'tst .run D:\\some\\path withModule:"wTools" withModule:wPath ; node .\\test.js v : "[ 10, str ]"';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { withModule : 'wPath' } );
+  test.identical( got.maps, [ { withModule : 'wPath' }, { v : [ 10, 'str' ] } ] );
+  test.identical( got.subject, 'tst .run D:\\some\\path' );
+  test.identical( got.subjects, [ 'tst .run D:\\some\\path', 'node .\\test.js' ] );
+
+  test.case = 'src - string, two command with options, same keys';
+  var src = 'tst .run D:\\some\\path withModule:"wTools" withModule:wPath ; node C:\\test.js v : "[ 10, str ]"';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { withModule : 'wPath' } );
+  test.identical( got.maps, [ { withModule : 'wPath' }, { v : [ 10, 'str' ] } ] );
+  test.identical( got.subject, 'tst .run D:\\some\\path' );
+  test.identical( got.subjects, [ 'tst .run D:\\some\\path', 'node C:\\test.js' ] );
+
+  test.close( 'unquoted windows path' );
+
+  /* */
+
+  test.open( 'quoted windows path' );
+
+  test.case = 'src - string, command with args';
+  var src = 'node "D:\\some\\path"';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {} ] );
+  test.identical( got.subject, 'node "D:\\some\\path"' );
+  test.identical( got.subjects, [ 'node "D:\\some\\path"' ] );
+
+  test.case = 'src - string, few command with delimeter, relative windows path';
+  var src = 'rm -rf ".\\node_modules" ; npm i';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {}, {} ] );
+  test.identical( got.subject, 'rm -rf ".\\node_modules"' );
+  test.identical( got.subjects, [ 'rm -rf ".\\node_modules"', 'npm i' ] );
+
+  test.case = 'src - string, command with options';
+  var src = 'tst .run "D:\\some\\path" v:"5" r:"some"';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { v : 5, r : 'some' } );
+  test.identical( got.maps, [ { v : 5, r : 'some' } ] );
+  test.identical( got.subject, 'tst .run "D:\\some\\path"' );
+  test.identical( got.subjects, [ 'tst .run "D:\\some\\path"' ] );
+
+  test.case = 'src - string, command with options, same keys';
+  var src = 'tst .run "D:\\some\\path" withModule:"wTools" withModule:wPath';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { withModule : 'wPath' } );
+  test.identical( got.maps, [ { withModule : 'wPath' } ] );
+  test.identical( got.subject, 'tst .run "D:\\some\\path"' );
+  test.identical( got.subjects, [ 'tst .run "D:\\some\\path"' ] );
+
+  test.case = 'src - string, two command with options';
+  var src = 'tst .run "D:\\some\\path" v:5 r:"some" ; node ".\\test.js" v : "[ 10, str ]"';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { v : 5, r : 'some' } );
+  test.identical( got.maps, [ { v : 5, r : 'some' }, { v : [ 10, 'str' ] } ] );
+  test.identical( got.subject, 'tst .run "D:\\some\\path"' );
+  test.identical( got.subjects, [ 'tst .run "D:\\some\\path"', 'node ".\\test.js"' ] );
+
+  test.case = 'src - string, two command with options, same keys';
+  var src = 'tst .run "D:\\some\\path" withModule:"wTools" withModule:wPath ; node ".\\test.js" v : "[ 10, str ]"';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { withModule : 'wPath' } );
+  test.identical( got.maps, [ { withModule : 'wPath' }, { v : [ 10, 'str' ] } ] );
+  test.identical( got.subject, 'tst .run "D:\\some\\path"' );
+  test.identical( got.subjects, [ 'tst .run "D:\\some\\path"', 'node ".\\test.js"' ] );
+
+  test.close( 'quoted windows path' );
+}
+
+//
+
 function strRequestParseOptionSeveralValues( test )
 {
   test.case = 'src - string, simple command';
@@ -15320,6 +15439,7 @@ let Self =
     strRequestParseDefaultOptions,
     strRequestParseDefaultOptionsQuotedValues,
     strRequestParseDefaultOptionsWindowsPaths,
+    strRequestParseWithWindowsPathsAndOptionSubjectWinPathsMaybe,
     strRequestParseOptionSeveralValues,
     strRequestParseExperiment,
     strRequestStr,

@@ -690,8 +690,8 @@ function _stepGenerate( op )
 
   _.assert
   (
-      _.objectIs( op.tstep ) && _.longHas( [ 'any', 'text' ], op.tstep.type )
-    , `Unknown type of token of the shape ${op.dissector.code}`
+    _.objectIs( op.tstep ) && _.longHas( [ 'any', 'text' ], op.tstep.type ),
+    `Unknown type of token of the shape ${op.dissector.code}`
   );
 
   if( op.tstep.type === 'any' )
@@ -769,7 +769,6 @@ function _stepGenerate( op )
 _stepGenerate.defaults =
 {
   dissector : null,
-  tindex : null,
   direct : null,
   tindex2 : null,
   tindex : null,
