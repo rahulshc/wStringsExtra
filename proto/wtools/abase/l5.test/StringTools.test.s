@@ -6520,9 +6520,9 @@ function tokensSyntaxFrom( test )
 {
 
   test.case = 'ins - instance of _.TokensSyntax';
-  var src = _.TokensSyntax.apply( null, [] );
+  var src = _.TokensSyntax( null );
   var got = _.tokensSyntaxFrom( src );
-  var exp = _.TokensSyntax.apply( null, [] );
+  var exp = _.TokensSyntax( null );
   test.identical( got, exp );
   test.true( got === src );
 
