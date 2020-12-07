@@ -2789,6 +2789,10 @@ function strRequestParse( o )
         subject += subject ? ` ${ key }:${ srcMap[ key ] }` : `${ key }:${ srcMap[ key ] }`;
         delete srcMap[ key ];
       }
+      else
+      {
+        break;
+      }
     }
 
     return subject;

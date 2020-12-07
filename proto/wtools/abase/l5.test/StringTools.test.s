@@ -14293,6 +14293,22 @@ function strRequestParseWithWindowsPathsAndOptionSubjectWinPathsMaybe( test )
   test.identical( got.subject, 'D:\\some\\path' );
   test.identical( got.subjects, [ 'D:\\some\\path' ] );
 
+  test.case = 'src - string with several paths and options';
+  var src = 'D:\\some\\path C:\\some\\path v:5 r:some';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { v : 5, r : 'some' } );
+  test.identical( got.maps, [ { v : 5, r : 'some' } ] );
+  test.identical( got.subject, 'D:\\some\\path C:\\some\\path' );
+  test.identical( got.subjects, [ 'D:\\some\\path C:\\some\\path' ] );
+
+  test.case = 'src - string with several paths, options, path added after options';
+  var src = 'D:\\some\\path v:5 r:some C:\\some\\path';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { v : 5, r : 'some', C : '\\some\\path' } );
+  test.identical( got.maps, [ { v : 5, r : 'some', C : '\\some\\path' } ] );
+  test.identical( got.subject, 'D:\\some\\path' );
+  test.identical( got.subjects, [ 'D:\\some\\path' ] );
+
   test.case = 'src - string, command with args';
   var src = 'node D:\\some\\path';
   var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
@@ -14314,6 +14330,22 @@ function strRequestParseWithWindowsPathsAndOptionSubjectWinPathsMaybe( test )
   var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
   test.identical( got.map, { v : 5, r : 'some' } );
   test.identical( got.maps, [ { v : 5, r : 'some' } ] );
+  test.identical( got.subject, 'tst .run D:\\some\\path' );
+  test.identical( got.subjects, [ 'tst .run D:\\some\\path' ] );
+
+  test.case = 'src - string with several paths and options';
+  var src = 'tst .run D:\\some\\path C:\\some\\path v:5 r:some';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { v : 5, r : 'some' } );
+  test.identical( got.maps, [ { v : 5, r : 'some' } ] );
+  test.identical( got.subject, 'tst .run D:\\some\\path C:\\some\\path' );
+  test.identical( got.subjects, [ 'tst .run D:\\some\\path C:\\some\\path' ] );
+
+  test.case = 'src - string with several paths, options, path added after options';
+  var src = 'tst .run D:\\some\\path v:5 r:some C:\\some\\path';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { v : 5, r : 'some', C : '\\some\\path' } );
+  test.identical( got.maps, [ { v : 5, r : 'some', C : '\\some\\path' } ] );
   test.identical( got.subject, 'tst .run D:\\some\\path' );
   test.identical( got.subjects, [ 'tst .run D:\\some\\path' ] );
 
