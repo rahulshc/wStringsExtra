@@ -13858,7 +13858,6 @@ function strRequestParseDefaultOptions( test )
   test.identical( got.maps, [ { withModule : 'wPath' }, { v : [ 10, 'str' ] } ] );
   test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
   test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s', 'node ./test.js' ] );
-
 }
 
 //
@@ -14119,6 +14118,157 @@ function strRequestParseDefaultOptionsWindowsPaths( test )
   test.identical( got.subjects, [ 'tst .run "D:\\some\\path"', 'node ".\\test.js"' ] );
 
   test.close( 'quoted windows path' );
+}
+
+//
+
+function strRequestParseOptionSubjectWinPathsMaybe( test )
+{
+  test.case = 'src - empty string';
+  var src = '';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, {} );
+  test.identical( got.maps, [] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [] );
+
+  test.case = 'src - string, simple command';
+  var src = 'node';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {} ] );
+  test.identical( got.subject, 'node' );
+  test.identical( got.subjects, [ 'node' ] );
+
+  test.case = 'src - string, command with args';
+  var src = 'node proto/wtools/SomeTest.test.s';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {} ] );
+  test.identical( got.subject, 'node proto/wtools/SomeTest.test.s' );
+  test.identical( got.subjects, [ 'node proto/wtools/SomeTest.test.s' ] );
+
+  test.case = 'src - string, few command with delimeter';
+  var src = 'rm -rf node_modules ; npm i';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {}, {} ] );
+  test.identical( got.subject, 'rm -rf node_modules' );
+  test.identical( got.subjects, [ 'rm -rf node_modules', 'npm i' ] );
+
+  test.case = 'src - string, one options, value - number';
+  var src = 'v:1';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { v : 1 } );
+  test.identical( got.maps, [ { v : 1 } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, one options, value - negative number';
+  var src = 'v:-1';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { v : -1 } );
+  test.identical( got.maps, [ { v : -1 } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, one options, value - negative number with dot';
+  var src = 'v:-.01';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { v : -0.01 } );
+  test.identical( got.maps, [ { v : -0.01 } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, one options, value - string';
+  var src = 'r:someRoutine';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { r : 'someRoutine' } );
+  test.identical( got.maps, [ { r : 'someRoutine' } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, one options, value - empty array';
+  var src = 'r:[]';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { r : [] } );
+  test.identical( got.maps, [ { r : [] } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, one options, value - array with number and string';
+  var src = 'r:[1,str]';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { r : [ 1, 'str' ] } );
+  test.identical( got.maps, [ { r : [ 1, 'str' ] } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, three options, value - string';
+  var src = 'one:1 two:someRoutine three:[1,str]';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { one : 1, two : 'someRoutine', three : [ 1, 'str' ] } );
+  test.identical( got.maps, [ { one : 1, two : 'someRoutine', three : [ 1, 'str' ] } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  /* */
+
+  test.case = 'src - string, three options, same keys';
+  var src = 'one:1 one:someRoutine one:[1,str]';
+  var got = _.strRequestParse( { src, severalValues : 1 } );
+  test.identical( got.map, { one : [ 1, 'someRoutine', 'str' ] } );
+  test.identical( got.maps, [ { one : [ 1, 'someRoutine', 'str' ] }  ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.case = 'src - string, three separated options, value - string';
+  var src = 'one:1 ; two:someRoutine ; three:[1,str]';
+  var got = _.strRequestParse( { src, severalValues : 1 } );
+  test.identical( got.map, { one : 1 } );
+  test.identical( got.maps, [ { one : 1 }, { two : 'someRoutine' }, { three : [ 1, 'str' ] } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '', '', '' ] );
+
+  test.case = 'src - string, three separated options, same keys';
+  var src = 'one:1 ; one:someRoutine ; one:[1,str]';
+  var got = _.strRequestParse( { src, severalValues : 1 } );
+  test.identical( got.map, { one : 1 } );
+  test.identical( got.maps, [ { one : 1 }, { one : 'someRoutine' }, { one : [ 1, 'str' ] } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '', '', '' ] );
+
+  test.case = 'src - string, command with options';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s v:5 r:some';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { v : 5, r : 'some' } );
+  test.identical( got.maps, [ { v : 5, r : 'some' } ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s' ] );
+
+  test.case = 'src - string, command with options, same keys';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s withModule:wTools withModule:wPath';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { withModule : 'wPath' } );
+  test.identical( got.maps, [ { withModule : 'wPath' } ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s' ] );
+
+  test.case = 'src - string, two command with options';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s v:5 r:some ; node ./test.js v : [ 10, str ]';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { v : 5, r : 'some' } );
+  test.identical( got.maps, [ { v : 5, r : 'some' }, { v : [ 10, 'str' ] } ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s', 'node ./test.js' ] );
+
+  test.case = 'src - string, two command with options, same keys';
+  var src = 'tst .run /proto/wtools/someRoutine.test.s withModule:wTools withModule:wPath ; node ./test.js v : [ 10, str ]';
+  var got = _.strRequestParse({ src, subjectWinPathsMaybe : 1 });
+  test.identical( got.map, { withModule : 'wPath' } );
+  test.identical( got.maps, [ { withModule : 'wPath' }, { v : [ 10, 'str' ] } ] );
+  test.identical( got.subject, 'tst .run /proto/wtools/someRoutine.test.s' );
+  test.identical( got.subjects, [ 'tst .run /proto/wtools/someRoutine.test.s', 'node ./test.js' ] );
 }
 
 //
@@ -15455,6 +15605,7 @@ let Self =
     strRequestParseDefaultOptions,
     strRequestParseDefaultOptionsQuotedValues,
     strRequestParseDefaultOptionsWindowsPaths,
+    strRequestParseOptionSubjectWinPathsMaybe,
     strRequestParseWithWindowsPathsAndOptionSubjectWinPathsMaybe,
     strRequestParseOptionSeveralValues,
     strRequestParseExperiment,
