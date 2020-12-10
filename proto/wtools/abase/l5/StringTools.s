@@ -1308,41 +1308,6 @@ strSorterParse.defaults =
 
 //
 
-// function jsonParse( o )
-// {
-//   let result;
-
-//   if( _.strIs( o ) )
-//   o = { src : o }
-//   _.routineOptions( jsonParse, o );
-//   _.assert( arguments.length === 1 );
-
-//   debugger; /* xxx: implement via GDF */
-
-//   try
-//   {
-//     result = JSON.parse( o.src );
-//   }
-//   catch( err )
-//   {
-//     let src = o.src;
-//     let position = /at position (\d+)/.exec( err.message );
-//     if( position )
-//     position = Number( position[ 1 ] );
-//     let first = 0;
-//     if( !isNaN( position ) )
-//     {
-//       let nearest = _.strLinesNearest( src, position );
-//       first = _.strLinesCount( src.substring( 0, nearest.spans[ 0 ] ) );
-//       src = nearest.splits.join( '' );
-//     }
-//     let err2 = _.err( 'Error parsing JSON\n', err, '\n', _.strLinesNumber( src, first ) );
-//     throw err2;
-//   }
-
-//   return result;
-// }
-
 function jsonParse( o )
 {
   let result;

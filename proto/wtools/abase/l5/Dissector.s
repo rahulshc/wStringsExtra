@@ -428,7 +428,8 @@ function make_body( o )
 
   function eatFirstLeft()
   {
-    let left = _.strLeft( text, pstep.map.first.val, [ textInterval[ 0 ], textInterval[ 1 ] + 1 ] );
+    // let left = _.strLeft( text, pstep.map.first.val, [ textInterval[ 0 ], textInterval[ 1 ] + 1 ] );
+    let left = _.strLeft_( text, pstep.map.first.val, textInterval.slice() ); /* xxx */
     if( left.entry === undefined )
     return;
 
@@ -464,7 +465,8 @@ function make_body( o )
 
   function eatFirstRight()
   {
-    let right = _.strRight( text, pstep.map.first.val, [ textInterval[ 0 ], textInterval[ 1 ] + 1 ] );
+    // let right = _.strRight( text, pstep.map.first.val, [ textInterval[ 0 ], textInterval[ 1 ] + 1 ] );
+    let right = _.strRight_( text, pstep.map.first.val, textInterval.slice() ); /* xxx */
     if( right.entry === undefined )
     return;
 
