@@ -1264,7 +1264,7 @@ function strSorterParse( o )
     '<' : 0
   }
 
-  let delimeters = _.mapOwnKeys( map );
+  let delimeters = _.mapOnlyOwnKeys( map );
   let splitted = _.strSplit
   ({
     src : o.src,
