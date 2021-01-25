@@ -9,7 +9,7 @@ Collection of sophisticated routines for operations on Strings. StringsToolsExtr
 git clone https://github.com/Wandalen/wStringsExtra
 cd wStringsExtra
 npm install
-node sample/Sample.s
+node sample/trivial/Sample.s
 ```
 
 ## To add to your project
