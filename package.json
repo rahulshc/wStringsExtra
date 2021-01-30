@@ -1,40 +1,29 @@
 {
-  "name": "wstringsextra",
-  "version": "0.3.264",
-  "description": "Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.",
-  "author": "Kostiantyn Wandalen <wanalen@01.school>",
-  "license": "MIT",
-  "main": "proto/wtools/abase/l5/StringTools.s",
-  "files": [
-    "proto/wtools/abase/l5",
-    "proto/wtools/Tools.s",
-    "out"
-  ],
-  "scripts": {
-    "test": "wtest .run 'proto/**' rapidity:-1",
-    "docgen": "wdocgen proto"
+  "name" : "wstringsextra",
+  "version" : "0.3.265",
+  "description" : "Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.",
+  "author" : "Kostiantyn Wandalen <wanalen@01.school>",
+  "license" : "MIT",
+  "main" : "proto/wtools/abase/l5/StringTools.s",
+  "files" : [ "proto/wtools/abase/l5", "proto/wtools/Tools.s", "out" ],
+  "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-1", "docgen" : "wdocgen proto" },
+  "repository" :
+  {
+    "type" : "git",
+    "url" : "https://github.com/Wandalen/wStringsExtra.git"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Wandalen/wStringsExtra.git"
+  "bugs" :
+  {
+    "url" : "https://github.com/Wandalen/wStringsExtra/issues"
   },
-  "bugs": {
-    "url": "https://github.com/Wandalen/wStringsExtra/issues"
+  "dependencies" :
+  {
+    "wTools" : "",
+    "wstringer" : "",
+    "warraysorted" : "",
+    "warraysparse" : "",
+    "wblueprint" : ""
   },
-  "dependencies": {
-    "wTools": "alpha",
-    "wstringer": "alpha",
-    "warraysorted": "alpha",
-    "warraysparse": "alpha",
-    "wblueprint": "alpha"
-  },
-  "devDependencies": {
-    "eslint": "7.1.0",
-    "wTesting": "alpha",
-    "wstringsextra": "file:."
-  },
-  "keywords": [
-    "wTools",
-    "wStringsExtra"
-  ]
+  "devDependencies" : { "wTesting" : "", "eslint" : "7.1.0", "wstringsextra" : "file:." },
+  "keywords" : [ "wTools", "wStringsExtra" ]
 }
