@@ -3520,7 +3520,7 @@ function strTable( o )
     }
     else
     {
-      return _.strStrShort
+      return _.strShort
       ({
         src : line,
         limit : it.sz[ 1 ],
