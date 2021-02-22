@@ -8686,7 +8686,7 @@ function strTokenizeJs( test )
 
   function log( src )
   {
-    logger.log( _.toStr( src, { levels : 3 } ) );
+    logger.log( _.entity.exportString( src, { levels : 3 } ) );
   }
 
   /* - */
@@ -8782,7 +8782,7 @@ for( var p = 0, pl = polygon.length / 2; p < pl ; p++ )
   var got = _.strTokenizeJs({ src : code, tokenizingUnknown : 1 });
 
   log( code );
-  log( _.toStr( select( got, '*/match' ), { multiline : 0 } ) );
+  log( _.entity.exportString( select( got, '*/match' ), { multiline : 0 } ) );
   log( select( got, '*/tokenName' ) );
 
   var tokenNamesGot = select( got, '*/tokenName' );
@@ -8904,7 +8904,7 @@ for( var p = 0, pl = polygon.length / 2; p < pl ; p++ )
   // var got = _.strTokenizeJs({ src : code, tokenizingUnknown : 1 });
   //
   // log( code );
-  // log( _.toStr( select( got, '*/match' ), { multiline : 0 } ) );
+  // log( _.entity.exportString( select( got, '*/match' ), { multiline : 0 } ) );
   // log( select( got, '*/tokenName' ) );
   //
   // var tokenNamesGot = select( got, '*/tokenName' );

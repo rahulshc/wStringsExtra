@@ -35,7 +35,7 @@ let _ObjectToString = Object.prototype.toString;
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
 
 let _arraySlice = _.longSlice;
-let strType = _.strType;
+let strType = _.entity.strType;
 
 _.assert( _.routineIs( _.sorted.addOnce ) );
 
@@ -3543,7 +3543,7 @@ function strTable( o )
   function cellGet( i2d )
   {
     let e = o.onCellGet( i2d, o );
-    _.assert( _.primitiveIs( e ) && e !== undefined, () => `Cell ${i2d} is ${_.strType( e )}` );
+    _.assert( _.primitiveIs( e ) && e !== undefined, () => `Cell ${i2d} is ${_.entity.strType( e )}` );
     e = String( e );
     return e;
   }
@@ -4075,7 +4075,7 @@ strTable.style.border =  /* qqq : cover style ( lightly ) */
 //       if( cellData === undefined )
 //       cellData = cellStr = '';
 //       else
-//       cellStr = _.toStr( cellData, { wrap : 0, stringWrapper : '' } );
+//       cellStr = _.entity.exportString( cellData, { wrap : 0, stringWrapper : '' } );
 //
 //       cellStr = o.onCellAfter( cellStr, index2d, o );
 //       row.push( cellStr );
