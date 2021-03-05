@@ -4109,6 +4109,7 @@ strTable.style.border =  /* qqq : cover style ( lightly ) */
 // }
 //
 // strTable_old.defaults =
+
 // {
 //   data : null,
 //   rowsNumber : null,
