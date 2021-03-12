@@ -1,6 +1,6 @@
 {
   "name": "wstringsextra",
-  "version": "0.3.278",
+  "version": "0.3.279",
   "description": "Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.",
   "author": "Kostiantyn Wandalen <wanalen@01.school>",
   "license": "MIT",
@@ -22,15 +22,15 @@
     "url": "https://github.com/Wandalen/wStringsExtra/issues"
   },
   "dependencies": {
-    "wTools": "alpha",
-    "wstringer": "alpha",
-    "warraysorted": "alpha",
-    "warraysparse": "alpha",
-    "wblueprint": "alpha"
+    "wTools": "gamma",
+    "wstringer": "gamma",
+    "warraysorted": "gamma",
+    "warraysparse": "gamma",
+    "wblueprint": "gamma"
   },
   "devDependencies": {
     "eslint": "7.1.0",
-    "wTesting": "alpha",
+    "wTesting": "gamma",
     "wstringsextra": "file:."
   },
   "keywords": [
