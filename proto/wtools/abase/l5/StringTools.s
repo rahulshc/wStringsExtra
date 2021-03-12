@@ -3523,7 +3523,7 @@ function strTable( o )
       return _.strShort
       ({
         src : line,
-        limit : it.sz[ 1 ],
+        widthLimit : it.sz[ 1 ],
         onLength : o.onLength,
       });
     }
