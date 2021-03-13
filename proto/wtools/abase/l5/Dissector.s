@@ -254,7 +254,7 @@ _codeLex_body.defaults =
   code : null
 }
 
-let _codeLex = _.routineUnite( _codeLex_head, _codeLex_body );
+let _codeLex = _.routine.uniteCloning_( _codeLex_head, _codeLex_body );
 
 //
 
@@ -676,7 +676,7 @@ make_body.defaults =
   code : null
 }
 
-let make = _.routineUnite( make_head, make_body );
+let make = _.routine.uniteCloning_( make_head, make_body );
 
 //
 
@@ -810,7 +810,7 @@ dissect_body.defaults =
   code : null,
 }
 
-let dissect = _.routineUnite( dissect_head, dissect_body );
+let dissect = _.routine.uniteCloning_( dissect_head, dissect_body );
 
 //
 

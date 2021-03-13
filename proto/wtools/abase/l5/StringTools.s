@@ -410,7 +410,7 @@ strSearch_body.defaults =
   excludingTokens : null,
 }
 
-let strSearch = _.routineUnite( strSearch_head, strSearch_body );
+let strSearch = _.routine.uniteCloning_( strSearch_head, strSearch_body );
 
 //
 
@@ -450,7 +450,7 @@ strSearchLog_body.defaults =
   gray : 0,
 }
 
-let strSearchLog = _.routineUnite( strSearch_head, strSearchLog_body );
+let strSearchLog = _.routine.uniteCloning_( strSearch_head, strSearchLog_body );
 
 //
 
@@ -513,7 +513,7 @@ strSearchReplace_body.defaults =
   // direct : 1,
 }
 
-let strSearchReplace = _.routineUnite( strSearch_head, strSearchReplace_body );
+let strSearchReplace = _.routine.uniteCloning_( strSearch_head, strSearchReplace_body );
 
 //
 
