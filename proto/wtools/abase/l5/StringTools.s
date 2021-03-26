@@ -26,13 +26,13 @@ if( typeof module !== 'undefined' )
 
 //
 
-let Self = _global_.wTools;
-let _ = _global_.wTools;
+const Self = _global_.wTools;
+const _ = _global_.wTools;
 
-let _ArraySlice = Array.prototype.slice;
-let _FunctionBind = Function.prototype.bind;
-let _ObjectToString = Object.prototype.toString;
-let _ObjectHasOwnProperty = Object.hasOwnProperty;
+const _ArraySlice = Array.prototype.slice;
+const _FunctionBind = Function.prototype.bind;
+const _ObjectToString = Object.prototype.toString;
+const _ObjectHasOwnProperty = Object.hasOwnProperty;
 
 let _arraySlice = _.longSlice;
 let strType = _.entity.strType;
@@ -419,7 +419,7 @@ function strSearchLog_body( o )
   debugger
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-  let o2 = _.mapOnly( o, this.strSearch.defaults );
+  let o2 = _.mapOnly_( null, o, this.strSearch.defaults );
   this.strSearch( o2 );
   _.mapExtend( o, o2 );
 
@@ -855,7 +855,7 @@ function _strReplaceMapPrepare( o )
 
   /* verify */
 
-  _.assertMapHasAll( o, _strReplaceMapPrepare.defaults );
+  _.map.assertHasAll( o, _strReplaceMapPrepare.defaults );
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( o.dictionary ) || _.longIs( o.dictionary ) || o.dictionary === null );
   _.assert( ( _.longIs( o.ins ) && _.longIs( o.sub ) ) || ( o.ins === null && o.sub === null ) );
@@ -3073,7 +3073,7 @@ function strCommandsParse( o )
     preservingEmpty : 0,
   });
 
-  let o2 = _.mapOnly( o, strCommandParse.defaults );
+  let o2 = _.mapOnly_( null, o, strCommandParse.defaults );
 
   for( let c = 0 ; c < commands.length ; c++ )
   {

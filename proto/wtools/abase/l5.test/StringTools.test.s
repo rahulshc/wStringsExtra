@@ -11,8 +11,9 @@ if( typeof module !== 'undefined' )
   _.include( 'wTesting' );
 }
 
-let select = _globals_.testing.wTools.select;
-let _ = _global_.wTools;
+const __ = _globals_.testing.wTools;
+const _ = _global_.wTools;
+let select = __.select;
 
 // --
 // converter
@@ -15554,7 +15555,7 @@ function strLattersSpectre( test )
 //
 // --
 
-let Self =
+const Proto =
 {
 
   name : 'Tools.StringsExtra',
@@ -15656,7 +15657,7 @@ let Self =
 
 }
 
-Self = wTestSuite( Self );
+const Self = wTestSuite( Proto );
 if( typeof module !== 'undefined' && !module.parent )
 wTester.test( Self.name );
 

@@ -11,8 +11,9 @@ if( typeof module !== 'undefined' )
   _.include( 'wTesting' );
 }
 
-let select = _globals_.testing.wTools.select;
-let _ = _global_.wTools;
+const __ = _globals_.testing.wTools;
+const _ = _global_.wTools;
+let select = __.select;
 
 // --
 // dissector
@@ -793,7 +794,7 @@ function dissectBasic( test )
     interval : [ 0, 3 ],
   };
   test.identical( dissection.parcels[ 0 ], exp );
-  console.log( _globals_.testing.wTools.entity.exportJs( dissection.parcels[ 0 ] ) );
+  console.log( __.entity.exportJs( dissection.parcels[ 0 ] ) );
 
   test.description = 'parcels[ 1 ]';
   test.true( dissection.parcels[ 1 ].pstep !== dissection.parcels[ 1 ].tstep );
@@ -811,7 +812,7 @@ function dissectBasic( test )
     interval : [ 4, 13 ],
   };
   test.identical( dissection.parcels[ 1 ], exp );
-  console.log( _globals_.testing.wTools.entity.exportJs( dissection.parcels[ 1 ] ) );
+  console.log( __.entity.exportJs( dissection.parcels[ 1 ] ) );
 
   test.description = 'parcels[ 2 ]';
   test.true( dissection.parcels[ 2 ].pstep !== dissection.parcels[ 2 ].tstep );
@@ -829,7 +830,7 @@ function dissectBasic( test )
     interval : [ 14, 20 ],
   };
   test.identical( dissection.parcels[ 2 ], exp );
-  console.log( _globals_.testing.wTools.entity.exportJs( dissection.parcels[ 2 ] ) );
+  console.log( __.entity.exportJs( dissection.parcels[ 2 ] ) );
 
   /* */
 
@@ -2262,7 +2263,7 @@ function dissectText( test )
 //
 // --
 
-let Self =
+const Proto =
 {
 
   name : 'Tools.Dissector',
@@ -2281,7 +2282,7 @@ let Self =
 
 }
 
-Self = wTestSuite( Self );
+const Self = wTestSuite( Proto );
 if( typeof module !== 'undefined' && !module.parent )
 wTester.test( Self.name );
 

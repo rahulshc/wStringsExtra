@@ -13,8 +13,8 @@ if( typeof module !== 'undefined' )
 
 //
 
-let _ = _global_.wTools;
-let Self = _.dissector = _.dissector || Object.create( null );
+const _ = _global_.wTools;
+const Self = _.dissector = _.dissector || Object.create( null );
 
 // --
 // dissector
