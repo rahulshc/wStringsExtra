@@ -13,7 +13,7 @@ if( typeof module !== 'undefined' )
 
 const __ = _globals_.testing.wTools;
 const _ = _global_.wTools;
-let select = __.select;
+const select = __.select;
 
 // --
 // converter
