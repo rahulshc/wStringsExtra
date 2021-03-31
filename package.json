@@ -1,6 +1,6 @@
 {
   "name": "wstringsextra",
-  "version": "0.3.287",
+  "version": "0.3.288",
   "description": "Collection of sophisticated routines for operations on Strings. StringsToolsExtra leverages analyzing, parsing and formatting of String for special purposes.",
   "author": "Kostiantyn Wandalen <wanalen@01.school>",
   "license": "MIT",
@@ -8,7 +8,8 @@
   "files": [
     "proto/wtools/abase/l5",
     "proto/wtools/Tools.s",
-    "out"
+    "out",
+    "proto/node_modules"
   ],
   "scripts": {
     "test": "wtest .run 'proto/**' rapidity:-1",
@@ -30,8 +31,7 @@
   },
   "devDependencies": {
     "eslint": "7.1.0",
-    "wTesting": "delta",
-    "wstringsextra": "file:."
+    "wTesting": "delta"
   },
   "keywords": [
     "wTools",
