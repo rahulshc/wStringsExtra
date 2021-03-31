@@ -5,7 +5,7 @@
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "license" : "MIT",
   "main" : "proto/wtools/abase/l5/StringTools.s",
-  "files" : [ "proto/wtools/abase/l5", "proto/wtools/Tools.s", "out" ],
+  "files" : [ "proto/wtools/abase/l5", "proto/wtools/Tools.s", "out", "proto/node_modules" ],
   "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-1", "docgen" : "wdocgen proto" },
   "repository" :
   {
@@ -24,6 +24,6 @@
     "warraysparse" : "",
     "wblueprint" : ""
   },
-  "devDependencies" : { "wTesting" : "", "eslint" : "7.1.0", "wstringsextra" : "file:." },
+  "devDependencies" : { "wTesting" : "", "eslint" : "7.1.0" },
   "keywords" : [ "wTools", "wStringsExtra" ]
 }
