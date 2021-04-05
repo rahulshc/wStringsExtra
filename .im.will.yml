@@ -89,8 +89,8 @@ path:
       raw: compiled
       content: prime
   npm.proto.entry:
-    - /pro/module/wStringsExtra/proto/wtools/abase/l5/StringTools.s
-    - /pro/module/wStringsExtra/proto/node_modules/wstringsextra
+    - proto/wtools/abase/l5/StringTools.s
+    - proto/node_modules/wstringsextra
 reflector:
   reflect.proto:
     inherit: predefined.*
