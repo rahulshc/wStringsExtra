@@ -11,7 +11,7 @@
 
 if( typeof module !== 'undefined' )
 {
-  let _ = require( '../../../node_modules/Tools' );
+  const _ = require( '../../../node_modules/Tools' );
   _.include( 'wArraySorted' );
   _.include( 'wArraySparse' );
   _.include( 'wBlueprint' );
@@ -35,7 +35,7 @@ const _ObjectToString = Object.prototype.toString;
 const _ObjectHasOwnProperty = Object.hasOwnProperty;
 
 const _longSlice = _.longSlice;
-let strType = _.entity.strType;
+const strType = _.entity.strType;
 
 _.assert( _.routineIs( _.sorted.addOnce ) );
 
