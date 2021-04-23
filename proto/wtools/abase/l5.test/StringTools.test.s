@@ -14660,7 +14660,7 @@ function strRequestStr( test )
 
   test.case = 'quoted option value, quoting - 0';
   var str = 'path:"some/path"';
-  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 0, parsingArrays : 1 } );
+  var src = _.strRequestParse( { src : str, commandsDelimeter : ';', quoting : 0, unquoting : 0, parsingArrays : 1 } );
   delete src[ 'original' ];
   var got = _.strRequestStr( src );
   var expected = 'path:"some/path"';

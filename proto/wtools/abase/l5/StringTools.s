@@ -2595,7 +2595,7 @@ function strRequestParse( o )
         delimeter : ' ',
         quote : o.quoting,
       })
-      subject = subjectAndKey[ 0 ];
+      subject = o.quoting && o.unquoting ? _.strUnquote( subjectAndKey[ 0 ] ) : subjectAndKey[ 0 ];
       mapEntries[ 0 ] = subjectAndKey[ 2 ];
 
       // map = _.strStructureParse
@@ -2614,10 +2614,10 @@ function strRequestParse( o )
         src : mapEntries.join( '' ),
         delimeter : o.keyValDelimeter,
         stripping : 0,
-        quoting : 0,
+        quoting : o.quoting,
         preservingEmpty : 1,
         preservingDelimeters : 1,
-        preservingQuoting : 0
+        preservingQuoting : 1,
       });
 
       let pairs = [];
@@ -2646,7 +2646,7 @@ function strRequestParse( o )
 
         left = left.trim();
         right = right.trim();
-        if( o.quoting )
+        if( o.unquoting )
         {
           left = _.strUnquote( left );
           right = _.strUnquote( right );
