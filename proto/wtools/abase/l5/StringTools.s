@@ -328,7 +328,6 @@ function strSearch_body( o )
 
   if( _.arrayIs( o.excludingTokens ) || _.strIs( o.excludingTokens ) )
   {
-    debugger;
     o.excludingTokens = _.path.globShortSplitsToRegexps( o.excludingTokens );
     o.excludingTokens = _.regexpsAny( o.excludingTokens );
   }
@@ -372,7 +371,8 @@ function strSearch_body( o )
     {
       let tokens = o.onTokenize( it.nearest.join( '' ) );
 
-      let ranges = _.select( tokens, '*/charsRangeLeft/0' );
+      // let ranges = _.select( tokens, '*/charsRangeLeft/0' ); /* Dmytro : new realization of Selector require quantitative number selector */
+      let ranges = _.select( tokens, '*/charsRangeLeft/#0' );
       let range = [ it.nearest[ 0 ].length, it.nearest[ 0 ].length + it.nearest[ 1 ].length ];
       let having = _.sorted.lookUpIntervalHaving( ranges, range );
 
@@ -416,7 +416,6 @@ let strSearch = _.routine.uniteCloning_( strSearch_head, strSearch_body );
 
 function strSearchLog_body( o )
 {
-  debugger
   _.assert( arguments.length === 1, 'Expects single argument' );
 
   let o2 = _.mapOnly_( null, o, this.strSearch.defaults );
@@ -1320,9 +1319,7 @@ function jsonParse( o )
 
   let jsonParser = _.gdf.selectSingleContext({ inFormat : 'string', outFormat : 'structure', ext : 'json' });
 
-  debugger;
   result = jsonParser.encode({ data : o.src }).out.data;
-  debugger;
 
   return result.data;
 }
@@ -1647,8 +1644,6 @@ function strCsvFrom( src, o )
   let result = '';
   o = o || Object.create( null );
 
-  debugger;
-
   if( !o.header )
   {
 
@@ -1937,7 +1932,6 @@ Dmytro : below added new version of routine strStructureParse for new features
 //   // if( src.length === 1 && src[ 0 ] )
 //   // return src[ 0 ];
 //   //
-//   // debugger;
 //
 //   if( _.mapKeys( result ).length === 0 )
 //   {
@@ -2158,7 +2152,6 @@ function strStructureParse( o )
       result = result.map( ( e ) => _.numberFromStrMaybe( e ) );
       if( depth > 0 )
       {
-        debugger;
         depth--;
 
         strSplitsParenthesesBalanceJoin( result );
@@ -2297,7 +2290,6 @@ strStructureParse.defaults =
 //   //   _.assert( _.strIs( left ) );
 //   //   _.assert( _.strIs( right ) );
 //   //
-//   //   debugger;
 //   //   while( a < src.length - 1 )
 //   //   {
 //   //     let cuts = _.strIsolateRightOrAll( right, o.entryDelimeter );
@@ -2325,7 +2317,6 @@ strStructureParse.defaults =
 //     _.assert( _.strIs( left ) );
 //     _.assert( _.strIs( right ) );
 //
-//     // debugger;
 //     while( a < src.length - 1 )
 //     {
 //       let cuts = _.strIsolateRightOrAll( right, o.entryDelimeter );
@@ -2554,7 +2545,6 @@ function strRequestParse( o )
     //   preservingEmpty : 0,
     // });
 
-    // debugger;
     if( o.keyValDelimeter )
     mapEntries = _.strIsolateLeftOrAll
     ({
@@ -2584,7 +2574,6 @@ function strRequestParse( o )
     }
     else
     {
-      // debugger;
       // let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ].trim(), ' ' );
       // subject = subjectAndKey[ 0 ];
       // mapEntries[ 0 ] = subjectAndKey[ 2 ];
@@ -3393,8 +3382,6 @@ function strTable( o )
     if( !o.colSplits )
     return false;
     if( j >= o.dim[ 1 ]-1 )
-    debugger;
-    if( j >= o.dim[ 1 ]-1 )
     return false;
     if( _.boolLikeTrue( o.colSplits ) )
     return true;
@@ -3757,7 +3744,6 @@ function strTable( o )
       () => `rightHead should have ${o2.dim[ 0 ]} elements, but have ${o.rightHead.length}`
     );
 
-    debugger;
     _.strTable( o2 );
 
     o.result = o2.result;
@@ -4175,8 +4161,6 @@ function strSimilarity( src1, src2 )
   _.assert( _.strIs( src2 ) );
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
-  debugger;
-
   let spectres = [ _.strLattersSpectre( src1 ), _.strLattersSpectre( src2 ) ];
   let result = _.strLattersSpectresSimilarity( spectres[ 0 ], spectres[ 1 ] );
 
@@ -4232,9 +4216,6 @@ function strLattersSpectresSimilarity( src1, src2 )
   result += Math.abs( src1[ s ] - src2[ s ] );
 
   result = ( minl / maxl ) - ( 0.5 * result / maxl );
-
-  if( result > 1 )
-  debugger;
 
   result = _.numberClamp( result, [ 0, 1 ] );
 
