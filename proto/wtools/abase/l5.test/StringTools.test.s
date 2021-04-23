@@ -14582,6 +14582,133 @@ function strRequestParseOptionSeveralValues( test )
 
 //
 
+function strRequestParseWithOptionsQuotingAndUnqoting( test )
+{
+  test.open( 'quoting : 1, unqoting - 1' );
+
+  test.case = 'only quoted subject';
+  var got = _.strRequestParse({ src : '`"v:0"`', quoting : 1, unquoting : 1 });
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {} ] );
+  test.identical( got.subject, 'v:0' );
+  test.identical( got.subjects, [ 'v:0' ] );
+
+  /* */
+
+  test.case = 'quoted subject and maps with assymmetrical quoting';
+  var got = _.strRequestParse({ src : '`"v:0" b:"k:0" c:0 "d:0"`', quoting : 1, unquoting : 1 });
+  test.identical( got.map, { b : 'k:0', c : '0 "d:0"' } );
+  test.identical( got.maps, [ { b : 'k:0', c : '0 "d:0"' } ] );
+  test.identical( got.subject, 'v:0' );
+  test.identical( got.subjects, [ 'v:0' ] );
+
+  /* */
+
+  test.case = 'quoted subject and maps with symmetrical quoting';
+  var got = _.strRequestParse({ src : '`"v:0" b:"k:0" c:0 d:"d:0"`', quoting : 1, unquoting : 1 });
+  test.identical( got.map, { b : 'k:0', c : 0, d : 'd:0' } );
+  test.identical( got.maps, [ { b : 'k:0', c : 0, d : 'd:0' } ] );
+  test.identical( got.subject, 'v:0' );
+  test.identical( got.subjects, [ 'v:0' ] );
+
+  test.close( 'quoting : 1, unqoting - 1' );
+
+  /* - */
+
+  test.open( 'quoting : 1, unqoting - 0' );
+
+  test.case = 'only quoted subject';
+  var got = _.strRequestParse({ src : '`"v:0"`', quoting : 1, unquoting : 0 });
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {} ] );
+  test.identical( got.subject, '`"v:0"`' );
+  test.identical( got.subjects, [ '`"v:0"`' ] );
+
+  /* */
+
+  test.case = 'quoted subject and maps with assymmetrical quoting';
+  var got = _.strRequestParse({ src : '`"v:0" b:"k:0" c:0 "d:0"`', quoting : 1, unquoting : 0 });
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {} ] );
+  test.identical( got.subject, '`"v:0" b:"k:0" c:0 "d:0"`' );
+  test.identical( got.subjects, [ '`"v:0" b:"k:0" c:0 "d:0"`' ] );
+
+  /* */
+
+  test.case = 'quoted subject and maps with symmetrical quoting';
+  var got = _.strRequestParse({ src : '`"v:0" b:"k:0" c:0 d:"d:0"`', quoting : 1, unquoting : 0 });
+  test.identical( got.map, {} );
+  test.identical( got.maps, [ {} ] );
+  test.identical( got.subject, '`"v:0" b:"k:0" c:0 d:"d:0"`' );
+  test.identical( got.subjects, [ '`"v:0" b:"k:0" c:0 d:"d:0"`' ] );
+
+  test.close( 'quoting : 1, unqoting - 0' );
+
+  /* - */
+
+  test.open( 'quoting : 0, unqoting - 1' );
+
+  test.case = 'only quoted subject';
+  var got = _.strRequestParse({ src : '`"v:0"`', quoting : 0, unquoting : 1 });
+  test.identical( got.map, { '`"v' : '0"`' } );
+  test.identical( got.maps, [ { '`"v' : '0"`' } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  /* */
+
+  test.case = 'quoted subject and maps with assymmetrical quoting';
+  var got = _.strRequestParse({ src : '`"v:0" b:"k:0" c:0 "d:0"`', quoting : 0, unquoting : 1 });
+  test.identical( got.map, { '`"v' : '0"', 'b' : 'k:0', 'c' : 0, '"d' : '0"`' } );
+  test.identical( got.maps, [ { '`"v' : '0"', 'b' : 'k:0', 'c' : 0, '"d' : '0"`' } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  /* */
+
+  test.case = 'quoted subject and maps with symmetrical quoting';
+  var got = _.strRequestParse({ src : '`"v:0" b:"k:0" c:0 d:"d:0"`', quoting : 0, unquoting : 1 });
+  test.identical( got.map, { '`"v' : '0"', 'b' : 'k:0', 'c' : 0, 'd' : '"d:0"`' } );
+  test.identical( got.maps, [ { '`"v' : '0"', 'b' : 'k:0', 'c' : 0, 'd' : '"d:0"`' } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.close( 'quoting : 0, unqoting - 1' );
+
+  /* - */
+
+  test.open( 'quoting : 0, unqoting - 0' );
+
+  test.case = 'only quoted subject';
+  var got = _.strRequestParse({ src : '`"v:0"`', quoting : 0, unquoting : 0 });
+  test.identical( got.map, { '`"v' : '0"`' } );
+  test.identical( got.maps, [ { '`"v' : '0"`' } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  /* */
+
+  test.case = 'quoted subject and maps with assymmetrical quoting';
+  var got = _.strRequestParse({ src : '`"v:0" b:"k:0" c:0 "d:0"`', quoting : 0, unquoting : 0 });
+  test.identical( got.map, { '`"v' : '0"', 'b' : '"k:0"', 'c' : 0, '"d' : '0"`' } );
+  test.identical( got.maps, [ { '`"v' : '0"', 'b' : '"k:0"', 'c' : 0, '"d' : '0"`' } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  /* */
+
+  test.case = 'quoted subject and maps with symmetrical quoting';
+  var got = _.strRequestParse({ src : '`"v:0" b:"k:0" c:0 d:"d:0"`', quoting : 0, unquoting : 0 });
+  test.identical( got.map, { '`"v' : '0"', 'b' : '"k:0"', 'c' : 0, 'd' : '"d:0"`' } );
+  test.identical( got.maps, [ { '`"v' : '0"', 'b' : '"k:0"', 'c' : 0, 'd' : '"d:0"`' } ] );
+  test.identical( got.subject, '' );
+  test.identical( got.subjects, [ '' ] );
+
+  test.close( 'quoting : 0, unqoting - 0' );
+}
+
+//
+
 function strRequestParseExperiment( test )
 {
   test.case = 'positive number in option';
@@ -15641,6 +15768,7 @@ const Proto =
     strRequestParseOptionSubjectWinPathsMaybe,
     strRequestParseWithWindowsPathsAndOptionSubjectWinPathsMaybe,
     strRequestParseOptionSeveralValues,
+    strRequestParseWithOptionsQuotingAndUnqoting,
     strRequestParseExperiment,
     strRequestStr,
     strCommandParse,

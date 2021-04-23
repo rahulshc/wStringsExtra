@@ -2595,7 +2595,7 @@ function strRequestParse( o )
         delimeter : ' ',
         quote : o.quoting,
       })
-      subject = o.quoting && o.unquoting ? _.strUnquote( subjectAndKey[ 0 ] ) : subjectAndKey[ 0 ];
+      subject = subjectAndKey[ 0 ];
       mapEntries[ 0 ] = subjectAndKey[ 2 ];
 
       // map = _.strStructureParse
@@ -2703,6 +2703,9 @@ function strRequestParse( o )
     //   });
     //
     // }
+
+    if( o.unquoting )
+    subject = _.strUnquote( subject );
 
     if( o.subjectWinPathsMaybe )
     subject = winPathSubjectCheck( subject, map );
