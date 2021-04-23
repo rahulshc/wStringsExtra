@@ -328,7 +328,6 @@ function strSearch_body( o )
 
   if( _.arrayIs( o.excludingTokens ) || _.strIs( o.excludingTokens ) )
   {
-    debugger;
     o.excludingTokens = _.path.globShortSplitsToRegexps( o.excludingTokens );
     o.excludingTokens = _.regexpsAny( o.excludingTokens );
   }
@@ -416,7 +415,6 @@ let strSearch = _.routine.uniteCloning_( strSearch_head, strSearch_body );
 
 function strSearchLog_body( o )
 {
-  debugger
   _.assert( arguments.length === 1, 'Expects single argument' );
 
   let o2 = _.mapOnly_( null, o, this.strSearch.defaults );
@@ -1287,14 +1285,19 @@ function strSorterParse( o )
 
     let valueForPostfix = map[ postfix ];
 
-    if( valueForPostfix !== undefined )
-    {
-      parsed.push( [ field, valueForPostfix ] )
-    }
+    if( valueForPostfix === undefined )
+    _.assert( 0, 'unknown postfix: ', postfix )
     else
-    {
-      _.assert( 0, 'unknown postfix: ', postfix )
-    }
+    parsed.push( [ field, valueForPostfix ] )
+
+    // if( valueForPostfix !== undefined )
+    // {
+    //   parsed.push( [ field, valueForPostfix ] )
+    // }
+    // else
+    // {
+    //   _.assert( 0, 'unknown postfix: ', postfix )
+    // }
   }
 
   return parsed;
@@ -1320,9 +1323,7 @@ function jsonParse( o )
 
   let jsonParser = _.gdf.selectSingleContext({ inFormat : 'string', outFormat : 'structure', ext : 'json' });
 
-  debugger;
   result = jsonParser.encode({ data : o.src }).out.data;
-  debugger;
 
   return result.data;
 }
@@ -1381,29 +1382,29 @@ function strToBytes( src )
 let _metrics =
 {
 
-  '24'  : { name : 'yotta', symbol : 'Y',  word : 'septillion' },
-  '21'  : { name : 'zetta', symbol : 'Z',  word : 'sextillion' },
-  '18'  : { name : 'exa',   symbol : 'E',  word : 'quintillion' },
-  '15'  : { name : 'peta',  symbol : 'P',  word : 'quadrillion' },
-  '12'  : { name : 'tera',  symbol : 'T',  word : 'trillion' },
-  '9'   : { name : 'giga',  symbol : 'G',  word : 'billion' },
-  '6'   : { name : 'mega',  symbol : 'M',  word : 'million' },
-  '3'   : { name : 'kilo',  symbol : 'k',  word : 'thousand' },
-  '2'   : { name : 'hecto', symbol : 'h',  word : 'hundred' },
-  '1'   : { name : 'deca',  symbol : 'da', word : 'ten' },
+  '24'  : { name : 'yotta', symbol : 'Y', word : 'septillion' },
+  '21'  : { name : 'zetta', symbol : 'Z', word : 'sextillion' },
+  '18'  : { name : 'exa', symbol : 'E', word : 'quintillion' },
+  '15'  : { name : 'peta', symbol : 'P', word : 'quadrillion' },
+  '12'  : { name : 'tera', symbol : 'T', word : 'trillion' },
+  '9'   : { name : 'giga', symbol : 'G', word : 'billion' },
+  '6'   : { name : 'mega', symbol : 'M', word : 'million' },
+  '3'   : { name : 'kilo', symbol : 'k', word : 'thousand' },
+  '2'   : { name : 'hecto', symbol : 'h', word : 'hundred' },
+  '1'   : { name : 'deca', symbol : 'da', word : 'ten' },
 
-  '0'   : { name : '',      symbol : '',   word : '' },
+  '0'   : { name : '', symbol : '', word : '' },
 
-  '-1'  : { name : 'deci',  symbol : 'd',  word : 'tenth' },
-  '-2'  : { name : 'centi', symbol : 'c',  word : 'hundredth' },
-  '-3'  : { name : 'milli', symbol : 'm',  word : 'thousandth' },
-  '-6'  : { name : 'micro', symbol : 'μ',  word : 'millionth' },
-  '-9'  : { name : 'nano',  symbol : 'n',  word : 'billionth' },
-  '-12' : { name : 'pico',  symbol : 'p',  word : 'trillionth' },
-  '-15' : { name : 'femto', symbol : 'f',  word : 'quadrillionth' },
-  '-18' : { name : 'atto',  symbol : 'a',  word : 'quintillionth' },
-  '-21' : { name : 'zepto', symbol : 'z',  word : 'sextillionth' },
-  '-24' : { name : 'yocto', symbol : 'y',  word : 'septillionth' },
+  '-1'  : { name : 'deci', symbol : 'd', word : 'tenth' },
+  '-2'  : { name : 'centi', symbol : 'c', word : 'hundredth' },
+  '-3'  : { name : 'milli', symbol : 'm', word : 'thousandth' },
+  '-6'  : { name : 'micro', symbol : 'μ', word : 'millionth' },
+  '-9'  : { name : 'nano', symbol : 'n', word : 'billionth' },
+  '-12' : { name : 'pico', symbol : 'p', word : 'trillionth' },
+  '-15' : { name : 'femto', symbol : 'f', word : 'quadrillionth' },
+  '-18' : { name : 'atto', symbol : 'a', word : 'quintillionth' },
+  '-21' : { name : 'zepto', symbol : 'z', word : 'sextillionth' },
+  '-24' : { name : 'yocto', symbol : 'y', word : 'septillionth' },
 
   'range' : [ -24, +24 ],
 
@@ -1646,8 +1647,6 @@ function strCsvFrom( src, o )
 
   let result = '';
   o = o || Object.create( null );
-
-  debugger;
 
   if( !o.header )
   {
@@ -1936,8 +1935,6 @@ Dmytro : below added new version of routine strStructureParse for new features
 //
 //   // if( src.length === 1 && src[ 0 ] )
 //   // return src[ 0 ];
-//   //
-//   // debugger;
 //
 //   if( _.mapKeys( result ).length === 0 )
 //   {
@@ -2158,7 +2155,6 @@ function strStructureParse( o )
       result = result.map( ( e ) => _.numberFromStrMaybe( e ) );
       if( depth > 0 )
       {
-        debugger;
         depth--;
 
         strSplitsParenthesesBalanceJoin( result );
@@ -2297,7 +2293,6 @@ strStructureParse.defaults =
 //   //   _.assert( _.strIs( left ) );
 //   //   _.assert( _.strIs( right ) );
 //   //
-//   //   debugger;
 //   //   while( a < src.length - 1 )
 //   //   {
 //   //     let cuts = _.strIsolateRightOrAll( right, o.entryDelimeter );
@@ -2325,7 +2320,6 @@ strStructureParse.defaults =
 //     _.assert( _.strIs( left ) );
 //     _.assert( _.strIs( right ) );
 //
-//     // debugger;
 //     while( a < src.length - 1 )
 //     {
 //       let cuts = _.strIsolateRightOrAll( right, o.entryDelimeter );
@@ -2554,7 +2548,6 @@ function strRequestParse( o )
     //   preservingEmpty : 0,
     // });
 
-    // debugger;
     if( o.keyValDelimeter )
     mapEntries = _.strIsolateLeftOrAll
     ({
@@ -2577,18 +2570,8 @@ function strRequestParse( o )
     let map = Object.create( null );
     // let subject, map;
     // if( mapEntries.length === 1 )
-    if( !mapEntries[ 1 ] )
+    if( mapEntries[ 1 ] )
     {
-      subject = mapEntries[ 0 ];
-      // map = Object.create( null );
-    }
-    else
-    {
-      // debugger;
-      // let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ].trim(), ' ' );
-      // subject = subjectAndKey[ 0 ];
-      // mapEntries[ 0 ] = subjectAndKey[ 2 ];
-
       let subjectAndKey = _.strIsolateRightOrAll
       ({
         src : mapEntries[ 0 ].trim(),
@@ -2597,17 +2580,6 @@ function strRequestParse( o )
       })
       subject = subjectAndKey[ 0 ];
       mapEntries[ 0 ] = subjectAndKey[ 2 ];
-
-      // map = _.strStructureParse
-      // ({
-      //   src : mapEntries.join( '' ),
-      //   keyValDelimeter : o.keyValDelimeter,
-      //   parsingArrays : o.parsingArrays,
-      //   quoting : o.quoting,
-      //   severalValues : o.severalValues,
-      // });
-
-      /* Dmytro : it uses to get valid result when the quotes is used, also, it used no additional options, so performance is improved */
 
       let splits = _.strSplit
       ({
@@ -2667,8 +2639,102 @@ function strRequestParse( o )
         else
         map[ left ] = right;
       }
-
     }
+    else
+    {
+      subject = mapEntries[ 0 ];
+    }
+    // if( !mapEntries[ 1 ] )
+    // {
+    //   subject = mapEntries[ 0 ];
+    //   // map = Object.create( null );
+    // }
+    // else
+    // {
+    //   // let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ].trim(), ' ' );
+    //   // subject = subjectAndKey[ 0 ];
+    //   // mapEntries[ 0 ] = subjectAndKey[ 2 ];
+    //
+    //   let subjectAndKey = _.strIsolateRightOrAll
+    //   ({
+    //     src : mapEntries[ 0 ].trim(),
+    //     delimeter : ' ',
+    //     quote : o.quoting,
+    //   })
+    //   subject = subjectAndKey[ 0 ];
+    //   mapEntries[ 0 ] = subjectAndKey[ 2 ];
+    //
+    //   // map = _.strStructureParse
+    //   // ({
+    //   //   src : mapEntries.join( '' ),
+    //   //   keyValDelimeter : o.keyValDelimeter,
+    //   //   parsingArrays : o.parsingArrays,
+    //   //   quoting : o.quoting,
+    //   //   severalValues : o.severalValues,
+    //   // });
+    //
+    //   /* Dmytro : it uses to get valid result when the quotes is used, also, it used no additional options, so performance is improved */
+    //
+    //   let splits = _.strSplit
+    //   ({
+    //     src : mapEntries.join( '' ),
+    //     delimeter : o.keyValDelimeter,
+    //     stripping : 0,
+    //     quoting : 0,
+    //     preservingEmpty : 1,
+    //     preservingDelimeters : 1,
+    //     preservingQuoting : 0
+    //   });
+    //
+    //   let pairs = [];
+    //   for( let a = 0 ; a < splits.length-2 ; a += 2 )
+    //   {
+    //     let left = splits[ a ];
+    //     let right = splits[ a+2 ].trim();
+    //
+    //     _.assert( _.strIs( left ) );
+    //     _.assert( _.strIs( right ) );
+    //
+    //     while( a < splits.length-3 )
+    //     {
+    //       let cuts = _.strIsolateRightOrAll({ src : right, delimeter : o.entryDelimeter, quote : 1, times : 1 });
+    //       if( cuts[ 1 ] === undefined )
+    //       {
+    //         right = splits[ a+2 ] = splits[ a+2 ] + splits[ a+3 ] + splits[ a+4 ];
+    //         right = right.trim();
+    //         splits.splice( a+3, 2 );
+    //         continue;
+    //       }
+    //       right = cuts[ 0 ];
+    //       splits[ a+2 ] = cuts[ 2 ];
+    //       break;
+    //     }
+    //
+    //     left = left.trim();
+    //     right = right.trim();
+    //     if( o.quoting )
+    //     {
+    //       left = _.strUnquote( left );
+    //       right = _.strUnquote( right );
+    //     }
+    //
+    //     pairs.push( left, right );
+    //   }
+    //
+    //   for( let a = 0 ; a < pairs.length-1 ; a += 2 )
+    //   {
+    //     let left = pairs[ a ];
+    //     let right = pairs[ a+1 ];
+    //     right = _.numberFromStrMaybe( right );
+    //     right = strToArrayMaybe( right );
+    //
+    //     if( o.severalValues )
+    //     map[ left ] = _.scalarAppendOnce( map[ left ], right );
+    //     else
+    //     map[ left ] = right;
+    //   }
+    //
+    // }
 
     // let mapEntries = [ commands[ c ] ];
     // if( o.keyValDelimeter )
@@ -3390,8 +3456,6 @@ function strTable( o )
     if( !o.colSplits )
     return false;
     if( j >= o.dim[ 1 ]-1 )
-    debugger;
-    if( j >= o.dim[ 1 ]-1 )
     return false;
     if( _.boolLikeTrue( o.colSplits ) )
     return true;
@@ -3754,7 +3818,6 @@ function strTable( o )
       () => `rightHead should have ${o2.dim[ 0 ]} elements, but have ${o.rightHead.length}`
     );
 
-    debugger;
     _.strTable( o2 );
 
     o.result = o2.result;
@@ -4172,8 +4235,6 @@ function strSimilarity( src1, src2 )
   _.assert( _.strIs( src2 ) );
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
-  debugger;
-
   let spectres = [ _.strLattersSpectre( src1 ), _.strLattersSpectre( src2 ) ];
   let result = _.strLattersSpectresSimilarity( spectres[ 0 ], spectres[ 1 ] );
 
@@ -4229,9 +4290,6 @@ function strLattersSpectresSimilarity( src1, src2 )
   result += Math.abs( src1[ s ] - src2[ s ] );
 
   result = ( minl / maxl ) - ( 0.5 * result / maxl );
-
-  if( result > 1 )
-  debugger;
 
   result = _.numberClamp( result, [ 0, 1 ] );
 
