@@ -786,7 +786,7 @@ function dissectBasic( test )
   delete dissection.parcels[ 0 ].tstep;
   test.true( dissection.parcels[ 0 ].tokens.length === 2 );
   delete dissection.parcels[ 0 ].tokens;
-  test.identical( _.mapKeys( dissection.parcels[ 0 ].map ), [ 'any', 'first' ] );
+  test.identical( _.props.keys( dissection.parcels[ 0 ].map ), [ 'any', 'first' ] );
   delete dissection.parcels[ 0 ].map;
   var exp =
   {
@@ -804,7 +804,7 @@ function dissectBasic( test )
   delete dissection.parcels[ 1 ].tstep;
   test.true( dissection.parcels[ 1 ].tokens.length === 2 );
   delete dissection.parcels[ 1 ].tokens;
-  test.identical( _.mapKeys( dissection.parcels[ 1 ].map ), [ 'any', 'first' ] );
+  test.identical( _.props.keys( dissection.parcels[ 1 ].map ), [ 'any', 'first' ] );
   delete dissection.parcels[ 1 ].map;
   var exp =
   {
@@ -822,7 +822,7 @@ function dissectBasic( test )
   delete dissection.parcels[ 2 ].tstep;
   test.true( _.arrayIs( dissection.parcels[ 2 ].tokens ) );
   delete dissection.parcels[ 2 ].tokens;
-  test.identical( _.mapKeys( dissection.parcels[ 2 ].map ), [] );
+  test.identical( _.props.keys( dissection.parcels[ 2 ].map ), [] );
   delete dissection.parcels[ 2 ].map;
   var exp =
   {
