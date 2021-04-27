@@ -2,13 +2,10 @@ format: outwillfile-2.0
 root:
   - wStringsExtra.out
 consistency:
-  wStringsExtra.out.will.yml: &ref_0
-    hash: cb9150c01cae0e823ba7adc514a26018
-    size: 39652
-  ../.ex.will.yml: &ref_1
-    hash: d1c91cc4f18d120f9d265447ec2d84c4
-    size: 1851
-  ../.im.will.yml: &ref_2
+  ../.ex.will.yml: &ref_0
+    hash: c6af0ab8616c4b4553333637d8430428
+    size: 1865
+  ../.im.will.yml: &ref_1
     hash: e60aa79083ea7a0df27da41a5562222c
     size: 5223
 module:
@@ -22,20 +19,20 @@ module:
         for special purposes.
       enabled: 1
       version: 0.4.0
-      interpreters:
+      interpreters: &ref_2
         - njs >= 10.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords:
+      keywords: &ref_3
         - wTools
         - wStringsExtra
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
+      contributors: &ref_4
         - Kostiantyn Wandalen <wanalen@01.school>
       npm.name: wstringsextra
-      npm.scripts:
-        test: wtest .run proto/**
+      npm.scripts: &ref_5
+        test: 'wtest .run "proto/**" rapidity:-3'
         docgen: wdocgen .build proto
     path:
       module.willfiles:
@@ -723,24 +720,6 @@ module:
           content: prime
         inherit:
           - files.transpile
-      exported.proto.export:
-        opts:
-          filePath: 'reflector::exported.proto.export'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
-      exported.files.proto.export:
-        opts:
-          filePath: 'reflector::exported.files.proto.export'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
     build:
       proto.export:
         steps:
@@ -829,9 +808,8 @@ module:
           content: proto
           export: 1
     consistency:
-      wStringsExtra.out.will.yml: *ref_0
-      ../.ex.will.yml: *ref_1
-      ../.im.will.yml: *ref_2
+      ../.ex.will.yml: *ref_0
+      ../.im.will.yml: *ref_1
   ../:
     about:
       name: wStringsExtra
@@ -842,21 +820,13 @@ module:
         for special purposes.
       enabled: 1
       version: 0.4.0
-      interpreters:
-        - njs >= 10.0.0
-        - chrome >= 60.0.0
-        - firefox >= 60.0.0
-      keywords:
-        - wTools
-        - wStringsExtra
+      interpreters: *ref_2
+      keywords: *ref_3
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
+      contributors: *ref_4
       npm.name: wstringsextra
-      npm.scripts:
-        test: wtest .run proto/**
-        docgen: wdocgen .build proto
+      npm.scripts: *ref_5
     path:
       module.willfiles:
         criterion:
@@ -1541,9 +1511,8 @@ module:
           - 'build::npm'
     consistency:
       ../.ex.will.yml:
-        hash: d1c91cc4f18d120f9d265447ec2d84c4
-        size: 1851
+        hash: c6af0ab8616c4b4553333637d8430428
+        size: 1865
       ../.im.will.yml:
         hash: e60aa79083ea7a0df27da41a5562222c
         size: 5223
-      wStringsExtra.out.will.yml: *ref_0
