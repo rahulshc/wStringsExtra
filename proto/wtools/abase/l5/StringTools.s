@@ -371,7 +371,8 @@ function strSearch_body( o )
     {
       let tokens = o.onTokenize( it.nearest.join( '' ) );
 
-      let ranges = _.select( tokens, '*/charsRangeLeft/0' );
+      // let ranges = _.select( tokens, '*/charsRangeLeft/0' ); /* Dmytro : new realization of Selector require quantitative number selector */
+      let ranges = _.select( tokens, '*/charsRangeLeft/#0' );
       let range = [ it.nearest[ 0 ].length, it.nearest[ 0 ].length + it.nearest[ 1 ].length ];
       let having = _.sorted.lookUpIntervalHaving( ranges, range );
 
@@ -1935,6 +1936,10 @@ Dmytro : below added new version of routine strStructureParse for new features
 //
 //   // if( src.length === 1 && src[ 0 ] )
 //   // return src[ 0 ];
+<<<<<<< HEAD
+//   //
+=======
+>>>>>>> 5d55856c37129b6da80ad898278fc4e19180e668
 //
 //   if( _.props.keys( result ).length === 0 )
 //   {
@@ -2572,6 +2577,13 @@ function strRequestParse( o )
     // if( mapEntries.length === 1 )
     if( mapEntries[ 1 ] )
     {
+<<<<<<< HEAD
+      // let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ].trim(), ' ' );
+      // subject = subjectAndKey[ 0 ];
+      // mapEntries[ 0 ] = subjectAndKey[ 2 ];
+
+=======
+>>>>>>> 5d55856c37129b6da80ad898278fc4e19180e668
       let subjectAndKey = _.strIsolateRightOrAll
       ({
         src : mapEntries[ 0 ].trim(),
@@ -2586,10 +2598,10 @@ function strRequestParse( o )
         src : mapEntries.join( '' ),
         delimeter : o.keyValDelimeter,
         stripping : 0,
-        quoting : 0,
+        quoting : o.quoting,
         preservingEmpty : 1,
         preservingDelimeters : 1,
-        preservingQuoting : 0
+        preservingQuoting : 1,
       });
 
       let pairs = [];
@@ -2620,7 +2632,7 @@ function strRequestParse( o )
 
         left = left.trim();
         right = right.trim();
-        if( o.quoting )
+        if( o.unquoting )
         {
           left = _.strUnquote( left );
           right = _.strUnquote( right );
@@ -2771,6 +2783,9 @@ function strRequestParse( o )
     //   });
     //
     // }
+
+    if( o.unquoting )
+    subject = _.strUnquote( subject );
 
     if( o.subjectWinPathsMaybe )
     subject = winPathSubjectCheck( subject, map );
