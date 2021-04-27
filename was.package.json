@@ -6,7 +6,7 @@
   "license" : "MIT",
   "main" : "proto/node_modules/wstringsextra",
   "files" : [ "proto/wtools/abase/l5", "out", "proto/node_modules" ],
-  "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-1", "docgen" : "wdocgen proto" },
+  "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-3", "docgen" : "wdocgen proto" },
   "repository" :
   {
     "type" : "git",
