@@ -166,7 +166,7 @@ function strFilenameFor( o )
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.strIs( o.srcString ) );
-  _.routineOptions( strFilenameFor, o );
+  _.routine.options_( strFilenameFor, o );
 
   let regexp = /<|>|:|"|'|\/|\\|\||\&|\?|\*|\n|\s/g;
   let result = o.srcString.replace( regexp, function( match )
@@ -215,7 +215,7 @@ function strVarNameFor( o )
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.strIs( o.src ) );
-  _.routineOptions( strVarNameFor, o );
+  _.routine.options_( strVarNameFor, o );
 
   let regexp = /\.|\-|\+|<|>|:|"|'|\/|\\|\||\&|\?|\*|\n|\s/g;
   let result = o.src.replace( regexp, function( match )
@@ -306,7 +306,7 @@ function strSearch_head( routine, args )
 
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 || args.length === 2 );
-  _.routineOptions( routine, o );
+  _.routine.options_( routine, o );
 
   return o;
 }
@@ -410,7 +410,7 @@ strSearch_body.defaults =
   excludingTokens : null,
 }
 
-let strSearch = _.routine.uniteCloning_( strSearch_head, strSearch_body );
+let strSearch = _.routine.uniteCloning_replaceByUnite( strSearch_head, strSearch_body );
 
 //
 
@@ -420,7 +420,7 @@ function strSearchLog_body( o )
 
   let o2 = _.mapOnly_( null, o, this.strSearch.defaults );
   this.strSearch( o2 );
-  _.mapExtend( o, o2 );
+  _.props.extend( o, o2 );
 
   _.each( o.parcels, ( parcel ) =>
   {
@@ -449,7 +449,7 @@ strSearchLog_body.defaults =
   gray : 0,
 }
 
-let strSearchLog = _.routine.uniteCloning_( strSearch_head, strSearchLog_body );
+let strSearchLog = _.routine.uniteCloning_replaceByUnite( strSearch_head, strSearchLog_body );
 
 //
 
@@ -457,7 +457,7 @@ function strSearchReplace_body( o )
 {
   let result = '';
   let last = 0;
-  _.routineOptions( strSearchReplace_body, o );
+  _.routine.options_( strSearchReplace_body, o );
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( o.src ) );
 
@@ -512,7 +512,7 @@ strSearchReplace_body.defaults =
   // direct : 1,
 }
 
-let strSearchReplace = _.routine.uniteCloning_( strSearch_head, strSearchReplace_body );
+let strSearchReplace = _.routine.uniteCloning_replaceByUnite( strSearch_head, strSearchReplace_body );
 
 //
 
@@ -536,8 +536,8 @@ function strFindAll( src, ins )
 
   _.assert( arguments.length === 1 || arguments.length === 2 );
   _.assert( _.strIs( o.src ) );
-  _.assert( _.arrayLike( o.ins ) || _.objectIs( o.ins ) );
-  _.routineOptions( strFindAll, o );
+  _.assert( _.argumentsArray.like( o.ins ) || _.objectIs( o.ins ) );
+  _.routine.options_( strFindAll, o );
 
   /* */
 
@@ -808,7 +808,7 @@ function tokensSyntaxFrom( ins )
   /* */
 
   _.assert( arguments.length === 1 );
-  _.assert( _.arrayLike( ins ) || _.objectIs( ins ) );
+  _.assert( _.argumentsArray.like( ins ) || _.objectIs( ins ) );
 
   /* */
 
@@ -1046,7 +1046,7 @@ function strReplaceAll( src, ins, sub )
 
   /* verify */
 
-  _.routineOptions( strReplaceAll, o );
+  _.routine.options_( strReplaceAll, o );
   _.assert( _.strIs( o.src ) );
 
   _._strReplaceMapPrepare( o );
@@ -1253,7 +1253,7 @@ function strSorterParse( o )
     }
   }
 
-  _.routineOptions( strSorterParse, o );
+  _.routine.options_( strSorterParse, o );
   _.assert( o.fields === null || _.objectLike( o.fields ) );
   _.assert( arguments.length === 1 || arguments.length === 2 );
 
@@ -1263,7 +1263,7 @@ function strSorterParse( o )
     '<' : 0
   }
 
-  let delimeters = _.mapOnlyOwnKeys( map );
+  let delimeters = _.props.onlyOwnKeys( map );
   let splitted = _.strSplit
   ({
     src : o.src,
@@ -1286,14 +1286,19 @@ function strSorterParse( o )
 
     let valueForPostfix = map[ postfix ];
 
-    if( valueForPostfix !== undefined )
-    {
-      parsed.push( [ field, valueForPostfix ] )
-    }
+    if( valueForPostfix === undefined )
+    _.assert( 0, 'unknown postfix: ', postfix )
     else
-    {
-      _.assert( 0, 'unknown postfix: ', postfix )
-    }
+    parsed.push( [ field, valueForPostfix ] )
+
+    // if( valueForPostfix !== undefined )
+    // {
+    //   parsed.push( [ field, valueForPostfix ] )
+    // }
+    // else
+    // {
+    //   _.assert( 0, 'unknown postfix: ', postfix )
+    // }
   }
 
   return parsed;
@@ -1313,7 +1318,7 @@ function jsonParse( o )
 
   if( _.strIs( o ) )
   o = { src : o }
-  _.routineOptions( jsonParse, o );
+  _.routine.options_( jsonParse, o );
   _.assert( arguments.length === 1 );
   _.assert( !!_.Gdf );
 
@@ -1378,29 +1383,29 @@ function strToBytes( src )
 let _metrics =
 {
 
-  '24'  : { name : 'yotta', symbol : 'Y',  word : 'septillion' },
-  '21'  : { name : 'zetta', symbol : 'Z',  word : 'sextillion' },
-  '18'  : { name : 'exa',   symbol : 'E',  word : 'quintillion' },
-  '15'  : { name : 'peta',  symbol : 'P',  word : 'quadrillion' },
-  '12'  : { name : 'tera',  symbol : 'T',  word : 'trillion' },
-  '9'   : { name : 'giga',  symbol : 'G',  word : 'billion' },
-  '6'   : { name : 'mega',  symbol : 'M',  word : 'million' },
-  '3'   : { name : 'kilo',  symbol : 'k',  word : 'thousand' },
-  '2'   : { name : 'hecto', symbol : 'h',  word : 'hundred' },
-  '1'   : { name : 'deca',  symbol : 'da', word : 'ten' },
+  '24'  : { name : 'yotta', symbol : 'Y', word : 'septillion' },
+  '21'  : { name : 'zetta', symbol : 'Z', word : 'sextillion' },
+  '18'  : { name : 'exa', symbol : 'E', word : 'quintillion' },
+  '15'  : { name : 'peta', symbol : 'P', word : 'quadrillion' },
+  '12'  : { name : 'tera', symbol : 'T', word : 'trillion' },
+  '9'   : { name : 'giga', symbol : 'G', word : 'billion' },
+  '6'   : { name : 'mega', symbol : 'M', word : 'million' },
+  '3'   : { name : 'kilo', symbol : 'k', word : 'thousand' },
+  '2'   : { name : 'hecto', symbol : 'h', word : 'hundred' },
+  '1'   : { name : 'deca', symbol : 'da', word : 'ten' },
 
-  '0'   : { name : '',      symbol : '',   word : '' },
+  '0'   : { name : '', symbol : '', word : '' },
 
-  '-1'  : { name : 'deci',  symbol : 'd',  word : 'tenth' },
-  '-2'  : { name : 'centi', symbol : 'c',  word : 'hundredth' },
-  '-3'  : { name : 'milli', symbol : 'm',  word : 'thousandth' },
-  '-6'  : { name : 'micro', symbol : 'μ',  word : 'millionth' },
-  '-9'  : { name : 'nano',  symbol : 'n',  word : 'billionth' },
-  '-12' : { name : 'pico',  symbol : 'p',  word : 'trillionth' },
-  '-15' : { name : 'femto', symbol : 'f',  word : 'quadrillionth' },
-  '-18' : { name : 'atto',  symbol : 'a',  word : 'quintillionth' },
-  '-21' : { name : 'zepto', symbol : 'z',  word : 'sextillionth' },
-  '-24' : { name : 'yocto', symbol : 'y',  word : 'septillionth' },
+  '-1'  : { name : 'deci', symbol : 'd', word : 'tenth' },
+  '-2'  : { name : 'centi', symbol : 'c', word : 'hundredth' },
+  '-3'  : { name : 'milli', symbol : 'm', word : 'thousandth' },
+  '-6'  : { name : 'micro', symbol : 'μ', word : 'millionth' },
+  '-9'  : { name : 'nano', symbol : 'n', word : 'billionth' },
+  '-12' : { name : 'pico', symbol : 'p', word : 'trillionth' },
+  '-15' : { name : 'femto', symbol : 'f', word : 'quadrillionth' },
+  '-18' : { name : 'atto', symbol : 'a', word : 'quintillionth' },
+  '-21' : { name : 'zepto', symbol : 'z', word : 'sextillionth' },
+  '-24' : { name : 'yocto', symbol : 'y', word : 'septillionth' },
 
   'range' : [ -24, +24 ],
 
@@ -1460,7 +1465,7 @@ function strMetricFormat( number, o )
   if( _.strIs( number ) )
   number = parseFloat( number );
 
-  o = _.routineOptions( strMetricFormat, o );
+  o = _.routine.options_( strMetricFormat, o || null );
 
   if( o.metrics === null )
   o.metrics = _metrics;
@@ -1592,7 +1597,7 @@ function strMetricFormatBytes( number, o )
     thousand : 1024,
   };
 
-  _.mapSupplement( o, defaultOptions );
+  _.props.supplement( o, defaultOptions );
 
   return _.strMetricFormat( number, o ) + 'b';
 }
@@ -1843,7 +1848,7 @@ Dmytro : below added new version of routine strStructureParse for new features
 //   if( _.strIs( o ) )
 //   o = { src : o }
 //
-//   _.routineOptions( strStructureParse, o );
+//   _.routine.options_( strStructureParse, o );
 //   _.assert( !!o.keyValDelimeter );
 //   _.assert( _.strIs( o.entryDelimeter ) );
 //   _.assert( _.strIs( o.src ) );
@@ -1931,9 +1936,12 @@ Dmytro : below added new version of routine strStructureParse for new features
 //
 //   // if( src.length === 1 && src[ 0 ] )
 //   // return src[ 0 ];
+<<<<<<< HEAD
 //   //
+=======
+>>>>>>> 5d55856c37129b6da80ad898278fc4e19180e668
 //
-//   if( _.mapKeys( result ).length === 0 )
+//   if( _.props.keys( result ).length === 0 )
 //   {
 //     if( o.defaultStructure === 'map' )
 //     return result;
@@ -1995,7 +2003,7 @@ function strStructureParse( o )
   if( _.strIs( o ) )
   o = { src : o }
 
-  _.routineOptions( strStructureParse, o );
+  _.routine.options_( strStructureParse, o );
   _.assert( arguments.length === 1 );
   _.assert( !!o.keyValDelimeter );
   _.assert( _.strIs( o.entryDelimeter ) );
@@ -2091,7 +2099,7 @@ function strStructureParse( o )
 
     if( o.depth > 0 )
     {
-      let options = _.mapExtend( null, o );
+      let options = _.props.extend( null, o );
       options.depth = o.depth - 1;
       if( _.strIs( right ) )
       {
@@ -2114,7 +2122,7 @@ function strStructureParse( o )
 
   }
 
-  if( _.mapKeys( result ).length === 0 )
+  if( _.props.keys( result ).length === 0 )
   {
     if( o.defaultStructure === 'map' )
     return result;
@@ -2155,7 +2163,7 @@ function strStructureParse( o )
         depth--;
 
         strSplitsParenthesesBalanceJoin( result );
-        let options = _.mapExtend( null, o );
+        let options = _.props.extend( null, o );
         options.depth = depth;
         for( let i = 0; i < result.length; i++ )
         {
@@ -2248,7 +2256,7 @@ strStructureParse.defaults =
 //   if( _.strIs( o ) )
 //   o = { src : o }
 //
-//   _.routineOptions( strStructureParse, o );
+//   _.routine.options_( strStructureParse, o );
 //   _.assert( !!o.keyValDelimeter );
 //   _.assert( _.strIs( o.entryDelimeter ) );
 //   _.assert( _.strIs( o.src ) );
@@ -2344,7 +2352,7 @@ strStructureParse.defaults =
 //   if( src.length === 1 && src[ 0 ] )
 //   return src[ 0 ];
 //
-//   if( _.mapKeys( result ).length === 0 )
+//   if( _.props.keys( result ).length === 0 )
 //   {
 //     if( o.defaultStructure === 'map' )
 //     return result;
@@ -2410,7 +2418,7 @@ function strWebQueryParse( o )
   if( _.strIs( o ) )
   o = { src : o }
 
-  _.routineOptions( strWebQueryParse, o );
+  _.routine.options_( strWebQueryParse, o );
   _.assert( arguments.length === 1 );
 
   if( o.keyValDelimeter === null )
@@ -2444,7 +2452,7 @@ function strWebQueryStr( o )
   if( _.strIs( o ) )
   return o;
 
-  _.routineOptions( strWebQueryStr, o ); // Dmytro : missed
+  _.routine.options_( strWebQueryStr, o ); // Dmytro : missed
 
   let result = _.mapToStr( o );
 
@@ -2466,7 +2474,7 @@ function strRequestParse( o )
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
   _.assert( _.strIs( o.src ) );
-  o = _.routineOptions( strRequestParse, o );
+  o = _.routine.options_( strRequestParse, o );
 
   if( _.boolLike( o.quoting ) && o.quoting )
   o.quoting = [ '"', '`', '\'' ];
@@ -2567,17 +2575,15 @@ function strRequestParse( o )
     let map = Object.create( null );
     // let subject, map;
     // if( mapEntries.length === 1 )
-    if( !mapEntries[ 1 ] )
+    if( mapEntries[ 1 ] )
     {
-      subject = mapEntries[ 0 ];
-      // map = Object.create( null );
-    }
-    else
-    {
+<<<<<<< HEAD
       // let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ].trim(), ' ' );
       // subject = subjectAndKey[ 0 ];
       // mapEntries[ 0 ] = subjectAndKey[ 2 ];
 
+=======
+>>>>>>> 5d55856c37129b6da80ad898278fc4e19180e668
       let subjectAndKey = _.strIsolateRightOrAll
       ({
         src : mapEntries[ 0 ].trim(),
@@ -2586,17 +2592,6 @@ function strRequestParse( o )
       })
       subject = subjectAndKey[ 0 ];
       mapEntries[ 0 ] = subjectAndKey[ 2 ];
-
-      // map = _.strStructureParse
-      // ({
-      //   src : mapEntries.join( '' ),
-      //   keyValDelimeter : o.keyValDelimeter,
-      //   parsingArrays : o.parsingArrays,
-      //   quoting : o.quoting,
-      //   severalValues : o.severalValues,
-      // });
-
-      /* Dmytro : it uses to get valid result when the quotes is used, also, it used no additional options, so performance is improved */
 
       let splits = _.strSplit
       ({
@@ -2620,7 +2615,9 @@ function strRequestParse( o )
 
         while( a < splits.length-3 )
         {
-          let cuts = _.strIsolateRightOrAll({ src : right, delimeter : o.entryDelimeter, quote : 1, times : 1 });
+          /* qqq : for Dmytro : ?? */
+          // let cuts = _.strIsolateRightOrAll({ src : right, delimeter : o.entryDelimeter, quote : 1, times : 1 });
+          let cuts = _.strIsolateRightOrAll({ src : right, quote : 1, times : 1 });
           if( cuts[ 1 ] === undefined )
           {
             right = splits[ a+2 ] = splits[ a+2 ] + splits[ a+3 ] + splits[ a+4 ];
@@ -2656,8 +2653,102 @@ function strRequestParse( o )
         else
         map[ left ] = right;
       }
-
     }
+    else
+    {
+      subject = mapEntries[ 0 ];
+    }
+    // if( !mapEntries[ 1 ] )
+    // {
+    //   subject = mapEntries[ 0 ];
+    //   // map = Object.create( null );
+    // }
+    // else
+    // {
+    //   // let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ].trim(), ' ' );
+    //   // subject = subjectAndKey[ 0 ];
+    //   // mapEntries[ 0 ] = subjectAndKey[ 2 ];
+    //
+    //   let subjectAndKey = _.strIsolateRightOrAll
+    //   ({
+    //     src : mapEntries[ 0 ].trim(),
+    //     delimeter : ' ',
+    //     quote : o.quoting,
+    //   })
+    //   subject = subjectAndKey[ 0 ];
+    //   mapEntries[ 0 ] = subjectAndKey[ 2 ];
+    //
+    //   // map = _.strStructureParse
+    //   // ({
+    //   //   src : mapEntries.join( '' ),
+    //   //   keyValDelimeter : o.keyValDelimeter,
+    //   //   parsingArrays : o.parsingArrays,
+    //   //   quoting : o.quoting,
+    //   //   severalValues : o.severalValues,
+    //   // });
+    //
+    //   /* Dmytro : it uses to get valid result when the quotes is used, also, it used no additional options, so performance is improved */
+    //
+    //   let splits = _.strSplit
+    //   ({
+    //     src : mapEntries.join( '' ),
+    //     delimeter : o.keyValDelimeter,
+    //     stripping : 0,
+    //     quoting : 0,
+    //     preservingEmpty : 1,
+    //     preservingDelimeters : 1,
+    //     preservingQuoting : 0
+    //   });
+    //
+    //   let pairs = [];
+    //   for( let a = 0 ; a < splits.length-2 ; a += 2 )
+    //   {
+    //     let left = splits[ a ];
+    //     let right = splits[ a+2 ].trim();
+    //
+    //     _.assert( _.strIs( left ) );
+    //     _.assert( _.strIs( right ) );
+    //
+    //     while( a < splits.length-3 )
+    //     {
+    //       let cuts = _.strIsolateRightOrAll({ src : right, delimeter : o.entryDelimeter, quote : 1, times : 1 });
+    //       if( cuts[ 1 ] === undefined )
+    //       {
+    //         right = splits[ a+2 ] = splits[ a+2 ] + splits[ a+3 ] + splits[ a+4 ];
+    //         right = right.trim();
+    //         splits.splice( a+3, 2 );
+    //         continue;
+    //       }
+    //       right = cuts[ 0 ];
+    //       splits[ a+2 ] = cuts[ 2 ];
+    //       break;
+    //     }
+    //
+    //     left = left.trim();
+    //     right = right.trim();
+    //     if( o.quoting )
+    //     {
+    //       left = _.strUnquote( left );
+    //       right = _.strUnquote( right );
+    //     }
+    //
+    //     pairs.push( left, right );
+    //   }
+    //
+    //   for( let a = 0 ; a < pairs.length-1 ; a += 2 )
+    //   {
+    //     let left = pairs[ a ];
+    //     let right = pairs[ a+1 ];
+    //     right = _.numberFromStrMaybe( right );
+    //     right = strToArrayMaybe( right );
+    //
+    //     if( o.severalValues )
+    //     map[ left ] = _.scalarAppendOnce( map[ left ], right );
+    //     else
+    //     map[ left ] = right;
+    //   }
+    //
+    // }
 
     // let mapEntries = [ commands[ c ] ];
     // if( o.keyValDelimeter )
@@ -2830,7 +2921,7 @@ function strRequestStr( o )
 {
 
   _.assert( arguments.length === 1 );
-  o = _.routineOptions( strRequestStr, arguments );
+  o = _.routine.options_( strRequestStr, arguments );
 
   if( o.original )
   {
@@ -2913,7 +3004,7 @@ function strCommandParse( o )
   o = { src : o }
   _.assert( arguments.length === 0 || arguments.length === 1 );
   _.assert( _.strIs( o.src ) );
-  o = _.routineOptions( strCommandParse, o );
+  o = _.routine.options_( strCommandParse, o );
 
   let tokens = _.strSplit({ src : o.commandFormat, delimeter : [ '?', 'subject', 'options' ], preservingEmpty : 0 });
 
@@ -3013,7 +3104,7 @@ function strCommandParse( o )
   _.sure( subjectTokenMaybe || subject.length, 'No subject found in string:', o.src )
 
   if( optionsToken )
-  _.sure( optionsTokenMaybe || _.mapKeys( map ).length, 'No options found in string:', o.src )
+  _.sure( optionsTokenMaybe || _.props.keys( map ).length, 'No options found in string:', o.src )
 
   result.subjects.push( subject );
   result.maps.push( map );
@@ -3039,7 +3130,7 @@ function strCommandsParse( o )
   o = { src : o }
   _.assert( arguments.length === 0 || arguments.length === 1 );
   _.assert( _.strIs( o.src ) );
-  o = _.routineOptions( strCommandsParse, o );
+  o = _.routine.options_( strCommandsParse, o );
 
   let result = Object.create( null );
 
@@ -3089,7 +3180,7 @@ defaults.commandsDelimeter = ';';
 function strJoinMap( o )
 {
 
-  _.routineOptions( strJoinMap, o );
+  _.routine.options_( strJoinMap, o );
   _.assert( _.strIs( o.keyValDelimeter ) );
   _.assert( _.strIs( o.entryDelimeter ) );
   _.assert( _.objectIs( o.src ) );
@@ -3123,9 +3214,9 @@ function strTable( o )
 {
 
   if( !_.mapIs( o ) )
-  o = { data : arguments[ 0 ], dim : arguments[ 1 ] }
+  o = { data : arguments[ 0 ], dim : ( arguments.length > 1 ? arguments[ 1 ] : null ) }
 
-  _.routineOptions( strTable, o );
+  _.routine.options_( strTable, o );
   _.assert( arguments.length === 1 || arguments.length === 2, 'Expects single argument' );
   _.assert( o.data !== undefined );
   _.assert( _.longIs( o.dim ) && o.dim.length === 2 && _.numbersAreAll( o.dim ), 'Expects defined {- o.dim -}' );
@@ -3510,7 +3601,7 @@ function strTable( o )
     }
     else
     {
-      return _.strShort
+      return _.strShort_
       ({
         src : line,
         widthLimit : it.sz[ 1 ],
@@ -3574,31 +3665,31 @@ function strTable( o )
 
   function headsIntegrate()
   {
-    let o2 = _.mapExtend( null, o );
+    let o2 = _.props.extend( null, o );
 
     o2.onCellGet = onCellGetWithHeads_functor();
     o2.topHead = null;
     o2.bottomHead = null;
     o2.leftHead = null;
     o2.rightHead = null;
-    o2.dim = _.arraySlice( o2.dim );
+    o2.dim = _.array.slice( o2.dim );
 
     if( o.topHead )
     {
       o2.dim[ 0 ] += 1;
       if( _.longIs( o2.rowHeight ) )
       {
-        o2.rowHeight = _.arraySlice( o2.rowHeight );
+        o2.rowHeight = _.array.slice( o2.rowHeight );
         o2.rowHeight.unshift( null );
       }
       if( _.longIs( o2.minRowHeight ) )
       {
-        o2.minRowHeight = _.arraySlice( o2.minRowHeight );
+        o2.minRowHeight = _.array.slice( o2.minRowHeight );
         o2.minRowHeight.unshift( null );
       }
       if( _.longIs( o2.maxRowHeight ) )
       {
-        o2.maxRowHeight = _.arraySlice( o2.maxRowHeight );
+        o2.maxRowHeight = _.array.slice( o2.maxRowHeight );
         o2.maxRowHeight.unshift( null );
       }
       if( _.longIs( o2.rowSplits ) )
@@ -3623,22 +3714,22 @@ function strTable( o )
       o2.dim[ 0 ] += 1;
       if( _.longIs( o2.rowHeight ) )
       {
-        o2.rowHeight = _.arraySlice( o2.rowHeight );
+        o2.rowHeight = _.array.slice( o2.rowHeight );
         o2.rowHeight.push( null );
       }
       if( _.longIs( o2.minRowHeight ) )
       {
-        o2.minRowHeight = _.arraySlice( o2.minRowHeight );
+        o2.minRowHeight = _.array.slice( o2.minRowHeight );
         o2.minRowHeight.push( null );
       }
       if( _.longIs( o2.maxRowHeight ) )
       {
-        o2.maxRowHeight = _.arraySlice( o2.maxRowHeight );
+        o2.maxRowHeight = _.array.slice( o2.maxRowHeight );
         o2.maxRowHeight.push( null );
       }
       if( _.longIs( o2.rowSplits ) )
       {
-        o2.rowSplits = _.arraySlice( o2.rowSplits );
+        o2.rowSplits = _.array.slice( o2.rowSplits );
       }
       else
       {
@@ -3658,17 +3749,17 @@ function strTable( o )
       o2.dim[ 1 ] += 1;
       if( _.longIs( o2.colWidth ) )
       {
-        o2.colWidth = _.arraySlice( o2.colWidth );
+        o2.colWidth = _.array.slice( o2.colWidth );
         o2.colWidth.unshift( null );
       }
       if( _.longIs( o2.minColWidth ) )
       {
-        o2.minColWidth = _.arraySlice( o2.minColWidth );
+        o2.minColWidth = _.array.slice( o2.minColWidth );
         o2.minColWidth.unshift( null );
       }
       if( _.longIs( o2.maxColWidth ) )
       {
-        o2.maxColWidth = _.arraySlice( o2.maxColWidth );
+        o2.maxColWidth = _.array.slice( o2.maxColWidth );
         o2.maxColWidth.unshift( null );
       }
       if( _.longIs( o2.colSplits ) )
@@ -3693,22 +3784,22 @@ function strTable( o )
       o2.dim[ 1 ] += 1;
       if( _.longIs( o2.colWidth ) )
       {
-        o2.colWidth = _.arraySlice( o2.colWidth );
+        o2.colWidth = _.array.slice( o2.colWidth );
         o2.colWidth.push( null );
       }
       if( _.longIs( o2.minColWidth ) )
       {
-        o2.minColWidth = _.arraySlice( o2.minColWidth );
+        o2.minColWidth = _.array.slice( o2.minColWidth );
         o2.minColWidth.push( null );
       }
       if( _.longIs( o2.maxColWidth ) )
       {
-        o2.maxColWidth = _.arraySlice( o2.maxColWidth );
+        o2.maxColWidth = _.array.slice( o2.maxColWidth );
         o2.maxColWidth.push( null );
       }
       if( _.longIs( o2.colSplits ) )
       {
-        o2.colSplits = _.arraySlice( o2.colSplits );
+        o2.colSplits = _.array.slice( o2.colSplits );
       }
       else
       {
@@ -3972,7 +4063,7 @@ strTable.style.border =  /* qqq : cover style ( lightly ) */
 //
 //   if( !_.objectIs( o ) )
 //   o = { data : o }
-//   _.routineOptions( strTable_old,o );
+//   _.routine.options_( strTable_old,o );
 //   _.assert( _.longIs( o.data ) );
 //
 //   if( typeof module !== 'undefined' )
@@ -4323,7 +4414,7 @@ let Extension =
 
 }
 
-_.mapExtend( _, Extension );
+_.props.extend( _, Extension );
 
 // --
 // export

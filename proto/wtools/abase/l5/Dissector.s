@@ -56,7 +56,7 @@ function _codeLex_head( routine, args )
 
   _.assert( args.length === 1 );
   _.assert( arguments.length === 2 );
-  _.routineOptions( routine, o );
+  _.routine.options_( routine, o );
 
   return o;
 }
@@ -254,7 +254,7 @@ _codeLex_body.defaults =
   code : null
 }
 
-let _codeLex = _.routine.uniteCloning_( _codeLex_head, _codeLex_body );
+let _codeLex = _.routine.uniteCloning_replaceByUnite( _codeLex_head, _codeLex_body );
 
 //
 
@@ -299,7 +299,7 @@ function make_head( routine, args )
 
   _.assert( args.length === 1 );
   _.assert( arguments.length === 2 );
-  _.routineOptions( routine, o );
+  _.routine.options_( routine, o );
 
   return o;
 }
@@ -676,7 +676,7 @@ make_body.defaults =
   code : null
 }
 
-let make = _.routine.uniteCloning_( make_head, make_body );
+let make = _.routine.uniteCloning_replaceByUnite( make_head, make_body );
 
 //
 
@@ -787,13 +787,13 @@ function dissect_head( routine, args )
     o =
     {
       code : args[ 0 ],
-      text : args[ 1 ],
+      text : ( args.length > 1 ? args[ 1 ] : null ),
     }
   }
 
   _.assert( args.length === 1 || args.length === 2 );
   _.assert( arguments.length === 2 );
-  _.routineOptions( routine, o );
+  _.routine.options_( routine, o );
 
   return o;
 }
@@ -810,7 +810,7 @@ dissect_body.defaults =
   code : null,
 }
 
-let dissect = _.routine.uniteCloning_( dissect_head, dissect_body );
+let dissect = _.routine.uniteCloning_replaceByUnite( dissect_head, dissect_body );
 
 //
 
@@ -860,7 +860,7 @@ function dissectionExportToString( o )
 {
   let result = '';
 
-  _.routineOptions( dissectionExportToString, arguments );
+  _.routine.options_( dissectionExportToString, arguments );
   _.assert( _.dissector.dissectionIs( o.src ) );
   _.assert( _.longHas( [ 'track' ], o.mode ) );
 
@@ -931,7 +931,7 @@ let DissectorExtension =
 
 }
 
-_.mapExtend( _.dissector, DissectorExtension );
+_.props.extend( _.dissector, DissectorExtension );
 
 // --
 // export
