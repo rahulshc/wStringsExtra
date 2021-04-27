@@ -1936,10 +1936,7 @@ Dmytro : below added new version of routine strStructureParse for new features
 //
 //   // if( src.length === 1 && src[ 0 ] )
 //   // return src[ 0 ];
-<<<<<<< HEAD
 //   //
-=======
->>>>>>> 5d55856c37129b6da80ad898278fc4e19180e668
 //
 //   if( _.props.keys( result ).length === 0 )
 //   {
@@ -2577,13 +2574,10 @@ function strRequestParse( o )
     // if( mapEntries.length === 1 )
     if( mapEntries[ 1 ] )
     {
-<<<<<<< HEAD
       // let subjectAndKey = _.strIsolateRightOrAll( mapEntries[ 0 ].trim(), ' ' );
       // subject = subjectAndKey[ 0 ];
       // mapEntries[ 0 ] = subjectAndKey[ 2 ];
 
-=======
->>>>>>> 5d55856c37129b6da80ad898278fc4e19180e668
       let subjectAndKey = _.strIsolateRightOrAll
       ({
         src : mapEntries[ 0 ].trim(),
