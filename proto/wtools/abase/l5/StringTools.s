@@ -3522,7 +3522,7 @@ function strTable( o )
     }
     else
     {
-      return _.strShort
+      return _.strShort_
       ({
         src : line,
         widthLimit : it.sz[ 1 ],
