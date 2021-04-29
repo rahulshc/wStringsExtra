@@ -22,9 +22,9 @@ const Self = _.dissector = _.dissector || Object.create( null );
 
 function dissectionIs( src )
 {
-  if( !_.objectIs( src ) )
+  if( !_.object.isBasic( src ) )
   return false;
-  if( !_.objectIs( src.dissector ) || !_.arrayIs( src.parcels ) )
+  if( !_.object.isBasic( src.dissector ) || !_.arrayIs( src.parcels ) )
   return false;
   return true;
 }
@@ -33,7 +33,7 @@ function dissectionIs( src )
 
 function dissectorIs( src )
 {
-  if( !_.objectIs( src ) )
+  if( !_.object.isBasic( src ) )
   return false;
   if( !_.strIs( src.code ) || !_.routineIs( src.parse ) )
   return false;
@@ -692,7 +692,7 @@ function _stepGenerate( op )
 
   _.assert
   (
-    _.objectIs( op.tstep ) && _.longHas( [ 'any', 'text' ], op.tstep.type ),
+    _.object.isBasic( op.tstep ) && _.longHas( [ 'any', 'text' ], op.tstep.type ),
     `Unknown type of token of the shape ${op.dissector.code}`
   );
 

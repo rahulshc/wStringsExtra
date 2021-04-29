@@ -536,7 +536,7 @@ function strFindAll( src, ins )
 
   _.assert( arguments.length === 1 || arguments.length === 2 );
   _.assert( _.strIs( o.src ) );
-  _.assert( _.argumentsArray.like( o.ins ) || _.objectIs( o.ins ) );
+  _.assert( _.argumentsArray.like( o.ins ) || _.object.isBasic( o.ins ) );
   _.routine.options_( strFindAll, o );
 
   /* */
@@ -808,7 +808,7 @@ function tokensSyntaxFrom( ins )
   /* */
 
   _.assert( arguments.length === 1 );
-  _.assert( _.argumentsArray.like( ins ) || _.objectIs( ins ) );
+  _.assert( _.argumentsArray.like( ins ) || _.object.isBasic( ins ) );
 
   /* */
 
@@ -856,7 +856,7 @@ function _strReplaceMapPrepare( o )
 
   _.map.assertHasAll( o, _strReplaceMapPrepare.defaults );
   _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( o.dictionary ) || _.longIs( o.dictionary ) || o.dictionary === null );
+  _.assert( _.object.isBasic( o.dictionary ) || _.longIs( o.dictionary ) || o.dictionary === null );
   _.assert( ( _.longIs( o.ins ) && _.longIs( o.sub ) ) || ( o.ins === null && o.sub === null ) );
 
   /* head */
@@ -867,7 +867,7 @@ function _strReplaceMapPrepare( o )
     o.ins = [];
     o.sub = [];
 
-    if( _.objectIs( o.dictionary ) )
+    if( _.object.isBasic( o.dictionary ) )
     {
       let i = 0;
       for( let d in o.dictionary )
@@ -1472,7 +1472,7 @@ function strMetricFormat( number, o )
 
   _.assert( _.numberIs( number ), '"number" should be Number' );
   _.assert( arguments.length === 1 || arguments.length === 2 );
-  _.assert( _.objectIs( o ) || o === undefined, 'Expects map {-o-}' );
+  _.assert( _.object.isBasic( o ) || o === undefined, 'Expects map {-o-}' );
   _.assert( _.numberIs( o.fixed ) );
   _.assert( o.fixed <= 20 );
 
@@ -3177,7 +3177,7 @@ function strJoinMap( o )
   _.routine.options_( strJoinMap, o );
   _.assert( _.strIs( o.keyValDelimeter ) );
   _.assert( _.strIs( o.entryDelimeter ) );
-  _.assert( _.objectIs( o.src ) );
+  _.assert( _.object.isBasic( o.src ) );
   _.assert( arguments.length === 1 );
 
   let result = '';
@@ -3637,7 +3637,7 @@ function strTable( o )
   function sideMapToArray( sideMap, length )
   {
     let result = _.dup( null, length );
-    _.assert( _.objectIs( sideMap ) );
+    _.assert( _.object.isBasic( sideMap ) );
     _.assert( 0, 'not tested' );
     for( let s in sideMap )
     {
@@ -4055,7 +4055,7 @@ strTable.style.border =  /* qqq : cover style ( lightly ) */
 // {
 //   _.assert( arguments.length === 1, 'Expects single argument' );
 //
-//   if( !_.objectIs( o ) )
+//   if( !_.object.isBasic( o ) )
 //   o = { data : o }
 //   _.routine.options_( strTable_old,o );
 //   _.assert( _.longIs( o.data ) );

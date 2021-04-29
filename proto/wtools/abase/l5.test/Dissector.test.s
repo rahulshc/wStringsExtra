@@ -780,7 +780,7 @@ function dissectBasic( test )
 
   test.description = 'parcels[ 0 ]';
   test.true( dissection.parcels[ 0 ].pstep !== dissection.parcels[ 0 ].tstep );
-  test.true( _.objectIs( dissection.parcels[ 0 ].pstep ) );
+  test.true( _.object.isBasic( dissection.parcels[ 0 ].pstep ) );
   delete dissection.parcels[ 0 ].pstep;
   test.true( _.nullIs( dissection.parcels[ 0 ].tstep ) );
   delete dissection.parcels[ 0 ].tstep;
@@ -798,7 +798,7 @@ function dissectBasic( test )
 
   test.description = 'parcels[ 1 ]';
   test.true( dissection.parcels[ 1 ].pstep !== dissection.parcels[ 1 ].tstep );
-  test.true( _.objectIs( dissection.parcels[ 1 ].pstep ) );
+  test.true( _.object.isBasic( dissection.parcels[ 1 ].pstep ) );
   delete dissection.parcels[ 1 ].pstep;
   test.true( _.nullIs( dissection.parcels[ 1 ].tstep ) );
   delete dissection.parcels[ 1 ].tstep;
@@ -816,9 +816,9 @@ function dissectBasic( test )
 
   test.description = 'parcels[ 2 ]';
   test.true( dissection.parcels[ 2 ].pstep !== dissection.parcels[ 2 ].tstep );
-  test.true( _.objectIs( dissection.parcels[ 2 ].pstep ) );
+  test.true( _.object.isBasic( dissection.parcels[ 2 ].pstep ) );
   delete dissection.parcels[ 2 ].pstep;
-  test.true( _.objectIs( dissection.parcels[ 2 ].tstep ) );
+  test.true( _.object.isBasic( dissection.parcels[ 2 ].tstep ) );
   delete dissection.parcels[ 2 ].tstep;
   test.true( _.arrayIs( dissection.parcels[ 2 ].tokens ) );
   delete dissection.parcels[ 2 ].tokens;
