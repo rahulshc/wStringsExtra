@@ -3595,6 +3595,12 @@ function strTable( o )
     }
     else
     {
+      // return _.strShort_
+      // ({
+      //   src : line,
+      //   widthLimit : it.sz[ 1 ],
+      //   onLength : o.onLength,
+      // });
       let lineDescriptor = _.strShort_
       ({
         src : line,

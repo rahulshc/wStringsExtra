@@ -42,7 +42,7 @@ function strCamelize( test )
   var expected = '';
   test.identical( got, expected );
 
-  /**/
+  /* - */
 
   if( !Config.debug )
   return;
@@ -9411,9 +9411,6 @@ function strTimeFormat( test )
 
 function strTableBasic( test )
 {
-
-  /* */
-
   test.case = '2 arguments';
   var exp =
 `a\tb\tc
@@ -9810,18 +9807,12 @@ function strTableOptionsSplits( test )
   var style = 'doubleBorder';
   var got = _.strTable({ data, dim, style, rowSplits : 1, colSplits : 1 });
   test.identical( got.result, exp );
-
-  /* */
-
 }
 
 //
 
 function strTableOptionsHead( test )
 {
-
-  /* */
-
   test.case = 'topHead';
   var exp =
 `╔═══════════╗
@@ -10142,9 +10133,6 @@ function strTableOptionsHead( test )
   var rightHead = [ 'r0', 'r11', 'r2', 'r3', 'r4', 'r5' ];
   var got = _.strTable({ data, dim, style, topHead, bottomHead, leftHead, rightHead, rowSplits, colSplits });
   test.identical( got.result, exp );
-
-  /* */
-
 }
 
 //
