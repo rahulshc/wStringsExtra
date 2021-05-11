@@ -3208,7 +3208,7 @@ function strTable( o )
 {
 
   if( !_.mapIs( o ) )
-  o = { data : arguments[ 0 ], dim : ( arguments.length > 1 ? arguments[ 1 ] : null ) }
+  o = { data : arguments[ 0 ], dim : ( arguments.length > 1 ? arguments[ 1 ] : null ) };
 
   _.routine.options_( strTable, o );
   _.assert( arguments.length === 1 || arguments.length === 2, 'Expects single argument' );
@@ -3595,12 +3595,19 @@ function strTable( o )
     }
     else
     {
-      return _.strShort_
+      // return _.strShort_
+      // ({
+      //   src : line,
+      //   widthLimit : it.sz[ 1 ],
+      //   onLength : o.onLength,
+      // });
+      let lineDescriptor = _.strShort_
       ({
         src : line,
         widthLimit : it.sz[ 1 ],
         onLength : o.onLength,
       });
+      return lineDescriptor.result;
     }
 
   }
@@ -3883,14 +3890,10 @@ function strTable( o )
   {
     return it.cellDrawn;
   }
-
-  /* */
-
 }
 
 strTable.defaults =
 {
-
   data : null,
   dim : null,
   topHead : null,
@@ -3957,8 +3960,7 @@ strTable.defaults =
   tTlikeThinToken : null,
   bTlikeThinToken : null,
   xThinToken : null,
-
-}
+};
 
 strTable.style = Object.create( null );
 
@@ -3969,11 +3971,10 @@ strTable.style.borderless =
   ncToken : '\t',
   nlToken : '\n',
   moreToken : '...',
-}
+};
 
 strTable.style.doubleBorder =
 {
-
   withBorder : 1,
   spaceToken : ' ',
   ncToken : '',
@@ -4007,12 +4008,10 @@ strTable.style.doubleBorder =
   tTlikeThinToken : '┬',
   bTlikeThinToken : '┴',
   xThinToken : '┼',
-
-}
+};
 
 strTable.style.border =  /* qqq : cover style ( lightly ) */
 {
-
   withBorder : 1,
   spaceToken : ' ',
   ncToken : '',
@@ -4046,8 +4045,7 @@ strTable.style.border =  /* qqq : cover style ( lightly ) */
   tTlikeThinToken : '┬',
   bTlikeThinToken : '┴',
   xThinToken : '┼',
-
-}
+};
 
 //
 
