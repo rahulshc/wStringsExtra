@@ -318,7 +318,7 @@ function strSearch_body( o )
 
   /* */
 
-  o.ins = _.arrayAs( o.ins );
+  o.ins = _.array.as( o.ins );
   o.ins = _.regexpsMaybeFrom
   ({
     srcStr : o.ins,
